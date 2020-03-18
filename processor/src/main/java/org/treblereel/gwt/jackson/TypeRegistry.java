@@ -50,38 +50,135 @@ import java.util.TreeSet;
 import java.util.UUID;
 import java.util.Vector;
 
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 
-import com.squareup.javapoet.TypeName;
-import org.dominokit.jacksonapt.deser.*;
-import org.dominokit.jacksonapt.deser.BaseDateJsonDeserializer.DateJsonDeserializer;
-import org.dominokit.jacksonapt.deser.BaseDateJsonDeserializer.SqlDateJsonDeserializer;
-import org.dominokit.jacksonapt.deser.BaseDateJsonDeserializer.SqlTimeJsonDeserializer;
-import org.dominokit.jacksonapt.deser.BaseDateJsonDeserializer.SqlTimestampJsonDeserializer;
-import org.dominokit.jacksonapt.deser.BaseNumberJsonDeserializer.*;
-import org.dominokit.jacksonapt.deser.array.*;
-import org.dominokit.jacksonapt.deser.array.dd.*;
-import org.dominokit.jacksonapt.deser.collection.*;
-import org.dominokit.jacksonapt.deser.map.*;
-import org.dominokit.jacksonapt.deser.map.key.*;
-import org.dominokit.jacksonapt.ser.*;
-import org.dominokit.jacksonapt.ser.BaseDateJsonSerializer.DateJsonSerializer;
-import org.dominokit.jacksonapt.ser.BaseDateJsonSerializer.SqlDateJsonSerializer;
-import org.dominokit.jacksonapt.ser.BaseDateJsonSerializer.SqlTimeJsonSerializer;
-import org.dominokit.jacksonapt.ser.BaseDateJsonSerializer.SqlTimestampJsonSerializer;
-import org.dominokit.jacksonapt.ser.BaseNumberJsonSerializer.*;
-import org.dominokit.jacksonapt.ser.array.*;
-import org.dominokit.jacksonapt.ser.array.dd.*;
-import org.dominokit.jacksonapt.ser.map.MapJsonSerializer;
-import org.dominokit.jacksonapt.ser.map.key.*;
+import org.treblereel.gwt.jackson.api.deser.BooleanXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.CharacterXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.EnumXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.StringXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.UUIDXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.VoidXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.PrimitiveBooleanArrayXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.PrimitiveByteArrayXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.PrimitiveCharacterArrayXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.PrimitiveDoubleArrayXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.PrimitiveFloatArrayXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.PrimitiveIntegerArrayXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.PrimitiveLongArrayXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.PrimitiveShortArrayXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.dd.Array2dXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.dd.PrimitiveBooleanArray2dXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.dd.PrimitiveByteArray2dXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.dd.PrimitiveCharacterArray2dXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.dd.PrimitiveDoubleArray2dXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.dd.PrimitiveFloatArray2dXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.dd.PrimitiveIntegerArray2dXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.dd.PrimitiveLongArray2dXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.dd.PrimitiveShortArray2dXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.AbstractCollectionXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.AbstractListXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.AbstractQueueXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.AbstractSequentialListXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.AbstractSetXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.ArrayListXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.CollectionXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.EnumSetXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.HashSetXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.IterableXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.LinkedHashSetXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.LinkedListXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.ListXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.PriorityQueueXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.QueueXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.SetXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.SortedSetXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.StackXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.TreeSetXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.collection.VectorXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.map.AbstractMapXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.map.EnumMapXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.map.HashMapXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.map.IdentityHashMapXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.map.LinkedHashMapXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.map.MapXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.map.SortedMapXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.map.TreeMapXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.map.key.BaseDateKeyDeserializer;
+import org.treblereel.gwt.jackson.api.deser.map.key.BaseNumberKeyDeserializer;
+import org.treblereel.gwt.jackson.api.deser.map.key.BooleanKeyDeserializer;
+import org.treblereel.gwt.jackson.api.deser.map.key.CharacterKeyDeserializer;
+import org.treblereel.gwt.jackson.api.deser.map.key.EnumKeyDeserializer;
+import org.treblereel.gwt.jackson.api.deser.map.key.StringKeyDeserializer;
+import org.treblereel.gwt.jackson.api.deser.map.key.UUIDKeyDeserializer;
 import org.treblereel.gwt.jackson.api.ser.BooleanXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.CharacterXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.CollectionXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.EnumXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.IterableXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.StringXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.UUIDXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.VoidXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.ArrayXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.PrimitiveBooleanArrayXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.PrimitiveByteArrayXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.PrimitiveCharacterArrayXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.PrimitiveDoubleArrayXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.PrimitiveFloatArrayXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.PrimitiveIntegerArrayXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.PrimitiveLongArrayXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.PrimitiveShortArrayXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.dd.Array2dXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.dd.PrimitiveBooleanArray2dXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.dd.PrimitiveByteArray2dXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.dd.PrimitiveCharacterArray2dXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.dd.PrimitiveDoubleArray2dXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.dd.PrimitiveFloatArray2dXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.dd.PrimitiveIntegerArray2dXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.dd.PrimitiveLongArray2dXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.dd.PrimitiveShortArray2dXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.map.MapXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.map.key.BooleanKeySerializer;
+import org.treblereel.gwt.jackson.api.ser.map.key.DateKeySerializer;
+import org.treblereel.gwt.jackson.api.ser.map.key.EnumKeySerializer;
+import org.treblereel.gwt.jackson.api.ser.map.key.NumberKeySerializer;
+import org.treblereel.gwt.jackson.api.ser.map.key.ObjectKeySerializer;
+import org.treblereel.gwt.jackson.api.ser.map.key.ToStringKeySerializer;
+import org.treblereel.gwt.jackson.api.ser.map.key.UUIDKeySerializer;
+import org.treblereel.gwt.jackson.context.GenerationContext;
 
 import static java.util.Objects.nonNull;
-import static org.dominokit.jacksonapt.processor.ObjectMapperProcessor.typeUtils;
+import static org.treblereel.gwt.jackson.api.deser.BaseDateXMLDeserializer.DateXMLDeserializer;
+import static org.treblereel.gwt.jackson.api.deser.BaseDateXMLDeserializer.SqlDateXMLDeserializer;
+import static org.treblereel.gwt.jackson.api.deser.BaseDateXMLDeserializer.SqlTimeXMLDeserializer;
+import static org.treblereel.gwt.jackson.api.deser.BaseDateXMLDeserializer.SqlTimestampXMLDeserializer;
+import static org.treblereel.gwt.jackson.api.deser.BaseNumberXMLDeserializer.BigDecimalXMLDeserializer;
+import static org.treblereel.gwt.jackson.api.deser.BaseNumberXMLDeserializer.BigIntegerXMLDeserializer;
+import static org.treblereel.gwt.jackson.api.deser.BaseNumberXMLDeserializer.ByteXMLDeserializer;
+import static org.treblereel.gwt.jackson.api.deser.BaseNumberXMLDeserializer.DoubleXMLDeserializer;
+import static org.treblereel.gwt.jackson.api.deser.BaseNumberXMLDeserializer.FloatXMLDeserializer;
+import static org.treblereel.gwt.jackson.api.deser.BaseNumberXMLDeserializer.IntegerXMLDeserializer;
+import static org.treblereel.gwt.jackson.api.deser.BaseNumberXMLDeserializer.LongXMLDeserializer;
+import static org.treblereel.gwt.jackson.api.deser.BaseNumberXMLDeserializer.NumberXMLDeserializer;
+import static org.treblereel.gwt.jackson.api.deser.BaseNumberXMLDeserializer.ShortXMLDeserializer;
+import static org.treblereel.gwt.jackson.api.ser.BaseDateXMLSerializer.DateXMLSerializer;
+import static org.treblereel.gwt.jackson.api.ser.BaseDateXMLSerializer.SqlDateXMLSerializer;
+import static org.treblereel.gwt.jackson.api.ser.BaseDateXMLSerializer.SqlTimeXMLSerializer;
+import static org.treblereel.gwt.jackson.api.ser.BaseDateXMLSerializer.SqlTimestampXMLSerializer;
+import static org.treblereel.gwt.jackson.api.ser.BaseNumberXMLSerializer.BigDecimalXMLSerializer;
+import static org.treblereel.gwt.jackson.api.ser.BaseNumberXMLSerializer.BigIntegerXMLSerializer;
+import static org.treblereel.gwt.jackson.api.ser.BaseNumberXMLSerializer.ByteXMLSerializer;
+import static org.treblereel.gwt.jackson.api.ser.BaseNumberXMLSerializer.DoubleXMLSerializer;
+import static org.treblereel.gwt.jackson.api.ser.BaseNumberXMLSerializer.FloatXMLSerializer;
+import static org.treblereel.gwt.jackson.api.ser.BaseNumberXMLSerializer.IntegerXMLSerializer;
+import static org.treblereel.gwt.jackson.api.ser.BaseNumberXMLSerializer.LongXMLSerializer;
+import static org.treblereel.gwt.jackson.api.ser.BaseNumberXMLSerializer.NumberXMLSerializer;
+import static org.treblereel.gwt.jackson.api.ser.BaseNumberXMLSerializer.ShortXMLSerializer;
 
 /**
  * <p>TypeRegistry class.</p>
- *
  * @author vegegoku
  * @version $Id: $Id
  */
@@ -94,458 +191,482 @@ public final class TypeRegistry {
     private static Map<String, ClassMapper> customMappers = new HashMap<>();
     private static Set<String> inActiveGenSerializers = new HashSet<>();
     private static Set<String> inActiveGenDeserializers = new HashSet<>();
+    final ClassMapperFactory MAPPER = new ClassMapperFactory();
+    private final Types types;
+    private final Elements elements;
+    private final TypeUtils typeUtils;
 
-    static final ClassMapperFactory MAPPER = new ClassMapperFactory();
+    public TypeRegistry(GenerationContext context) {
+        this.types = context.getProcessingEnv().getTypeUtils();
+        this.elements = context.getProcessingEnv().getElementUtils();
+        this.typeUtils = context.getTypeUtils();
 
-    //bas types mappers
-    static {
+        initBasicMappers();
+        initCommonMappers();
+        initNumberMappers();
+        initDataMappers();
+        initIterableMappers();
+        initMapMappers();
+        initPrimitiveArraysMappers();
+        initPrimitive2DArraysMappers();
+        initMapsKeyMappers();
+        initCollectionsDeserializersMappers();
+        initMapsDeserializersMappers();
+    }
+
+    private void initBasicMappers() {
         MAPPER
                 .forType(boolean.class)
                 .serializer(BooleanXMLSerializer.class)
-                .deserializer(BooleanJsonDeserializer.class)
+                .deserializer(BooleanXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(char.class)
-                .serializer(CharacterJsonSerializer.class)
-                .deserializer(CharacterJsonDeserializer.class)
+                .serializer(CharacterXMLSerializer.class)
+                .deserializer(CharacterXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(byte.class)
-                .serializer(ByteJsonSerializer.class)
-                .deserializer(ByteJsonDeserializer.class)
+                .serializer(ByteXMLSerializer.class)
+                .deserializer(ByteXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(double.class)
-                .serializer(DoubleJsonSerializer.class)
-                .deserializer(DoubleJsonDeserializer.class)
+                .serializer(DoubleXMLSerializer.class)
+                .deserializer(DoubleXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(float.class)
-                .serializer(FloatJsonSerializer.class)
-                .deserializer(FloatJsonDeserializer.class)
+                .serializer(FloatXMLSerializer.class)
+                .deserializer(FloatXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(int.class)
-                .serializer(IntegerJsonSerializer.class)
-                .deserializer(IntegerJsonDeserializer.class)
+                .serializer(IntegerXMLSerializer.class)
+                .deserializer(IntegerXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(long.class)
-                .serializer(LongJsonSerializer.class)
-                .deserializer(LongJsonDeserializer.class)
+                .serializer(LongXMLSerializer.class)
+                .deserializer(LongXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(short.class)
-                .serializer(ShortJsonSerializer.class)
-                .deserializer(ShortJsonDeserializer.class)
+                .serializer(ShortXMLSerializer.class)
+                .deserializer(ShortXMLDeserializer.class)
                 .register(simpleTypes);
+    }
 
+    private void initCommonMappers() {
         // Common mappers
         MAPPER
                 .forType(String.class)
-                .serializer(StringJsonSerializer.class)
-                .deserializer(StringJsonDeserializer.class)
+                .serializer(StringXMLSerializer.class)
+                .deserializer(StringXMLDeserializer.class)
                 .register(simpleTypes);
         MAPPER
                 .forType(Boolean.class)
-                .serializer(BooleanJsonSerializer.class)
-                .deserializer(BooleanJsonDeserializer.class)
+                .serializer(BooleanXMLSerializer.class)
+                .deserializer(BooleanXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(Character.class)
-                .serializer(CharacterJsonSerializer.class)
-                .deserializer(CharacterJsonDeserializer.class)
+                .serializer(CharacterXMLSerializer.class)
+                .deserializer(CharacterXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(UUID.class)
-                .serializer(UUIDJsonSerializer.class)
-                .deserializer(UUIDJsonDeserializer.class)
+                .serializer(UUIDXMLSerializer.class)
+                .deserializer(UUIDXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(Void.class)
-                .serializer(VoidJsonSerializer.class)
-                .deserializer(VoidJsonDeserializer.class)
+                .serializer(VoidXMLSerializer.class)
+                .deserializer(VoidXMLDeserializer.class)
                 .register(simpleTypes);
-
 
         MAPPER
                 .forType(Enum.class)
-                .serializer(EnumJsonSerializer.class)
-                .deserializer(EnumJsonDeserializer.class)
+                .serializer(EnumXMLSerializer.class)
+                .deserializer(EnumXMLDeserializer.class)
                 .register(simpleTypes);
+    }
 
-        // Number mappers
+    private void initNumberMappers() {
         MAPPER
                 .forType(BigDecimal.class)
-                .serializer(BigDecimalJsonSerializer.class)
-                .deserializer(BigDecimalJsonDeserializer.class)
+                .serializer(BigDecimalXMLSerializer.class)
+                .deserializer(BigDecimalXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(BigInteger.class)
-                .serializer(BigIntegerJsonSerializer.class)
-                .deserializer(BigIntegerJsonDeserializer.class)
+                .serializer(BigIntegerXMLSerializer.class)
+                .deserializer(BigIntegerXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(Byte.class)
-                .serializer(ByteJsonSerializer.class)
-                .deserializer(ByteJsonDeserializer.class)
+                .serializer(ByteXMLSerializer.class)
+                .deserializer(ByteXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(Double.class)
-                .serializer(DoubleJsonSerializer.class)
-                .deserializer(DoubleJsonDeserializer.class)
+                .serializer(DoubleXMLSerializer.class)
+                .deserializer(DoubleXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(Float.class)
-                .serializer(FloatJsonSerializer.class)
-                .deserializer(FloatJsonDeserializer.class)
+                .serializer(FloatXMLSerializer.class)
+                .deserializer(FloatXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(Integer.class)
-                .serializer(IntegerJsonSerializer.class)
-                .deserializer(IntegerJsonDeserializer.class)
+                .serializer(IntegerXMLSerializer.class)
+                .deserializer(IntegerXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(Long.class)
-                .serializer(LongJsonSerializer.class)
-                .deserializer(LongJsonDeserializer.class)
+                .serializer(LongXMLSerializer.class)
+                .deserializer(LongXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(Short.class)
-                .serializer(ShortJsonSerializer.class)
-                .deserializer(ShortJsonDeserializer.class)
+                .serializer(ShortXMLSerializer.class)
+                .deserializer(ShortXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(Number.class)
-                .serializer(NumberJsonSerializer.class)
-                .deserializer(NumberJsonDeserializer.class)
+                .serializer(NumberXMLSerializer.class)
+                .deserializer(NumberXMLDeserializer.class)
                 .register(simpleTypes);
+    }
 
-        // Date mappers
+    private void initDataMappers() {
         MAPPER
                 .forType(Date.class)
-                .serializer(DateJsonSerializer.class)
-                .deserializer(DateJsonDeserializer.class)
+                .serializer(DateXMLSerializer.class)
+                .deserializer(DateXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(java.sql.Date.class)
-                .serializer(SqlDateJsonSerializer.class)
-                .deserializer(SqlDateJsonDeserializer.class)
+                .serializer(SqlDateXMLSerializer.class)
+                .deserializer(SqlDateXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(Time.class)
-                .serializer(SqlTimeJsonSerializer.class)
-                .deserializer(SqlTimeJsonDeserializer.class)
+                .serializer(SqlTimeXMLSerializer.class)
+                .deserializer(SqlTimeXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(Timestamp.class)
-                .serializer(SqlTimestampJsonSerializer.class)
-                .deserializer(SqlTimestampJsonDeserializer.class)
+                .serializer(SqlTimestampXMLSerializer.class)
+                .deserializer(SqlTimestampXMLDeserializer.class)
                 .register(simpleTypes);
+    }
 
-        // Iterable mappers
+    private void initIterableMappers() {
         MAPPER
                 .forType(Iterable.class)
-                .serializer(IterableJsonSerializer.class)
-                .deserializer(IterableJsonDeserializer.class)
+                .serializer(IterableXMLSerializer.class)
+                .deserializer(IterableXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(Collection.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(CollectionJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(CollectionXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(AbstractCollection.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(AbstractCollectionJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(AbstractCollectionXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(AbstractList.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(AbstractListJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(AbstractListXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(AbstractQueue.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(AbstractQueueJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(AbstractQueueXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(AbstractSequentialList.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(AbstractSequentialListJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(AbstractSequentialListXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(AbstractSet.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(AbstractSetJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(AbstractSetXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(ArrayList.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(ArrayListJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(ArrayListXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(EnumSet.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(EnumSetJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(EnumSetXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(HashSet.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(HashSetJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(HashSetXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(LinkedHashSet.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(LinkedHashSetJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(LinkedHashSetXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(LinkedList.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(LinkedListJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(LinkedListXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(List.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(ListJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(ListXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(PriorityQueue.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(PriorityQueueJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(PriorityQueueXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(Queue.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(QueueJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(QueueXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(Set.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(SetJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(SetXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(SortedSet.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(SortedSetJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(SortedSetXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(Stack.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(StackJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(StackXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(TreeSet.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(TreeSetJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(TreeSetXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(Vector.class)
-                .serializer(CollectionJsonSerializer.class)
-                .deserializer(VectorJsonDeserializer.class)
+                .serializer(CollectionXMLSerializer.class)
+                .deserializer(VectorXMLDeserializer.class)
                 .register(simpleTypes);
+    }
 
-        // Map mappers
+    private void initMapMappers() {
         MAPPER
                 .forType(Map.class)
-                .serializer(MapJsonSerializer.class)
-                .deserializer(MapJsonDeserializer.class)
+                .serializer(MapXMLSerializer.class)
+                .deserializer(MapXMLDeserializer.class)
                 .register(simpleTypes);
         MAPPER
                 .forType(AbstractMap.class)
-                .serializer(MapJsonSerializer.class)
-                .deserializer(AbstractMapJsonDeserializer.class)
+                .serializer(MapXMLSerializer.class)
+                .deserializer(AbstractMapXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(EnumMap.class)
-                .serializer(MapJsonSerializer.class)
-                .deserializer(EnumMapJsonDeserializer.class)
+                .serializer(MapXMLSerializer.class)
+                .deserializer(EnumMapXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(HashMap.class)
-                .serializer(MapJsonSerializer.class)
-                .deserializer(HashMapJsonDeserializer.class)
+                .serializer(MapXMLSerializer.class)
+                .deserializer(HashMapXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(IdentityHashMap.class)
-                .serializer(MapJsonSerializer.class)
-                .deserializer(IdentityHashMapJsonDeserializer.class)
+                .serializer(MapXMLSerializer.class)
+                .deserializer(IdentityHashMapXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(LinkedHashMap.class)
-                .serializer(MapJsonSerializer.class)
-                .deserializer(LinkedHashMapJsonDeserializer.class)
+                .serializer(MapXMLSerializer.class)
+                .deserializer(LinkedHashMapXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(SortedMap.class)
-                .serializer(MapJsonSerializer.class)
-                .deserializer(SortedMapJsonDeserializer.class)
+                .serializer(MapXMLSerializer.class)
+                .deserializer(SortedMapXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(TreeMap.class)
-                .serializer(MapJsonSerializer.class)
-                .deserializer(TreeMapJsonDeserializer.class)
+                .serializer(MapXMLSerializer.class)
+                .deserializer(TreeMapXMLDeserializer.class)
                 .register(simpleTypes);
+    }
 
-        // Primitive array mappers
+    private void initPrimitiveArraysMappers() {
         MAPPER
                 .forType(boolean[].class)
-                .serializer(PrimitiveBooleanArrayJsonSerializer.class)
-                .deserializer(PrimitiveBooleanArrayJsonDeserializer.class)
+                .serializer(PrimitiveBooleanArrayXMLSerializer.class)
+                .deserializer(PrimitiveBooleanArrayXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(byte[].class)
-                .serializer(PrimitiveByteArrayJsonSerializer.class)
-                .deserializer(PrimitiveByteArrayJsonDeserializer.class)
+                .serializer(PrimitiveByteArrayXMLSerializer.class)
+                .deserializer(PrimitiveByteArrayXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(char[].class)
-                .serializer(PrimitiveCharacterArrayJsonSerializer.class)
-                .deserializer(PrimitiveCharacterArrayJsonDeserializer.class)
+                .serializer(PrimitiveCharacterArrayXMLSerializer.class)
+                .deserializer(PrimitiveCharacterArrayXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(double[].class)
-                .serializer(PrimitiveDoubleArrayJsonSerializer.class)
-                .deserializer(PrimitiveDoubleArrayJsonDeserializer.class)
+                .serializer(PrimitiveDoubleArrayXMLSerializer.class)
+                .deserializer(PrimitiveDoubleArrayXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(float[].class)
-                .serializer(PrimitiveFloatArrayJsonSerializer.class)
-                .deserializer(PrimitiveFloatArrayJsonDeserializer.class)
+                .serializer(PrimitiveFloatArrayXMLSerializer.class)
+                .deserializer(PrimitiveFloatArrayXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(int[].class)
-                .serializer(PrimitiveIntegerArrayJsonSerializer.class)
-                .deserializer(PrimitiveIntegerArrayJsonDeserializer.class)
+                .serializer(PrimitiveIntegerArrayXMLSerializer.class)
+                .deserializer(PrimitiveIntegerArrayXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(long[].class)
-                .serializer(PrimitiveLongArrayJsonSerializer.class)
-                .deserializer(PrimitiveLongArrayJsonDeserializer.class)
+                .serializer(PrimitiveLongArrayXMLSerializer.class)
+                .deserializer(PrimitiveLongArrayXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(short[].class)
-                .serializer(PrimitiveShortArrayJsonSerializer.class)
-                .deserializer(PrimitiveShortArrayJsonDeserializer.class)
+                .serializer(PrimitiveShortArrayXMLSerializer.class)
+                .deserializer(PrimitiveShortArrayXMLDeserializer.class)
                 .register(simpleTypes);
+    }
 
-        // Primitive 2D Array mappers
+    private void initPrimitive2DArraysMappers() {
         MAPPER
                 .forType(boolean[][].class)
-                .serializer(PrimitiveBooleanArray2dJsonSerializer.class)
-                .deserializer(PrimitiveBooleanArray2dJsonDeserializer.class)
+                .serializer(PrimitiveBooleanArray2dXMLSerializer.class)
+                .deserializer(PrimitiveBooleanArray2dXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(byte[][].class)
-                .serializer(PrimitiveByteArray2dJsonSerializer.class)
-                .deserializer(PrimitiveByteArray2dJsonDeserializer.class)
+                .serializer(PrimitiveByteArray2dXMLSerializer.class)
+                .deserializer(PrimitiveByteArray2dXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(char[][].class)
-                .serializer(PrimitiveCharacterArray2dJsonSerializer.class)
-                .deserializer(PrimitiveCharacterArray2dJsonDeserializer.class)
+                .serializer(PrimitiveCharacterArray2dXMLSerializer.class)
+                .deserializer(PrimitiveCharacterArray2dXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(double[][].class)
-                .serializer(PrimitiveDoubleArray2dJsonSerializer.class)
-                .deserializer(PrimitiveDoubleArray2dJsonDeserializer.class)
+                .serializer(PrimitiveDoubleArray2dXMLSerializer.class)
+                .deserializer(PrimitiveDoubleArray2dXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(float[][].class)
-                .serializer(PrimitiveFloatArray2dJsonSerializer.class)
-                .deserializer(PrimitiveFloatArray2dJsonDeserializer.class)
+                .serializer(PrimitiveFloatArray2dXMLSerializer.class)
+                .deserializer(PrimitiveFloatArray2dXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(int[][].class)
-                .serializer(PrimitiveIntegerArray2dJsonSerializer.class)
-                .deserializer(PrimitiveIntegerArray2dJsonDeserializer.class)
+                .serializer(PrimitiveIntegerArray2dXMLSerializer.class)
+                .deserializer(PrimitiveIntegerArray2dXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(long[][].class)
-                .serializer(PrimitiveLongArray2dJsonSerializer.class)
-                .deserializer(PrimitiveLongArray2dJsonDeserializer.class)
+                .serializer(PrimitiveLongArray2dXMLSerializer.class)
+                .deserializer(PrimitiveLongArray2dXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(short[][].class)
-                .serializer(PrimitiveShortArray2dJsonSerializer.class)
-                .deserializer(PrimitiveShortArray2dJsonDeserializer.class)
+                .serializer(PrimitiveShortArray2dXMLSerializer.class)
+                .deserializer(PrimitiveShortArray2dXMLDeserializer.class)
                 .register(simpleTypes);
 
         MAPPER
                 .forType(String[].class)
-                .serializer(ArrayJsonSerializer.class)
-                .deserializer(PrimitiveShortArray2dJsonDeserializer.class)
+                .serializer(ArrayXMLSerializer.class)
+                .deserializer(PrimitiveShortArray2dXMLDeserializer.class)
                 .register(simpleTypes);
         MAPPER
                 .forType(String[][].class)
-                .serializer(Array2dJsonSerializer.class)
-                .deserializer(Array2dJsonDeserializer.class)
+                .serializer(Array2dXMLSerializer.class)
+                .deserializer(Array2dXMLDeserializer.class)
                 .register(simpleTypes);
     }
 
-    // Map's key mappers
-    static {
-
+    private void initMapsKeyMappers() {
         MAPPER
                 .forType(Object.class)
                 .serializer(ObjectKeySerializer.class)
@@ -654,7 +775,6 @@ public final class TypeRegistry {
                 .deserializer(StringKeyDeserializer.class)
                 .register(keysMappers);
 
-
         MAPPER
                 .forType(UUID.class)
                 .serializer(UUIDKeySerializer.class)
@@ -662,84 +782,100 @@ public final class TypeRegistry {
                 .register(keysMappers);
     }
 
-    // Collections deserializers
-    static {
-
-        collectionsDeserializers.put(AbstractCollection.class.getCanonicalName(), AbstractCollectionJsonDeserializer.class);
-        collectionsDeserializers.put(AbstractList.class.getCanonicalName(), AbstractListJsonDeserializer.class);
-        collectionsDeserializers.put(AbstractQueue.class.getCanonicalName(), AbstractQueueJsonDeserializer.class);
-        collectionsDeserializers.put(AbstractSequentialList.class.getCanonicalName(), AbstractSequentialListJsonDeserializer.class);
-        collectionsDeserializers.put(AbstractSet.class.getCanonicalName(), AbstractSetJsonDeserializer.class);
-        collectionsDeserializers.put(ArrayList.class.getCanonicalName(), ArrayListJsonDeserializer.class);
-        collectionsDeserializers.put(Collection.class.getCanonicalName(), CollectionJsonDeserializer.class);
-        collectionsDeserializers.put(EnumSet.class.getCanonicalName(), EnumSetJsonDeserializer.class);
-        collectionsDeserializers.put(HashSet.class.getCanonicalName(), HashSetJsonDeserializer.class);
-        collectionsDeserializers.put(Iterable.class.getCanonicalName(), IterableJsonDeserializer.class);
-        collectionsDeserializers.put(LinkedHashSet.class.getCanonicalName(), LinkedHashSetJsonDeserializer.class);
-        collectionsDeserializers.put(LinkedList.class.getCanonicalName(), LinkedListJsonDeserializer.class);
-        collectionsDeserializers.put(List.class.getCanonicalName(), ListJsonDeserializer.class);
-        collectionsDeserializers.put(PriorityQueue.class.getCanonicalName(), PriorityQueueJsonDeserializer.class);
-        collectionsDeserializers.put(Queue.class.getCanonicalName(), QueueJsonDeserializer.class);
-        collectionsDeserializers.put(Set.class.getCanonicalName(), SetJsonDeserializer.class);
-        collectionsDeserializers.put(SortedSet.class.getCanonicalName(), SortedSetJsonDeserializer.class);
-        collectionsDeserializers.put(Stack.class.getCanonicalName(), StackJsonDeserializer.class);
-        collectionsDeserializers.put(TreeSet.class.getCanonicalName(), TreeSetJsonDeserializer.class);
-        collectionsDeserializers.put(Vector.class.getCanonicalName(), VectorJsonDeserializer.class);
-
+    private void initCollectionsDeserializersMappers() {
+        collectionsDeserializers.put(AbstractCollection.class.getCanonicalName(), AbstractCollectionXMLDeserializer.class);
+        collectionsDeserializers.put(AbstractList.class.getCanonicalName(), AbstractListXMLDeserializer.class);
+        collectionsDeserializers.put(AbstractQueue.class.getCanonicalName(), AbstractQueueXMLDeserializer.class);
+        collectionsDeserializers.put(AbstractSequentialList.class.getCanonicalName(), AbstractSequentialListXMLDeserializer.class);
+        collectionsDeserializers.put(AbstractSet.class.getCanonicalName(), AbstractSetXMLDeserializer.class);
+        collectionsDeserializers.put(ArrayList.class.getCanonicalName(), ArrayListXMLDeserializer.class);
+        collectionsDeserializers.put(Collection.class.getCanonicalName(), CollectionXMLDeserializer.class);
+        collectionsDeserializers.put(EnumSet.class.getCanonicalName(), EnumSetXMLDeserializer.class);
+        collectionsDeserializers.put(HashSet.class.getCanonicalName(), HashSetXMLDeserializer.class);
+        collectionsDeserializers.put(Iterable.class.getCanonicalName(), IterableXMLDeserializer.class);
+        collectionsDeserializers.put(LinkedHashSet.class.getCanonicalName(), LinkedHashSetXMLDeserializer.class);
+        collectionsDeserializers.put(LinkedList.class.getCanonicalName(), LinkedListXMLDeserializer.class);
+        collectionsDeserializers.put(List.class.getCanonicalName(), ListXMLDeserializer.class);
+        collectionsDeserializers.put(PriorityQueue.class.getCanonicalName(), PriorityQueueXMLDeserializer.class);
+        collectionsDeserializers.put(Queue.class.getCanonicalName(), QueueXMLDeserializer.class);
+        collectionsDeserializers.put(Set.class.getCanonicalName(), SetXMLDeserializer.class);
+        collectionsDeserializers.put(SortedSet.class.getCanonicalName(), SortedSetXMLDeserializer.class);
+        collectionsDeserializers.put(Stack.class.getCanonicalName(), StackXMLDeserializer.class);
+        collectionsDeserializers.put(TreeSet.class.getCanonicalName(), TreeSetXMLDeserializer.class);
+        collectionsDeserializers.put(Vector.class.getCanonicalName(), VectorXMLDeserializer.class);
     }
 
-    //Maps deserializers
-    static {
+    private void initMapsDeserializersMappers() {
+        mapDeserializers.put(Map.class.getName(), MapXMLDeserializer.class);
+        mapDeserializers.put(AbstractMap.class.getName(), AbstractMapXMLDeserializer.class);
+        mapDeserializers.put(EnumMap.class.getName(), EnumMapXMLDeserializer.class);
+        mapDeserializers.put(HashMap.class.getName(), HashMapXMLDeserializer.class);
+        mapDeserializers.put(IdentityHashMap.class.getName(), IdentityHashMapXMLDeserializer.class);
+        mapDeserializers.put(LinkedHashMap.class.getName(), LinkedHashMapXMLDeserializer.class);
+        mapDeserializers.put(SortedMap.class.getName(), SortedMapXMLDeserializer.class);
+        mapDeserializers.put(TreeMap.class.getName(), TreeMapXMLDeserializer.class);
+    }
 
-        mapDeserializers.put(Map.class.getName(), MapJsonDeserializer.class);
-        mapDeserializers.put(AbstractMap.class.getName(), AbstractMapJsonDeserializer.class);
-        mapDeserializers.put(EnumMap.class.getName(), EnumMapJsonDeserializer.class);
-        mapDeserializers.put(HashMap.class.getName(), HashMapJsonDeserializer.class);
-        mapDeserializers.put(IdentityHashMap.class.getName(), IdentityHashMapJsonDeserializer.class);
-        mapDeserializers.put(LinkedHashMap.class.getName(), LinkedHashMapJsonDeserializer.class);
-        mapDeserializers.put(SortedMap.class.getName(), SortedMapJsonDeserializer.class);
-        mapDeserializers.put(TreeMap.class.getName(), TreeMapJsonDeserializer.class);
+    public void addInActiveGenSerializer(TypeMirror typeMirror) {
+        inActiveGenSerializers.add(typeUtils.stringifyTypeWithPackage(typeMirror));
+    }
+
+    public void addInActiveGenDeserializer(TypeMirror typeMirror) {
+        inActiveGenDeserializers.add(typeUtils.stringifyTypeWithPackage(typeMirror));
+    }
+
+    public void removeInActiveGenSerializer(TypeMirror typeMirror) {
+        inActiveGenSerializers.remove(typeUtils.stringifyTypeWithPackage(typeMirror));
+    }
+
+    public void removeInActiveGenDeserializer(TypeMirror typeMirror) {
+        inActiveGenDeserializers.remove(typeUtils.stringifyTypeWithPackage(typeMirror));
+    }
+
+    public boolean isInActiveGenSerializer(TypeMirror typeMirror) {
+        return inActiveGenSerializers.contains(typeUtils.stringifyTypeWithPackage(typeMirror));
+    }
+
+    public boolean isInActiveGenDeserializer(TypeMirror typeMirror) {
+        return inActiveGenDeserializers.contains(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
     /**
      * <p>resetTypeRegistry</p>
-     * 
+     * <p>
      * Helper method to clean (reset) state of TypeRegistry. This action should be
      * performed on every APT run, since in some environments (such as Eclipse),
      * the processor is instantiated once and used multiple times. Without some cleanup
      * we may end up with some serializer/deserializers not generated due to TypeRegistry internal
-     * state saying that they already exists. 
+     * state saying that they already exists.
      */
-    public static void resetTypeRegistry() {
-    	customMappers.clear();
+    public void resetTypeRegistry() {
+        customMappers.clear();
     }
-    
+
     /**
      * <p>register.</p>
-     *
-     * @param mapper a {@link org.dominokit.jacksonapt.processor.TypeRegistry.ClassMapper} object.
+     * @param mapper a {@link TypeRegistry.ClassMapper} object.
      */
-    public static void register(ClassMapper mapper) {
+    public void register(ClassMapper mapper) {
         mapper.register(simpleTypes);
     }
 
     /**
      * <p>isBasicType.</p>
-     *
      * @param type a {@link String} object.
      * @return a boolean.
      */
-    public static boolean isBasicType(String type) {
+    public boolean isBasicType(String type) {
         return simpleTypes.containsKey(type);
     }
 
     /**
      * <p>registerSerializer.</p>
-     *
      * @param type a {@link String} object.
-     * @param serializer a {@link com.squareup.javapoet.TypeName} object.
+     * @param serializer a {@link TypeElement} object.
      */
-    public static void registerSerializer(String type, TypeName serializer) {
+    public void registerSerializer(String type, TypeElement serializer) {
         if (customMappers.containsKey(type)) {
             customMappers.get(type).serializer = serializer;
         } else {
@@ -751,11 +887,10 @@ public final class TypeRegistry {
 
     /**
      * <p>registerDeserializer.</p>
-     *
      * @param type a {@link String} object.
-     * @param deserializer a {@link com.squareup.javapoet.TypeName} object.
+     * @param deserializer a {@link TypeElement} object.
      */
-    public static void registerDeserializer(String type, TypeName deserializer) {
+    public void registerDeserializer(String type, TypeElement deserializer) {
         if (customMappers.containsKey(type)) {
             customMappers.get(type).deserializer = deserializer;
         } else {
@@ -767,207 +902,211 @@ public final class TypeRegistry {
 
     /**
      * <p>getCustomSerializer.</p>
-     *
      * @param typeMirror a {@link TypeMirror} object.
-     * @return a {@link com.squareup.javapoet.TypeName} object.
+     * @return a {@link TypeElement} object.
      */
-    public static TypeName getCustomSerializer(TypeMirror typeMirror) {
-        return getCustomSerializer(Type.stringifyTypeWithPackage(typeMirror));
+    public TypeElement getCustomSerializer(TypeMirror typeMirror) {
+        return getCustomSerializer(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
     /**
      * <p>getCustomSerializer.</p>
-     *
      * @param type a {@link String} object.
-     * @return a {@link com.squareup.javapoet.TypeName} object.
+     * @return a {@link TypeElement} object.
      */
-    public static TypeName getCustomSerializer(String type) {
-        if (containsSerializer(type))
+    public TypeElement getCustomSerializer(String type) {
+        if (containsSerializer(type)) {
             return customMappers.get(type).serializer;
+        }
         throw new TypeSerializerNotFoundException(type);
     }
 
-
     /**
-     * <p>getCustomDeserializer.</p>
-     *
-     * @param typeMirror a {@link TypeMirror} object.
-     * @return a {@link com.squareup.javapoet.TypeName} object.
+     * <p>containsSerializer.</p>
+     * @param typeName a {@link String} object.
+     * @return a boolean.
      */
-    public static TypeName getCustomDeserializer(TypeMirror typeMirror) {
-        return getCustomDeserializer(Type.stringifyTypeWithPackage(typeMirror));
+    public boolean containsSerializer(String typeName) {
+        return nonNull(customMappers.get(typeName)) && nonNull(customMappers.get(typeName).serializer);
     }
 
     /**
      * <p>getCustomDeserializer.</p>
-     *
-     * @param type a {@link String} object.
-     * @return a {@link com.squareup.javapoet.TypeName} object.
+     * @param typeMirror a {@link TypeMirror} object.
+     * @return a {@link TypeElement} object.
      */
-    public static TypeName getCustomDeserializer(String type) {
-        if (containsDeserializer(type))
+    public TypeElement getCustomDeserializer(TypeMirror typeMirror) {
+        return getCustomDeserializer(typeUtils.stringifyTypeWithPackage(typeMirror));
+    }
+
+    /**
+     * <p>getCustomDeserializer.</p>
+     * @param type a {@link String} object.
+     * @return a {@link TypeElement} object.
+     */
+    public TypeElement getCustomDeserializer(String type) {
+        if (containsDeserializer(type)) {
             return customMappers.get(type).deserializer;
+        }
         throw new TypeDeserializerNotFoundException(type);
     }
 
     /**
-     * <p>get.</p>
-     *
+     * <p>containsDeserializer.</p>
      * @param typeName a {@link String} object.
-     * @return a {@link org.dominokit.jacksonapt.processor.TypeRegistry.ClassMapper} object.
+     * @return a boolean.
      */
-    public static ClassMapper get(String typeName) {
-        return simpleTypes.get(typeName);
+    public boolean containsDeserializer(String typeName) {
+        return nonNull(customMappers.get(typeName)) && nonNull(customMappers.get(typeName).deserializer);
     }
 
     /**
      * <p>getSerializer.</p>
-     *
      * @param typeMirror a {@link TypeMirror} object.
-     * @return a {@link com.squareup.javapoet.TypeName} object.
+     * @return a {@link TypeElement} object.
      */
-    public static TypeName getSerializer(TypeMirror typeMirror) {
-        return getSerializer(Type.stringifyTypeWithPackage(typeMirror));
+    public TypeElement getSerializer(TypeMirror typeMirror) {
+        return getSerializer(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
-    private static TypeName getSerializer(String typeName) {
-        if (simpleTypes.containsKey(typeName))
+    private TypeElement getSerializer(String typeName) {
+        if (simpleTypes.containsKey(typeName)) {
             return get(typeName).serializer;
+        }
         throw new TypeSerializerNotFoundException(typeName);
     }
 
     /**
-     * <p>getKeySerializer.</p>
-     *
+     * <p>get.</p>
      * @param typeName a {@link String} object.
-     * @return a {@link com.squareup.javapoet.TypeName} object.
+     * @return a {@link TypeRegistry.ClassMapper} object.
      */
-    public static TypeName getKeySerializer(String typeName) {
-        if (keysMappers.containsKey(typeName))
+    public ClassMapper get(String typeName) {
+        return simpleTypes.get(typeName);
+    }
+
+    /**
+     * <p>getKeySerializer.</p>
+     * @param typeName a {@link String} object.
+     * @return a {@link TypeElement} object.
+     */
+    public TypeElement getKeySerializer(String typeName) {
+        if (keysMappers.containsKey(typeName)) {
             return keysMappers.get(typeName).serializer;
+        }
         throw new TypeSerializerNotFoundException(typeName);
     }
 
     /**
      * <p>getKeyDeserializer.</p>
-     *
      * @param typeName a {@link String} object.
-     * @return a {@link com.squareup.javapoet.TypeName} object.
+     * @return a {@link TypeElement} object.
      */
-    public static TypeName getKeyDeserializer(String typeName) {
-        if (keysMappers.containsKey(typeName))
+    public TypeElement getKeyDeserializer(String typeName) {
+        if (keysMappers.containsKey(typeName)) {
             return keysMappers.get(typeName).deserializer;
+        }
         throw new TypeDeserializerNotFoundException(typeName);
     }
 
     /**
      * <p>getDeserializer.</p>
-     *
      * @param typeMirror a {@link TypeMirror} object.
-     * @return a {@link com.squareup.javapoet.TypeName} object.
+     * @return a {@link TypeElement} object.
      */
-    public static TypeName getDeserializer(TypeMirror typeMirror) {
-        return getDeserializer(Type.stringifyTypeWithPackage(typeMirror));
+    public TypeElement getDeserializer(TypeMirror typeMirror) {
+        return getDeserializer(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
-    private static TypeName getDeserializer(String typeName) {
-        if (simpleTypes.containsKey(typeName))
+    private TypeElement getDeserializer(String typeName) {
+        if (simpleTypes.containsKey(typeName)) {
             return simpleTypes.get(typeName).deserializer;
+        }
         throw new TypeDeserializerNotFoundException(typeName);
     }
 
     /**
      * <p>getCollectionDeserializer.</p>
-     *
      * @param typeMirror a {@link TypeMirror} object.
      * @return a {@link Class} object.
      */
-    public static Class<?> getCollectionDeserializer(TypeMirror typeMirror) {
+    public Class<?> getCollectionDeserializer(TypeMirror typeMirror) {
         return getCollectionDeserializer(asNoneGeneric(typeMirror));
     }
 
-    private static String asNoneGeneric(TypeMirror type) {
-        return AbstractMapperProcessor.typeUtils.asElement(type).toString().replace("<E>", "");
+    private Class<?> getCollectionDeserializer(String collectionType) {
+        if (collectionsDeserializers.containsKey(collectionType)) {
+            return collectionsDeserializers.get(collectionType);
+        }
+        throw new TypeDeserializerNotFoundException(collectionType);
     }
 
-    private static Class<?> getCollectionDeserializer(String collectionType) {
-        if (collectionsDeserializers.containsKey(collectionType))
-            return collectionsDeserializers.get(collectionType);
-        throw new TypeDeserializerNotFoundException(collectionType);
+    private String asNoneGeneric(TypeMirror type) {
+        return types.asElement(type).toString().replace("<E>", "");
     }
 
     /**
      * <p>getMapDeserializer.</p>
-     *
      * @param typeMirror a {@link TypeMirror} object.
      * @return a {@link Class} object.
      */
-    public static Class<?> getMapDeserializer(TypeMirror typeMirror) {
+    public Class<?> getMapDeserializer(TypeMirror typeMirror) {
         return getMapDeserializer(asNoneGeneric(typeMirror));
     }
 
-
-    private static Class<?> getMapDeserializer(String mapType) {
-        if (mapDeserializers.containsKey(mapType))
+    private Class<?> getMapDeserializer(String mapType) {
+        if (mapDeserializers.containsKey(mapType)) {
             return mapDeserializers.get(mapType);
+        }
         throw new TypeDeserializerNotFoundException(mapType);
     }
 
     /**
-     * <p>containsDeserializer.</p>
-     *
-     * @param typeName a {@link String} object.
-     * @return a boolean.
-     */
-    public static boolean containsDeserializer(String typeName) {
-        return nonNull(customMappers.get(typeName)) && nonNull(customMappers.get(typeName).deserializer);
-    }
-
-    /**
      * <p>containsSerializer.</p>
-     *
-     * @param typeName a {@link String} object.
-     * @return a boolean.
-     */
-    public static boolean containsSerializer(String typeName) {
-        return nonNull(customMappers.get(typeName)) && nonNull(customMappers.get(typeName).serializer);
-    }
-
-    /**
-     * <p>containsSerializer.</p>
-     *
      * @param typeMirror a {@link TypeMirror} object.
      * @return a boolean.
      */
-    public static boolean containsSerializer(TypeMirror typeMirror) {
-        return containsSerializer(Type.stringifyTypeWithPackage(typeMirror));
+    public boolean containsSerializer(TypeMirror typeMirror) {
+        return containsSerializer(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
     /**
      * <p>containsDeserializer.</p>
-     *
      * @param typeMirror a {@link TypeMirror} object.
      * @return a boolean.
      */
-    public static boolean containsDeserializer(TypeMirror typeMirror) {
-        return containsDeserializer(Type.stringifyTypeWithPackage(typeMirror));
+    public boolean containsDeserializer(TypeMirror typeMirror) {
+        return containsDeserializer(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
+    private static class TypeSerializerNotFoundException extends RuntimeException {
 
-    static class ClassMapperFactory {
+        TypeSerializerNotFoundException(String typeName) {
+            super(typeName);
+        }
+    }
+
+    private static class TypeDeserializerNotFoundException extends RuntimeException {
+
+        TypeDeserializerNotFoundException(String typeName) {
+            super(typeName);
+        }
+    }
+
+    class ClassMapperFactory {
+
         ClassMapper forType(Class<?> clazz) {
             return new ClassMapper(clazz);
         }
     }
 
-
-    public static class ClassMapper {
+    public class ClassMapper {
 
         private final String clazz;
 
-        private TypeName serializer;
+        private TypeElement serializer;
 
-        private TypeName deserializer;
+        private TypeElement deserializer;
 
         private ClassMapper(Class clazz) {
             this.clazz = clazz.getCanonicalName();
@@ -978,21 +1117,21 @@ public final class TypeRegistry {
         }
 
         private ClassMapper serializer(Class serializer) {
-            this.serializer = TypeName.get(serializer);
+            this.serializer = elements.getTypeElement(serializer.getCanonicalName());
             return this;
         }
 
         private ClassMapper deserializer(Class deserializer) {
-            this.deserializer = TypeName.get(deserializer);
+            this.deserializer = elements.getTypeElement(deserializer.getCanonicalName());
             return this;
         }
 
-        private ClassMapper serializer(TypeName serializer) {
+        private ClassMapper serializer(TypeElement serializer) {
             this.serializer = serializer;
             return this;
         }
 
-        private ClassMapper deserializer(TypeName deserializer) {
+        private ClassMapper deserializer(TypeElement deserializer) {
             this.deserializer = deserializer;
             return this;
         }
@@ -1000,42 +1139,6 @@ public final class TypeRegistry {
         private ClassMapper register(Map<String, ClassMapper> registry) {
             registry.put(this.clazz, this);
             return this;
-        }
-    }
-
-    public static void addInActiveGenSerializer(TypeMirror typeMirror){
-        inActiveGenSerializers.add(Type.stringifyTypeWithPackage(typeMirror));
-    }
-
-    public static void addInActiveGenDeserializer(TypeMirror typeMirror){
-        inActiveGenDeserializers.add(Type.stringifyTypeWithPackage(typeMirror));
-    }
-
-    public static void removeInActiveGenSerializer(TypeMirror typeMirror){
-        inActiveGenSerializers.remove(Type.stringifyTypeWithPackage(typeMirror));
-    }
-
-    public static void removeInActiveGenDeserializer(TypeMirror typeMirror){
-        inActiveGenDeserializers.remove(Type.stringifyTypeWithPackage(typeMirror));
-    }
-
-    public static boolean isInActiveGenSerializer(TypeMirror typeMirror){
-        return inActiveGenSerializers.contains(Type.stringifyTypeWithPackage(typeMirror));
-    }
-
-    public static boolean isInActiveGenDeserializer(TypeMirror typeMirror){
-        return inActiveGenDeserializers.contains(Type.stringifyTypeWithPackage(typeMirror));
-    }
-
-    private static class TypeSerializerNotFoundException extends RuntimeException {
-        TypeSerializerNotFoundException(String typeName) {
-            super(typeName);
-        }
-    }
-
-    private static class TypeDeserializerNotFoundException extends RuntimeException {
-        TypeDeserializerNotFoundException(String typeName) {
-            super(typeName);
         }
     }
 }

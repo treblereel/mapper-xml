@@ -27,14 +27,14 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  * @author Nicolas Morel
  * @version $Id: $
  */
-public abstract class AbstractValueBeanJsonSerializer<T> extends AbstractBeanJsonSerializer<T> {
+public abstract class AbstractValueBeanXMLSerializer<T> extends AbstractBeanXMLSerializer<T> {
 
     private final BeanPropertySerializer<T, ?> serializer;
 
     /**
      * <p>Constructor for AbstractValueBeanJsonSerializer.</p>
      */
-    protected AbstractValueBeanJsonSerializer() {
+    protected AbstractValueBeanXMLSerializer() {
         super();
         this.serializer = initValueSerializer();
     }

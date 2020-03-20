@@ -30,11 +30,11 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 public abstract class SubtypeSerializer<T, S extends XMLSerializer<T>> extends HasSerializer<T, S> implements InternalSerializer<T> {
 
     /**
-     * Delegate the serialization of a subtype to a corresponding {@link AbstractBeanJsonSerializer}
+     * Delegate the serialization of a subtype to a corresponding {@link AbstractBeanXMLSerializer}
      *
      * @author Nicolas Morel
      */
-    public abstract static class BeanSubtypeSerializer<T> extends SubtypeSerializer<T, AbstractBeanJsonSerializer<T>> {
+    public abstract static class BeanSubtypeSerializer<T> extends SubtypeSerializer<T, AbstractBeanXMLSerializer<T>> {
 
         @Override
         public void serializeInternally(XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters params,

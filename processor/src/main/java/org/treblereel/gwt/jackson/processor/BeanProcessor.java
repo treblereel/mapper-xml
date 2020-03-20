@@ -4,20 +4,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.ElementFilter;
 
 import com.google.auto.common.MoreElements;
-import com.google.auto.common.MoreTypes;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.context.GenerationContext;
+import org.treblereel.gwt.jackson.deserializer.DeserializerGenerator;
 import org.treblereel.gwt.jackson.exception.GenerationException;
+import org.treblereel.gwt.jackson.generator.MapperGenerator;
 import org.treblereel.gwt.jackson.logger.TreeLogger;
+import org.treblereel.gwt.jackson.serializer.SerializerGenerator;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -30,23 +30,36 @@ public class BeanProcessor {
     private final Set<TypeElement> annotatedBeans;
     private final Set<TypeElement> beans = new HashSet<>();
     private final TypeUtils typeUtils;
+    private final DeserializerGenerator deserializerGenerator;
+    private final SerializerGenerator serializerGenerator;
+    private final MapperGenerator mapperGenerator;
 
     public BeanProcessor(GenerationContext context, TreeLogger logger, Set<TypeElement> annotatedBeans) {
         this.context = context;
         this.logger = logger;
         this.annotatedBeans = annotatedBeans;
         this.typeUtils = context.getTypeUtils();
+        this.deserializerGenerator = new DeserializerGenerator(context, logger);
+        this.serializerGenerator = new SerializerGenerator(context, logger);
+        this.mapperGenerator = new MapperGenerator(context, logger);
     }
 
     public void process() {
         annotatedBeans.forEach(bean -> {
-            logger.log(TreeLogger.INFO, "BEAN " + bean);
             processBean(bean);
         });
 
         beans.forEach(b -> {
-            System.out.println(" registred " + b);
+            serializerGenerator.generate(b);
+        });
 
+        beans.forEach(b -> {
+            deserializerGenerator.generate(b);
+        });
+
+        //TODO call generators from mapperGenerator
+        beans.forEach(b -> {
+            mapperGenerator.generate(b);
         });
     }
 
@@ -64,7 +77,8 @@ public class BeanProcessor {
 
     private void processField(VariableElement field) {
         checkField(field);
-        if(context.getTypeRegistry().get(field.asType().toString()) == null) {
+        if (context.getTypeRegistry().get(context.getProcessingEnv()
+                                                  .getTypeUtils().erasure(field.asType()).toString()) == null) {
             processBean(typeUtils.toTypeElement(field.asType()));
         }
     }

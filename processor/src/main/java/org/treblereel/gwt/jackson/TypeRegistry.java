@@ -194,13 +194,12 @@ public final class TypeRegistry {
     final ClassMapperFactory MAPPER = new ClassMapperFactory();
     private final Types types;
     private final Elements elements;
-    private final GenerationContext context;
-
+    private final TypeUtils typeUtils;
 
     public TypeRegistry(GenerationContext context) {
         this.types = context.getProcessingEnv().getTypeUtils();
         this.elements = context.getProcessingEnv().getElementUtils();
-        this.context = context;
+        this.typeUtils = context.getTypeUtils();
 
         initBasicMappers();
         initCommonMappers();
@@ -818,27 +817,27 @@ public final class TypeRegistry {
     }
 
     public void addInActiveGenSerializer(TypeMirror typeMirror) {
-        inActiveGenSerializers.add(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+        inActiveGenSerializers.add(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
     public void addInActiveGenDeserializer(TypeMirror typeMirror) {
-        inActiveGenDeserializers.add(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+        inActiveGenDeserializers.add(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
     public void removeInActiveGenSerializer(TypeMirror typeMirror) {
-        inActiveGenSerializers.remove(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+        inActiveGenSerializers.remove(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
     public void removeInActiveGenDeserializer(TypeMirror typeMirror) {
-        inActiveGenDeserializers.remove(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+        inActiveGenDeserializers.remove(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
     public boolean isInActiveGenSerializer(TypeMirror typeMirror) {
-        return inActiveGenSerializers.contains(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+        return inActiveGenSerializers.contains(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
     public boolean isInActiveGenDeserializer(TypeMirror typeMirror) {
-        return inActiveGenDeserializers.contains(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+        return inActiveGenDeserializers.contains(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
     /**
@@ -907,7 +906,7 @@ public final class TypeRegistry {
      * @return a {@link TypeElement} object.
      */
     public TypeElement getCustomSerializer(TypeMirror typeMirror) {
-        return getCustomSerializer(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+        return getCustomSerializer(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
     /**
@@ -937,7 +936,7 @@ public final class TypeRegistry {
      * @return a {@link TypeElement} object.
      */
     public TypeElement getCustomDeserializer(TypeMirror typeMirror) {
-        return getCustomDeserializer(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+        return getCustomDeserializer(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
     /**
@@ -967,7 +966,7 @@ public final class TypeRegistry {
      * @return a {@link TypeElement} object.
      */
     public TypeElement getSerializer(TypeMirror typeMirror) {
-        return getSerializer(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+        return getSerializer(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
     private TypeElement getSerializer(String typeName) {
@@ -1016,7 +1015,7 @@ public final class TypeRegistry {
      * @return a {@link TypeElement} object.
      */
     public TypeElement getDeserializer(TypeMirror typeMirror) {
-        return getDeserializer(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+        return getDeserializer(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
     private TypeElement getDeserializer(String typeName) {
@@ -1068,7 +1067,7 @@ public final class TypeRegistry {
      * @return a boolean.
      */
     public boolean containsSerializer(TypeMirror typeMirror) {
-        return containsSerializer(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+        return containsSerializer(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
     /**
@@ -1077,7 +1076,7 @@ public final class TypeRegistry {
      * @return a boolean.
      */
     public boolean containsDeserializer(TypeMirror typeMirror) {
-        return containsDeserializer(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+        return containsDeserializer(typeUtils.stringifyTypeWithPackage(typeMirror));
     }
 
     private static class TypeSerializerNotFoundException extends RuntimeException {

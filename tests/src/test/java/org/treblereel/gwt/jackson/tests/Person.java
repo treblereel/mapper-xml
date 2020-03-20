@@ -1,7 +1,5 @@
 package org.treblereel.gwt.jackson.tests;
 
-import java.util.List;
-
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
 /**
@@ -15,8 +13,6 @@ public class Person {
     private String lastName;
 
     private Address address;
-
-    private List<Person> childs;
 
     public String getFirstName() {
         return firstName;
@@ -49,13 +45,5 @@ public class Person {
                 ", lastName='" + lastName + '\'' +
                 ", address=" + address +
                 '}';
-    }
-
-    public List<Person> getChilds() {
-        return childs;
-    }
-
-    public void setChilds(List<Person> childs) {
-        this.childs = childs;
     }
 }

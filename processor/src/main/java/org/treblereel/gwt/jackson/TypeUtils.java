@@ -45,6 +45,7 @@ import javax.lang.model.util.Types;
 
 import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
+import com.squareup.javapoet.TypeName;
 import org.apache.commons.lang3.StringUtils;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 import org.treblereel.gwt.jackson.context.GenerationContext;
@@ -75,10 +76,12 @@ public class TypeUtils {
     private final Elements elements;
     private final TypeRegistry typeRegistry;
 
+
     public TypeUtils(GenerationContext context) {
         this.types = context.getProcessingEnv().getTypeUtils();
         this.elements = context.getProcessingEnv().getElementUtils();
         this.typeRegistry = context.getTypeRegistry();
+
     }
 
     /**
@@ -86,29 +89,31 @@ public class TypeUtils {
      * @param type a {@link TypeMirror} object.
      * @return a {@link com.squareup.javapoet.TypeName} object.
      */
-    public static String wrapperType(TypeMirror type) {
+    public static TypeName wrapperType(TypeMirror type) {
         if (isPrimitive(type)) {
             if ("boolean".equals(type.toString())) {
-                return Boolean.class.getSimpleName();
+
+
+                return TypeName.get(Boolean.class);
             } else if ("byte".equals(type.toString())) {
-                return Byte.class.getSimpleName();
+                return TypeName.get(Byte.class);
             } else if ("short".equals(type.toString())) {
-                return Short.class.getSimpleName();
+                return TypeName.get(Short.class);
             } else if ("int".equals(type.toString())) {
-                return Integer.class.getSimpleName();
+                return TypeName.get(Integer.class);
             } else if ("long".equals(type.toString())) {
-                return Long.class.getSimpleName();
+                return TypeName.get(Long.class);
             } else if ("char".equals(type.toString())) {
-                return Character.class.getSimpleName();
+                return TypeName.get(Character.class);
             } else if ("float".equals(type.toString())) {
-                return Float.class.getSimpleName();
+                return TypeName.get(Float.class);
             } else if ("double".equals(type.toString())) {
-                return Double.class.getSimpleName();
+                return TypeName.get(Double.class);
             } else {
-                return Void.class.getSimpleName();
+                return TypeName.get(Void.class);
             }
         } else {
-            return MoreTypes.asElement(type).toString();
+            return TypeName.get(type);
         }
     }
 
@@ -179,6 +184,47 @@ public class TypeUtils {
     }
 
     /**
+     * <p>isCollection.</p>
+     * @param typeMirror a {@link TypeMirror} object.
+     * @return a boolean.
+     */
+    public boolean isCollection(TypeMirror typeMirror) {
+        return !TypeUtils.isPrimitive(typeMirror) && isAssignableFrom(typeMirror, Collection.class);
+    }
+
+    /**
+     * <p>isIterable.</p>
+     * @param typeMirror a {@link TypeMirror} object.
+     * @return a boolean.
+     */
+    public boolean isIterable(TypeMirror typeMirror) {
+        return !TypeUtils.isPrimitive(typeMirror) && isAssignableFrom(typeMirror, Iterable.class);
+    }
+
+    /**
+     * <p>isAssignableFrom.</p>
+     * @param typeMirror a {@link TypeMirror} object.
+     * @param targetClass a {@link Class} object.
+     * @return a boolean.
+     */
+    public boolean isAssignableFrom(TypeMirror typeMirror, Class<?> targetClass) {
+        return types.isAssignable(typeMirror, types.getDeclaredType(elements.getTypeElement(targetClass.getCanonicalName())));
+    }
+
+    public boolean isAssignableFrom(Element element, Class<?> targetClass) {
+        return types.isAssignable(element.asType(), types.getDeclaredType(elements.getTypeElement(targetClass.getCanonicalName())));
+    }
+
+    /**
+     * <p>isMap.</p>
+     * @param typeMirror a {@link TypeMirror} object.
+     * @return a boolean.
+     */
+    public boolean isMap(TypeMirror typeMirror) {
+        return !TypeUtils.isPrimitive(typeMirror) && isAssignableFrom(typeMirror, Map.class);
+    }
+
+    /**
      * <p>firstTypeArgument.</p>
      * @param typeMirror a {@link TypeMirror} object.
      * @return a {@link TypeMirror} object.
@@ -194,6 +240,162 @@ public class TypeUtils {
      */
     public static TypeMirror secondTypeArgument(TypeMirror typeMirror) {
         return ((DeclaredType) typeMirror).getTypeArguments().get(SECOND_ARGUMENT);
+    }
+
+    /**
+     * <p>isBasicType.</p>
+     * @param typeMirror a {@link TypeMirror} object.
+     * @return a boolean.
+     */
+    public  boolean isBasicType(TypeMirror typeMirror) {
+        return typeRegistry.isBasicType(stringifyTypeWithPackage(typeMirror));
+    }
+
+    /**
+     * Stringify given TypeMirror including generic arguments and append package name
+     * @param type a {@link TypeMirror} object
+     * @return a {@link String} containing string representation of given TypeMirror
+     */
+    public String stringifyTypeWithPackage(TypeMirror type) {
+        return stringifyType(type, true);
+    }
+
+    private String stringifyType(TypeMirror type, boolean appendPackage) {
+        return
+                (appendPackage ?
+                        !getPackage(type).isEmpty() ? getPackage(type) + "." : ""
+                        : "")
+                        + type.accept(new SimpleTypeVisitor8<String, Void>() {
+                                          @Override
+                                          public String visitPrimitive(PrimitiveType t, Void p) {
+                                              return t.toString();
+                                          }
+
+                                          @Override
+                                          public String visitArray(ArrayType t, Void p) {
+                                              return visit(t.getComponentType(), p) + "[]";
+                                          }
+
+                                          @Override
+                                          public String visitDeclared(DeclaredType t, Void p) {
+                                              return
+                                                      t.asElement().getSimpleName()
+                                                              + ((!t.getTypeArguments().isEmpty()) ?
+                                                              "_" + t.getTypeArguments().stream().map(type -> visit(type, p)).collect(Collectors.joining("_"))
+                                                              : "");
+                                          }
+
+                                          @Override
+                                          public String visitTypeVariable(TypeVariable t, Void p) {
+                                              return t.toString();
+                                          }
+
+                                          @Override
+                                          public String visitWildcard(WildcardType t, Void p) {
+                                              return
+                                                      (t.getExtendsBound() != null) ?
+                                                              "extends_" + visit(t.getExtendsBound(), p)
+                                                              : (t.getSuperBound() != null) ?
+                                                              "super_" + visit(t.getSuperBound(), p)
+                                                              : "";
+                                          }
+                                      },
+                                      null);
+    }
+
+    /**
+     * Returns package name of given TypeMirror as String.
+     * For primitive types, returns emtpy string
+     * @param typeMirror a {@link TypeMirror} object.
+     * @return a {@link String} object.
+     */
+    public String getPackage(TypeMirror typeMirror) {
+        return types.asElement(types.erasure(typeMirror)) != null ?
+                elements.getPackageOf(types.asElement(types.erasure(typeMirror))).toString() : "";
+    }
+
+    /**
+     * <p>simpleName.</p>
+     * @param typeMirror a {@link TypeMirror} object.
+     * @return a {@link Name} object.
+     */
+    public Name simpleName(TypeMirror typeMirror) {
+        return types.asElement(typeMirror).getSimpleName();
+    }
+
+    /**
+     * Create serializer name for given packageName and beanType.
+     * Package name for corresponding serializer is prepended to the result.
+     * @param packageName a {@link String} object.
+     * @param beanType {@link TypeMirror} object
+     * @return fully-qualified serializer class name
+     */
+    public String serializerName(String packageName, TypeMirror beanType) {
+        return packageName + "." + stringifyType(beanType) + BEAN_XML_SERIALIZER_IMPL;
+    }
+
+    /**
+     * Stringify given TypeMirror including generic arguments. Package of
+     * the TypeMirror is not prepended to the result.
+     * @param type a {@link TypeMirror} object
+     * @return a {@link String} containing string representation of given TypeMirror
+     */
+    public String stringifyType(TypeMirror type) {
+        return stringifyType(type, false);
+    }
+
+    /**
+     * Returns deserializer name for given typeMirror. Package name for
+     * corresponding deserializer is prepended to the result.
+     * @param packageName a {@link String} object.
+     * @param beanType a {@link TypeMirror} object
+     * @return fully qualified deserializer name
+     */
+    public String deserializerName(String packageName, TypeMirror beanType) {
+        return packageName + "." + stringifyType(beanType) + BEAN_XML_DESERIALIZER_IMPL;
+    }
+
+    /**
+     * If given type is bounded wildcard, remove the wildcard and returns extends bound
+     * if exists. If extends bounds is non existing - return the super bound.
+     * <p>
+     * <p>
+     * If given type is not wildcard, returns type.
+     * @param type TypeMirror to be processed
+     * @return extends or super bounds for given wildcard type
+     */
+    public TypeMirror removeOuterWildCards(TypeMirror type) {
+        return type.accept(new SimpleTypeVisitor8<TypeMirror, Void>() {
+            @Override
+            public TypeMirror visitPrimitive(PrimitiveType t, Void p) {
+                return t;
+            }
+
+            @Override
+            public TypeMirror visitArray(ArrayType t, Void p) {
+                return types.getArrayType(visit(t.getComponentType(), p));
+            }
+
+            @Override
+            public TypeMirror visitDeclared(DeclaredType t, Void p) {
+                return t;
+            }
+
+            @Override
+            public TypeMirror visitTypeVariable(TypeVariable t, Void p) {
+                return t;
+            }
+
+            @Override
+            public TypeMirror visitWildcard(WildcardType t, Void p) {
+                return
+                        t.getExtendsBound() != null ?
+                                visit(t.getExtendsBound(), p)
+                                : t.getSuperBound() != null ?
+                                visit(t.getSuperBound(), p)
+                                : types.getDeclaredType(elements.getTypeElement(Object.class.getName()));
+            }
+        }, null);
     }
 
     /**
@@ -345,254 +547,6 @@ public class TypeUtils {
     }
 
     /**
-     * Check if given type has type argument containing unbounded wildcard
-     * @param type{@link javax.lang.model.type.TypeMirror} to be checked
-     * @return true if given type has type argument containing unbounded wildcard
-     */
-    public static boolean hasUnboundedWildcards(TypeMirror type) {
-        return type.accept(new SimpleTypeVisitor8<Boolean, Void>() {
-            @Override
-            public Boolean visitPrimitive(PrimitiveType t, Void p) {
-                return false;
-            }
-
-            @Override
-            public Boolean visitArray(ArrayType t, Void p) {
-                return visit(t.getComponentType(), p);
-            }
-
-            @Override
-            public Boolean visitDeclared(DeclaredType t, Void p) {
-                return t.getTypeArguments().stream()
-                        .map(typeArg -> visit(typeArg, p))
-                        .filter(b -> b)
-                        .findFirst()
-                        .orElse(false);
-            }
-
-            @Override
-            public Boolean visitTypeVariable(TypeVariable t, Void p) {
-                return false;
-            }
-
-            @Override
-            public Boolean visitWildcard(WildcardType t, Void p) {
-                return
-                        t.getExtendsBound() != null ?
-                                visit(t.getExtendsBound(), p)
-                                : t.getSuperBound() != null ?
-                                visit(t.getSuperBound(), p)
-                                : true;
-            }
-        }, null);
-    }
-
-    /**
-     * <p>isCollection.</p>
-     * @param typeMirror a {@link TypeMirror} object.
-     * @return a boolean.
-     */
-    public boolean isCollection(TypeMirror typeMirror) {
-        return !TypeUtils.isPrimitive(typeMirror) && isAssignableFrom(typeMirror, Collection.class);
-    }
-
-    /**
-     * <p>isIterable.</p>
-     * @param typeMirror a {@link TypeMirror} object.
-     * @return a boolean.
-     */
-    public boolean isIterable(TypeMirror typeMirror) {
-        return !TypeUtils.isPrimitive(typeMirror) && isAssignableFrom(typeMirror, Iterable.class);
-    }
-
-    /**
-     * <p>isAssignableFrom.</p>
-     * @param typeMirror a {@link TypeMirror} object.
-     * @param targetClass a {@link Class} object.
-     * @return a boolean.
-     */
-    public boolean isAssignableFrom(TypeMirror typeMirror, Class<?> targetClass) {
-        return types.isAssignable(typeMirror, types.getDeclaredType(elements.getTypeElement(targetClass.getCanonicalName())));
-    }
-
-    public boolean isAssignableFrom(Element element, Class<?> targetClass) {
-        return types.isAssignable(element.asType(), types.getDeclaredType(elements.getTypeElement(targetClass.getCanonicalName())));
-    }
-
-    /**
-     * <p>isMap.</p>
-     * @param typeMirror a {@link TypeMirror} object.
-     * @return a boolean.
-     */
-    public boolean isMap(TypeMirror typeMirror) {
-        return !TypeUtils.isPrimitive(typeMirror) && isAssignableFrom(typeMirror, Map.class);
-    }
-
-    /**
-     * <p>isBasicType.</p>
-     * @param typeMirror a {@link TypeMirror} object.
-     * @return a boolean.
-     */
-    public boolean isBasicType(TypeMirror typeMirror) {
-        return typeRegistry.isBasicType(stringifyTypeWithPackage(typeMirror));
-    }
-
-    /**
-     * Stringify given TypeMirror including generic arguments and append package name
-     * @param type a {@link TypeMirror} object
-     * @return a {@link String} containing string representation of given TypeMirror
-     */
-    public String stringifyTypeWithPackage(TypeMirror type) {
-        return stringifyType(type, true);
-    }
-
-    private String stringifyType(TypeMirror type, boolean appendPackage) {
-        return
-                (appendPackage ?
-                        !getPackage(type).isEmpty() ? getPackage(type) + "." : ""
-                        : "")
-                        + type.accept(new SimpleTypeVisitor8<String, Void>() {
-                                          @Override
-                                          public String visitPrimitive(PrimitiveType t, Void p) {
-                                              return t.toString();
-                                          }
-
-                                          @Override
-                                          public String visitArray(ArrayType t, Void p) {
-                                              return visit(t.getComponentType(), p) + "[]";
-                                          }
-
-                                          @Override
-                                          public String visitDeclared(DeclaredType t, Void p) {
-                                              return
-                                                      t.asElement().getSimpleName()
-                                                              + ((!t.getTypeArguments().isEmpty()) ?
-                                                              "_" + t.getTypeArguments().stream().map(type -> visit(type, p)).collect(Collectors.joining("_"))
-                                                              : "");
-                                          }
-
-                                          @Override
-                                          public String visitTypeVariable(TypeVariable t, Void p) {
-                                              return t.toString();
-                                          }
-
-                                          @Override
-                                          public String visitWildcard(WildcardType t, Void p) {
-                                              return
-                                                      (t.getExtendsBound() != null) ?
-                                                              "extends_" + visit(t.getExtendsBound(), p)
-                                                              : (t.getSuperBound() != null) ?
-                                                              "super_" + visit(t.getSuperBound(), p)
-                                                              : "";
-                                          }
-                                      },
-                                      null);
-    }
-
-    /**
-     * Returns package name of given TypeMirror as String.
-     * For primitive types, returns emtpy string
-     * @param typeMirror a {@link TypeMirror} object.
-     * @return a {@link String} object.
-     */
-    public String getPackage(TypeMirror typeMirror) {
-        return types.asElement(types.erasure(typeMirror)) != null ?
-                elements.getPackageOf(types.asElement(types.erasure(typeMirror))).toString() : "";
-    }
-
-    /**
-     * <p>simpleName.</p>
-     * @param typeMirror a {@link TypeMirror} object.
-     * @return a {@link Name} object.
-     */
-    public Name simpleName(TypeMirror typeMirror) {
-        return types.asElement(typeMirror).getSimpleName();
-    }
-
-    /**
-     * Create serializer name for given packageName and beanType.
-     * Package name for corresponding serializer is prepended to the result.
-     * @param packageName a {@link String} object.
-     * @param beanType {@link TypeMirror} object
-     * @return fully-qualified serializer class name
-     */
-    public String canonicalSerializerName(String packageName, TypeMirror beanType) {
-        return packageName + "." + serializerName(beanType);
-    }
-
-    public String serializerName(TypeMirror beanType) {
-        return stringifyType(beanType) + BEAN_XML_SERIALIZER_IMPL;
-    }
-
-    /**
-     * Stringify given TypeMirror including generic arguments. Package of
-     * the TypeMirror is not prepended to the result.
-     * @param type a {@link TypeMirror} object
-     * @return a {@link String} containing string representation of given TypeMirror
-     */
-    public String stringifyType(TypeMirror type) {
-        return stringifyType(type, false);
-    }
-
-    /**
-     * Returns deserializer name for given typeMirror. Package name for
-     * corresponding deserializer is prepended to the result.
-     * @param packageName a {@link String} object.
-     * @param beanType a {@link TypeMirror} object
-     * @return fully qualified deserializer name
-     */
-    public String canonicalDeserializerName(String packageName, TypeMirror beanType) {
-        return packageName + "." + deserializerName(beanType);
-    }
-
-    public String deserializerName(TypeMirror beanType) {
-        return stringifyType(beanType) + BEAN_XML_DESERIALIZER_IMPL;
-    }
-
-    /**
-     * If given type is bounded wildcard, remove the wildcard and returns extends bound
-     * if exists. If extends bounds is non existing - return the super bound.
-     * <p>
-     * <p>
-     * If given type is not wildcard, returns type.
-     * @param type TypeMirror to be processed
-     * @return extends or super bounds for given wildcard type
-     */
-    public TypeMirror removeOuterWildCards(TypeMirror type) {
-        return type.accept(new SimpleTypeVisitor8<TypeMirror, Void>() {
-            @Override
-            public TypeMirror visitPrimitive(PrimitiveType t, Void p) {
-                return t;
-            }
-
-            @Override
-            public TypeMirror visitArray(ArrayType t, Void p) {
-                return types.getArrayType(visit(t.getComponentType(), p));
-            }
-
-            @Override
-            public TypeMirror visitDeclared(DeclaredType t, Void p) {
-                return t;
-            }
-
-            @Override
-            public TypeMirror visitTypeVariable(TypeVariable t, Void p) {
-                return t;
-            }
-
-            @Override
-            public TypeMirror visitWildcard(WildcardType t, Void p) {
-                return
-                        t.getExtendsBound() != null ?
-                                visit(t.getExtendsBound(), p)
-                                : t.getSuperBound() != null ?
-                                visit(t.getSuperBound(), p)
-                                : types.getDeclaredType(elements.getTypeElement(Object.class.getName()));
-            }
-        }, null);
-    }
-
-    /**
      * Create TypeMirror for given generic type, with type parameters replaced by actual type arguments,
      * specified in parametersToArgumentsMap
      * @param type TypeMirror to be processed
@@ -632,6 +586,49 @@ public class TypeUtils {
                         (t.getSuperBound() != null) ?
                                 visit(t.getSuperBound(), p)
                                 : null);
+            }
+        }, null);
+    }
+
+    /**
+     * Check if given type has type argument containing unbounded wildcard
+     * @param type{@link javax.lang.model.type.TypeMirror} to be checked
+     * @return true if given type has type argument containing unbounded wildcard
+     */
+    public static boolean hasUnboundedWildcards(TypeMirror type) {
+        return type.accept(new SimpleTypeVisitor8<Boolean, Void>() {
+            @Override
+            public Boolean visitPrimitive(PrimitiveType t, Void p) {
+                return false;
+            }
+
+            @Override
+            public Boolean visitArray(ArrayType t, Void p) {
+                return visit(t.getComponentType(), p);
+            }
+
+            @Override
+            public Boolean visitDeclared(DeclaredType t, Void p) {
+                return t.getTypeArguments().stream()
+                        .map(typeArg -> visit(typeArg, p))
+                        .filter(b -> b)
+                        .findFirst()
+                        .orElse(false);
+            }
+
+            @Override
+            public Boolean visitTypeVariable(TypeVariable t, Void p) {
+                return false;
+            }
+
+            @Override
+            public Boolean visitWildcard(WildcardType t, Void p) {
+                return
+                        t.getExtendsBound() != null ?
+                                visit(t.getExtendsBound(), p)
+                                : t.getSuperBound() != null ?
+                                visit(t.getSuperBound(), p)
+                                : true;
             }
         }, null);
     }
@@ -738,6 +735,10 @@ public class TypeUtils {
         return getGetter(variable) != null;
     }
 
+    public boolean hasSetter(VariableElement variable) {
+        return getSetter(variable) != null;
+    }
+
     public ExecutableElement getGetter(VariableElement variable) {
         String method = compileGetterMethodName(variable);
         return MoreElements.asType(variable.getEnclosingElement())
@@ -749,37 +750,18 @@ public class TypeUtils {
                 .filter(e -> !e.getModifiers().contains(Modifier.STATIC))
                 .map(elm -> MoreElements.asExecutable(elm))
                 .filter(elm -> elm.getParameters().isEmpty())
-                .filter(elm -> types.isSameType(elm.getReturnType(), variable.asType()))
+                .filter(elm -> elm.getReturnType().equals(variable.asType()))
                 .findFirst()
                 .orElseThrow(() -> new GenerationException(String.format("Unable to find suitable getter [%s] in [%s]", method, variable.getEnclosingElement())));
-    }
-
-    public String compileGetterMethodName(VariableElement variable) {
-        String varName = variable.getSimpleName().toString();
-        return (isBoolean(variable) ? "is" : "get") + StringUtils.capitalize(varName) + "()";
     }
 
     public boolean isBoolean(VariableElement variable) {
         return variable.getKind().equals(TypeKind.BOOLEAN);
     }
 
-    public boolean hasSetter(VariableElement variable) {
-        return getSetter(variable) != null;
-    }
-
-    private ExecutableElement getSetter(VariableElement variable) {
-        String method = compileSetterMethodName(variable);
-        return MoreElements.asType(variable.getEnclosingElement())
-                .getEnclosedElements().stream()
-                .filter(e -> e.getKind().equals(ElementKind.METHOD))
-                .filter(e -> e.toString().equals(method))
-                .filter(e -> e.getModifiers().contains(Modifier.PUBLIC))
-                .filter(e -> !e.getModifiers().contains(Modifier.STATIC))
-                .map(elm -> MoreElements.asExecutable(elm))
-                .filter(elm -> elm.getParameters().size() == 1)
-                .filter(elm -> types.isSameType(elm.getParameters().get(0).asType(), variable.asType()))
-                .findFirst()
-                .orElseThrow(() -> new GenerationException(String.format("Unable to find suitable setter [%s] in [%s]", method, variable.getEnclosingElement())));
+    public String compileGetterMethodName(VariableElement variable) {
+        String varName = variable.getSimpleName().toString();
+        return (isBoolean(variable) ? "is" : "get") + StringUtils.capitalize(varName) + "()";
     }
 
     private String compileSetterMethodName(VariableElement variable) {
@@ -793,11 +775,26 @@ public class TypeUtils {
         return sb.toString();
     }
 
+    private ExecutableElement getSetter(VariableElement variable) {
+        String method = compileSetterMethodName(variable);
+        return MoreElements.asType(variable.getEnclosingElement())
+                .getEnclosedElements().stream()
+                .filter(e -> e.getKind().equals(ElementKind.METHOD))
+                .filter(e -> e.toString().equals(method))
+                .filter(e -> e.getModifiers().contains(Modifier.PUBLIC))
+                .filter(e -> !e.getModifiers().contains(Modifier.STATIC))
+                .map(elm -> MoreElements.asExecutable(elm))
+                .filter(elm -> elm.getParameters().size() == 1)
+                .filter(elm -> elm.getParameters().get(0).asType().equals(variable.asType()))
+                .findFirst()
+                .orElseThrow(() -> new GenerationException(String.format("Unable to find suitable setter [%s] in [%s]", method, variable.getEnclosingElement())));
+    }
+
     public TypeMirror toType(Class<?> clazz) {
         return elements.getTypeElement(clazz.getCanonicalName()).asType();
     }
 
-    public TypeElement toTypeElement(TypeMirror type) {
+    public  TypeElement toTypeElement(TypeMirror type) {
         return ((TypeElement) types.asElement(type));
     }
 }

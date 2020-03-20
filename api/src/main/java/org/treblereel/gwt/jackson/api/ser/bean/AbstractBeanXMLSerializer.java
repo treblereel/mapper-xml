@@ -32,7 +32,7 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  * @author Nicolas Morel
  * @version $Id: $
  */
-public abstract class AbstractBeanJsonSerializer<T> extends XMLSerializer<T> implements InternalSerializer<T> {
+public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> implements InternalSerializer<T> {
 
     protected final BeanPropertySerializer[] serializers;
 
@@ -47,7 +47,7 @@ public abstract class AbstractBeanJsonSerializer<T> extends XMLSerializer<T> imp
     /**
      * <p>Constructor for AbstractBeanJsonSerializer.</p>
      */
-    protected AbstractBeanJsonSerializer() {
+    protected AbstractBeanXMLSerializer() {
         this.serializers = initSerializers();
         this.defaultIdentityInfo = initIdentityInfo();
         this.defaultTypeInfo = initTypeInfo();

@@ -1,6 +1,7 @@
 package org.treblereel.gwt.jackson.serializer;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -47,11 +48,6 @@ public class SerializerGenerator extends AbstractGenerator {
     }
 
     @Override
-    protected String getMapperName(TypeElement type) {
-        return context.getTypeUtils().serializerName(type.asType());
-    }
-
-    @Override
     protected void configureClassType(TypeElement type) {
         cu.addImport(XMLSerializationContext.class);
         cu.addImport(XMLSerializer.class);
@@ -82,6 +78,11 @@ public class SerializerGenerator extends AbstractGenerator {
         initSerializers.addAnnotation(Override.class)
                 .setType(BeanPropertySerializer[].class)
                 .getBody().ifPresent(body -> processInitSerializersMethodBody(body, type, fields));
+    }
+
+    @Override
+    protected String getMapperName(TypeElement type) {
+        return context.getTypeUtils().serializerName(type.asType());
     }
 
     private void processInitSerializersMethodBody(BlockStmt body, TypeElement type, List<VariableElement> fields) {

@@ -767,7 +767,7 @@ public class TypeUtils {
         return getSetter(variable) != null;
     }
 
-    private ExecutableElement getSetter(VariableElement variable) {
+    public ExecutableElement getSetter(VariableElement variable) {
         String method = compileSetterMethodName(variable);
         return MoreElements.asType(variable.getEnclosingElement())
                 .getEnclosedElements().stream()

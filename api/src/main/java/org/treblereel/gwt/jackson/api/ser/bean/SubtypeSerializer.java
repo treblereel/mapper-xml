@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.ser.bean;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -38,7 +40,7 @@ public abstract class SubtypeSerializer<T, S extends XMLSerializer<T>> extends H
 
         @Override
         public void serializeInternally(XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters params,
-                                        IdentitySerializationInfo<T> defaultIdentityInfo, TypeSerializationInfo<T> defaultTypeInfo) {
+                                        IdentitySerializationInfo<T> defaultIdentityInfo, TypeSerializationInfo<T> defaultTypeInfo) throws XMLStreamException {
             getSerializer().serializeInternally(writer, value, ctx, params, defaultIdentityInfo, defaultTypeInfo);
         }
     }
@@ -52,7 +54,7 @@ public abstract class SubtypeSerializer<T, S extends XMLSerializer<T>> extends H
 
         @Override
         public void serializeInternally(XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters params,
-                                        IdentitySerializationInfo<T> defaultIdentityInfo, TypeSerializationInfo<T> defaultTypeInfo) {
+                                        IdentitySerializationInfo<T> defaultIdentityInfo, TypeSerializationInfo<T> defaultTypeInfo) throws XMLStreamException {
 
             final TypeSerializationInfo typeInfo = null == params.getTypeInfo() ? defaultTypeInfo : params.getTypeInfo();
 
@@ -66,7 +68,7 @@ public abstract class SubtypeSerializer<T, S extends XMLSerializer<T>> extends H
                     case WRAPPER_OBJECT:
                         // type info is included in a wrapper object that contains only one property. The name of this property is the type
                         // info and the value the object
-                        writer.beginObject();
+                        writer.beginObject(typeInformation);
                         writer.name(typeInformation);
                         getSerializer().serialize(writer, value, ctx, params);
                         writer.endObject();

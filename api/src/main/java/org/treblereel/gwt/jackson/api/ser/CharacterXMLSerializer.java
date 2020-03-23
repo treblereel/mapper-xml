@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.ser;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -53,7 +55,7 @@ public class CharacterXMLSerializer extends XMLSerializer<Character> {
 
     /** {@inheritDoc} */
     @Override
-    public void doSerialize(XMLWriter writer, Character value, XMLSerializationContext ctx, XMLSerializerParameters params) {
+    public void doSerialize(XMLWriter writer, Character value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         writer.value(value.toString());
     }
 }

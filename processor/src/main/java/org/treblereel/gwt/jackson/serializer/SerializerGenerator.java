@@ -1,11 +1,12 @@
 package org.treblereel.gwt.jackson.serializer;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import com.github.javaparser.ast.Modifier;
@@ -28,6 +29,7 @@ import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
+import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
@@ -45,6 +47,11 @@ public class SerializerGenerator extends AbstractGenerator {
 
     public SerializerGenerator(GenerationContext context, TreeLogger logger) {
         super(context, logger.branch(TreeLogger.INFO, "Serializers generation started"));
+    }
+
+    @Override
+    protected String getMapperName(TypeElement type) {
+        return context.getTypeUtils().serializerName(type.asType());
     }
 
     @Override
@@ -78,11 +85,6 @@ public class SerializerGenerator extends AbstractGenerator {
         initSerializers.addAnnotation(Override.class)
                 .setType(BeanPropertySerializer[].class)
                 .getBody().ifPresent(body -> processInitSerializersMethodBody(body, type, fields));
-    }
-
-    @Override
-    protected String getMapperName(TypeElement type) {
-        return context.getTypeUtils().serializerName(type.asType());
     }
 
     private void processInitSerializersMethodBody(BlockStmt body, TypeElement type, List<VariableElement> fields) {
@@ -131,6 +133,9 @@ public class SerializerGenerator extends AbstractGenerator {
         String fieldType;
         if (variableElement.asType().getKind().isPrimitive()) {
             fieldType = typeUtils.wrapperType(variableElement.asType());
+        } else if (variableElement.asType().getKind().equals(TypeKind.ARRAY)) {
+            ArrayType arrayType = (ArrayType)variableElement.asType();
+            fieldType = arrayType.toString();
         } else {
             fieldType = typeUtils.toTypeElement(variableElement.asType()).toString();
         }
@@ -138,16 +143,20 @@ public class SerializerGenerator extends AbstractGenerator {
         ClassOrInterfaceType interfaceType = new ClassOrInterfaceType();
         interfaceType.setName(fieldType);
 
-        if (variableElement.asType() instanceof DeclaredType) {
-            if (!((DeclaredType) variableElement.asType()).getTypeArguments().isEmpty()) {
+        addTypeArguments(variableElement.asType(), interfaceType);
+        typeArguments.add(interfaceType);
+        beanType.setTypeArguments(typeArguments);
+    }
+
+    private void addTypeArguments(TypeMirror type, ClassOrInterfaceType interfaceType) {
+        if (type instanceof DeclaredType) {
+            if (!((DeclaredType) type).getTypeArguments().isEmpty()) {
                 NodeList<Type> types = new NodeList<>();
-                ((DeclaredType) variableElement.asType()).getTypeArguments()
+                ((DeclaredType) type).getTypeArguments()
                         .forEach(param -> types.add(new ClassOrInterfaceType().setName(param.toString())));
                 interfaceType.setTypeArguments(types);
             }
         }
-        typeArguments.add(interfaceType);
-        beanType.setTypeArguments(typeArguments);
     }
 
     private void addMethods(ObjectCreationExpr beanProperty, TypeElement bean, VariableElement field) {
@@ -176,7 +185,11 @@ public class SerializerGenerator extends AbstractGenerator {
         method.setName("getValue");
         method.addParameter(new ClassOrInterfaceType().setName(bean.getSimpleName().toString()), "bean");
         method.addParameter(XMLSerializationContext.class.getSimpleName(), "ctx");
-        method.setType(new ClassOrInterfaceType().setName(typeUtils.wrapperType(field.asType())));
+
+        ClassOrInterfaceType interfaceType = new ClassOrInterfaceType().setName(typeUtils.wrapperType(field.asType()));
+        addTypeArguments(field.asType(), interfaceType);
+
+        method.setType(interfaceType);
         method.getBody().get().addAndGetStatement(new ReturnStmt(new MethodCallExpr(new NameExpr("bean"), typeUtils.getGetter(field).getSimpleName().toString())));
         anonymousClassBody.add(method);
     }

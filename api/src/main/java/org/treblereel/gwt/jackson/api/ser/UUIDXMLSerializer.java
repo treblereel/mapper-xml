@@ -18,6 +18,8 @@ package org.treblereel.gwt.jackson.api.ser;
 
 import java.util.UUID;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -47,7 +49,7 @@ public class UUIDXMLSerializer extends XMLSerializer<UUID> {
 
     /** {@inheritDoc} */
     @Override
-    public void doSerialize(XMLWriter writer, UUID value, XMLSerializationContext ctx, XMLSerializerParameters params) {
+    public void doSerialize(XMLWriter writer, UUID value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         writer.unescapeValue(value.toString());
     }
 }

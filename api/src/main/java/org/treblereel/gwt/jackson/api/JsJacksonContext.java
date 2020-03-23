@@ -37,12 +37,6 @@ public class JsJacksonContext implements JacksonContext{
 
     /** {@inheritDoc} */
     @Override
-    public ValueStringifier stringifier() {
-        return JSON::stringify;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public StringArrayReader stringArrayReader() {
         return new JsStringArrayReader();
     }

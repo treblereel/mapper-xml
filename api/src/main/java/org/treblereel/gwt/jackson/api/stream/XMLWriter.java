@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.stream;
 
+import javax.xml.stream.XMLStreamException;
+
 /**
  * <p>XMLWriter interface.</p>
  *
@@ -23,32 +25,6 @@ package org.treblereel.gwt.jackson.api.stream;
  * @version $Id: $
  */
 public interface XMLWriter {
-
-    /**
-     * Sets the indentation string to be repeated for each level of indentation
-     * in the encoded document. If {@code indent.isEmpty()} the encoded document
-     * will be compact. Otherwise the encoded document will be more
-     * human-readable.
-     *
-     * @param indent a string containing only whitespace.
-     */
-    void setIndent(String indent);
-
-    /**
-     * Configure this writer to relax its syntax rules. By default, this writer
-     * only emits well-formed JSON as specified by <a
-     * href="http://www.ietf.org/rfc/rfc4627.txt">RFC 4627</a>. Setting the writer
-     * to lenient permits the following:
-     * <ul>
-     * <li>Top-level values of any type. With strict writing, the top-level
-     * value must be an object or an array.
-     * <li>Numbers may be {@link java.lang.Double#isNaN() NaNs} or {@link
-     * Double#isInfinite() infinities}.
-     * </ul>
-     *
-     * @param lenient a boolean.
-     */
-    void setLenient(boolean lenient);
 
     /**
      * Sets whether object members are serialized when their value is null.
@@ -71,14 +47,14 @@ public interface XMLWriter {
      *
      * @return this writer.
      */
-    XMLWriter beginArray();
+    XMLWriter beginArray() throws XMLStreamException;
 
     /**
      * Ends encoding the current array.
      *
      * @return this writer.
      */
-    XMLWriter endArray();
+    XMLWriter endArray() throws XMLStreamException;
 
     /**
      * Begins encoding a new object. Each call to this method must be paired
@@ -86,14 +62,14 @@ public interface XMLWriter {
      *
      * @return this writer.
      */
-    XMLWriter beginObject();
+    XMLWriter beginObject(String name) throws XMLStreamException;
 
     /**
      * Ends encoding the current object.
      *
      * @return this writer.
      */
-    XMLWriter endObject();
+    XMLWriter endObject() throws XMLStreamException;
 
     /**
      * Encodes the property name.
@@ -117,7 +93,7 @@ public interface XMLWriter {
      * @param value the literal string value, or null to encode a null literal.
      * @return this writer.
      */
-    XMLWriter value(String value);
+    XMLWriter value(String value) throws XMLStreamException;
 
     /**
      * Encodes {@code value} without escaping it.
@@ -125,21 +101,14 @@ public interface XMLWriter {
      * @param value the literal string value, or null to encode a null literal.
      * @return this writer.
      */
-    XMLWriter unescapeValue(String value);
+    XMLWriter unescapeValue(String value) throws XMLStreamException;
 
     /**
      * Encodes {@code null}.
      *
      * @return this writer.
      */
-    XMLWriter nullValue();
-
-    /**
-     * <p>cancelName</p>
-     *
-     * @return a {@link XMLWriter} object.
-     */
-    XMLWriter cancelName();
+    XMLWriter nullValue() throws XMLStreamException;
 
     /**
      * Encodes {@code value}.
@@ -147,7 +116,7 @@ public interface XMLWriter {
      * @param value a boolean.
      * @return this writer.
      */
-    XMLWriter value(boolean value);
+    XMLWriter value(boolean value) throws XMLStreamException;
 
     /**
      * Encodes {@code value}.
@@ -156,7 +125,7 @@ public interface XMLWriter {
      *              {@link java.lang.Double#isInfinite() infinities}.
      * @return this writer.
      */
-    XMLWriter value(double value);
+    XMLWriter value(double value) throws XMLStreamException;
 
     /**
      * Encodes {@code value}.
@@ -164,7 +133,7 @@ public interface XMLWriter {
      * @param value a long.
      * @return this writer.
      */
-    XMLWriter value(long value);
+    XMLWriter value(long value) throws XMLStreamException;
 
     /**
      * Encodes {@code value}.
@@ -173,7 +142,7 @@ public interface XMLWriter {
      *              {@link java.lang.Double#isInfinite() infinities}.
      * @return this writer.
      */
-    XMLWriter value(Number value);
+    XMLWriter value(Number value) throws XMLStreamException;
 
     /**
      * Encodes {@code value}.toString() as is.
@@ -187,12 +156,12 @@ public interface XMLWriter {
      * Ensures all buffered data is written to the underlying {@link java.lang.StringBuilder}
      * and flushes that writer.
      */
-    void flush();
+    void flush() throws XMLStreamException;
 
     /**
      * Flushes and closes this writer and the underlying {@link java.lang.StringBuilder}.
      */
-    void close();
+    void close() throws XMLStreamException;
 
     /**
      * <p>getOutput</p>

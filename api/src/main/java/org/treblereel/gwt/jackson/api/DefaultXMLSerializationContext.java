@@ -27,329 +27,48 @@ import java.util.SortedMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+
+import com.ctc.wstx.stax.WstxOutputFactory;
 import org.treblereel.gwt.jackson.api.exception.XMLSerializationException;
 import org.treblereel.gwt.jackson.api.ser.bean.AbstractBeanXMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.bean.ObjectIdSerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
-import org.treblereel.gwt.jackson.api.stream.impl.FastXMLWriter;
+import org.treblereel.gwt.jackson.api.stream.impl.DefaultXMLWriter;
 
 /**
  * Context for the serialization process.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class DefaultXMLSerializationContext implements XMLSerializationContext {
 
-    /**
-     * Builder for {@link XMLSerializationContext}. To override default settings globally, you can extend this class, modify the
-     * default settings inside the constructor and tell the compiler to use your builder instead in your gwt.xml file :
-     * <pre>
-     * {@code
-     *
-     * <replace-with class="your.package.YourBuilder">
-     *   <when-type-assignable class="org.dominokit.jacksonapt.XMLSerializationContext.Builder" />
-     * </replace-with>
-     *
-     * }
-     * </pre>
-     */
-    public static class Builder {
-
-        protected boolean useEqualityForObjectId = false;
-
-        protected boolean serializeNulls = true;
-
-        protected boolean writeDatesAsTimestamps = true;
-
-        protected boolean writeDateKeysAsTimestamps = false;
-
-        protected boolean indent = false;
-
-        protected boolean wrapRootValue = false;
-
-        protected boolean writeCharArraysAsXMLArrays = false;
-
-        protected boolean writeNullMapValues = true;
-
-        protected boolean writeEmptyXMLArrays = true;
-
-        protected boolean orderMapEntriesByKeys = false;
-
-        protected boolean writeSingleElemArraysUnwrapped = false;
-
-        protected boolean wrapExceptions = true;
-
-        /**
-         * Determines whether Object Identity is compared using
-         * true JVM-level identity of Object (false); or, <code>equals()</code> method.
-         * Latter is sometimes useful when dealing with Database-bound objects with
-         * ORM libraries (like Hibernate).
-         * <p>
-         * Option is disabled by default; meaning that strict identity is used, not
-         * <code>equals()</code>
-         * </p>
-         *
-         * @param useEqualityForObjectId true if should useEqualityForObjectId
-         * @return the builder
-         */
-        public Builder useEqualityForObjectId(boolean useEqualityForObjectId) {
-            this.useEqualityForObjectId = useEqualityForObjectId;
-            return this;
-        }
-
-        /**
-         * Sets whether object members are serialized when their value is null.
-         * This has no impact on array elements. The default is true.
-         *
-         * @param serializeNulls true if should serializeNulls
-         * @return the builder
-         */
-        public Builder serializeNulls(boolean serializeNulls) {
-            this.serializeNulls = serializeNulls;
-            return this;
-        }
-
-        /**
-         * Determines whether {@link Date} and {@link java.sql.Timestamp} values are to be serialized as numeric timestamps
-         * (true; the default), or as textual representation.
-         * <p>If textual representation is used, the actual format is
-         * Option is enabled by default.
-         *
-         * @param writeDatesAsTimestamps true if should writeDatesAsTimestamps
-         * @return the builder
-         */
-        public Builder writeDatesAsTimestamps(boolean writeDatesAsTimestamps) {
-            this.writeDatesAsTimestamps = writeDatesAsTimestamps;
-            return this;
-        }
-
-        /**
-         * Feature that determines whether {@link Date}s and {@link java.sql.Timestamp}s used as {@link Map} keys are
-         * serialized as timestamps or as textual values.
-         * <p>If textual representation is used, the actual format is
-         * Option is disabled by default.
-         *
-         * @param writeDateKeysAsTimestamps true if should writeDateKeysAsTimestamps
-         * @return the builder
-         */
-        public Builder writeDateKeysAsTimestamps(boolean writeDateKeysAsTimestamps) {
-            this.writeDateKeysAsTimestamps = writeDateKeysAsTimestamps;
-            return this;
-        }
-
-        /**
-         * Feature that allows enabling (or disabling) indentation
-         * for the underlying writer.
-         * <p>Feature is disabled by default.</p>
-         *
-         * @param indent true if should indent
-         * @return the builder
-         */
-        public Builder indent(boolean indent) {
-            this.indent = indent;
-            return this;
-        }
-
-        /**
-         * Feature that can be enabled to make root value (usually XML
-         * Object but can be any type) wrapped within a single property
-         * XML object, where key as the "root name", as determined by
-         * annotation introspector or fallback (non-qualified
-         * class name).
-         * <p>Feature is disabled by default.</p>
-         *
-         * @param wrapRootValue true if should wrapRootValue
-         * @return the builder
-         */
-        public Builder wrapRootValue(boolean wrapRootValue) {
-            this.wrapRootValue = wrapRootValue;
-            return this;
-        }
-
-        /**
-         * Feature that determines how type <code>char[]</code> is serialized:
-         * when enabled, will be serialized as an explict XML array (with
-         * single-character Strings as values); when disabled, defaults to
-         * serializing them as Strings (which is more compact).
-         * <p>
-         * Feature is disabled by default.
-         * </p>
-         *
-         * @param writeCharArraysAsXMLArrays true if should writeCharArraysAsXMLArrays
-         * @return the builder
-         */
-        public Builder writeCharArraysAsXMLArrays(boolean writeCharArraysAsXMLArrays) {
-            this.writeCharArraysAsXMLArrays = writeCharArraysAsXMLArrays;
-            return this;
-        }
-
-        /**
-         * Feature that determines whether Map entries with null values are
-         * to be serialized (true) or not (false).
-         * <p>
-         * Feature is enabled by default.
-         * </p>
-         *
-         * @param writeNullMapValues true if should writeNullMapValues
-         * @return the builder
-         */
-        public Builder writeNullMapValues(boolean writeNullMapValues) {
-            this.writeNullMapValues = writeNullMapValues;
-            return this;
-        }
-
-        /**
-         * Feature that determines whether Container properties (POJO properties
-         * with declared value of Collection or array; i.e. things that produce XML
-         * arrays) that are empty (have no elements)
-         * will be serialized as empty XML arrays (true), or suppressed from output (false).
-         * <p>
-         * Note that this does not change behavior of {@link Map}s, or
-         * "Collection-like" types.
-         * </p>
-         * <p>
-         * Feature is enabled by default.
-         * </p>
-         *
-         * @param writeEmptyXMLArrays true if should writeEmptyXMLArrays
-         * @return the builder
-         */
-        public Builder writeEmptyXMLArrays(boolean writeEmptyXMLArrays) {
-            this.writeEmptyXMLArrays = writeEmptyXMLArrays;
-            return this;
-        }
-
-        /**
-         * Feature that determines whether {@link Map} entries are first
-         * sorted by key before serialization or not: if enabled, additional sorting
-         * step is performed if necessary (not necessary for {@link SortedMap}s),
-         * if disabled, no additional sorting is needed.
-         * <p>
-         * Feature is disabled by default.
-         * </p>
-         *
-         * @param orderMapEntriesByKeys true if should orderMapEntriesByKeys
-         * @return the builder
-         */
-        public Builder orderMapEntriesByKeys(boolean orderMapEntriesByKeys) {
-            this.orderMapEntriesByKeys = orderMapEntriesByKeys;
-            return this;
-        }
-
-        /**
-         * Feature added for interoperability, to work with oddities of
-         * so-called "BadgerFish" convention.
-         * Feature determines handling of single element {@link Collection}s
-         * and arrays: if enabled, {@link Collection}s and arrays that contain exactly
-         * one element will be serialized as if that element itself was serialized.
-         * <br>
-         * <br>
-         * When enabled, a POJO with array that normally looks like this:
-         * <pre>
-         *  { "arrayProperty" : [ 1 ] }
-         * </pre>
-         * will instead be serialized as
-         * <pre>
-         *  { "arrayProperty" : 1 }
-         * </pre>
-         * <p>
-         * Note that this feature is counterpart to {@link DefaultXMLDeserializationContext.Builder#acceptSingleValueAsArray(boolean)}
-         * (that is, usually both are enabled, or neither is).
-         * </p>
-         * Feature is disabled by default, so that no special handling is done.
-         *
-         * @param writeSingleElemArraysUnwrapped true if should writeSingleElemArraysUnwrapped
-         * @return the builder
-         */
-        public Builder writeSingleElemArraysUnwrapped(boolean writeSingleElemArraysUnwrapped) {
-            this.writeSingleElemArraysUnwrapped = writeSingleElemArraysUnwrapped;
-            return this;
-        }
-
-        /**
-         * Feature that determines whether gwt-jackson code should catch
-         * and wrap {@link RuntimeException}s (but never {@link Error}s!)
-         * to add additional information about
-         * location (within input) of problem or not. If enabled,
-         * exceptions will be caught and re-thrown; this can be
-         * convenient both in that all exceptions will be checked and
-         * declared, and so there is more contextual information.
-         * However, sometimes calling application may just want "raw"
-         * unchecked exceptions passed as is.
-         * <br>
-         * <br>
-         * Feature is enabled by default.
-         *
-         * @param wrapExceptions true if should wrapExceptions
-         * @return the builder
-         */
-        public Builder wrapExceptions(boolean wrapExceptions) {
-            this.wrapExceptions = wrapExceptions;
-            return this;
-        }
-
-        public final XMLSerializationContext build() {
-            return new DefaultXMLSerializationContext(useEqualityForObjectId, serializeNulls, writeDatesAsTimestamps,
-                    writeDateKeysAsTimestamps, indent, wrapRootValue, writeCharArraysAsXMLArrays, writeNullMapValues,
-                    writeEmptyXMLArrays, orderMapEntriesByKeys, writeSingleElemArraysUnwrapped, wrapExceptions);
-        }
-    }
-
-    public static class DefaultBuilder extends Builder {
-
-        private DefaultBuilder() {
-        }
-
-    }
-
-    /**
-     * <p>builder</p>
-     *
-     * @return a {@link DefaultXMLSerializationContext.Builder} object.
-     */
-    public static Builder builder() {
-        return new DefaultBuilder();
-    }
-
     private static final Logger logger = Logger.getLogger("XMLSerialization");
-
-    private Map<Object, ObjectIdSerializer<?>> mapObjectId;
-
-    private List<ObjectIdGenerator<?>> generators;
-
     /*
      * Serialization options
      */
     private final boolean useEqualityForObjectId;
-
     private final boolean serializeNulls;
-
     private final boolean writeDatesAsTimestamps;
-
     private final boolean writeDateKeysAsTimestamps;
-
     private final boolean indent;
-
     private final boolean wrapRootValue;
-
     private final boolean writeCharArraysAsXMLArrays;
-
     private final boolean writeNullMapValues;
-
     private final boolean writeEmptyXMLArrays;
-
     private final boolean orderMapEntriesByKeys;
-
     private final boolean writeSingleElemArraysUnwrapped;
-
     private final boolean wrapExceptions;
+    private final XMLOutputFactory xmlOutputFactory;
+    private Map<Object, ObjectIdSerializer<?>> mapObjectId;
+    private List<ObjectIdGenerator<?>> generators;
 
     private DefaultXMLSerializationContext(boolean useEqualityForObjectId, boolean serializeNulls, boolean writeDatesAsTimestamps, boolean
             writeDateKeysAsTimestamps, boolean indent, boolean wrapRootValue, boolean writeCharArraysAsXMLArrays, boolean
-                                                    writeNullMapValues, boolean writeEmptyXMLArrays, boolean orderMapEntriesByKeys, boolean
-                                                    writeSingleElemArraysUnwrapped,
-                                            boolean wrapExceptions) {
+                                                   writeNullMapValues, boolean writeEmptyXMLArrays, boolean orderMapEntriesByKeys, boolean
+                                                   writeSingleElemArraysUnwrapped,
+                                           boolean wrapExceptions) {
         this.useEqualityForObjectId = useEqualityForObjectId;
         this.serializeNulls = serializeNulls;
         this.writeDatesAsTimestamps = writeDatesAsTimestamps;
@@ -362,12 +81,15 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
         this.orderMapEntriesByKeys = orderMapEntriesByKeys;
         this.writeSingleElemArraysUnwrapped = writeSingleElemArraysUnwrapped;
         this.wrapExceptions = wrapExceptions;
+        this.xmlOutputFactory = new WstxOutputFactory();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public Logger getLogger() {
-        return logger;
+    /**
+     * <p>builder</p>
+     * @return a {@link DefaultXMLSerializationContext.Builder} object.
+     */
+    public static Builder builder() {
+        return new DefaultBuilder();
     }
 
     /**
@@ -469,18 +191,14 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
      * <p>newXMLWriter</p>
      */
     @Override
-    public XMLWriter newXMLWriter() {
-        XMLWriter writer = new FastXMLWriter(new StringBuilder());
-        writer.setLenient(true);
-        if (indent) {
-            writer.setIndent("  ");
-        }
+    public XMLWriter newXMLWriter() throws XMLStreamException {
+        XMLWriter writer = new DefaultXMLWriter(xmlOutputFactory);
         return writer;
     }
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Trace an error and returns a corresponding exception.
      */
     @Override
@@ -491,7 +209,7 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Trace an error with current writer state and returns a corresponding exception.
      */
     @Override
@@ -503,7 +221,7 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Trace an error and returns a corresponding exception.
      */
     @Override
@@ -518,7 +236,7 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Trace an error with current writer state and returns a corresponding exception.
      */
     @Override
@@ -526,17 +244,6 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
         RuntimeException exception = traceError(value, cause);
         traceWriterInfo(value, writer);
         return exception;
-    }
-
-    /**
-     * Trace the current writer state
-     *
-     * @param value current value
-     */
-    private void traceWriterInfo(Object value, XMLWriter writer) {
-        if (getLogger().isLoggable(Level.INFO)) {
-            getLogger().log(Level.INFO, "Error on value <" + value + ">. Current output : <" + writer.getOutput() + ">");
-        }
     }
 
     /**
@@ -571,7 +278,7 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Used by generated {@link AbstractBeanXMLSerializer}
      */
     @Override
@@ -585,7 +292,7 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Used by generated {@link AbstractBeanXMLSerializer}
      */
     @Override
@@ -601,9 +308,278 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
         return null;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public XMLSerializerParameters defaultParameters() {
         return JacksonContextProvider.get().defaultSerializerParameters();
+    }
+
+    /**
+     * Trace the current writer state
+     * @param value current value
+     */
+    private void traceWriterInfo(Object value, XMLWriter writer) {
+        if (getLogger().isLoggable(Level.INFO)) {
+            getLogger().log(Level.INFO, "Error on value <" + value + ">. Current output : <" + writer.getOutput() + ">");
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Logger getLogger() {
+        return logger;
+    }
+
+    /**
+     * Builder for {@link XMLSerializationContext}. To override default settings globally, you can extend this class, modify the
+     * default settings inside the constructor and tell the compiler to use your builder instead in your gwt.xml file :
+     * <pre>
+     * {@code
+     *
+     * <replace-with class="your.package.YourBuilder">
+     *   <when-type-assignable class="org.dominokit.jacksonapt.XMLSerializationContext.Builder" />
+     * </replace-with>
+     *
+     * }
+     * </pre>
+     */
+    public static class Builder {
+
+        protected boolean useEqualityForObjectId = false;
+
+        protected boolean serializeNulls = true;
+
+        protected boolean writeDatesAsTimestamps = true;
+
+        protected boolean writeDateKeysAsTimestamps = false;
+
+        protected boolean indent = false;
+
+        protected boolean wrapRootValue = false;
+
+        protected boolean writeCharArraysAsXMLArrays = false;
+
+        protected boolean writeNullMapValues = true;
+
+        protected boolean writeEmptyXMLArrays = true;
+
+        protected boolean orderMapEntriesByKeys = false;
+
+        protected boolean writeSingleElemArraysUnwrapped = false;
+
+        protected boolean wrapExceptions = true;
+
+        /**
+         * Determines whether Object Identity is compared using
+         * true JVM-level identity of Object (false); or, <code>equals()</code> method.
+         * Latter is sometimes useful when dealing with Database-bound objects with
+         * ORM libraries (like Hibernate).
+         * <p>
+         * Option is disabled by default; meaning that strict identity is used, not
+         * <code>equals()</code>
+         * </p>
+         * @param useEqualityForObjectId true if should useEqualityForObjectId
+         * @return the builder
+         */
+        public Builder useEqualityForObjectId(boolean useEqualityForObjectId) {
+            this.useEqualityForObjectId = useEqualityForObjectId;
+            return this;
+        }
+
+        /**
+         * Sets whether object members are serialized when their value is null.
+         * This has no impact on array elements. The default is true.
+         * @param serializeNulls true if should serializeNulls
+         * @return the builder
+         */
+        public Builder serializeNulls(boolean serializeNulls) {
+            this.serializeNulls = serializeNulls;
+            return this;
+        }
+
+        /**
+         * Determines whether {@link Date} and {@link java.sql.Timestamp} values are to be serialized as numeric timestamps
+         * (true; the default), or as textual representation.
+         * <p>If textual representation is used, the actual format is
+         * Option is enabled by default.
+         * @param writeDatesAsTimestamps true if should writeDatesAsTimestamps
+         * @return the builder
+         */
+        public Builder writeDatesAsTimestamps(boolean writeDatesAsTimestamps) {
+            this.writeDatesAsTimestamps = writeDatesAsTimestamps;
+            return this;
+        }
+
+        /**
+         * Feature that determines whether {@link Date}s and {@link java.sql.Timestamp}s used as {@link Map} keys are
+         * serialized as timestamps or as textual values.
+         * <p>If textual representation is used, the actual format is
+         * Option is disabled by default.
+         * @param writeDateKeysAsTimestamps true if should writeDateKeysAsTimestamps
+         * @return the builder
+         */
+        public Builder writeDateKeysAsTimestamps(boolean writeDateKeysAsTimestamps) {
+            this.writeDateKeysAsTimestamps = writeDateKeysAsTimestamps;
+            return this;
+        }
+
+        /**
+         * Feature that allows enabling (or disabling) indentation
+         * for the underlying writer.
+         * <p>Feature is disabled by default.</p>
+         * @param indent true if should indent
+         * @return the builder
+         */
+        public Builder indent(boolean indent) {
+            this.indent = indent;
+            return this;
+        }
+
+        /**
+         * Feature that can be enabled to make root value (usually XML
+         * Object but can be any type) wrapped within a single property
+         * XML object, where key as the "root name", as determined by
+         * annotation introspector or fallback (non-qualified
+         * class name).
+         * <p>Feature is disabled by default.</p>
+         * @param wrapRootValue true if should wrapRootValue
+         * @return the builder
+         */
+        public Builder wrapRootValue(boolean wrapRootValue) {
+            this.wrapRootValue = wrapRootValue;
+            return this;
+        }
+
+        /**
+         * Feature that determines how type <code>char[]</code> is serialized:
+         * when enabled, will be serialized as an explict XML array (with
+         * single-character Strings as values); when disabled, defaults to
+         * serializing them as Strings (which is more compact).
+         * <p>
+         * Feature is disabled by default.
+         * </p>
+         * @param writeCharArraysAsXMLArrays true if should writeCharArraysAsXMLArrays
+         * @return the builder
+         */
+        public Builder writeCharArraysAsXMLArrays(boolean writeCharArraysAsXMLArrays) {
+            this.writeCharArraysAsXMLArrays = writeCharArraysAsXMLArrays;
+            return this;
+        }
+
+        /**
+         * Feature that determines whether Map entries with null values are
+         * to be serialized (true) or not (false).
+         * <p>
+         * Feature is enabled by default.
+         * </p>
+         * @param writeNullMapValues true if should writeNullMapValues
+         * @return the builder
+         */
+        public Builder writeNullMapValues(boolean writeNullMapValues) {
+            this.writeNullMapValues = writeNullMapValues;
+            return this;
+        }
+
+        /**
+         * Feature that determines whether Container properties (POJO properties
+         * with declared value of Collection or array; i.e. things that produce XML
+         * arrays) that are empty (have no elements)
+         * will be serialized as empty XML arrays (true), or suppressed from output (false).
+         * <p>
+         * Note that this does not change behavior of {@link Map}s, or
+         * "Collection-like" types.
+         * </p>
+         * <p>
+         * Feature is enabled by default.
+         * </p>
+         * @param writeEmptyXMLArrays true if should writeEmptyXMLArrays
+         * @return the builder
+         */
+        public Builder writeEmptyXMLArrays(boolean writeEmptyXMLArrays) {
+            this.writeEmptyXMLArrays = writeEmptyXMLArrays;
+            return this;
+        }
+
+        /**
+         * Feature that determines whether {@link Map} entries are first
+         * sorted by key before serialization or not: if enabled, additional sorting
+         * step is performed if necessary (not necessary for {@link SortedMap}s),
+         * if disabled, no additional sorting is needed.
+         * <p>
+         * Feature is disabled by default.
+         * </p>
+         * @param orderMapEntriesByKeys true if should orderMapEntriesByKeys
+         * @return the builder
+         */
+        public Builder orderMapEntriesByKeys(boolean orderMapEntriesByKeys) {
+            this.orderMapEntriesByKeys = orderMapEntriesByKeys;
+            return this;
+        }
+
+        /**
+         * Feature added for interoperability, to work with oddities of
+         * so-called "BadgerFish" convention.
+         * Feature determines handling of single element {@link Collection}s
+         * and arrays: if enabled, {@link Collection}s and arrays that contain exactly
+         * one element will be serialized as if that element itself was serialized.
+         * <br>
+         * <br>
+         * When enabled, a POJO with array that normally looks like this:
+         * <pre>
+         *  { "arrayProperty" : [ 1 ] }
+         * </pre>
+         * will instead be serialized as
+         * <pre>
+         *  { "arrayProperty" : 1 }
+         * </pre>
+         * <p>
+         * Note that this feature is counterpart to {@link DefaultXMLDeserializationContext.Builder#acceptSingleValueAsArray(boolean)}
+         * (that is, usually both are enabled, or neither is).
+         * </p>
+         * Feature is disabled by default, so that no special handling is done.
+         * @param writeSingleElemArraysUnwrapped true if should writeSingleElemArraysUnwrapped
+         * @return the builder
+         */
+        public Builder writeSingleElemArraysUnwrapped(boolean writeSingleElemArraysUnwrapped) {
+            this.writeSingleElemArraysUnwrapped = writeSingleElemArraysUnwrapped;
+            return this;
+        }
+
+        /**
+         * Feature that determines whether gwt-jackson code should catch
+         * and wrap {@link RuntimeException}s (but never {@link Error}s!)
+         * to add additional information about
+         * location (within input) of problem or not. If enabled,
+         * exceptions will be caught and re-thrown; this can be
+         * convenient both in that all exceptions will be checked and
+         * declared, and so there is more contextual information.
+         * However, sometimes calling application may just want "raw"
+         * unchecked exceptions passed as is.
+         * <br>
+         * <br>
+         * Feature is enabled by default.
+         * @param wrapExceptions true if should wrapExceptions
+         * @return the builder
+         */
+        public Builder wrapExceptions(boolean wrapExceptions) {
+            this.wrapExceptions = wrapExceptions;
+            return this;
+        }
+
+        public final XMLSerializationContext build() {
+            return new DefaultXMLSerializationContext(useEqualityForObjectId, serializeNulls, writeDatesAsTimestamps,
+                                                      writeDateKeysAsTimestamps, indent, wrapRootValue, writeCharArraysAsXMLArrays, writeNullMapValues,
+                                                      writeEmptyXMLArrays, orderMapEntriesByKeys, writeSingleElemArraysUnwrapped, wrapExceptions);
+        }
+    }
+
+    public static class DefaultBuilder extends Builder {
+
+        private DefaultBuilder() {
+        }
     }
 }

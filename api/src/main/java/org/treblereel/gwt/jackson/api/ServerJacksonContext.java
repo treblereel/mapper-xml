@@ -16,9 +16,6 @@ import org.treblereel.gwt.jackson.api.utils.DefaultDateFormat;
  */
 public class ServerJacksonContext extends JsJacksonContext{
 
-    @GwtIncompatible
-    private static final JacksonContext.ValueStringifier VALUE_STRINGIFIER = new ServerValueStringifier();
-
     /** {@inheritDoc} */
     @GwtIncompatible
     @Override
@@ -38,13 +35,6 @@ public class ServerJacksonContext extends JsJacksonContext{
     @Override
     public MapLikeFactory mapLikeFactory() {
         return DefaultMapLike::new;
-    }
-
-    /** {@inheritDoc} */
-    @GwtIncompatible
-    @Override
-    public ValueStringifier stringifier() {
-        return VALUE_STRINGIFIER;
     }
 
     /** {@inheritDoc} */

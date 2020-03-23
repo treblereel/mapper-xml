@@ -18,6 +18,8 @@ package org.treblereel.gwt.jackson.api.ser;
 
 import java.util.Collection;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -65,13 +67,13 @@ public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSeri
 
     /** {@inheritDoc} */
     @Override
-    public void doSerialize(XMLWriter writer, C values, XMLSerializationContext ctx, XMLSerializerParameters params) {
+    public void doSerialize(XMLWriter writer, C values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         if (values.isEmpty()) {
             if (ctx.isWriteEmptyXMLArrays()) {
                 writer.beginArray();
                 writer.endArray();
             } else {
-                writer.cancelName();
+                writer.nullValue();
             }
             return;
         }

@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.exception.XMLSerializationException;
 
 /**
@@ -49,7 +51,7 @@ public interface ObjectWriter<T> {
      * @return the XML output
      * @throws XMLSerializationException if an exception occurs while writing the output
      */
-    String write(T value) throws XMLSerializationException;
+    String write(T value) throws XMLSerializationException, XMLStreamException;
 
     /**
      * Writes an object to XML.
@@ -58,7 +60,7 @@ public interface ObjectWriter<T> {
      * @return a {@link String} object.
      * @throws XMLSerializationException if an exception occurs while writing the output
      */
-    String write(T value, XMLSerializationContext ctx) throws XMLSerializationException;
+    String write(T value, XMLSerializationContext ctx) throws XMLSerializationException, XMLStreamException;
 
     /**
      * <p>getSerializer.</p>

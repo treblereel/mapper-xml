@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.ser.array.dd;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -51,9 +53,9 @@ public class PrimitiveFloatArray2dXMLSerializer extends XMLSerializer<float[][]>
 
     /** {@inheritDoc} */
     @Override
-    public void doSerialize(XMLWriter writer, float[][] values, XMLSerializationContext ctx, XMLSerializerParameters params) {
+    public void doSerialize(XMLWriter writer, float[][] values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
-            writer.cancelName();
+            writer.nullValue();
             return;
         }
 

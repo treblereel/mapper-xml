@@ -1,5 +1,7 @@
 package org.treblereel.gwt.jackson.tests;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
@@ -13,6 +15,12 @@ public class Person {
 
     private String firstName;
     private String lastName;
+
+    private Date birthday = new Date();
+
+    private Timestamp timestamp = new Timestamp(1);
+
+
 
     private Address address;
 
@@ -57,5 +65,21 @@ public class Person {
 
     public void setChilds(List<Person> childs) {
         this.childs = childs;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
     }
 }

@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.ser.bean;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
@@ -49,7 +51,7 @@ public class ObjectIdSerializer<I> {
      * @param writer a {@link XMLWriter} object.
      * @param ctx    a {@link XMLSerializationContext} object.
      */
-    public void serializeId(XMLWriter writer, XMLSerializationContext ctx) {
+    public void serializeId(XMLWriter writer, XMLSerializationContext ctx) throws XMLStreamException {
         serializer.serialize(writer, id, ctx);
     }
 }

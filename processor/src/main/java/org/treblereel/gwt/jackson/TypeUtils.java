@@ -107,6 +107,9 @@ public class TypeUtils {
             } else {
                 return Void.class.getSimpleName();
             }
+        } else if (type.getKind().equals(TypeKind.ARRAY)) {
+            ArrayType arrayType = (ArrayType) type;
+            return arrayType.toString();
         } else {
             return MoreTypes.asElement(type).toString();
         }

@@ -1,8 +1,9 @@
-package org.treblereel.gwt.jackson.tests;
+package org.treblereel.gwt.jackson.tests.beans;
 
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
@@ -18,15 +19,13 @@ public class Person {
 
     private Date birthday = new Date();
 
-    private Timestamp timestamp = new Timestamp(1);
-
-
+    private Timestamp alive = new Timestamp(1);
 
     private Address address;
 
     private List<Person> childs;
 
-    public String getFirstName() {
+      public String getFirstName() {
         return firstName;
     }
 
@@ -50,15 +49,6 @@ public class Person {
         this.address = address;
     }
 
-    @Override
-    public String toString() {
-        return "Person{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", address=" + address +
-                '}';
-    }
-
     public List<Person> getChilds() {
         return childs;
     }
@@ -75,11 +65,33 @@ public class Person {
         this.birthday = birthday;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    public Timestamp getAlive() {
+        return alive;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
+    public void setAlive(Timestamp alive) {
+        this.alive = alive;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Person)) {
+            return false;
+        }
+        Person person = (Person) o;
+        return Objects.equals(getFirstName(), person.getFirstName()) &&
+                Objects.equals(getLastName(), person.getLastName()) &&
+                Objects.equals(getBirthday(), person.getBirthday()) &&
+                Objects.equals(getAlive(), person.getAlive()) &&
+                Objects.equals(getAddress(), person.getAddress()) &&
+                Objects.equals(getChilds(), person.getChilds());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getFirstName(), getLastName(), getBirthday(), getAlive(), getAddress(), getChilds());
     }
 }

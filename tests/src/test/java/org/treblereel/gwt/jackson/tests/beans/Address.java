@@ -1,4 +1,4 @@
-package org.treblereel.gwt.jackson.tests;
+package org.treblereel.gwt.jackson.tests.beans;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -7,10 +7,8 @@ package org.treblereel.gwt.jackson.tests;
 public class Address {
 
     private int id;
-    private long id1 = 1;
     private String street = "Street";
-    private String city;
-    private int[] ints;
+    private String city = "Los Alamos";
 
     public int getId() {
         return id;
@@ -43,21 +41,5 @@ public class Address {
                 ", street='" + street + '\'' +
                 ", city='" + city + '\'' +
                 '}';
-    }
-
-    public long getId1() {
-        return id1;
-    }
-
-    public void setId1(long id1) {
-        this.id1 = id1;
-    }
-
-    public int[] getInts() {
-        return ints;
-    }
-
-    public void setInts(int[] ints) {
-        this.ints = ints;
     }
 }

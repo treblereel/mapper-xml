@@ -1401,7 +1401,7 @@ public class NonBufferedXMLReader implements XMLReader {
     /** {@inheritDoc} */
     @Override
     public String nextValue() {
-        int p = peeked;
+     /*   int p = peeked;
         if (p == PEEKED_NONE) {
             p = doPeek();
         }
@@ -1413,8 +1413,7 @@ public class NonBufferedXMLReader implements XMLReader {
 
         // TODO rewrite to avoid using a XMLWriter
         // we should be able to write the tree without escaping/unescaping
-        XMLWriter writer = new FastXMLWriter(new StringBuilder());
-        writer.setLenient(true);
+        XMLWriter writer = new DefaultXMLWriter(new StringBuilder());
 
         int count = 0;
         do {
@@ -1469,7 +1468,8 @@ public class NonBufferedXMLReader implements XMLReader {
         } while (count != 0);
 
         writer.close();
-        return writer.getOutput();
+        return writer.getOutput();*/
+        throw new UnsupportedOperationException();
     }
 
     /** {@inheritDoc} */

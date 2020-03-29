@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.ser.bean;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.JacksonContextProvider;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
@@ -100,7 +102,7 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
      * @param bean   bean containing the property to serialize
      * @param ctx    context of the serialization process
      */
-    public void serialize(XMLWriter writer, T bean, XMLSerializationContext ctx) {
+    public void serialize(XMLWriter writer, T bean, XMLSerializationContext ctx) throws XMLStreamException {
         getSerializer().serialize(writer, getValue(bean, ctx), ctx, getParameters());
     }
 }

@@ -19,6 +19,8 @@ package org.treblereel.gwt.jackson.api.ser;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -126,7 +128,7 @@ public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSeria
         }
 
         @Override
-        public void doSerialize(XMLWriter writer, Double value, XMLSerializationContext ctx, XMLSerializerParameters params) {
+        public void doSerialize(XMLWriter writer, Double value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
             // writer has a special method to write double, let's use instead of default Number method.
             writer.value(value.doubleValue());
         }
@@ -201,7 +203,7 @@ public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSeria
         }
 
         @Override
-        public void doSerialize(XMLWriter writer, Long value, XMLSerializationContext ctx, XMLSerializerParameters params) {
+        public void doSerialize(XMLWriter writer, Long value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
             // writer has a special method to write long, let's use instead of default Number method.
             writer.value(value.longValue());
         }
@@ -257,7 +259,7 @@ public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSeria
 
     /** {@inheritDoc} */
     @Override
-    public void doSerialize(XMLWriter writer, N value, XMLSerializationContext ctx, XMLSerializerParameters params) {
+    public void doSerialize(XMLWriter writer, N value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         writer.value(value);
     }
 }

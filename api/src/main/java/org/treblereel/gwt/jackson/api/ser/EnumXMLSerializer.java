@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.ser;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -46,7 +48,7 @@ public class EnumXMLSerializer<E extends Enum<E>> extends XMLSerializer<E> {
 
     /** {@inheritDoc} */
     @Override
-    public void doSerialize(XMLWriter writer, E value, XMLSerializationContext ctx, XMLSerializerParameters params) {
+    public void doSerialize(XMLWriter writer, E value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         writer.unescapeValue(value.name());
     }
 }

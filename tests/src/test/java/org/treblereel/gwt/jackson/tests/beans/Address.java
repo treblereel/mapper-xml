@@ -1,4 +1,4 @@
-package org.treblereel.gwt.jackson.tests;
+package org.treblereel.gwt.jackson.tests.beans;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -7,8 +7,8 @@ package org.treblereel.gwt.jackson.tests;
 public class Address {
 
     private int id;
-    private String street;
-    private String city;
+    private String street = "Street";
+    private String city = "Los Alamos";
 
     public int getId() {
         return id;

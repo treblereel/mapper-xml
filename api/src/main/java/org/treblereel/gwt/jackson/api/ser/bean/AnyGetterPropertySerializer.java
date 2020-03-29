@@ -18,6 +18,8 @@ package org.treblereel.gwt.jackson.api.ser.bean;
 
 import java.util.Map;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.ser.map.MapXMLSerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
@@ -54,7 +56,7 @@ public abstract class AnyGetterPropertySerializer<T> extends BeanPropertySeriali
      * <p>
      * Serializes the property defined for this instance.
      */
-    public void serialize(XMLWriter writer, T bean, XMLSerializationContext ctx) {
+    public void serialize(XMLWriter writer, T bean, XMLSerializationContext ctx) throws XMLStreamException {
         Map map = getValue(bean, ctx);
         if (null != map) {
             ((MapXMLSerializer) getSerializer()).serializeValues(writer, map, ctx, getParameters());

@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -79,12 +81,8 @@ public class MapXMLSerializer<M extends Map<K, V>, K, V> extends XMLSerializer<M
 
     /** {@inheritDoc} */
     @Override
-    public void doSerialize(XMLWriter writer, M values, XMLSerializationContext ctx, XMLSerializerParameters params) {
-        writer.beginObject();
-
+    public void doSerialize(XMLWriter writer, M values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         serializeValues(writer, values, ctx, params);
-
-        writer.endObject();
     }
 
     /**
@@ -95,7 +93,7 @@ public class MapXMLSerializer<M extends Map<K, V>, K, V> extends XMLSerializer<M
      * @param ctx    a {@link XMLSerializationContext} object.
      * @param params a {@link XMLSerializerParameters} object.
      */
-    public void serializeValues(XMLWriter writer, M values, XMLSerializationContext ctx, XMLSerializerParameters params) {
+    public void serializeValues(XMLWriter writer, M values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         if (!values.isEmpty()) {
             Map<K, V> map = values;
             if (ctx.isOrderMapEntriesByKeys() && !(values instanceof SortedMap<?, ?>)) {

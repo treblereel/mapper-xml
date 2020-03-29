@@ -18,6 +18,8 @@ package org.treblereel.gwt.jackson.api.ser.bean;
 
 import java.util.Set;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
@@ -50,7 +52,7 @@ public abstract class AbstractValueBeanXMLSerializer<T> extends AbstractBeanXMLS
     @Override
     protected void serializeObject(XMLWriter writer, T value, XMLSerializationContext ctx, Set<String> ignoredProperties,
                                    IdentitySerializationInfo identityInfo, ObjectIdSerializer<?> idWriter, String typeName, String
-                                           typeInformation) {
+                                           typeInformation) throws XMLStreamException {
         serializer.serialize(writer, value, ctx);
     }
 }

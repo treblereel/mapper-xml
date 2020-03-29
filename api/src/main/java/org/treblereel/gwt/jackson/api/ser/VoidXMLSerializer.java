@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.ser;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -45,7 +47,7 @@ public class VoidXMLSerializer extends XMLSerializer<Void> {
 
     /** {@inheritDoc} */
     @Override
-    protected void serializeNullValue(XMLWriter writer, XMLSerializationContext ctx, XMLSerializerParameters params) {
+    protected void serializeNullValue(XMLWriter writer, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         if (writer.getSerializeNulls()) {
             writer.setSerializeNulls(false);
             writer.nullValue();

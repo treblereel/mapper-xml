@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.exception.XMLSerializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
@@ -35,7 +37,7 @@ public abstract class XMLSerializer<T> {
      * @param ctx    Context for the full serialization process
      * @throws XMLSerializationException if an error occurs during the serialization
      */
-    public void serialize(XMLWriter writer, T value, XMLSerializationContext ctx) throws XMLSerializationException {
+    public void serialize(XMLWriter writer, T value, XMLSerializationContext ctx) throws XMLSerializationException, XMLStreamException {
         serialize(writer, value, ctx, ctx.defaultParameters());
     }
 
@@ -49,7 +51,7 @@ public abstract class XMLSerializer<T> {
      * @throws XMLSerializationException if an error occurs during the serialization
      */
     public void serialize(XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters params) throws
-            XMLSerializationException {
+            XMLSerializationException, XMLStreamException {
         serialize(writer, value, ctx, params, false);
     }
 
@@ -64,12 +66,12 @@ public abstract class XMLSerializer<T> {
      * @throws XMLSerializationException if an error occurs during the serialization
      */
     public void serialize(XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters params, boolean isMapValue) throws
-            XMLSerializationException {
+            XMLSerializationException, XMLStreamException {
         if (null == value) {
             if (ctx.isSerializeNulls() || (isMapValue && ctx.isWriteNullMapValues())) {
                 serializeNullValue(writer, ctx, params);
             } else {
-                writer.cancelName();
+                writer.nullValue();
             }
         } else {
             doSerialize(writer, value, ctx, params);
@@ -83,7 +85,7 @@ public abstract class XMLSerializer<T> {
      * @param ctx    Context for the full serialization process
      * @param params Parameters for this serialization
      */
-    protected void serializeNullValue(XMLWriter writer, XMLSerializationContext ctx, XMLSerializerParameters params) {
+    protected void serializeNullValue(XMLWriter writer, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         writer.nullValue();
     }
 
@@ -126,5 +128,5 @@ public abstract class XMLSerializer<T> {
      * @param params Parameters for this serialization
      */
     protected abstract void doSerialize(XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters
-            params);
+            params) throws XMLStreamException;
 }

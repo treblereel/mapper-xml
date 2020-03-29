@@ -18,6 +18,8 @@ package org.treblereel.gwt.jackson.api.ser;
 
 import java.util.Iterator;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -65,7 +67,7 @@ public class IterableXMLSerializer<I extends Iterable<T>, T> extends XMLSerializ
 
     /** {@inheritDoc} */
     @Override
-    public void doSerialize(XMLWriter writer, I values, XMLSerializationContext ctx, XMLSerializerParameters params) {
+    public void doSerialize(XMLWriter writer, I values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         Iterator<T> iterator = values.iterator();
 
         if (!iterator.hasNext()) {
@@ -73,7 +75,7 @@ public class IterableXMLSerializer<I extends Iterable<T>, T> extends XMLSerializ
                 writer.beginArray();
                 writer.endArray();
             } else {
-                writer.cancelName();
+                writer.nullValue();
             }
             return;
         }

@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.ser.bean;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
@@ -38,7 +40,7 @@ interface InternalSerializer<T> {
      * @param defaultTypeInfo     a {@link TypeSerializationInfo} object.
      */
     void serializeInternally(XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters params,
-                             IdentitySerializationInfo<T> defaultIdentityInfo, TypeSerializationInfo<T> defaultTypeInfo);
+                             IdentitySerializationInfo<T> defaultIdentityInfo, TypeSerializationInfo<T> defaultTypeInfo) throws XMLStreamException;
 
 }
 

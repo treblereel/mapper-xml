@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.deser.array.ArrayXMLDeserializer;
 import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.exception.XMLSerializationException;
@@ -135,21 +137,22 @@ public abstract class AbstractObjectMapper<T> implements ObjectMapper<T> {
      * {@inheritDoc}
      */
     @Override
-    public String write(T value) throws XMLSerializationException {
+    public String write(T value) throws XMLSerializationException, XMLStreamException {
         return write(value, DefaultXMLSerializationContext.builder().build());
     }
 
     /**
      * {@inheritDoc}
      */
-    public String write(T value, XMLSerializationContext ctx) throws XMLSerializationException {
+    public String write(T value, XMLSerializationContext ctx) throws XMLSerializationException, XMLStreamException {
         XMLWriter writer = ctx.newXMLWriter();
         try {
             if (ctx.isWrapRootValue()) {
-                writer.beginObject();
+                writer.beginObject(rootName);
                 writer.name(rootName);
                 getSerializer().serialize(writer, value, ctx);
                 writer.endObject();
+                writer.close();
             } else {
                 getSerializer().serialize(writer, value, ctx);
             }

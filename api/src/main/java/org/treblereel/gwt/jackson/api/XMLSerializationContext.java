@@ -1,5 +1,7 @@
 package org.treblereel.gwt.jackson.api;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.exception.XMLSerializationException;
 import org.treblereel.gwt.jackson.api.ser.bean.ObjectIdSerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
@@ -79,7 +81,7 @@ public interface XMLSerializationContext extends XMLMappingContext {
      *
      * @return a {@link XMLWriter} object.
      */
-    XMLWriter newXMLWriter();
+    XMLWriter newXMLWriter() throws XMLStreamException;
 
     /**
      * <p>traceError.</p>

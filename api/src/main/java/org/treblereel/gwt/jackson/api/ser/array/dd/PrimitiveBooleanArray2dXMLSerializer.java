@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.ser.array.dd;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -52,9 +54,9 @@ public class PrimitiveBooleanArray2dXMLSerializer extends XMLSerializer<boolean[
     /** {@inheritDoc} */
     @Override
     public void doSerialize(XMLWriter writer, boolean[][] values, XMLSerializationContext ctx,
-                            XMLSerializerParameters params) {
+                            XMLSerializerParameters params) throws XMLStreamException {
         if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
-            writer.cancelName();
+            writer.nullValue();
             return;
         }
 

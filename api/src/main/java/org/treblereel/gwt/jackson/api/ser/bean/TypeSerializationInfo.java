@@ -19,21 +19,12 @@ package org.treblereel.gwt.jackson.api.ser.bean;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.treblereel.gwt.jackson.api.annotation.XMLTypeInfo;
-import org.treblereel.gwt.jackson.api.annotation.XMLTypeInfo.As;
-
 /**
  * Contains type serialization informations
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class TypeSerializationInfo<T> {
-
-    /**
-     * Inclusion mechanism
-     */
-    private final As include;
 
     /**
      * Name of the property containing information about the type
@@ -44,20 +35,17 @@ public class TypeSerializationInfo<T> {
 
     /**
      * <p>Constructor for TypeSerializationInfo.</p>
-     * @param include      a {@link XMLTypeInfo.As} object.
      * @param propertyName a {@link String} object.
      */
-    public TypeSerializationInfo(As include,String propertyName) {
-        this.include = include;
+    public TypeSerializationInfo(String propertyName) {
         this.propertyName = propertyName;
         this.typeClassToInfo = new HashMap<>();
     }
 
     /**
      * <p>addTypeInfo</p>
-     *
      * @param <S> type of the {@link Class}
-     * @param clazz    a {@link Class} object.
+     * @param clazz a {@link Class} object.
      * @param typeInfo a {@link String} object.
      * @return a {@link TypeSerializationInfo} object.
      */
@@ -67,17 +55,7 @@ public class TypeSerializationInfo<T> {
     }
 
     /**
-     * <p>Getter for the field <code>include</code>.</p>
-     *
-     * @return a {@link As} object.
-     */
-    public As getInclude() {
-        return include;
-    }
-
-    /**
      * <p>Getter for the field <code>propertyName</code>.</p>
-     *
      * @return a {@link String} object.
      */
     public String getPropertyName() {
@@ -86,7 +64,6 @@ public class TypeSerializationInfo<T> {
 
     /**
      * <p>getTypeInfo</p>
-     *
      * @param aClass a {@link Class} object.
      * @return a {@link String} object.
      */

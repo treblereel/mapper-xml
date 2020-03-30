@@ -16,46 +16,22 @@
 
 package org.treblereel.gwt.jackson.api.deser.bean;
 
-import org.treblereel.gwt.jackson.api.ObjectIdGenerator;
-import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
-import org.treblereel.gwt.jackson.api.stream.XMLReader;
-
 /**
  * Contains identity informations for deserialization process.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
-public interface IdentityDeserializationInfo<T> {
+public interface IdentityDeserializationInfo {
 
     /**
      * <p>getPropertyName</p>
-     *
      * @return name of the identifier property
      */
     String getPropertyName();
 
     /**
      * <p>isProperty</p>
-     *
      * @return true if the identifier is also a property of the bean
      */
     boolean isProperty();
-
-    /**
-     * <p>newIdKey</p>
-     *
-     * @param id Identifier
-     * @return a new {@link ObjectIdGenerator.IdKey}
-     */
-    ObjectIdGenerator.IdKey newIdKey(Object id);
-
-    /**
-     * Reads the id and returns it.
-     *
-     * @param reader reader
-     * @param ctx    context of the deserialization process
-     * @return the identifier
-     */
-    Object readId(XMLReader reader, XMLDeserializationContext ctx);
 }

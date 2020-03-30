@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.deser.bean;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.JacksonContextProvider;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
@@ -60,7 +62,7 @@ public abstract class HasDeserializerAndParameters<V, S extends XMLDeserializer<
      * @param ctx    context of the deserialization process
      * @return a V object.
      */
-    public V deserialize(XMLReader reader, XMLDeserializationContext ctx) {
+    public V deserialize(XMLReader reader, XMLDeserializationContext ctx) throws XMLStreamException {
         return getDeserializer().deserialize(reader, ctx, getParameters());
     }
 }

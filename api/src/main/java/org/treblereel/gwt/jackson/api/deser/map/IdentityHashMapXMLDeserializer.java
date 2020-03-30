@@ -43,7 +43,7 @@ public final class IdentityHashMapXMLDeserializer<K, V> extends BaseMapXMLDeseri
      */
     public static <K, V> IdentityHashMapXMLDeserializer<K, V> newInstance(KeyDeserializer<K> keyDeserializer,
                                                                            XMLDeserializer<V> valueDeserializer) {
-        return new IdentityHashMapXMLDeserializer<K, V>(keyDeserializer, valueDeserializer);
+        return new IdentityHashMapXMLDeserializer<>(keyDeserializer, valueDeserializer);
     }
 
     /**
@@ -57,6 +57,6 @@ public final class IdentityHashMapXMLDeserializer<K, V> extends BaseMapXMLDeseri
     /** {@inheritDoc} */
     @Override
     protected IdentityHashMap<K, V> newMap() {
-        return new IdentityHashMap<K, V>();
+        return new IdentityHashMap<>();
     }
 }

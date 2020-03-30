@@ -2,6 +2,8 @@ package org.treblereel.gwt.jackson.api;
 
 import java.util.Date;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.deser.bean.MapLike;
 import org.treblereel.gwt.jackson.api.deser.map.key.DateKeyParser;
 import org.treblereel.gwt.jackson.api.stream.Stack;
@@ -108,21 +110,21 @@ public interface JacksonContext {
 
     interface StringArrayReader {
 
-        String[] readArray(XMLReader reader);
+        String[] readArray(XMLReader reader) throws XMLStreamException;
     }
 
     interface ShortArrayReader {
 
-        short[] readArray(XMLReader reader);
+        short[] readArray(XMLReader reader) throws XMLStreamException;
     }
 
     interface IntegerArrayReader {
 
-        int[] readArray(XMLReader reader);
+        int[] readArray(XMLReader reader) throws XMLStreamException;
     }
 
     interface DoubleArrayReader {
 
-        double[] readArray(XMLReader reader);
+        double[] readArray(XMLReader reader) throws XMLStreamException;
     }
 }

@@ -38,7 +38,7 @@ public final class QueueXMLDeserializer<T> extends BaseQueueXMLDeserializer<Queu
      * @return a new instance of {@link QueueXMLDeserializer}
      */
     public static <T> QueueXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
-        return new QueueXMLDeserializer<T>(deserializer);
+        return new QueueXMLDeserializer<>(deserializer);
     }
 
     /**
@@ -51,6 +51,6 @@ public final class QueueXMLDeserializer<T> extends BaseQueueXMLDeserializer<Queu
     /** {@inheritDoc} */
     @Override
     protected Queue<T> newCollection() {
-        return new LinkedList<T>();
+        return new LinkedList<>();
     }
 }

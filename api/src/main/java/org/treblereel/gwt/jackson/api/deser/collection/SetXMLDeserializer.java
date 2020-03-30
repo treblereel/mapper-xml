@@ -38,7 +38,7 @@ public final class SetXMLDeserializer<T> extends BaseSetXMLDeserializer<Set<T>, 
      * @return a new instance of {@link SetXMLDeserializer}
      */
     public static <T> SetXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
-        return new SetXMLDeserializer<T>(deserializer);
+        return new SetXMLDeserializer<>(deserializer);
     }
 
     /**
@@ -51,6 +51,6 @@ public final class SetXMLDeserializer<T> extends BaseSetXMLDeserializer<Set<T>, 
     /** {@inheritDoc} */
     @Override
     protected Set<T> newCollection() {
-        return new LinkedHashSet<T>();
+        return new LinkedHashSet<>();
     }
 }

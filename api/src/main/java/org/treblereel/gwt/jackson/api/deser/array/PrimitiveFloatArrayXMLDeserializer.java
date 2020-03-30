@@ -18,6 +18,8 @@ package org.treblereel.gwt.jackson.api.deser.array;
 
 import java.util.List;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -48,7 +50,7 @@ public class PrimitiveFloatArrayXMLDeserializer extends AbstractArrayXMLDeserial
 
     /** {@inheritDoc} */
     @Override
-    public float[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    public float[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         List<Float> list = deserializeIntoList(reader, ctx, BaseNumberXMLDeserializer.FloatXMLDeserializer.getInstance(), params);
 
         float[] result = new float[list.size()];
@@ -64,7 +66,7 @@ public class PrimitiveFloatArrayXMLDeserializer extends AbstractArrayXMLDeserial
 
     /** {@inheritDoc} */
     @Override
-    protected float[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    protected float[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         return new float[]{BaseNumberXMLDeserializer.FloatXMLDeserializer.getInstance().deserialize(reader, ctx, params)};
     }
 }

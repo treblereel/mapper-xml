@@ -25,45 +25,51 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for 2D array.
- *
  * @param <T> Type of the elements inside the array
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class Array2dXMLSerializer<T> extends XMLSerializer<T[][]> {
 
-    /**
-     * <p>newInstance</p>
-     *
-     * @param serializer {@link XMLSerializer} used to serialize the objects inside the array.
-     * @param <T>        Type of the elements inside the array
-     * @return a new instance of {@link Array2dXMLSerializer}
-     */
-    public static <T> Array2dXMLSerializer<T> newInstance(XMLSerializer<T> serializer) {
-        return new Array2dXMLSerializer<T>(serializer);
-    }
-
+    protected final String propertyName;
     private final XMLSerializer<T> serializer;
 
     /**
      * <p>Constructor for Array2dXMLSerializer.</p>
-     *
      * @param serializer {@link XMLSerializer} used to serialize the objects inside the array.
      */
-    protected Array2dXMLSerializer(XMLSerializer<T> serializer) {
+    protected Array2dXMLSerializer(XMLSerializer<T> serializer, String propertyName) {
         if (null == serializer) {
             throw new IllegalArgumentException("serializer cannot be null");
         }
+        if (null == propertyName) {
+            throw new IllegalArgumentException("propertyName cannot be null");
+        }
         this.serializer = serializer;
+        this.propertyName = propertyName;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * <p>newInstance</p>
+     * @param serializer {@link XMLSerializer} used to serialize the objects inside the array.
+     * @param <T> Type of the elements inside the array
+     * @return a new instance of {@link Array2dXMLSerializer}
+     */
+    public static <T> Array2dXMLSerializer<T> getInstance(XMLSerializer<T> serializer, String propertyName) {
+        return new Array2dXMLSerializer<>(serializer, propertyName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean isEmpty(T[][] value) {
         return null == value || value.length == 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSerialize(XMLWriter writer, T[][] values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
@@ -71,14 +77,14 @@ public class Array2dXMLSerializer<T> extends XMLSerializer<T[][]> {
             return;
         }
 
-        writer.beginArray();
+        writer.beginObject(propertyName);
         for (T[] array : values) {
-            writer.beginArray();
+            writer.beginObject(propertyName);
             for (T value : array) {
                 serializer.serialize(writer, value, ctx, params);
             }
-            writer.endArray();
+            writer.endObject();
         }
-        writer.endArray();
+        writer.endObject();
     }
 }

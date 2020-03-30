@@ -18,6 +18,8 @@ package org.treblereel.gwt.jackson.api.deser.array.dd;
 
 import java.util.List;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -48,7 +50,7 @@ public class PrimitiveLongArray2dXMLDeserializer extends AbstractArray2dXMLDeser
 
     /** {@inheritDoc} */
     @Override
-    public long[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    public long[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         List<List<Long>> list = deserializeIntoList(reader, ctx, BaseNumberXMLDeserializer.LongXMLDeserializer.getInstance(), params);
 
         if (list.isEmpty()) {

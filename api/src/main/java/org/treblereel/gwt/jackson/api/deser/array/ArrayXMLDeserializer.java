@@ -23,6 +23,8 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 import java.util.List;
 
+import javax.xml.stream.XMLStreamException;
+
 /**
  * Default {@link XMLDeserializer} implementation for array.
  *
@@ -45,7 +47,7 @@ public class ArrayXMLDeserializer<T> extends AbstractArrayXMLDeserializer<T[]> {
      * @return a new instance of {@link ArrayXMLDeserializer}
      */
     public static <T> ArrayXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer, ArrayCreator<T> arrayCreator) {
-        return new ArrayXMLDeserializer<T>(deserializer, arrayCreator);
+        return new ArrayXMLDeserializer<>(deserializer, arrayCreator);
     }
 
     private final XMLDeserializer<T> deserializer;
@@ -71,26 +73,16 @@ public class ArrayXMLDeserializer<T> extends AbstractArrayXMLDeserializer<T[]> {
 
     /** {@inheritDoc} */
     @Override
-    public T[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    public T[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         List<T> list = deserializeIntoList(reader, ctx, deserializer, params);
         return list.toArray(arrayCreator.create(list.size()));
     }
 
     /** {@inheritDoc} */
     @Override
-    protected T[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    protected T[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         T[] result = arrayCreator.create(1);
         result[0] = deserializer.deserialize(reader, ctx, params);
         return result;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setBackReference(String referenceName, Object reference, T[] value, XMLDeserializationContext ctx) {
-        if (null != value && value.length > 0) {
-            for (T val : value) {
-                deserializer.setBackReference(referenceName, reference, val, ctx);
-            }
-        }
     }
 }

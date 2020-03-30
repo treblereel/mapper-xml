@@ -23,6 +23,8 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 import java.util.UUID;
 
+import javax.xml.stream.XMLStreamException;
+
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.UUID}.
  *
@@ -47,7 +49,11 @@ public class UUIDXMLDeserializer extends XMLDeserializer<UUID> {
 
     /** {@inheritDoc} */
     @Override
-    public UUID doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-        return UUID.fromString(reader.nextString());
+    public UUID doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+        String uuid = reader.nextString();
+        if(uuid != null) {
+            return UUID.fromString(uuid);
+        }
+        return null;
     }
 }

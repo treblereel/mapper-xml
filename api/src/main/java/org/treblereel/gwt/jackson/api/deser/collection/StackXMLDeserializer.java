@@ -37,7 +37,7 @@ public class StackXMLDeserializer<T> extends BaseListXMLDeserializer<Stack<T>, T
      * @return a new instance of {@link StackXMLDeserializer}
      */
     public static <T> StackXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
-        return new StackXMLDeserializer<T>(deserializer);
+        return new StackXMLDeserializer<>(deserializer);
     }
 
     /**
@@ -50,6 +50,6 @@ public class StackXMLDeserializer<T> extends BaseListXMLDeserializer<Stack<T>, T
     /** {@inheritDoc} */
     @Override
     protected Stack<T> newCollection() {
-        return new Stack<T>();
+        return new Stack<>();
     }
 }

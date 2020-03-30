@@ -21,38 +21,41 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
+import org.treblereel.gwt.jackson.api.ser.BaseNumberXMLSerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
-import org.treblereel.gwt.jackson.api.utils.Base64Utils;
 
 /**
  * Default {@link XMLSerializer} implementation for array of byte.
- *
  * @author Nicolas Morel
  * @version $Id: $Id
  */
-public class PrimitiveByteArrayXMLSerializer extends XMLSerializer<byte[]> {
+public class PrimitiveByteArrayXMLSerializer extends BasicArrayXMLSerializer<byte[]> {
 
     private static final PrimitiveByteArrayXMLSerializer INSTANCE = new PrimitiveByteArrayXMLSerializer();
-
-    /**
-     * <p>getInstance.</p>
-     *
-     * @return an instance of {@link PrimitiveByteArrayXMLSerializer}
-     */
-    public static PrimitiveByteArrayXMLSerializer getInstance() {
-        return INSTANCE;
-    }
+    private BaseNumberXMLSerializer.ByteXMLSerializer byteXMLSerializer = BaseNumberXMLSerializer.ByteXMLSerializer.getInstance();
 
     private PrimitiveByteArrayXMLSerializer() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * <p>getInstance.</p>
+     * @return an instance of {@link PrimitiveByteArrayXMLSerializer}
+     */
+    public static BasicArrayXMLSerializer getInstance(String propertyName) {
+        return INSTANCE.setPropertyName(propertyName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean isEmpty(byte[] value) {
         return null == value || value.length == 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSerialize(XMLWriter writer, byte[] values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
@@ -60,6 +63,10 @@ public class PrimitiveByteArrayXMLSerializer extends XMLSerializer<byte[]> {
             return;
         }
 
-        writer.unescapeValue(Base64Utils.toBase64(values));
+        writer.beginObject(propertyName);
+        for (byte value : values) {
+            byteXMLSerializer.doSerialize(writer, value, ctx, params);
+        }
+        writer.endObject();
     }
 }

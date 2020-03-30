@@ -45,7 +45,7 @@ public abstract class KeySerializer<T> {
      * @return the key
      * @throws XMLSerializationException if an error occurs during the serialization
      */
-    public String serialize(T value, XMLSerializationContext ctx) throws XMLSerializationException {
+    public String serialize(T value, XMLSerializationContext ctx) {
         if (null == value) {
             return null;
         }

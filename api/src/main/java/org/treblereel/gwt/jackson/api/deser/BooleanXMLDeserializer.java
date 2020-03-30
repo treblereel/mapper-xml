@@ -16,15 +16,15 @@
 
 package org.treblereel.gwt.jackson.api.deser;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
-import org.treblereel.gwt.jackson.api.stream.XMLToken;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.lang.Boolean}.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
@@ -32,30 +32,22 @@ public class BooleanXMLDeserializer extends XMLDeserializer<Boolean> {
 
     private static final BooleanXMLDeserializer INSTANCE = new BooleanXMLDeserializer();
 
+    private BooleanXMLDeserializer() {
+    }
+
     /**
      * <p>getInstance</p>
-     *
      * @return an instance of {@link BooleanXMLDeserializer}
      */
     public static BooleanXMLDeserializer getInstance() {
         return INSTANCE;
     }
 
-    private BooleanXMLDeserializer() {
-    }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Boolean doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-        XMLToken token = reader.peek();
-        if (XMLToken.BOOLEAN.equals(token)) {
-            return reader.nextBoolean();
-        } else if (XMLToken.STRING.equals(token)) {
-            return Boolean.valueOf(reader.nextString());
-        } else if (XMLToken.NUMBER.equals(token)) {
-            return reader.nextInt() == 1;
-        } else {
-            return null;
-        }
+    public Boolean doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+        return reader.nextBoolean();
     }
 }

@@ -18,6 +18,8 @@ package org.treblereel.gwt.jackson.api.deser.array.dd;
 
 import java.util.List;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -45,7 +47,7 @@ public class Array2dXMLDeserializer<T> extends AbstractArray2dXMLDeserializer<T[
      * @return a new instance of {@link Array2dXMLDeserializer}
      */
     public static <T> Array2dXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer, Array2dCreator<T> arrayCreator) {
-        return new Array2dXMLDeserializer<T>(deserializer, arrayCreator);
+        return new Array2dXMLDeserializer<>(deserializer, arrayCreator);
     }
 
     private final XMLDeserializer<T> deserializer;
@@ -71,7 +73,7 @@ public class Array2dXMLDeserializer<T> extends AbstractArray2dXMLDeserializer<T[
 
     /** {@inheritDoc} */
     @Override
-    protected T[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    protected T[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         List<List<T>> list = deserializeIntoList(reader, ctx, deserializer, params);
 
         if (list.isEmpty()) {
@@ -91,17 +93,5 @@ public class Array2dXMLDeserializer<T> extends AbstractArray2dXMLDeserializer<T[
             i++;
         }
         return array;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setBackReference(String referenceName, Object reference, T[][] value, XMLDeserializationContext ctx) {
-        if (null != value && value.length > 0) {
-            for (T[] array : value) {
-                for (T val : array) {
-                    deserializer.setBackReference(referenceName, reference, val, ctx);
-                }
-            }
-        }
     }
 }

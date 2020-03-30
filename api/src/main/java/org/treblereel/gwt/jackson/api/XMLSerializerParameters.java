@@ -19,6 +19,8 @@ public interface XMLSerializerParameters {
      */
     String getPattern();
 
+
+
     /**
      * <p>setPattern.</p>
      *

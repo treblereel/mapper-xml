@@ -37,7 +37,7 @@ public class HashSetXMLDeserializer<T> extends BaseSetXMLDeserializer<HashSet<T>
      * @return a new instance of {@link HashSetXMLDeserializer}
      */
     public static <T> HashSetXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
-        return new HashSetXMLDeserializer<T>(deserializer);
+        return new HashSetXMLDeserializer<>(deserializer);
     }
 
     /**
@@ -50,6 +50,6 @@ public class HashSetXMLDeserializer<T> extends BaseSetXMLDeserializer<HashSet<T>
     /** {@inheritDoc} */
     @Override
     protected HashSet<T> newCollection() {
-        return new HashSet<T>();
+        return new HashSet<>();
     }
 }

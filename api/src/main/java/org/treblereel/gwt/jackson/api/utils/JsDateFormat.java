@@ -65,7 +65,7 @@ public final class JsDateFormat implements JacksonContext.DateFormat {
      */
     public static final TimeZone UTC_TIMEZONE = TimeZone.createTimeZone(0);
 
-    private static final Map<String, DateParser> CACHE_PARSERS = new HashMap<String, DateParser>();
+    private static final Map<String, DateParser> CACHE_PARSERS = new HashMap<>();
 
     /**
      * <p>Constructor for JsDateFormat.</p>
@@ -152,6 +152,9 @@ public final class JsDateFormat implements JacksonContext.DateFormat {
      * Parse a date using the pattern given in parameter or {@link #DATE_FORMAT_STR_ISO8601} and the browser timezone.
      */
     public Date parse(boolean useBrowserTimezone, String pattern, Boolean hasTz, String date) {
+        if(date == null) {
+            return null;
+        }
         if (null == pattern) {
             return parse(JsDateFormat.DATE_FORMAT_STR_ISO8601, date);
         } else {

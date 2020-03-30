@@ -79,7 +79,7 @@ public class DefaultXMLWriter implements XMLWriter {
      */
     @Override
     public DefaultXMLWriter beginArray() throws XMLStreamException {
-        out.writeStartElement(deferredUnescapeName);
+        out.writeStartElement(deferredName);
         return this;
     }
 
@@ -225,21 +225,6 @@ public class DefaultXMLWriter implements XMLWriter {
         }
         value(value.toString());
         return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public DefaultXMLWriter rawValue(Object value) {
-/*        if (value == null) {
-            return nullValue();
-        }
-        writeDeferredName();
-        beforeValue(false);
-        out.append(value.toString());
-        return this;*/
-        throw new UnsupportedOperationException();
     }
 
     /**

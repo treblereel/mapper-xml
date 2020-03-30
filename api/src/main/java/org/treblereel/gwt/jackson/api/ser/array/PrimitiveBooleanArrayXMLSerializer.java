@@ -21,37 +21,37 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
+import org.treblereel.gwt.jackson.api.ser.BooleanXMLSerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for array of boolean.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
-public class PrimitiveBooleanArrayXMLSerializer extends XMLSerializer<boolean[]> {
+public class PrimitiveBooleanArrayXMLSerializer extends BasicArrayXMLSerializer<boolean[]> {
 
     private static final PrimitiveBooleanArrayXMLSerializer INSTANCE = new PrimitiveBooleanArrayXMLSerializer();
-
-    /**
-     * <p>getInstance</p>
-     *
-     * @return an instance of {@link PrimitiveBooleanArrayXMLSerializer}
-     */
-    public static PrimitiveBooleanArrayXMLSerializer getInstance() {
-        return INSTANCE;
-    }
+    private BooleanXMLSerializer serializer = BooleanXMLSerializer.getInstance();
 
     private PrimitiveBooleanArrayXMLSerializer() {
     }
 
-    /** {@inheritDoc} */
+    public static BasicArrayXMLSerializer getInstance(String propertyName) {
+        return INSTANCE.setPropertyName(propertyName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean isEmpty(boolean[] value) {
         return null == value || value.length == 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSerialize(XMLWriter writer, boolean[] values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
@@ -59,14 +59,10 @@ public class PrimitiveBooleanArrayXMLSerializer extends XMLSerializer<boolean[]>
             return;
         }
 
-        if (ctx.isWriteSingleElemArraysUnwrapped() && values.length == 1) {
-            writer.value(values[0]);
-        } else {
-            writer.beginArray();
-            for (boolean value : values) {
-                writer.value(value);
-            }
-            writer.endArray();
+        writer.beginObject(propertyName);
+        for (boolean value : values) {
+            serializer.doSerialize(writer, value, ctx, params);
         }
+        writer.endObject();
     }
 }

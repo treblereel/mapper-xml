@@ -42,7 +42,7 @@ public final class EnumMapXMLDeserializer<E extends Enum<E>, V> extends BaseMapX
      */
     public static <E extends Enum<E>, V> EnumMapXMLDeserializer<E, V> newInstance(EnumKeyDeserializer<E> keyDeserializer,
                                                                                    XMLDeserializer<V> valueDeserializer) {
-        return new EnumMapXMLDeserializer<E, V>(keyDeserializer, valueDeserializer);
+        return new EnumMapXMLDeserializer<>(keyDeserializer, valueDeserializer);
     }
 
     /**
@@ -62,6 +62,6 @@ public final class EnumMapXMLDeserializer<E extends Enum<E>, V> extends BaseMapX
     /** {@inheritDoc} */
     @Override
     protected EnumMap<E, V> newMap() {
-        return new EnumMap<E, V>(enumClass);
+        return new EnumMap<>(enumClass);
     }
 }

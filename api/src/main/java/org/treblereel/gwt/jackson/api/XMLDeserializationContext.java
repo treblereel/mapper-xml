@@ -1,5 +1,7 @@
 package org.treblereel.gwt.jackson.api;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
@@ -16,13 +18,6 @@ public interface XMLDeserializationContext extends XMLMappingContext {
      * @return a boolean.
      */
     boolean isFailOnUnknownProperties();
-
-    /**
-     * <p>isUnwrapRootValue.</p>
-     *
-     * @return a boolean.
-     */
-    boolean isUnwrapRootValue();
 
     /**
      * <p>isAcceptSingleValueAsArray.</p>
@@ -58,7 +53,7 @@ public interface XMLDeserializationContext extends XMLMappingContext {
      * @param input a {@link String} object.
      * @return a {@link XMLReader} object.
      */
-    XMLReader newXMLReader(String input);
+    XMLReader newXMLReader(String input) throws XMLStreamException;
 
     /**
      * <p>traceError.</p>
@@ -66,7 +61,7 @@ public interface XMLDeserializationContext extends XMLMappingContext {
      * @param message a {@link String} object.
      * @return a {@link XMLDeserializationException} object.
      */
-    XMLDeserializationException traceError(String message);
+    XMLDeserializationException traceError(String message) throws XMLStreamException;
 
     /**
      * <p>traceError.</p>
@@ -75,7 +70,7 @@ public interface XMLDeserializationContext extends XMLMappingContext {
      * @param reader a {@link XMLReader} object.
      * @return a {@link XMLDeserializationException} object.
      */
-    XMLDeserializationException traceError(String message, XMLReader reader);
+    XMLDeserializationException traceError(String message, XMLReader reader) throws XMLStreamException;
 
     /**
      * <p>traceError.</p>
@@ -92,23 +87,7 @@ public interface XMLDeserializationContext extends XMLMappingContext {
      * @param reader a {@link XMLReader} object.
      * @return a {@link RuntimeException} object.
      */
-    RuntimeException traceError(RuntimeException cause, XMLReader reader);
-
-    /**
-     * <p>addObjectId.</p>
-     *
-     * @param id a {@link ObjectIdGenerator.IdKey} object.
-     * @param instance a {@link Object} object.
-     */
-    void addObjectId(ObjectIdGenerator.IdKey id, Object instance);
-
-    /**
-     * <p>getObjectWithId.</p>
-     *
-     * @param id a {@link com.fasterxml.jackson.annotation.ObjectIdGenerator.IdKey} object.
-     * @return a {@link Object} object.
-     */
-    Object getObjectWithId(ObjectIdGenerator.IdKey id);
+    RuntimeException traceError(RuntimeException cause, XMLReader reader) throws XMLStreamException;
 
     /**
      * <p>defaultParameters.</p>

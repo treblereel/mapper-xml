@@ -23,6 +23,7 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
+import org.treblereel.gwt.jackson.api.ser.bean.TypeSerializationInfo;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
@@ -41,22 +42,29 @@ public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSeri
      * @param <C> Type of the {@link Collection}
      * @return a new instance of {@link CollectionXMLSerializer}
      */
-    public static <C extends Collection<?>> CollectionXMLSerializer<C, ?> newInstance(XMLSerializer<?> serializer) {
-        return new CollectionXMLSerializer(serializer);
+    public static <C extends Collection<?>> CollectionXMLSerializer<C, ?> newInstance(XMLSerializer<?> serializer, String propertyName) {
+        return new CollectionXMLSerializer(serializer, propertyName);
     }
 
     protected final XMLSerializer<T> serializer;
+    protected final String propertyName;
+
+
 
     /**
      * <p>Constructor for CollectionXMLSerializer.</p>
      *
      * @param serializer {@link XMLSerializer} used to serialize the objects inside the {@link Collection}.
      */
-    protected CollectionXMLSerializer(XMLSerializer<T> serializer) {
+    protected CollectionXMLSerializer(XMLSerializer<T> serializer, String propertyName) {
         if (null == serializer) {
             throw new IllegalArgumentException("serializer cannot be null");
         }
+        if (null == propertyName) {
+            throw new IllegalArgumentException("propertyName cannot be null");
+        }
         this.serializer = serializer;
+        this.propertyName = propertyName;
     }
 
     /** {@inheritDoc} */
@@ -77,16 +85,13 @@ public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSeri
             }
             return;
         }
+        writer.beginObject(propertyName);
+        for (T value : values) {
+            params.setTypeInfo(new TypeSerializationInfo(propertyName));
 
-        if (ctx.isWriteSingleElemArraysUnwrapped() && values.size() == 1) {
-            // there is only one element, we write it directly
-            serializer.serialize(writer, values.iterator().next(), ctx, params);
-        } else {
-            writer.beginArray();
-            for (T value : values) {
-                serializer.serialize(writer, value, ctx, params);
-            }
-            writer.endArray();
+            serializer.serialize(writer, value, ctx, params);
+            params.setTypeInfo(null);
         }
+        writer.endObject();
     }
 }

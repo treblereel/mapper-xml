@@ -34,7 +34,7 @@ public final class EnumKeyDeserializer<E extends Enum<E>> extends KeyDeserialize
      * @return a new instance of {@link EnumKeyDeserializer}
      */
     public static <E extends Enum<E>> EnumKeyDeserializer<E> newInstance(Class<E> enumClass) {
-        return new EnumKeyDeserializer<E>(enumClass);
+        return new EnumKeyDeserializer<>(enumClass);
     }
 
     private final Class<E> enumClass;

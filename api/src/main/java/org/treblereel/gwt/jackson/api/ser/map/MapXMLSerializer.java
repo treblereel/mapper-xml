@@ -97,7 +97,7 @@ public class MapXMLSerializer<M extends Map<K, V>, K, V> extends XMLSerializer<M
         if (!values.isEmpty()) {
             Map<K, V> map = values;
             if (ctx.isOrderMapEntriesByKeys() && !(values instanceof SortedMap<?, ?>)) {
-                map = new TreeMap<K, V>(map);
+                map = new TreeMap<>(map);
             }
 
             if (ctx.isWriteNullMapValues()) {

@@ -44,7 +44,7 @@ public final class SortedMapXMLDeserializer<K, V> extends BaseMapXMLDeserializer
      */
     public static <K, V> SortedMapXMLDeserializer<K, V> newInstance(KeyDeserializer<K> keyDeserializer,
                                                                      XMLDeserializer<V> valueDeserializer) {
-        return new SortedMapXMLDeserializer<K, V>(keyDeserializer, valueDeserializer);
+        return new SortedMapXMLDeserializer<>(keyDeserializer, valueDeserializer);
     }
 
     /**
@@ -58,6 +58,6 @@ public final class SortedMapXMLDeserializer<K, V> extends BaseMapXMLDeserializer
     /** {@inheritDoc} */
     @Override
     protected SortedMap<K, V> newMap() {
-        return new TreeMap<K, V>();
+        return new TreeMap<>();
     }
 }

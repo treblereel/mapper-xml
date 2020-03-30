@@ -16,9 +16,10 @@
 
 package org.treblereel.gwt.jackson.api;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
-import org.treblereel.gwt.jackson.api.stream.XMLToken;
 
 /**
  * Base class for all the deserializer. It handles null values and exceptions. The rest is delegated to implementations.
@@ -36,7 +37,7 @@ public abstract class XMLDeserializer<T> {
      * @return the deserialized object
      * @throws XMLDeserializationException if an error occurs during the deserialization
      */
-    public T deserialize(XMLReader reader, XMLDeserializationContext ctx) throws XMLDeserializationException {
+    public T deserialize(XMLReader reader, XMLDeserializationContext ctx) throws XMLDeserializationException, XMLStreamException {
         return deserialize(reader, ctx, ctx.defaultParameters());
     }
 
@@ -50,24 +51,8 @@ public abstract class XMLDeserializer<T> {
      * @throws XMLDeserializationException if an error occurs during the deserialization
      */
     public T deserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
-            XMLDeserializationException {
-        if (XMLToken.NULL.equals(reader.peek())) {
-            return deserializeNullValue(reader, ctx, params);
-        }
+            XMLDeserializationException, XMLStreamException {
         return doDeserialize(reader, ctx, params);
-    }
-
-    /**
-     * Deserialize the null value. This method allows children to override the default behaviour.
-     *
-     * @param reader {@link XMLReader} used to read the JSON input
-     * @param ctx    Context for the full deserialization process
-     * @param params Parameters for this deserialization
-     * @return the deserialized object
-     */
-    protected T deserializeNullValue(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-        reader.skipValue();
-        return null;
     }
 
     /**
@@ -78,17 +63,6 @@ public abstract class XMLDeserializer<T> {
      * @param params Parameters for this deserialization
      * @return the deserialized object
      */
-    protected abstract T doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params);
+    protected abstract T doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException;
 
-    /**
-     * Set the back reference.
-     *
-     * @param referenceName name of the reference
-     * @param reference     reference to set
-     * @param value         value to set the reference to.
-     * @param ctx           Context for the full deserialization process
-     */
-    public void setBackReference(String referenceName, Object reference, T value, XMLDeserializationContext ctx) {
-        throw new XMLDeserializationException("Cannot set a back reference to the type managed by this deserializer");
-    }
 }

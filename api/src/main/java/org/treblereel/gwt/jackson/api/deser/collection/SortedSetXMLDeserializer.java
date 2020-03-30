@@ -38,7 +38,7 @@ public final class SortedSetXMLDeserializer<T> extends BaseSortedSetXMLDeseriali
      * @return a new instance of {@link SortedSetXMLDeserializer}
      */
     public static <T> SortedSetXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
-        return new SortedSetXMLDeserializer<T>(deserializer);
+        return new SortedSetXMLDeserializer<>(deserializer);
     }
 
     /**
@@ -51,6 +51,6 @@ public final class SortedSetXMLDeserializer<T> extends BaseSortedSetXMLDeseriali
     /** {@inheritDoc} */
     @Override
     protected SortedSet<T> newCollection() {
-        return new TreeSet<T>();
+        return new TreeSet<>();
     }
 }

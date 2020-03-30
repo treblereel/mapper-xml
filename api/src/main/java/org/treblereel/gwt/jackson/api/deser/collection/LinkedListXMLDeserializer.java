@@ -37,7 +37,7 @@ public class LinkedListXMLDeserializer<T> extends BaseListXMLDeserializer<Linked
      * @return a new instance of {@link LinkedListXMLDeserializer}
      */
     public static <T> LinkedListXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
-        return new LinkedListXMLDeserializer<T>(deserializer);
+        return new LinkedListXMLDeserializer<>(deserializer);
     }
 
     /**
@@ -50,6 +50,6 @@ public class LinkedListXMLDeserializer<T> extends BaseListXMLDeserializer<Linked
     /** {@inheritDoc} */
     @Override
     protected LinkedList<T> newCollection() {
-        return new LinkedList<T>();
+        return new LinkedList<>();
     }
 }

@@ -38,7 +38,7 @@ public final class ListXMLDeserializer<T> extends BaseListXMLDeserializer<List<T
      * @return a new instance of {@link ListXMLDeserializer}
      */
     public static <T> ListXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
-        return new ListXMLDeserializer<T>(deserializer);
+        return new ListXMLDeserializer<>(deserializer);
     }
 
     /**
@@ -51,6 +51,6 @@ public final class ListXMLDeserializer<T> extends BaseListXMLDeserializer<List<T
     /** {@inheritDoc} */
     @Override
     protected List<T> newCollection() {
-        return new ArrayList<T>();
+        return new ArrayList<>();
     }
 }

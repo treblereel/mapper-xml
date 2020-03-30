@@ -18,6 +18,8 @@ package org.treblereel.gwt.jackson.api.deser.bean;
 
 import java.util.Map;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -42,13 +44,13 @@ public abstract class SubtypeDeserializer<T, D extends XMLDeserializer<T>> exten
         @Override
         public T deserializeInline(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params,
                                    IdentityDeserializationInfo identityInfo, TypeDeserializationInfo typeInfo, String typeInformation,
-                                   Map<String, String> bufferedProperties) {
+                                   Map<String, String> bufferedProperties) throws XMLStreamException {
             return getDeserializer().deserializeInline(reader, ctx, params, identityInfo, typeInfo, typeInformation, bufferedProperties);
         }
 
         @Override
         public T deserializeWrapped(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params,
-                                    IdentityDeserializationInfo identityInfo, TypeDeserializationInfo typeInfo, String typeInformation) {
+                                    IdentityDeserializationInfo identityInfo, TypeDeserializationInfo typeInfo, String typeInformation) throws XMLStreamException {
             return getDeserializer().deserializeWrapped(reader, ctx, params, identityInfo, typeInfo, typeInformation);
         }
     }
@@ -63,13 +65,13 @@ public abstract class SubtypeDeserializer<T, D extends XMLDeserializer<T>> exten
         @Override
         public T deserializeInline(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params,
                                    IdentityDeserializationInfo identityInfo, TypeDeserializationInfo typeInfo, String typeInformation,
-                                   Map<String, String> bufferedProperties) {
+                                   Map<String, String> bufferedProperties) throws XMLStreamException {
             throw ctx.traceError("Cannot deserialize into a bean when not using an AbstractBeanXMLDeserializer");
         }
 
         @Override
         public T deserializeWrapped(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params,
-                                    IdentityDeserializationInfo identityInfo, TypeDeserializationInfo typeInfo, String typeInformation) {
+                                    IdentityDeserializationInfo identityInfo, TypeDeserializationInfo typeInfo, String typeInformation) throws XMLStreamException {
             return getDeserializer().deserialize(reader, ctx, params);
         }
     }

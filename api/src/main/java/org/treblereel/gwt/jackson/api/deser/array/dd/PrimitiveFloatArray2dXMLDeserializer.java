@@ -18,6 +18,8 @@ package org.treblereel.gwt.jackson.api.deser.array.dd;
 
 import java.util.List;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -48,7 +50,7 @@ public class PrimitiveFloatArray2dXMLDeserializer extends AbstractArray2dXMLDese
 
     /** {@inheritDoc} */
     @Override
-    public float[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    public float[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         List<List<Float>> list = deserializeIntoList(reader, ctx, BaseNumberXMLDeserializer.FloatXMLDeserializer.getInstance(), params);
 
         if (list.isEmpty()) {

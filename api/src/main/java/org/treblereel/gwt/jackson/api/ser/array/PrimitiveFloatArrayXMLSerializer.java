@@ -21,37 +21,41 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
+import org.treblereel.gwt.jackson.api.ser.BaseNumberXMLSerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for array of float.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
-public class PrimitiveFloatArrayXMLSerializer extends XMLSerializer<float[]> {
+public class PrimitiveFloatArrayXMLSerializer extends BasicArrayXMLSerializer<float[]> {
 
     private static final PrimitiveFloatArrayXMLSerializer INSTANCE = new PrimitiveFloatArrayXMLSerializer();
+    private BaseNumberXMLSerializer.FloatXMLSerializer serializer = BaseNumberXMLSerializer.FloatXMLSerializer.getInstance();
 
-    /**
-     * <p>getInstance</p>
-     *
-     * @return an instance of {@link PrimitiveFloatArrayXMLSerializer}
-     */
-    public static PrimitiveFloatArrayXMLSerializer getInstance() {
-        return INSTANCE;
-    }
 
     private PrimitiveFloatArrayXMLSerializer() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * <p>getInstance</p>
+     * @return an instance of {@link PrimitiveFloatArrayXMLSerializer}
+     */
+    public static BasicArrayXMLSerializer getInstance(String propertyName) {
+        return INSTANCE.setPropertyName(propertyName);
+    }
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean isEmpty(float[] value) {
         return null == value || value.length == 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSerialize(XMLWriter writer, float[] values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
@@ -59,14 +63,10 @@ public class PrimitiveFloatArrayXMLSerializer extends XMLSerializer<float[]> {
             return;
         }
 
-        if (ctx.isWriteSingleElemArraysUnwrapped() && values.length == 1) {
-            writer.value(values[0]);
-        } else {
-            writer.beginArray();
-            for (float value : values) {
-                writer.value(value);
-            }
-            writer.endArray();
+        writer.beginObject(propertyName);
+        for (float value : values) {
+            serializer.doSerialize(writer, value, ctx, params);
         }
+        writer.endObject();
     }
 }

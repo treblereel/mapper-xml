@@ -16,12 +16,7 @@
 
 package org.treblereel.gwt.jackson.api;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.logging.Level;
@@ -32,8 +27,6 @@ import javax.xml.stream.XMLStreamException;
 
 import com.ctc.wstx.stax.WstxOutputFactory;
 import org.treblereel.gwt.jackson.api.exception.XMLSerializationException;
-import org.treblereel.gwt.jackson.api.ser.bean.AbstractBeanXMLSerializer;
-import org.treblereel.gwt.jackson.api.ser.bean.ObjectIdSerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 import org.treblereel.gwt.jackson.api.stream.impl.DefaultXMLWriter;
 
@@ -48,38 +41,24 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
     /*
      * Serialization options
      */
-    private final boolean useEqualityForObjectId;
     private final boolean serializeNulls;
     private final boolean writeDatesAsTimestamps;
     private final boolean writeDateKeysAsTimestamps;
-    private final boolean indent;
-    private final boolean wrapRootValue;
-    private final boolean writeCharArraysAsXMLArrays;
     private final boolean writeNullMapValues;
     private final boolean writeEmptyXMLArrays;
     private final boolean orderMapEntriesByKeys;
-    private final boolean writeSingleElemArraysUnwrapped;
     private final boolean wrapExceptions;
     private final XMLOutputFactory xmlOutputFactory;
-    private Map<Object, ObjectIdSerializer<?>> mapObjectId;
-    private List<ObjectIdGenerator<?>> generators;
 
-    private DefaultXMLSerializationContext(boolean useEqualityForObjectId, boolean serializeNulls, boolean writeDatesAsTimestamps, boolean
-            writeDateKeysAsTimestamps, boolean indent, boolean wrapRootValue, boolean writeCharArraysAsXMLArrays, boolean
-                                                   writeNullMapValues, boolean writeEmptyXMLArrays, boolean orderMapEntriesByKeys, boolean
-                                                   writeSingleElemArraysUnwrapped,
+    private DefaultXMLSerializationContext(boolean serializeNulls, boolean writeDatesAsTimestamps, boolean
+            writeDateKeysAsTimestamps, boolean writeNullMapValues, boolean writeEmptyXMLArrays, boolean orderMapEntriesByKeys,
                                            boolean wrapExceptions) {
-        this.useEqualityForObjectId = useEqualityForObjectId;
         this.serializeNulls = serializeNulls;
         this.writeDatesAsTimestamps = writeDatesAsTimestamps;
         this.writeDateKeysAsTimestamps = writeDateKeysAsTimestamps;
-        this.indent = indent;
-        this.wrapRootValue = wrapRootValue;
-        this.writeCharArraysAsXMLArrays = writeCharArraysAsXMLArrays;
         this.writeNullMapValues = writeNullMapValues;
         this.writeEmptyXMLArrays = writeEmptyXMLArrays;
         this.orderMapEntriesByKeys = orderMapEntriesByKeys;
-        this.writeSingleElemArraysUnwrapped = writeSingleElemArraysUnwrapped;
         this.wrapExceptions = wrapExceptions;
         this.xmlOutputFactory = new WstxOutputFactory();
     }
@@ -128,22 +107,6 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
     /**
      * {@inheritDoc}
      *
-     * <p>isWrapRootValue</p>
-     * @see Builder#wrapRootValue(boolean)
-     */
-    @Override
-    public boolean isWrapRootValue() {
-        return wrapRootValue;
-    }
-
-    @Override
-    public boolean isWriteCharArraysAsJsonArrays() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
      * <p>isWriteNullMapValues</p>
      * @see Builder#writeNullMapValues(boolean)
      */
@@ -172,17 +135,6 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
     @Override
     public boolean isOrderMapEntriesByKeys() {
         return orderMapEntriesByKeys;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>isWriteSingleElemArraysUnwrapped</p>
-     * @see Builder#writeSingleElemArraysUnwrapped(boolean)
-     */
-    @Override
-    public boolean isWriteSingleElemArraysUnwrapped() {
-        return writeSingleElemArraysUnwrapped;
     }
 
     /**
@@ -248,68 +200,6 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
 
     /**
      * {@inheritDoc}
-     *
-     * <p>addObjectId</p>
-     */
-    @Override
-    public void addObjectId(Object object, ObjectIdSerializer<?> id) {
-        if (null == mapObjectId) {
-            if (useEqualityForObjectId) {
-                mapObjectId = new HashMap<Object, ObjectIdSerializer<?>>();
-            } else {
-                mapObjectId = new IdentityHashMap<Object, ObjectIdSerializer<?>>();
-            }
-        }
-        mapObjectId.put(object, id);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>getObjectId</p>
-     */
-    @Override
-    public ObjectIdSerializer<?> getObjectId(Object object) {
-        if (null != mapObjectId) {
-            return mapObjectId.get(object);
-        }
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Used by generated {@link AbstractBeanXMLSerializer}
-     */
-    @Override
-    @SuppressWarnings("UnusedDeclaration")
-    public void addGenerator(ObjectIdGenerator<?> generator) {
-        if (null == generators) {
-            generators = new ArrayList<ObjectIdGenerator<?>>();
-        }
-        generators.add(generator);
-    }
-
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Used by generated {@link AbstractBeanXMLSerializer}
-     */
-    @Override
-    @SuppressWarnings({"UnusedDeclaration", "unchecked"})
-    public <T> ObjectIdGenerator<T> findObjectIdGenerator(ObjectIdGenerator<T> gen) {
-        if (null != generators) {
-            for (ObjectIdGenerator<?> generator : generators) {
-                if (generator.canUseFor(gen)) {
-                    return (ObjectIdGenerator<T>) generator;
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
      */
     @Override
     public XMLSerializerParameters defaultParameters() {
@@ -360,8 +250,6 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
         protected boolean indent = false;
 
         protected boolean wrapRootValue = false;
-
-        protected boolean writeCharArraysAsXMLArrays = false;
 
         protected boolean writeNullMapValues = true;
 
@@ -428,49 +316,6 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
         }
 
         /**
-         * Feature that allows enabling (or disabling) indentation
-         * for the underlying writer.
-         * <p>Feature is disabled by default.</p>
-         * @param indent true if should indent
-         * @return the builder
-         */
-        public Builder indent(boolean indent) {
-            this.indent = indent;
-            return this;
-        }
-
-        /**
-         * Feature that can be enabled to make root value (usually XML
-         * Object but can be any type) wrapped within a single property
-         * XML object, where key as the "root name", as determined by
-         * annotation introspector or fallback (non-qualified
-         * class name).
-         * <p>Feature is disabled by default.</p>
-         * @param wrapRootValue true if should wrapRootValue
-         * @return the builder
-         */
-        public Builder wrapRootValue(boolean wrapRootValue) {
-            this.wrapRootValue = wrapRootValue;
-            return this;
-        }
-
-        /**
-         * Feature that determines how type <code>char[]</code> is serialized:
-         * when enabled, will be serialized as an explict XML array (with
-         * single-character Strings as values); when disabled, defaults to
-         * serializing them as Strings (which is more compact).
-         * <p>
-         * Feature is disabled by default.
-         * </p>
-         * @param writeCharArraysAsXMLArrays true if should writeCharArraysAsXMLArrays
-         * @return the builder
-         */
-        public Builder writeCharArraysAsXMLArrays(boolean writeCharArraysAsXMLArrays) {
-            this.writeCharArraysAsXMLArrays = writeCharArraysAsXMLArrays;
-            return this;
-        }
-
-        /**
          * Feature that determines whether Map entries with null values are
          * to be serialized (true) or not (false).
          * <p>
@@ -521,35 +366,6 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
         }
 
         /**
-         * Feature added for interoperability, to work with oddities of
-         * so-called "BadgerFish" convention.
-         * Feature determines handling of single element {@link Collection}s
-         * and arrays: if enabled, {@link Collection}s and arrays that contain exactly
-         * one element will be serialized as if that element itself was serialized.
-         * <br>
-         * <br>
-         * When enabled, a POJO with array that normally looks like this:
-         * <pre>
-         *  { "arrayProperty" : [ 1 ] }
-         * </pre>
-         * will instead be serialized as
-         * <pre>
-         *  { "arrayProperty" : 1 }
-         * </pre>
-         * <p>
-         * Note that this feature is counterpart to {@link DefaultXMLDeserializationContext.Builder#acceptSingleValueAsArray(boolean)}
-         * (that is, usually both are enabled, or neither is).
-         * </p>
-         * Feature is disabled by default, so that no special handling is done.
-         * @param writeSingleElemArraysUnwrapped true if should writeSingleElemArraysUnwrapped
-         * @return the builder
-         */
-        public Builder writeSingleElemArraysUnwrapped(boolean writeSingleElemArraysUnwrapped) {
-            this.writeSingleElemArraysUnwrapped = writeSingleElemArraysUnwrapped;
-            return this;
-        }
-
-        /**
          * Feature that determines whether gwt-jackson code should catch
          * and wrap {@link RuntimeException}s (but never {@link Error}s!)
          * to add additional information about
@@ -571,9 +387,9 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
         }
 
         public final XMLSerializationContext build() {
-            return new DefaultXMLSerializationContext(useEqualityForObjectId, serializeNulls, writeDatesAsTimestamps,
-                                                      writeDateKeysAsTimestamps, indent, wrapRootValue, writeCharArraysAsXMLArrays, writeNullMapValues,
-                                                      writeEmptyXMLArrays, orderMapEntriesByKeys, writeSingleElemArraysUnwrapped, wrapExceptions);
+            return new DefaultXMLSerializationContext(serializeNulls, writeDatesAsTimestamps,
+                                                      writeDateKeysAsTimestamps, writeNullMapValues,
+                                                      writeEmptyXMLArrays, orderMapEntriesByKeys, wrapExceptions);
         }
     }
 

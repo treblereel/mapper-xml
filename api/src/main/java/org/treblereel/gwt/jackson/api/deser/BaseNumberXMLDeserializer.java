@@ -16,18 +16,18 @@
 
 package org.treblereel.gwt.jackson.api.deser;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
-import org.treblereel.gwt.jackson.api.stream.XMLToken;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
 
 /**
  * Base implementation of {@link XMLDeserializer} for {@link java.lang.Number}.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
@@ -40,6 +40,9 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
 
         private static final BigDecimalXMLDeserializer INSTANCE = new BigDecimalXMLDeserializer();
 
+        private BigDecimalXMLDeserializer() {
+        }
+
         /**
          * @return an instance of {@link BigDecimalXMLDeserializer}
          */
@@ -47,12 +50,13 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
             return INSTANCE;
         }
 
-        private BigDecimalXMLDeserializer() {
-        }
-
         @Override
-        protected BigDecimal doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-            return new BigDecimal(reader.nextString());
+        protected BigDecimal doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+            String value = reader.nextString();
+            if (value == null) {
+                return null;
+            }
+            return new BigDecimal(value);
         }
     }
 
@@ -63,6 +67,9 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
 
         private static final BigIntegerXMLDeserializer INSTANCE = new BigIntegerXMLDeserializer();
 
+        private BigIntegerXMLDeserializer() {
+        }
+
         /**
          * @return an instance of {@link BigIntegerXMLDeserializer}
          */
@@ -70,12 +77,13 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
             return INSTANCE;
         }
 
-        private BigIntegerXMLDeserializer() {
-        }
-
         @Override
-        protected BigInteger doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-            return new BigInteger(reader.nextString());
+        protected BigInteger doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+            String value = reader.nextString();
+            if (value == null) {
+                return null;
+            }
+            return new BigInteger(value);
         }
     }
 
@@ -86,6 +94,9 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
 
         private static final ByteXMLDeserializer INSTANCE = new ByteXMLDeserializer();
 
+        private ByteXMLDeserializer() {
+        }
+
         /**
          * @return an instance of {@link ByteXMLDeserializer}
          */
@@ -93,12 +104,13 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
             return INSTANCE;
         }
 
-        private ByteXMLDeserializer() {
-        }
-
         @Override
-        protected Byte doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-            return (byte) reader.nextInt();
+        protected Byte doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+            String value = reader.nextString();
+            if (value == null) {
+                return null;
+            }
+            return Byte.valueOf(value);
         }
     }
 
@@ -109,6 +121,9 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
 
         private static final DoubleXMLDeserializer INSTANCE = new DoubleXMLDeserializer();
 
+        private DoubleXMLDeserializer() {
+        }
+
         /**
          * @return an instance of {@link DoubleXMLDeserializer}
          */
@@ -116,12 +131,13 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
             return INSTANCE;
         }
 
-        private DoubleXMLDeserializer() {
-        }
-
         @Override
-        protected Double doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-            return reader.nextDouble();
+        protected Double doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+            String value = reader.nextString();
+            if (value == null) {
+                return null;
+            }
+            return Double.valueOf(value);
         }
     }
 
@@ -132,6 +148,9 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
 
         private static final FloatXMLDeserializer INSTANCE = new FloatXMLDeserializer();
 
+        private FloatXMLDeserializer() {
+        }
+
         /**
          * @return an instance of {@link FloatXMLDeserializer}
          */
@@ -139,12 +158,13 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
             return INSTANCE;
         }
 
-        private FloatXMLDeserializer() {
-        }
-
         @Override
-        protected Float doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-            return Float.parseFloat(reader.nextString());
+        protected Float doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+            String value = reader.nextString();
+            if (value == null) {
+                return null;
+            }
+            return Float.parseFloat(value);
         }
     }
 
@@ -155,6 +175,9 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
 
         private static final IntegerXMLDeserializer INSTANCE = new IntegerXMLDeserializer();
 
+        private IntegerXMLDeserializer() {
+        }
+
         /**
          * @return an instance of {@link IntegerXMLDeserializer}
          */
@@ -162,16 +185,13 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
             return INSTANCE;
         }
 
-        private IntegerXMLDeserializer() {
-        }
-
         @Override
-        protected Integer doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-            if (XMLToken.NUMBER.equals(reader.peek())) {
-                return reader.nextInt();
-            } else {
-                return Integer.parseInt(reader.nextString());
+        protected Integer doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+            String value = reader.nextString();
+            if (value == null) {
+                return null;
             }
+            return Integer.valueOf(value);
         }
     }
 
@@ -182,6 +202,9 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
 
         private static final LongXMLDeserializer INSTANCE = new LongXMLDeserializer();
 
+        private LongXMLDeserializer() {
+        }
+
         /**
          * @return an instance of {@link LongXMLDeserializer}
          */
@@ -189,12 +212,13 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
             return INSTANCE;
         }
 
-        private LongXMLDeserializer() {
-        }
-
         @Override
-        protected Long doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-            return reader.nextLong();
+        protected Long doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+            String value = reader.nextString();
+            if (value == null) {
+                return null;
+            }
+            return Long.valueOf(value);
         }
     }
 
@@ -205,6 +229,9 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
 
         private static final ShortXMLDeserializer INSTANCE = new ShortXMLDeserializer();
 
+        private ShortXMLDeserializer() {
+        }
+
         /**
          * @return an instance of {@link ShortXMLDeserializer}
          */
@@ -212,16 +239,13 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
             return INSTANCE;
         }
 
-        private ShortXMLDeserializer() {
-        }
-
         @Override
-        protected Short doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-            if (XMLToken.NUMBER.equals(reader.peek())) {
-                return (short) reader.nextInt();
-            } else {
-                return Short.parseShort(reader.nextString());
+        protected Short doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+            String value = reader.nextString();
+            if (value == null) {
+                return null;
             }
+            return Short.valueOf(value);
         }
     }
 
@@ -232,6 +256,9 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
 
         private static final NumberXMLDeserializer INSTANCE = new NumberXMLDeserializer();
 
+        private NumberXMLDeserializer() {
+        }
+
         /**
          * @return an instance of {@link NumberXMLDeserializer}
          */
@@ -239,13 +266,9 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
             return INSTANCE;
         }
 
-        private NumberXMLDeserializer() {
-        }
-
         @Override
-        public Number doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+        public Number doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
             return reader.nextNumber();
         }
     }
-
 }

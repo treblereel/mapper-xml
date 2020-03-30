@@ -32,9 +32,9 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLSerializer<V>> {
 
-    protected final String propertyName;
+    protected String propertyName;
 
-    private XMLSerializerParameters parameters;
+    private XMLSerializerParameters parameters = newParameters();
 
     /**
      * <p>Constructor for BeanPropertySerializer.</p>
@@ -51,9 +51,6 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
      * @return a {@link XMLSerializerParameters} object.
      */
     protected XMLSerializerParameters getParameters() {
-        if (null == parameters) {
-            parameters = newParameters();
-        }
         return parameters;
     }
 
@@ -103,6 +100,7 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
      * @param ctx    context of the serialization process
      */
     public void serialize(XMLWriter writer, T bean, XMLSerializationContext ctx) throws XMLStreamException {
+        writer.name(propertyName);
         getSerializer().serialize(writer, getValue(bean, ctx), ctx, getParameters());
     }
 }

@@ -145,14 +145,6 @@ public interface XMLWriter {
     XMLWriter value(Number value) throws XMLStreamException;
 
     /**
-     * Encodes {@code value}.toString() as is.
-     *
-     * @param value a value .
-     * @return this writer.
-     */
-    XMLWriter rawValue(Object value);
-
-    /**
      * Ensures all buffered data is written to the underlying {@link java.lang.StringBuilder}
      * and flushes that writer.
      */

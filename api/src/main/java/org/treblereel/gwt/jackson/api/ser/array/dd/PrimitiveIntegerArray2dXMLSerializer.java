@@ -21,37 +21,41 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
+import org.treblereel.gwt.jackson.api.ser.array.BasicArrayXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.PrimitiveIntegerArrayXMLSerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for 2D array of int.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
-public class PrimitiveIntegerArray2dXMLSerializer extends XMLSerializer<int[][]> {
+public class PrimitiveIntegerArray2dXMLSerializer extends BasicArrayXMLSerializer<int[][]> {
 
     private static final PrimitiveIntegerArray2dXMLSerializer INSTANCE = new PrimitiveIntegerArray2dXMLSerializer();
-
-    /**
-     * <p>getInstance</p>
-     *
-     * @return an instance of {@link PrimitiveIntegerArray2dXMLSerializer}
-     */
-    public static PrimitiveIntegerArray2dXMLSerializer getInstance() {
-        return INSTANCE;
-    }
 
     private PrimitiveIntegerArray2dXMLSerializer() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * <p>getInstance</p>
+     * @return an instance of {@link PrimitiveIntegerArray2dXMLSerializer}
+     */
+    public static BasicArrayXMLSerializer getInstance(String propertyName) {
+        return INSTANCE.setPropertyName(propertyName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean isEmpty(int[][] value) {
         return null == value || value.length == 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSerialize(XMLWriter writer, int[][] values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
@@ -59,14 +63,12 @@ public class PrimitiveIntegerArray2dXMLSerializer extends XMLSerializer<int[][]>
             return;
         }
 
-        writer.beginArray();
-        for (int[] array : values) {
-            writer.beginArray();
-            for (int value : array) {
-                writer.value(value);
-            }
-            writer.endArray();
+        BasicArrayXMLSerializer serializer = PrimitiveIntegerArrayXMLSerializer.getInstance(propertyName);
+
+        writer.beginObject(propertyName);
+        for (int[] value : values) {
+            serializer.serialize(writer, value, ctx, params);
         }
-        writer.endArray();
+        writer.endObject();
     }
 }

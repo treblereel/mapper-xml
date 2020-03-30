@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.deser;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -45,7 +47,7 @@ public class StringXMLDeserializer extends XMLDeserializer<String> {
 
     /** {@inheritDoc} */
     @Override
-    public String doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    public String doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         return reader.nextString();
     }
 }

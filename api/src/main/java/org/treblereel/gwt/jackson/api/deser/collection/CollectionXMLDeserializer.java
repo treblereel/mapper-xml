@@ -38,7 +38,7 @@ public class CollectionXMLDeserializer<T> extends BaseCollectionXMLDeserializer<
      * @return a new instance of {@link CollectionXMLDeserializer}
      */
     public static <T> CollectionXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
-        return new CollectionXMLDeserializer<T>(deserializer);
+        return new CollectionXMLDeserializer<>(deserializer);
     }
 
     /**
@@ -51,6 +51,6 @@ public class CollectionXMLDeserializer<T> extends BaseCollectionXMLDeserializer<
     /** {@inheritDoc} */
     @Override
     protected Collection<T> newCollection() {
-        return new ArrayList<T>();
+        return new ArrayList<>();
     }
 }

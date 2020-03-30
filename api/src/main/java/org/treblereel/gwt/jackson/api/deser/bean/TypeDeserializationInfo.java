@@ -19,9 +19,6 @@ package org.treblereel.gwt.jackson.api.deser.bean;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.treblereel.gwt.jackson.api.annotation.XMLTypeInfo;
-import org.treblereel.gwt.jackson.api.annotation.XMLTypeInfo.As;
-
 /**
  * Contains type deserialization informations
  *
@@ -29,11 +26,6 @@ import org.treblereel.gwt.jackson.api.annotation.XMLTypeInfo.As;
  * @version $Id: $
  */
 public class TypeDeserializationInfo<T> {
-
-    /**
-     * Inclusion mechanism
-     */
-    private final As include;
 
     /**
      * Name of the property containing information about the type
@@ -45,11 +37,9 @@ public class TypeDeserializationInfo<T> {
     /**
      * <p>Constructor for TypeDeserializationInfo.</p>
      *
-     * @param include      a {@link XMLTypeInfo.As} object.
      * @param propertyName a {@link java.lang.String} object.
      */
-    public TypeDeserializationInfo(As include, String propertyName) {
-        this.include = include;
+    public TypeDeserializationInfo(String propertyName) {
         this.propertyName = propertyName;
         this.typeInfoToClass = new HashMap<>();
     }
@@ -64,15 +54,6 @@ public class TypeDeserializationInfo<T> {
     public <S extends T> TypeDeserializationInfo<T> addTypeInfo(Class<S> clazz, String typeInfo) {
         typeInfoToClass.put(typeInfo, clazz);
         return this;
-    }
-
-    /**
-     * <p>Getter for the field <code>include</code>.</p>
-     *
-     * @return a {@link XMLTypeInfo.As} object.
-     */
-    public As getInclude() {
-        return include;
     }
 
     /**

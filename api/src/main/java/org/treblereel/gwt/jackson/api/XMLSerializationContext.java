@@ -35,20 +35,6 @@ public interface XMLSerializationContext extends XMLMappingContext {
     boolean isWriteDateKeysAsTimestamps();
 
     /**
-     * <p>isWrapRootValue.</p>
-     *
-     * @return a boolean.
-     */
-    boolean isWrapRootValue();
-
-    /**
-     * <p>isWriteCharArraysAsJsonArrays.</p>
-     *
-     * @return a boolean.
-     */
-    boolean isWriteCharArraysAsJsonArrays();
-
-    /**
      * <p>isWriteNullMapValues.</p>
      *
      * @return a boolean.
@@ -68,13 +54,6 @@ public interface XMLSerializationContext extends XMLMappingContext {
      * @return a boolean.
      */
     boolean isOrderMapEntriesByKeys();
-
-    /**
-     * <p>isWriteSingleElemArraysUnwrapped.</p>
-     *
-     * @return a boolean.
-     */
-    boolean isWriteSingleElemArraysUnwrapped();
 
     /**
      * <p>newXMLWriter.</p>
@@ -120,41 +99,6 @@ public interface XMLSerializationContext extends XMLMappingContext {
      * @return a {@link java.lang.RuntimeException} object.
      */
     RuntimeException traceError(Object value, RuntimeException cause, XMLWriter writer);
-
-    /**
-     * <p>addObjectId.</p>
-     *
-     * @param object a {@link java.lang.Object} object.
-     * @param id a {@link ObjectIdSerializer} object.
-     */
-    void addObjectId(Object object, ObjectIdSerializer<?> id);
-
-    /**
-     * <p>getObjectId.</p>
-     *
-     * @param object a {@link java.lang.Object} object.
-     * @return a {@link ObjectIdSerializer} object.
-     */
-    ObjectIdSerializer<?> getObjectId(Object object);
-
-    /**
-     * <p>addGenerator.</p>
-     *
-     * @param generator a {@link ObjectIdGenerator} object.
-     */
-    @SuppressWarnings("UnusedDeclaration")
-    void addGenerator(ObjectIdGenerator<?> generator);
-
-    /**
-     * <p>findObjectIdGenerator.</p>
-     *
-     * @param gen a {@link ObjectIdGenerator} object.
-     * @param <T> a T object.
-     * @return a {@link ObjectIdGenerator} object.
-     */
-    @SuppressWarnings({"UnusedDeclaration", "unchecked"})
-    <T> ObjectIdGenerator<T> findObjectIdGenerator(ObjectIdGenerator<T> gen);
-
 
     /**
      * <p>defaultParameters.</p>

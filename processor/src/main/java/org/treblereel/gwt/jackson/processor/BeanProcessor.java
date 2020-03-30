@@ -4,20 +4,24 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 
 import com.google.auto.common.MoreElements;
+import com.google.auto.common.MoreTypes;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.context.GenerationContext;
-import org.treblereel.gwt.jackson.deserializer.DeserializerGenerator;
 import org.treblereel.gwt.jackson.exception.GenerationException;
 import org.treblereel.gwt.jackson.generator.MapperGenerator;
 import org.treblereel.gwt.jackson.logger.TreeLogger;
-import org.treblereel.gwt.jackson.serializer.SerializerGenerator;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -30,8 +34,6 @@ public class BeanProcessor {
     private final Set<TypeElement> annotatedBeans;
     private final Set<TypeElement> beans = new HashSet<>();
     private final TypeUtils typeUtils;
-    private final DeserializerGenerator deserializerGenerator;
-    private final SerializerGenerator serializerGenerator;
     private final MapperGenerator mapperGenerator;
 
     public BeanProcessor(GenerationContext context, TreeLogger logger, Set<TypeElement> annotatedBeans) {
@@ -39,28 +41,12 @@ public class BeanProcessor {
         this.logger = logger;
         this.annotatedBeans = annotatedBeans;
         this.typeUtils = context.getTypeUtils();
-        this.deserializerGenerator = new DeserializerGenerator(context, logger);
-        this.serializerGenerator = new SerializerGenerator(context, logger);
         this.mapperGenerator = new MapperGenerator(context, logger);
     }
 
     public void process() {
-        annotatedBeans.forEach(bean -> {
-            processBean(bean);
-        });
-
-        beans.forEach(b -> {
-            serializerGenerator.generate(b);
-        });
-
-        beans.forEach(b -> {
-            deserializerGenerator.generate(b);
-        });
-
-        //TODO call generators from mapperGenerator
-        beans.forEach(b -> {
-            mapperGenerator.generate(b);
-        });
+        annotatedBeans.forEach(this::processBean);
+        beans.forEach(mapperGenerator::generate);
     }
 
     private void processBean(TypeElement bean) {
@@ -70,36 +56,55 @@ public class BeanProcessor {
             bean.getEnclosedElements().stream()
                     .filter(elm -> context.getTypeUtils().isXMLMapper(bean.asType()))
                     .filter(elm -> elm.getKind().isField())
-                    .map(field -> MoreElements.asVariable(field))
-                    .forEach(field -> processField(field));
+                    .map(MoreElements::asVariable)
+                    .forEach(this::processField);
         }
     }
 
     private void processField(VariableElement field) {
         checkField(field);
+        checkTypeAndAdd(field.asType());
+    }
+
+    private void checkTypeAndAdd(TypeMirror type) {
         if (context.getTypeRegistry().get(context.getProcessingEnv()
-                                                  .getTypeUtils().erasure(field.asType()).toString()) == null) {
-            processBean(typeUtils.toTypeElement(field.asType()));
+                                                  .getTypeUtils().erasure(type).toString()) == null) {
+            if (type.getKind().equals(TypeKind.ARRAY)) {
+                ArrayType arrayType = (ArrayType) type;
+
+                if (!context.getTypeUtils().isBasicType(arrayType.getComponentType())) {
+                    processBean(typeUtils.toTypeElement(arrayType.getComponentType()));
+                }
+            } else if (MoreTypes.isType(type)) {
+                if (!MoreTypes.asElement(type).getKind().equals(ElementKind.ENUM)) {
+                    processBean(typeUtils.toTypeElement(type));
+                }
+            }
+        }
+
+        if (context.getTypeUtils().isCollection(type)) {
+            DeclaredType collection = (DeclaredType) type;
+            collection.getTypeArguments().forEach(this::checkTypeAndAdd);
         }
     }
 
     private boolean checkField(VariableElement field) {
+        if (field.getModifiers().contains(Modifier.STATIC) ||
+                field.getModifiers().contains(Modifier.TRANSIENT) ||
+                field.getModifiers().contains(Modifier.FINAL)) {
+            return false;
+        }
         return typeUtils.hasGetter(field) && typeUtils.hasSetter(field);
     }
 
     private TypeElement checkBean(TypeElement type) {
-        if (type.getModifiers().contains(Modifier.STATIC)) {
-            throw new GenerationException(
-                    "A @XMLMapper bean [" + type + "] must not be static");
-        }
-
         if (!type.getModifiers().contains(Modifier.PUBLIC)) {
             throw new GenerationException(
                     "A @XMLMapper bean [" + type + "] must be public");
         }
 
         List<ExecutableElement> constructors = ElementFilter.constructorsIn(type.getEnclosedElements());
-        if (constructors.size() > 0) {
+        if (!constructors.isEmpty()) {
             long nonArgConstructorCount = constructors.stream()
                     .filter(constr -> constr.getModifiers().contains(Modifier.PUBLIC))
                     .filter(constr -> constr.getParameters().isEmpty()).count();

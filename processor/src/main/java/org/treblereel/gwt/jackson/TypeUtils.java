@@ -523,8 +523,11 @@ public class TypeUtils {
         return packageName + "." + serializerName(beanType);
     }
 
-    public String serializerName(TypeMirror beanType) {
-        return stringifyType(beanType) + BEAN_XML_SERIALIZER_IMPL;
+    public String serializerName(TypeMirror mirror) {
+        TypeElement type = MoreTypes.asTypeElement(mirror);
+        return (type.getEnclosingElement().getKind().equals(ElementKind.PACKAGE) ? "" :
+                MoreElements.asType(type.getEnclosingElement()).getSimpleName().toString() + "_")
+                + type.getSimpleName() + BEAN_XML_SERIALIZER_IMPL;
     }
 
     /**
@@ -548,51 +551,11 @@ public class TypeUtils {
         return packageName + "." + deserializerName(beanType);
     }
 
-    public String deserializerName(TypeMirror beanType) {
-        return stringifyType(beanType) + BEAN_XML_DESERIALIZER_IMPL;
-    }
-
-    /**
-     * If given type is bounded wildcard, remove the wildcard and returns extends bound
-     * if exists. If extends bounds is non existing - return the super bound.
-     * <p>
-     * <p>
-     * If given type is not wildcard, returns type.
-     * @param type TypeMirror to be processed
-     * @return extends or super bounds for given wildcard type
-     */
-    public TypeMirror removeOuterWildCards(TypeMirror type) {
-        return type.accept(new SimpleTypeVisitor8<TypeMirror, Void>() {
-            @Override
-            public TypeMirror visitPrimitive(PrimitiveType t, Void p) {
-                return t;
-            }
-
-            @Override
-            public TypeMirror visitArray(ArrayType t, Void p) {
-                return types.getArrayType(visit(t.getComponentType(), p));
-            }
-
-            @Override
-            public TypeMirror visitDeclared(DeclaredType t, Void p) {
-                return t;
-            }
-
-            @Override
-            public TypeMirror visitTypeVariable(TypeVariable t, Void p) {
-                return t;
-            }
-
-            @Override
-            public TypeMirror visitWildcard(WildcardType t, Void p) {
-                return
-                        t.getExtendsBound() != null ?
-                                visit(t.getExtendsBound(), p)
-                                : t.getSuperBound() != null ?
-                                visit(t.getSuperBound(), p)
-                                : types.getDeclaredType(elements.getTypeElement(Object.class.getName()));
-            }
-        }, null);
+    public String deserializerName(TypeMirror mirror) {
+        TypeElement type = MoreTypes.asTypeElement(mirror);
+        return (type.getEnclosingElement().getKind().equals(ElementKind.PACKAGE) ? "" :
+                MoreElements.asType(type.getEnclosingElement()).getSimpleName().toString() + "_")
+                + type.getSimpleName() + BEAN_XML_DESERIALIZER_IMPL;
     }
 
     /**
@@ -637,59 +600,6 @@ public class TypeUtils {
                                 : null);
             }
         }, null);
-    }
-
-    /**
-     * Check if given type is generic class (and not being collection, iterable, enum or map)
-     * with type argument containing bounded wildcard.
-     * <p>
-     * All type parameters of the type needs to be resolved to actual type arguments prior calling this method.
-     * Note that presence of type parameter causes RuntimeException.
-     * @param type {@link TypeMirror} to be checked.
-     * @return true of type is generic class with type argument containing bounded wildcards
-     */
-    public boolean hasTypeArgumentWithBoundedWildcards(TypeMirror type) {
-        return type.accept(new SimpleTypeVisitor8<Boolean, Boolean>() {
-            @Override
-            public Boolean visitPrimitive(PrimitiveType t, Boolean p) {
-                return false;
-            }
-
-            @Override
-            public Boolean visitArray(ArrayType t, Boolean p) {
-                return visit(t.getComponentType(), p);
-            }
-
-            @Override
-            public Boolean visitDeclared(DeclaredType t, Boolean p) {
-                final Boolean isCustomType =
-                        !isCollection(t)
-                                && !isIterable(t)
-                                && !isMap(t)
-                                && !isEnum(t);
-
-                return t.getTypeArguments().stream()
-                        .map(typeArg -> visit(typeArg, p || isCustomType))
-                        .filter(b -> b)
-                        .findFirst()
-                        .orElse(false);
-            }
-
-            @Override
-            public Boolean visitTypeVariable(TypeVariable t, Boolean p) {
-                throw new RuntimeException("Unexpected type variable for:" + type);
-            }
-
-            @Override
-            public Boolean visitWildcard(WildcardType t, Boolean p) {
-                return
-                        t.getExtendsBound() != null ?
-                                p || visit(t.getExtendsBound(), p)
-                                : t.getSuperBound() != null ?
-                                p || !visit(t.getSuperBound(), p)
-                                : false;
-            }
-        }, false);
     }
 
     public boolean isXMLMapper(TypeMirror typeMirror) {
@@ -750,11 +660,11 @@ public class TypeUtils {
                 .filter(e -> e.toString().equals(method))
                 .filter(e -> e.getModifiers().contains(Modifier.PUBLIC))
                 .filter(e -> !e.getModifiers().contains(Modifier.STATIC))
-                .map(elm -> MoreElements.asExecutable(elm))
+                .map(MoreElements::asExecutable)
                 .filter(elm -> elm.getParameters().isEmpty())
                 .filter(elm -> types.isSameType(elm.getReturnType(), variable.asType()))
                 .findFirst()
-                .orElseThrow(() -> new GenerationException(String.format("Unable to find suitable getter [%s] in [%s]", method, variable.getEnclosingElement())));
+                .orElseThrow(() -> new GenerationException(String.format("Unable to find suitable getter for [%s] in [%s]", variable.getSimpleName(), variable.getEnclosingElement())));
     }
 
     public String compileGetterMethodName(VariableElement variable) {
@@ -763,7 +673,7 @@ public class TypeUtils {
     }
 
     public boolean isBoolean(VariableElement variable) {
-        return variable.getKind().equals(TypeKind.BOOLEAN);
+        return variable.asType().getKind().equals(TypeKind.BOOLEAN);
     }
 
     public boolean hasSetter(VariableElement variable) {
@@ -778,7 +688,7 @@ public class TypeUtils {
                 .filter(e -> e.toString().equals(method))
                 .filter(e -> e.getModifiers().contains(Modifier.PUBLIC))
                 .filter(e -> !e.getModifiers().contains(Modifier.STATIC))
-                .map(elm -> MoreElements.asExecutable(elm))
+                .map(MoreElements::asExecutable)
                 .filter(elm -> elm.getParameters().size() == 1)
                 .filter(elm -> types.isSameType(elm.getParameters().get(0).asType(), variable.asType()))
                 .findFirst()

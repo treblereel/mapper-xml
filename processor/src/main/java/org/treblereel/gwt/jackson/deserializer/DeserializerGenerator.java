@@ -2,9 +2,12 @@ package org.treblereel.gwt.jackson.deserializer;
 
 import java.util.Map;
 
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import com.github.javaparser.ast.Modifier;
@@ -12,6 +15,7 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.expr.CastExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
@@ -25,10 +29,13 @@ import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
 import com.google.auto.common.MoreTypes;
+import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.api.JacksonContextProvider;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
+import org.treblereel.gwt.jackson.api.deser.EnumXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.ArrayXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.bean.AbstractBeanXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.bean.BeanPropertyDeserializer;
 import org.treblereel.gwt.jackson.api.deser.bean.HasDeserializerAndParameters;
@@ -110,8 +117,8 @@ public class DeserializerGenerator extends AbstractGenerator {
                 );
         ClassOrInterfaceType varType = new ClassOrInterfaceType().setName("MapLike")
                 .setTypeArguments(new ClassOrInterfaceType().setName("BeanPropertyDeserializer")
-                .setTypeArguments(new ClassOrInterfaceType().setName(type.getSimpleName().toString()),
-                                  new ClassOrInterfaceType().setName("?")));
+                                          .setTypeArguments(new ClassOrInterfaceType().setName(type.getSimpleName().toString()),
+                                                            new ClassOrInterfaceType().setName("?")));
 
         VariableDeclarator map = new VariableDeclarator();
         map.setType(varType);
@@ -171,7 +178,7 @@ public class DeserializerGenerator extends AbstractGenerator {
                                                        .setType(beanPropertyDeserializer)
                                                        .setAnonymousClassBody(anonymousClassBody)
                                   ));
-        addNewDeserializer(type, field, anonymousClassBody);
+        addNewDeserializer(field, anonymousClassBody);
         setValue(type, typeArg, field, anonymousClassBody);
     }
 
@@ -194,27 +201,27 @@ public class DeserializerGenerator extends AbstractGenerator {
     }
 
     private ClassOrInterfaceType getWrappedType(VariableElement field) {
-        ClassOrInterfaceType typeArg = new ClassOrInterfaceType().setName(typeUtils.wrapperType(field.asType()));
+        ClassOrInterfaceType typeArg = new ClassOrInterfaceType().setName(TypeUtils.wrapperType(field.asType()));
         if (field.asType() instanceof DeclaredType) {
             if (!((DeclaredType) field.asType()).getTypeArguments().isEmpty()) {
                 NodeList<Type> types = new NodeList<>();
-                ((DeclaredType) field.asType()).getTypeArguments().forEach(t -> {
-                    types.add(new ClassOrInterfaceType().setName(typeUtils.wrapperType(t)));
-                });
+                ((DeclaredType) field.asType()).getTypeArguments()
+                        .forEach(t -> types.add(new ClassOrInterfaceType().setName(TypeUtils.wrapperType(t))));
                 typeArg.setTypeArguments(types);
             }
         }
         return typeArg;
     }
 
-    private void addNewDeserializer(TypeElement type, VariableElement field, NodeList<BodyDeclaration<?>> anonymousClassBody) {
+    private void addNewDeserializer(VariableElement field, NodeList<BodyDeclaration<?>> anonymousClassBody) {
         MethodDeclaration method = new MethodDeclaration();
         method.setModifiers(Modifier.Keyword.PROTECTED);
         method.addAnnotation(Override.class);
         method.setName("newDeserializer");
         method.setType(new ClassOrInterfaceType().setName("XMLDeserializer<?>"));
 
-        method.getBody().get().addAndGetStatement(new ReturnStmt().setExpression(getDeserializerExpression(field.asType())));
+        method.getBody().ifPresent(body -> body.addAndGetStatement(
+                new ReturnStmt().setExpression(getDeserializerExpression(field.asType()))));
         anonymousClassBody.add(method);
     }
 
@@ -223,9 +230,23 @@ public class DeserializerGenerator extends AbstractGenerator {
             return new MethodCallExpr(
                     new NameExpr(context.getTypeRegistry()
                                          .getDeserializer(context.getProcessingEnv().getTypeUtils().erasure(type)).toString()), "getInstance");
+        } else if (type.getKind().equals(TypeKind.ARRAY)) {
+            ArrayType array = (ArrayType) type;
+
+            ClassOrInterfaceType typeOf = new ClassOrInterfaceType().setName(ArrayXMLDeserializer.ArrayCreator.class.getCanonicalName())
+                    .setTypeArguments(new ClassOrInterfaceType().setName(array.getComponentType().toString()));
+
+            return new MethodCallExpr(
+                    new NameExpr(ArrayXMLDeserializer.class.getCanonicalName()), "newInstance")
+                    .addArgument(getDeserializerExpression(array.getComponentType()))
+                    .addArgument(new CastExpr().setType(typeOf).setExpression(new NameExpr(type.toString() + "::new")));
         } else {
             if (context.getTypeRegistry().get(context.getProcessingEnv()
                                                       .getTypeUtils().erasure(type).toString()) == null) {
+                if (MoreTypes.asElement(type).getKind().equals(ElementKind.ENUM)) {
+                    return new MethodCallExpr(new NameExpr(EnumXMLDeserializer.class.getCanonicalName()), "newInstance")
+                            .addArgument(MoreTypes.asTypeElement(type).getQualifiedName().toString() + ".class");
+                }
                 return new ObjectCreationExpr().setType(new ClassOrInterfaceType()
                                                                 .setName(typeUtils.canonicalDeserializerName(typeUtils.getPackage(type), type)));
             } else {
@@ -234,9 +255,10 @@ public class DeserializerGenerator extends AbstractGenerator {
                 MethodCallExpr method = new MethodCallExpr(
                         new NameExpr(serializer.getQualifiedName().toString()), "newInstance");
                 if (typeUtils.isCollection(type)) {
-                    MoreTypes.asDeclared(type).getTypeArguments().forEach(param -> {
-                        method.addArgument(getDeserializerExpression(param));
-                    });
+                    MoreTypes.asDeclared(type)
+                            .getTypeArguments()
+                            .forEach(param ->
+                                             method.addArgument(getDeserializerExpression(param)));
                 }
                 return method;
             }
@@ -253,9 +275,9 @@ public class DeserializerGenerator extends AbstractGenerator {
         method.addParameter(fieldType, "value");
         method.addParameter("XMLDeserializationContext", "ctx");
 
-        method.getBody().get()
-                .addAndGetStatement(new MethodCallExpr(
-                        new NameExpr("bean"), typeUtils.getSetter(field).getSimpleName().toString()).addArgument("value"));
+        method.getBody().ifPresent(body -> body.addAndGetStatement(
+                new MethodCallExpr(
+                        new NameExpr("bean"), typeUtils.getSetter(field).getSimpleName().toString()).addArgument("value")));
         anonymousClassBody.add(method);
     }
 
@@ -282,7 +304,7 @@ public class DeserializerGenerator extends AbstractGenerator {
         instanceBuilder.addArgument(new MethodCallExpr("create"));
         instanceBuilder.addArgument("bufferedProperties");
 
-        method.getBody().get().addAndGetStatement(new ReturnStmt().setExpression(instanceBuilder));
+        method.getBody().ifPresent(body -> body.addAndGetStatement(new ReturnStmt().setExpression(instanceBuilder)));
         anonymousClassBody.add(method);
     }
 
@@ -294,7 +316,7 @@ public class DeserializerGenerator extends AbstractGenerator {
         method.setType(new ClassOrInterfaceType().setName("MapLike")
                                .setTypeArguments(new ClassOrInterfaceType()
                                                          .setName("HasDeserializerAndParameters")));
-        method.getBody().get().addAndGetStatement(new ReturnStmt().setExpression(new NameExpr("deserializers")));
+        method.getBody().ifPresent(body -> body.addAndGetStatement(new ReturnStmt().setExpression(new NameExpr("deserializers"))));
         anonymousClassBody.add(method);
     }
 
@@ -309,7 +331,7 @@ public class DeserializerGenerator extends AbstractGenerator {
                 .setName(type.getSimpleName().toString());
         instanceBuilder.setType(instanceBuilderType);
 
-        method.getBody().get().addAndGetStatement(new ReturnStmt().setExpression(instanceBuilder));
+        method.getBody().ifPresent(body -> body.addAndGetStatement(new ReturnStmt().setExpression(instanceBuilder)));
         anonymousClassBody.add(method);
     }
 

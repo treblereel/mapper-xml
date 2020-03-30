@@ -2,6 +2,7 @@ package org.treblereel.gwt.jackson.serializer;
 
 import java.util.List;
 
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
@@ -29,10 +30,13 @@ import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
-import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
+import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.EnumXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.ArrayXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.dd.Array2dXMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.bean.AbstractBeanXMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.bean.BeanPropertySerializer;
 import org.treblereel.gwt.jackson.context.GenerationContext;
@@ -132,9 +136,9 @@ public class SerializerGenerator extends AbstractGenerator {
 
         String fieldType;
         if (variableElement.asType().getKind().isPrimitive()) {
-            fieldType = typeUtils.wrapperType(variableElement.asType());
+            fieldType = TypeUtils.wrapperType(variableElement.asType());
         } else if (variableElement.asType().getKind().equals(TypeKind.ARRAY)) {
-            ArrayType arrayType = (ArrayType)variableElement.asType();
+            ArrayType arrayType = (ArrayType) variableElement.asType();
             fieldType = arrayType.toString();
         } else {
             fieldType = typeUtils.toTypeElement(variableElement.asType()).toString();
@@ -163,18 +167,19 @@ public class SerializerGenerator extends AbstractGenerator {
         NodeList<BodyDeclaration<?>> anonymousClassBody = new NodeList<>();
         beanProperty.setAnonymousClassBody(anonymousClassBody);
 
-        newSerializer(anonymousClassBody, field.asType());
+        newSerializer(anonymousClassBody, field);
         getValue(anonymousClassBody, bean, field);
     }
 
-    private void newSerializer(NodeList<BodyDeclaration<?>> anonymousClassBody, TypeMirror type) {
+    private void newSerializer(NodeList<BodyDeclaration<?>> anonymousClassBody, VariableElement field) {
         MethodDeclaration method = new MethodDeclaration();
         method.setModifiers(Modifier.Keyword.PROTECTED);
         method.addAnnotation(Override.class);
         method.setName("newSerializer");
         method.setType(new ClassOrInterfaceType().setName("XMLSerializer<?>"));
 
-        method.getBody().get().addAndGetStatement(new ReturnStmt().setExpression(getSerializerExpression(type)));
+        method.getBody().ifPresent(body -> body.addAndGetStatement(
+                new ReturnStmt().setExpression(getSerializerExpression(field.asType(), field.getSimpleName().toString()))));
         anonymousClassBody.add(method);
     }
 
@@ -186,34 +191,70 @@ public class SerializerGenerator extends AbstractGenerator {
         method.addParameter(new ClassOrInterfaceType().setName(bean.getSimpleName().toString()), "bean");
         method.addParameter(XMLSerializationContext.class.getSimpleName(), "ctx");
 
-        ClassOrInterfaceType interfaceType = new ClassOrInterfaceType().setName(typeUtils.wrapperType(field.asType()));
+        ClassOrInterfaceType interfaceType = new ClassOrInterfaceType().setName(TypeUtils.wrapperType(field.asType()));
         addTypeArguments(field.asType(), interfaceType);
 
         method.setType(interfaceType);
-        method.getBody().get().addAndGetStatement(new ReturnStmt(new MethodCallExpr(new NameExpr("bean"), typeUtils.getGetter(field).getSimpleName().toString())));
+        method.getBody().ifPresent(body -> body.addAndGetStatement(
+                new ReturnStmt(
+                        new MethodCallExpr(
+                                new NameExpr("bean"), typeUtils.getGetter(field).getSimpleName().toString()))));
         anonymousClassBody.add(method);
     }
 
-    private Expression getSerializerExpression(TypeMirror type) {
-        if (typeUtils.isBasicType(type)) {
-            return new MethodCallExpr(
+    private Expression getSerializerExpression(TypeMirror field, String fieldName) {
+
+        if (typeUtils.isBasicType(field)) {
+            MethodCallExpr method = new MethodCallExpr(
                     new NameExpr(context.getTypeRegistry()
-                                         .getSerializer(context.getProcessingEnv().getTypeUtils().erasure(type)).toString()), "getInstance");
+                                         .getSerializer(context.getProcessingEnv().getTypeUtils().erasure(field)).toString()), "getInstance");
+            if (field.getKind().equals(TypeKind.ARRAY)) {
+                method.addArgument(new StringLiteralExpr(fieldName));
+            }
+            return method;
+        } else if (field.getKind().equals(TypeKind.ARRAY)) {
+            ArrayType array = (ArrayType) field;
+            String serializer = null;
+            Expression expression = null;
+            if (array.getComponentType().getKind().equals(TypeKind.ARRAY)) {
+                serializer = Array2dXMLSerializer.class.getCanonicalName();
+                ArrayType array2d = (ArrayType) array.getComponentType();
+
+                expression = getSerializerExpression(array2d.getComponentType(), null);
+            } else {
+                serializer = ArrayXMLSerializer.class.getCanonicalName();
+                expression = getSerializerExpression(array.getComponentType(), null);
+            }
+            return new MethodCallExpr(
+                    new NameExpr(serializer), "getInstance")
+                    .addArgument(expression)
+                    .addArgument(new StringLiteralExpr(fieldName));
         } else {
             if (context.getTypeRegistry().get(context.getProcessingEnv()
-                                                      .getTypeUtils().erasure(type).toString()) == null) {
-                return new ObjectCreationExpr().setType(new ClassOrInterfaceType()
-                                                                .setName(typeUtils.canonicalSerializerName(typeUtils.getPackage(type), type)));
-            } else {
-                TypeElement serializer = context.getTypeRegistry().getSerializer(context.getProcessingEnv().getTypeUtils().erasure(type));
+                                                      .getTypeUtils().erasure(field).toString()) == null) {
 
-                MethodCallExpr method = new MethodCallExpr(
-                        new NameExpr(serializer.getQualifiedName().toString()), "newInstance");
-                if (typeUtils.isCollection(type)) {
-                    MoreTypes.asDeclared(type).getTypeArguments().forEach(param -> {
-                        method.addArgument(getSerializerExpression(param));
-                    });
+                if (MoreTypes.asElement(field).getKind().equals(ElementKind.ENUM)) {
+                    return new MethodCallExpr(new NameExpr(EnumXMLSerializer.class.getCanonicalName()), "getInstance");
                 }
+                return new ObjectCreationExpr().setType(new ClassOrInterfaceType()
+
+                                                                .setName(typeUtils.canonicalSerializerName(typeUtils.getPackage(field), field)));
+            } else {
+                TypeElement serializer = context.getTypeRegistry().getSerializer(context.getProcessingEnv().getTypeUtils().erasure(field));
+
+                MethodCallExpr method = null;
+                if (typeUtils.isCollection(field)) {
+                    method = new MethodCallExpr(
+                            new NameExpr(serializer.getQualifiedName().toString()), "newInstance");
+                    for (TypeMirror param : MoreTypes.asDeclared(field).getTypeArguments()) {
+                        method.addArgument(getSerializerExpression(param, null));
+                    }
+                }
+
+                if (fieldName != null && method != null) {
+                    method.addArgument(new StringLiteralExpr(fieldName));
+                }
+
                 return method;
             }
         }

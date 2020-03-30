@@ -34,19 +34,18 @@ public class ApplicationProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
-        if (annotations.isEmpty()) {
-            return false;
+        if (!annotations.isEmpty()) {
+
+            GenerationContext context = new GenerationContext(roundEnvironment, processingEnv);
+
+            Set<TypeElement> beans = roundEnvironment.getElementsAnnotatedWith(XMLMapper.class)
+                    .stream()
+                    .filter(elm -> elm.getKind().isClass())
+                    .map(MoreElements::asType)
+                    .collect(Collectors.toSet());
+
+            new BeanProcessor(context, logger, beans).process();
         }
-        GenerationContext context = new GenerationContext(roundEnvironment, processingEnv);
-
-        Set<TypeElement> beans = roundEnvironment.getElementsAnnotatedWith(XMLMapper.class)
-                .stream()
-                .filter(elm -> elm.getKind().isClass())
-                .map(elm -> MoreElements.asType(elm))
-                .collect(Collectors.toSet());
-
-        new BeanProcessor(context, logger, beans).process();
-
         return false;
     }
 

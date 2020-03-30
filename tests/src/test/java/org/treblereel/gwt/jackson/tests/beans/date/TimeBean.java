@@ -1,6 +1,6 @@
-package org.treblereel.gwt.jackson.tests.beans.number;
+package org.treblereel.gwt.jackson.tests.beans.date;
 
-import java.math.BigInteger;
+import java.sql.Time;
 import java.util.Objects;
 
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
@@ -10,15 +10,15 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
  * Created by treblereel 3/27/20
  */
 @XMLMapper
-public class BigIntegerTest {
+public class TimeBean {
 
-    private BigInteger val;
+    private Time val;
 
-    public BigInteger getVal() {
+    public Time getVal() {
         return val;
     }
 
-    public void setVal(BigInteger val) {
+    public void setVal(Time val) {
         this.val = val;
     }
 
@@ -27,11 +27,11 @@ public class BigIntegerTest {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof BigIntegerTest)) {
+        if (!(o instanceof TimeBean)) {
             return false;
         }
-        BigIntegerTest that = (BigIntegerTest) o;
-        return Objects.equals(getVal(), that.getVal());
+        TimeBean timeTest = (TimeBean) o;
+        return Objects.equals(getVal(), timeTest.getVal());
     }
 
     @Override

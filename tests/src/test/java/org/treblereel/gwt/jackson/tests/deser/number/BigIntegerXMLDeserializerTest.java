@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import javax.xml.stream.XMLStreamException;
 
 import org.junit.Test;
-import org.treblereel.gwt.jackson.tests.beans.number.BigIntegerTest_MapperImpl;
+import org.treblereel.gwt.jackson.tests.beans.number.BigIntegerBean_MapperImpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -21,8 +21,8 @@ public class BigIntegerXMLDeserializerTest {
 
     @Test
     public void testDeserializeValue() throws XMLStreamException {
-        assertNull(BigIntegerTest_MapperImpl.INSTANCE.read("<?xml version='1.0' encoding='UTF-8'?><BigIntegerTest><val/></BigIntegerTest>").getVal());
-        assertEquals(expected, BigIntegerTest_MapperImpl.INSTANCE.read("<?xml version='1.0' encoding='UTF-8'?><BigIntegerTest><val>" + value + "</val></BigIntegerTest>").getVal());
+        assertNull(BigIntegerBean_MapperImpl.INSTANCE.read("<?xml version='1.0' encoding='UTF-8'?><BigIntegerBean><val/></BigIntegerBean>").getVal());
+        assertEquals(expected, BigIntegerBean_MapperImpl.INSTANCE.read("<?xml version='1.0' encoding='UTF-8'?><BigIntegerBean><val>" + value + "</val></BigIntegerBean>").getVal());
     }
 }
 

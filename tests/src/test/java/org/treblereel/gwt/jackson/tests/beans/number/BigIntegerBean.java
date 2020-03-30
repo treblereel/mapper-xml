@@ -1,7 +1,7 @@
-package org.treblereel.gwt.jackson.tests.beans;
+package org.treblereel.gwt.jackson.tests.beans.number;
 
+import java.math.BigInteger;
 import java.util.Objects;
-import java.util.UUID;
 
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
@@ -10,15 +10,15 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
  * Created by treblereel 3/27/20
  */
 @XMLMapper
-public class UUIDTest {
+public class BigIntegerBean {
 
-    private UUID val;
+    private BigInteger val;
 
-    public UUID getVal() {
+    public BigInteger getVal() {
         return val;
     }
 
-    public void setVal(UUID val) {
+    public void setVal(BigInteger val) {
         this.val = val;
     }
 
@@ -27,11 +27,11 @@ public class UUIDTest {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof UUIDTest)) {
+        if (!(o instanceof BigIntegerBean)) {
             return false;
         }
-        UUIDTest uuidTest = (UUIDTest) o;
-        return Objects.equals(getVal(), uuidTest.getVal());
+        BigIntegerBean that = (BigIntegerBean) o;
+        return Objects.equals(getVal(), that.getVal());
     }
 
     @Override

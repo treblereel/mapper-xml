@@ -3,23 +3,23 @@ package org.treblereel.gwt.jackson.tests.ser;
 import javax.xml.stream.XMLStreamException;
 
 import org.junit.Test;
-import org.treblereel.gwt.jackson.tests.beans.BooleanTest;
-import org.treblereel.gwt.jackson.tests.beans.BooleanTest_MapperImpl;
+import org.treblereel.gwt.jackson.tests.beans.BooleanBean;
+import org.treblereel.gwt.jackson.tests.beans.BooleanBean_MapperImpl;
 
 import static org.junit.Assert.assertEquals;
 
 public class BooleanXMLSerializerTest {
 
-    BooleanTest_MapperImpl mapper = BooleanTest_MapperImpl.INSTANCE;
+    BooleanBean_MapperImpl mapper = BooleanBean_MapperImpl.INSTANCE;
 
     @Test
     public void testDeserializeValue() throws XMLStreamException {
-        BooleanTest test = new BooleanTest();
+        BooleanBean test = new BooleanBean();
         test.setCheck(true);
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><BooleanTest><check>true</check></BooleanTest>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><BooleanBean><check>true</check></BooleanBean>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
         test.setCheck(false);
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><BooleanTest><check>false</check></BooleanTest>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><BooleanBean><check>false</check></BooleanBean>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
     }
 }

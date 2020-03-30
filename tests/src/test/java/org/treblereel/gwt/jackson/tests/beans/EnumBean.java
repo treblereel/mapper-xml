@@ -1,4 +1,4 @@
-package org.treblereel.gwt.jackson.tests.beans.number;
+package org.treblereel.gwt.jackson.tests.beans;
 
 import java.util.Objects;
 
@@ -9,16 +9,23 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
  * Created by treblereel 3/27/20
  */
 @XMLMapper
-public class DoubleTest {
+public class EnumBean {
 
-    private Double val;
+    private Enums val;
 
-    public Double getVal() {
+    public Enums getVal() {
         return val;
     }
 
-    public void setVal(Double val) {
+    public void setVal(Enums val) {
         this.val = val;
+    }
+
+    public enum Enums {
+        ONE,
+        TWO,
+        THREE,
+        FOUR
     }
 
     @Override
@@ -26,11 +33,11 @@ public class DoubleTest {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof DoubleTest)) {
+        if (!(o instanceof EnumBean)) {
             return false;
         }
-        DoubleTest that = (DoubleTest) o;
-        return Objects.equals(getVal(), that.getVal());
+        EnumBean enumTest = (EnumBean) o;
+        return getVal() == enumTest.getVal();
     }
 
     @Override

@@ -3,9 +3,8 @@ package org.treblereel.gwt.jackson.tests.ser;
 import javax.xml.stream.XMLStreamException;
 
 import org.junit.Test;
-import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
-import org.treblereel.gwt.jackson.tests.beans.EnumTest;
-import org.treblereel.gwt.jackson.tests.beans.EnumTest_MapperImpl;
+import org.treblereel.gwt.jackson.tests.beans.EnumBean;
+import org.treblereel.gwt.jackson.tests.beans.EnumBean_MapperImpl;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,13 +14,13 @@ import static org.junit.Assert.assertEquals;
  */
 public class EnumXMLSerializerTest {
 
-    EnumTest_MapperImpl mapper = EnumTest_MapperImpl.INSTANCE;
+    EnumBean_MapperImpl mapper = EnumBean_MapperImpl.INSTANCE;
 
     @Test
     public void testDeserializeValue() throws XMLStreamException {
-        EnumTest test = new EnumTest();
-        test.setVal(EnumTest.Enums.ONE);
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><EnumTest><val>ONE</val></EnumTest>", mapper.write(test));
+        EnumBean test = new EnumBean();
+        test.setVal(EnumBean.Enums.ONE);
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><EnumBean><val>ONE</val></EnumBean>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
     }
 }

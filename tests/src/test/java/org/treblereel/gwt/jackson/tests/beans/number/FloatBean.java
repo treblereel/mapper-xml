@@ -1,6 +1,5 @@
 package org.treblereel.gwt.jackson.tests.beans.number;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
@@ -10,15 +9,15 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
  * Created by treblereel 3/27/20
  */
 @XMLMapper
-public class BigDecimalTest {
+public class FloatBean {
 
-    private BigDecimal val;
+    private Float val;
 
-    public BigDecimal getVal() {
+    public Float getVal() {
         return val;
     }
 
-    public void setVal(BigDecimal val) {
+    public void setVal(Float val) {
         this.val = val;
     }
 
@@ -27,11 +26,11 @@ public class BigDecimalTest {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof BigDecimalTest)) {
+        if (!(o instanceof FloatBean)) {
             return false;
         }
-        BigDecimalTest that = (BigDecimalTest) o;
-        return Objects.equals(getVal(), that.getVal());
+        FloatBean floatBean = (FloatBean) o;
+        return Objects.equals(getVal(), floatBean.getVal());
     }
 
     @Override

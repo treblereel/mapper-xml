@@ -1,5 +1,6 @@
-package org.treblereel.gwt.jackson.tests.beans.number;
+package org.treblereel.gwt.jackson.tests.beans.date;
 
+import java.sql.Date;
 import java.util.Objects;
 
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
@@ -9,15 +10,15 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
  * Created by treblereel 3/27/20
  */
 @XMLMapper
-public class LongTest {
+public class SQLDateBean {
 
-    private Long val;
+    private Date val;
 
-    public Long getVal() {
+    public Date getVal() {
         return val;
     }
 
-    public void setVal(Long val) {
+    public void setVal(Date val) {
         this.val = val;
     }
 
@@ -26,11 +27,11 @@ public class LongTest {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof LongTest)) {
+        if (!(o instanceof SQLDateBean)) {
             return false;
         }
-        LongTest longTest = (LongTest) o;
-        return Objects.equals(getVal(), longTest.getVal());
+        SQLDateBean that = (SQLDateBean) o;
+        return Objects.equals(getVal(), that.getVal());
     }
 
     @Override

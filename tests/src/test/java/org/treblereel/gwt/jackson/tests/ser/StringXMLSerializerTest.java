@@ -3,8 +3,8 @@ package org.treblereel.gwt.jackson.tests.ser;
 import javax.xml.stream.XMLStreamException;
 
 import org.junit.Test;
-import org.treblereel.gwt.jackson.tests.beans.StringTest;
-import org.treblereel.gwt.jackson.tests.beans.StringTest_MapperImpl;
+import org.treblereel.gwt.jackson.tests.beans.StringBean;
+import org.treblereel.gwt.jackson.tests.beans.StringBean_MapperImpl;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,15 +14,15 @@ import static org.junit.Assert.assertEquals;
  */
 public class StringXMLSerializerTest {
 
-    StringTest_MapperImpl mapper = StringTest_MapperImpl.INSTANCE;
+    StringBean_MapperImpl mapper = StringBean_MapperImpl.INSTANCE;
 
     @Test
     public void testDeserializeValue() throws XMLStreamException {
-        StringTest test = new StringTest();
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><StringTest><val/></StringTest>", mapper.write(test));
+        StringBean test = new StringBean();
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><StringBean><val/></StringBean>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
         test.setVal("XML");
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><StringTest><val>XML</val></StringTest>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><StringBean><val>XML</val></StringBean>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
     }
 }

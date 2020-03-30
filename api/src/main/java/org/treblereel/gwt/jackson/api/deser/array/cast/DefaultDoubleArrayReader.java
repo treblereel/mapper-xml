@@ -7,6 +7,8 @@ import org.treblereel.gwt.jackson.api.stream.XMLToken;
 
 import java.util.Stack;
 
+import javax.xml.stream.XMLStreamException;
+
 /**
  * <p>DefaultDoubleArrayReader class.</p>
  *
@@ -17,8 +19,8 @@ import java.util.Stack;
 public class DefaultDoubleArrayReader implements JacksonContext.DoubleArrayReader {
     /** {@inheritDoc} */
     @Override
-    public double[] readArray(XMLReader reader) {
-        Stack<Double> doubleStack = new Stack<>();
+    public double[] readArray(XMLReader reader) throws XMLStreamException {
+/*        Stack<Double> doubleStack = new Stack<>();
         reader.beginArray();
         while (XMLToken.END_ARRAY != reader.peek()) {
             if (XMLToken.NULL == reader.peek()) {
@@ -29,6 +31,7 @@ public class DefaultDoubleArrayReader implements JacksonContext.DoubleArrayReade
             }
         }
         reader.endArray();
-        return doubleStack.stream().mapToDouble(Double::doubleValue).toArray();
+        return doubleStack.stream().mapToDouble(Double::doubleValue).toArray();*/
+        throw new UnsupportedOperationException();
     }
 }

@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.deser.array.cast;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.JacksonContextProvider;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
@@ -50,13 +52,13 @@ public class PrimitiveShortArrayXMLDeserializer extends AbstractArrayXMLDeserial
 
     /** {@inheritDoc} */
     @Override
-    public short[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    public short[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
        return JacksonContextProvider.get().shortArrayReader().readArray(reader);
     }
 
     /** {@inheritDoc} */
     @Override
-    protected short[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    protected short[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         return new short[]{BaseNumberXMLDeserializer.ShortXMLDeserializer.getInstance().deserialize(reader, ctx, params)};
     }
 }

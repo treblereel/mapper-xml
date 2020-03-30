@@ -37,7 +37,7 @@ public class ArrayListXMLDeserializer<T> extends BaseListXMLDeserializer<ArrayLi
      * @return a new instance of {@link ArrayListXMLDeserializer}
      */
     public static <T> ArrayListXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
-        return new ArrayListXMLDeserializer<T>(deserializer);
+        return new ArrayListXMLDeserializer<>(deserializer);
     }
 
     /**
@@ -50,6 +50,6 @@ public class ArrayListXMLDeserializer<T> extends BaseListXMLDeserializer<ArrayLi
     /** {@inheritDoc} */
     @Override
     protected ArrayList<T> newCollection() {
-        return new ArrayList<T>();
+        return new ArrayList<>();
     }
 }

@@ -17,103 +17,82 @@
 package org.treblereel.gwt.jackson.api.deser.array;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
-import org.treblereel.gwt.jackson.api.stream.XMLToken;
 
 /**
  * Base implementation of {@link XMLDeserializer} for array.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public abstract class AbstractArrayXMLDeserializer<T> extends XMLDeserializer<T> {
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public T doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-        if (XMLToken.BEGIN_ARRAY == reader.peek()) {
-            return doDeserializeArray(reader, ctx, params);
-        } else {
-            return doDeserializeNonArray(reader, ctx, params);
-        }
+    public T doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+        return doDeserializeArray(reader, ctx, params);
     }
 
     /**
      * <p>doDeserializeArray</p>
-     *
      * @param reader a {@link XMLReader} object.
-     * @param ctx    a {@link XMLDeserializationContext} object.
+     * @param ctx a {@link XMLDeserializationContext} object.
      * @param params a {@link XMLDeserializerParameters} object.
      * @return a T object.
      */
-    protected abstract T doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params);
-
-    /**
-     * <p>doDeserializeNonArray</p>
-     *
-     * @param reader a {@link XMLReader} object.
-     * @param ctx    a {@link XMLDeserializationContext} object.
-     * @param params a {@link XMLDeserializerParameters} object.
-     * @return a T object.
-     */
-    protected T doDeserializeNonArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-        if (ctx.isAcceptSingleValueAsArray()) {
-            return doDeserializeSingleArray(reader, ctx, params);
-        } else {
-            throw ctx.traceError("Cannot deserialize an array out of " + reader.peek() + " token", reader);
-        }
-    }
+    protected abstract T doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException;
 
     /**
      * <p>doDeserializeSingleArray</p>
-     *
      * @param reader a {@link XMLReader} object.
-     * @param ctx    a {@link XMLDeserializationContext} object.
+     * @param ctx a {@link XMLDeserializationContext} object.
      * @param params a {@link XMLDeserializerParameters} object.
      * @return a T object.
      */
-    protected abstract T doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params);
+    protected abstract T doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException;
 
     /**
      * Deserializes the array into a {@link java.util.List}. We need the length of the array before creating it.
-     *
-     * @param reader       reader
-     * @param ctx          context of the deserialization process
+     * @param reader reader
+     * @param ctx context of the deserialization process
      * @param deserializer deserializer for element inside the array
-     * @param params       Parameters for the deserializer
-     * @param <C>          type of the element inside the array
+     * @param params Parameters for the deserializer
+     * @param <C> type of the element inside the array
      * @return a list containing all the elements of the array
      */
     protected <C> List<C> deserializeIntoList(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializer<C> deserializer,
-                                              XMLDeserializerParameters params) {
-        List<C> list;
+                                              XMLDeserializerParameters params) throws XMLStreamException {
 
-        reader.beginArray();
-        XMLToken token = reader.peek();
-
-        if (XMLToken.END_ARRAY == token) {
-
-            // empty array, no need to create a list
-            list = Collections.emptyList();
-
-        } else {
-
-            list = new ArrayList<C>();
-
-            while (XMLToken.END_ARRAY != token) {
-                list.add(deserializer.deserialize(reader, ctx, params));
-                token = reader.peek();
+        List<C> list = new ArrayList<>();
+        int counter = 0;
+        while (reader.hasNext()) {
+            reader.next();
+            switch (reader.peek()) {
+                case XMLStreamReader.START_ELEMENT:
+                    counter++;
+                    list.add(deserializer.deserialize(reader, ctx, params));
+                    break;
+                case XMLStreamReader.END_ELEMENT:
+                    counter--;
+                    if (counter == -1) {
+                        return list;
+                    }
+                    break;
+                case XMLStreamReader.END_DOCUMENT:
+                    break;
+                default:
+                    throw new XMLStreamException();
             }
-
         }
-
-        reader.endArray();
         return list;
     }
 }

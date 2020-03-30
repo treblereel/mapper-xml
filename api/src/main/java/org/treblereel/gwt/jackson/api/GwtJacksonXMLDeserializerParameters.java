@@ -135,7 +135,7 @@ public final class GwtJacksonXMLDeserializerParameters implements XMLDeserialize
     @Override
     public XMLDeserializerParameters addIgnoredProperty(String ignoredProperty) {
         if (null == ignoredProperties) {
-            ignoredProperties = new HashSet<String>();
+            ignoredProperties = new HashSet<>();
         }
         ignoredProperties.add(ignoredProperty);
         return this;

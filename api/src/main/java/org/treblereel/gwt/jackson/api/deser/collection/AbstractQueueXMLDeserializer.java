@@ -38,7 +38,7 @@ public final class AbstractQueueXMLDeserializer<T> extends BaseQueueXMLDeseriali
      * @return a new instance of {@link AbstractQueueXMLDeserializer}
      */
     public static <T> AbstractQueueXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
-        return new AbstractQueueXMLDeserializer<T>(deserializer);
+        return new AbstractQueueXMLDeserializer<>(deserializer);
     }
 
     /**
@@ -51,6 +51,6 @@ public final class AbstractQueueXMLDeserializer<T> extends BaseQueueXMLDeseriali
     /** {@inheritDoc} */
     @Override
     protected AbstractQueue<T> newCollection() {
-        return new PriorityQueue<T>();
+        return new PriorityQueue<>();
     }
 }

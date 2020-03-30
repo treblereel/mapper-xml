@@ -2,6 +2,8 @@ package org.treblereel.gwt.jackson.api.deser.array.cast;
 
 import java.util.Stack;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.GwtIncompatible;
 import org.treblereel.gwt.jackson.api.JacksonContext;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
@@ -17,8 +19,8 @@ import org.treblereel.gwt.jackson.api.stream.XMLToken;
 public class DefaultShortArrayReader implements JacksonContext.ShortArrayReader {
     /** {@inheritDoc} */
     @Override
-    public short[] readArray(XMLReader reader) {
-        Stack<Short> shortStack = new Stack<>();
+    public short[] readArray(XMLReader reader) throws XMLStreamException {
+/*        Stack<Short> shortStack = new Stack<>();
         reader.beginArray();
         while (XMLToken.END_ARRAY != reader.peek()) {
             if (XMLToken.NULL == reader.peek()) {
@@ -33,7 +35,8 @@ public class DefaultShortArrayReader implements JacksonContext.ShortArrayReader 
         for (int i = 0; i < shortStack.size(); i++) {
             shorts[i] = shortStack.get(i);
         }
-        return shorts;
+        return shorts;*/
+        throw new UnsupportedOperationException();
     }
 
 }

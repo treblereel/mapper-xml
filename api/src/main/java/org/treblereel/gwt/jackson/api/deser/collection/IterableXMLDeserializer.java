@@ -25,6 +25,8 @@ import org.treblereel.gwt.jackson.api.stream.XMLToken;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.xml.stream.XMLStreamException;
+
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.lang.Iterable}. The deserialization process returns an {@link java.util.ArrayList}.
  *
@@ -42,7 +44,7 @@ public class IterableXMLDeserializer<T> extends BaseIterableXMLDeserializer<Iter
      * @return a new instance of {@link IterableXMLDeserializer}
      */
     public static <T> IterableXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
-        return new IterableXMLDeserializer<T>(deserializer);
+        return new IterableXMLDeserializer<>(deserializer);
     }
 
     /**
@@ -54,8 +56,8 @@ public class IterableXMLDeserializer<T> extends BaseIterableXMLDeserializer<Iter
 
     /** {@inheritDoc} */
     @Override
-    public Iterable<T> doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-        if (XMLToken.BEGIN_ARRAY == reader.peek()) {
+    public Iterable<T> doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+/*        if (XMLToken.BEGIN_ARRAY == reader.peek()) {
 
             Collection<T> result = new ArrayList<T>();
 
@@ -74,6 +76,7 @@ public class IterableXMLDeserializer<T> extends BaseIterableXMLDeserializer<Iter
 
         } else {
             throw ctx.traceError("Cannot deserialize a java.lang.Iterable out of " + reader.peek() + " token", reader);
-        }
+        }*/
+        throw new UnsupportedOperationException();
     }
 }

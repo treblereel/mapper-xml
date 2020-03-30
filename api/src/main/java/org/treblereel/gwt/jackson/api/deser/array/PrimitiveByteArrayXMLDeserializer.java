@@ -18,13 +18,13 @@ package org.treblereel.gwt.jackson.api.deser.array;
 
 import java.util.List;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
 import org.treblereel.gwt.jackson.api.deser.BaseNumberXMLDeserializer;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
-import org.treblereel.gwt.jackson.api.stream.XMLToken;
-import org.treblereel.gwt.jackson.api.utils.Base64Utils;
 
 /**
  * Default {@link XMLDeserializer} implementation for array of byte.
@@ -50,7 +50,7 @@ public class PrimitiveByteArrayXMLDeserializer extends AbstractArrayXMLDeseriali
 
     /** {@inheritDoc} */
     @Override
-    public byte[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    public byte[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         List<Byte> list = deserializeIntoList(reader, ctx, BaseNumberXMLDeserializer.ByteXMLDeserializer.getInstance(), params);
 
         byte[] result = new byte[list.size()];
@@ -66,19 +66,7 @@ public class PrimitiveByteArrayXMLDeserializer extends AbstractArrayXMLDeseriali
 
     /** {@inheritDoc} */
     @Override
-    protected byte[] doDeserializeNonArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-        if (XMLToken.STRING == reader.peek()) {
-            return Base64Utils.fromBase64(reader.nextString());
-        } else if (ctx.isAcceptSingleValueAsArray()) {
-            return doDeserializeSingleArray(reader, ctx, params);
-        } else {
-            throw ctx.traceError("Cannot deserialize a byte[] out of " + reader.peek() + " token", reader);
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected byte[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    protected byte[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         return new byte[]{BaseNumberXMLDeserializer.ByteXMLDeserializer.getInstance().deserialize(reader, ctx, params)};
     }
 }

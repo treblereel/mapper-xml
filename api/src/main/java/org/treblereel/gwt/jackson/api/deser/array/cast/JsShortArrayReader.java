@@ -1,5 +1,7 @@
 package org.treblereel.gwt.jackson.api.deser.array.cast;
 
+import javax.xml.stream.XMLStreamException;
+
 import elemental2.core.JsArray;
 import elemental2.core.JsNumber;
 import jsinterop.base.Js;
@@ -15,7 +17,7 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 public class JsShortArrayReader extends BaseJsNumberArrayReader implements JacksonContext.ShortArrayReader {
     /** {@inheritDoc} */
     @Override
-    public short[] readArray(XMLReader reader) {
+    public short[] readArray(XMLReader reader) throws XMLStreamException {
         return reinterpretCast(super.readNumberArray(reader));
     }
 

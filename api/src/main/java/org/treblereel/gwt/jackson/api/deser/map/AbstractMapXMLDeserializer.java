@@ -44,7 +44,7 @@ public final class AbstractMapXMLDeserializer<K, V> extends BaseMapXMLDeserializ
      */
     public static <K, V> AbstractMapXMLDeserializer<K, V> newInstance(KeyDeserializer<K> keyDeserializer,
                                                                        XMLDeserializer<V> valueDeserializer) {
-        return new AbstractMapXMLDeserializer<K, V>(keyDeserializer, valueDeserializer);
+        return new AbstractMapXMLDeserializer<>(keyDeserializer, valueDeserializer);
     }
 
     /**
@@ -58,6 +58,6 @@ public final class AbstractMapXMLDeserializer<K, V> extends BaseMapXMLDeserializ
     /** {@inheritDoc} */
     @Override
     protected AbstractMap<K, V> newMap() {
-        return new LinkedHashMap<K, V>();
+        return new LinkedHashMap<>();
     }
 }

@@ -18,12 +18,13 @@ package org.treblereel.gwt.jackson.api.deser.array;
 
 import java.util.List;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
 import org.treblereel.gwt.jackson.api.deser.CharacterXMLDeserializer;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
-import org.treblereel.gwt.jackson.api.stream.XMLToken;
 
 /**
  * Default {@link XMLDeserializer} implementation for array of char.
@@ -49,7 +50,7 @@ public class PrimitiveCharacterArrayXMLDeserializer extends AbstractArrayXMLDese
 
     /** {@inheritDoc} */
     @Override
-    public char[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    public char[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         List<Character> list = deserializeIntoList(reader, ctx, CharacterXMLDeserializer.getInstance(), params);
 
         char[] result = new char[list.size()];
@@ -65,19 +66,7 @@ public class PrimitiveCharacterArrayXMLDeserializer extends AbstractArrayXMLDese
 
     /** {@inheritDoc} */
     @Override
-    protected char[] doDeserializeNonArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-        if (XMLToken.STRING == reader.peek()) {
-            return reader.nextString().toCharArray();
-        } else if (ctx.isAcceptSingleValueAsArray()) {
-            return doDeserializeSingleArray(reader, ctx, params);
-        } else {
-            throw ctx.traceError("Cannot deserialize a char[] out of " + reader.peek() + " token", reader);
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected char[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    protected char[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         return new char[]{CharacterXMLDeserializer.getInstance().deserialize(reader, ctx, params)};
     }
 }

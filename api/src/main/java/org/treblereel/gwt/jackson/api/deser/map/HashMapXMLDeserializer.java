@@ -43,7 +43,7 @@ public final class HashMapXMLDeserializer<K, V> extends BaseMapXMLDeserializer<H
      */
     public static <K, V> HashMapXMLDeserializer<K, V> newInstance(KeyDeserializer<K> keyDeserializer,
                                                                    XMLDeserializer<V> valueDeserializer) {
-        return new HashMapXMLDeserializer<K, V>(keyDeserializer, valueDeserializer);
+        return new HashMapXMLDeserializer<>(keyDeserializer, valueDeserializer);
     }
 
     /**
@@ -57,6 +57,6 @@ public final class HashMapXMLDeserializer<K, V> extends BaseMapXMLDeserializer<H
     /** {@inheritDoc} */
     @Override
     protected HashMap<K, V> newMap() {
-        return new HashMap<K, V>();
+        return new HashMap<>();
     }
 }

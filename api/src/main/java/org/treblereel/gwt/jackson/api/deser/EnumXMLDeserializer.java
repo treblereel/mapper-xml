@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.deser;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -37,7 +39,7 @@ public class EnumXMLDeserializer<E extends Enum<E>> extends XMLDeserializer<E> {
      * @return a new instance of {@link EnumXMLDeserializer}
      */
     public static <E extends Enum<E>> EnumXMLDeserializer<E> newInstance(Class<E> enumClass) {
-        return new EnumXMLDeserializer<E>(enumClass);
+        return new EnumXMLDeserializer<>(enumClass);
     }
 
     private final Class<E> enumClass;
@@ -56,7 +58,7 @@ public class EnumXMLDeserializer<E extends Enum<E>> extends XMLDeserializer<E> {
 
     /** {@inheritDoc} */
     @Override
-    public E doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    public E doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         try {
             return Enum.valueOf(enumClass, reader.nextString());
         } catch (IllegalArgumentException ex) {

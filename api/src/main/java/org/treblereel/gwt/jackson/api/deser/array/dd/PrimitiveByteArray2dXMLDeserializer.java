@@ -16,20 +16,18 @@
 
 package org.treblereel.gwt.jackson.api.deser.array.dd;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.stream.XMLStreamException;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
 import org.treblereel.gwt.jackson.api.deser.BaseNumberXMLDeserializer;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
-import org.treblereel.gwt.jackson.api.stream.XMLToken;
-import org.treblereel.gwt.jackson.api.utils.Base64Utils;
 
 /**
  * Default {@link XMLDeserializer} implementation for 2D array of byte.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
@@ -37,85 +35,50 @@ public class PrimitiveByteArray2dXMLDeserializer extends AbstractArray2dXMLDeser
 
     private static final PrimitiveByteArray2dXMLDeserializer INSTANCE = new PrimitiveByteArray2dXMLDeserializer();
 
+    private PrimitiveByteArray2dXMLDeserializer() {
+    }
+
     /**
      * <p>getInstance</p>
-     *
      * @return an instance of {@link PrimitiveByteArray2dXMLDeserializer}
      */
     public static PrimitiveByteArray2dXMLDeserializer getInstance() {
         return INSTANCE;
     }
 
-    private PrimitiveByteArray2dXMLDeserializer() {
-    }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public byte[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    public byte[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
 
         byte[][] result;
 
-        reader.beginArray();
-        XMLToken token = reader.peek();
+        List<List<Byte>> list = doDeserializeIntoList(reader, ctx, BaseNumberXMLDeserializer.ByteXMLDeserializer.getInstance(), params);
 
-        if (XMLToken.END_ARRAY == token) {
+        if(list.isEmpty()) {
+            return new byte[0][0];
+        }
 
-            // empty array
-            result = new byte[0][0];
+        List<Byte> firstList = list.get(0);
+        if (firstList.isEmpty()) {
+            result = new byte[list.size()][0];
+        } else {
+            result = new byte[list.size()][firstList.size()];
 
-        } else if (XMLToken.STRING == token) {
-
-            // byte[] are encoded as String
-
-            List<byte[]> list = new ArrayList<byte[]>();
-            int size = 0;
-            while (XMLToken.END_ARRAY != token) {
-                byte[] decoded = Base64Utils.fromBase64(reader.nextString());
-                size = Math.max(size, decoded.length);
-                list.add(decoded);
-                token = reader.peek();
-            }
-
-            result = new byte[list.size()][size];
             int i = 0;
-            for (byte[] value : list) {
-                if (null != value) {
-                    result[i] = value;
+            int j;
+            for (List<Byte> innerList : list) {
+                j = 0;
+                for (Byte value : innerList) {
+                    if (null != value) {
+                        result[i][j] = value;
+                    }
+                    j++;
                 }
                 i++;
             }
-
-        } else {
-
-            List<List<Byte>> list = doDeserializeIntoList(reader, ctx, BaseNumberXMLDeserializer.ByteXMLDeserializer.getInstance(), params, token);
-
-            List<Byte> firstList = list.get(0);
-            if (firstList.isEmpty()) {
-
-                result = new byte[list.size()][0];
-
-            } else {
-
-                result = new byte[list.size()][firstList.size()];
-
-                int i = 0;
-                int j;
-                for (List<Byte> innerList : list) {
-                    j = 0;
-                    for (Byte value : innerList) {
-                        if (null != value) {
-                            result[i][j] = value;
-                        }
-                        j++;
-                    }
-                    i++;
-                }
-            }
-
         }
-
-        reader.endArray();
         return result;
-
     }
 }

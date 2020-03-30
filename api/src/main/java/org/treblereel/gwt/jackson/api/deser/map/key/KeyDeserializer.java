@@ -35,7 +35,7 @@ public abstract class KeyDeserializer<T> {
      * @return the deserialized object
      * @throws XMLDeserializationException if an error occurs during the deserialization
      */
-    public T deserialize(String key, XMLDeserializationContext ctx) throws XMLDeserializationException {
+    public T deserialize(String key, XMLDeserializationContext ctx) {
         if (null == key) {
             return null;
         }

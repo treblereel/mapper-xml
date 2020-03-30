@@ -43,7 +43,7 @@ public final class LinkedHashMapXMLDeserializer<K, V> extends BaseMapXMLDeserial
      */
     public static <K, V> LinkedHashMapXMLDeserializer<K, V> newInstance(KeyDeserializer<K> keyDeserializer,
                                                                          XMLDeserializer<V> valueDeserializer) {
-        return new LinkedHashMapXMLDeserializer<K, V>(keyDeserializer, valueDeserializer);
+        return new LinkedHashMapXMLDeserializer<>(keyDeserializer, valueDeserializer);
     }
 
     /**
@@ -57,6 +57,6 @@ public final class LinkedHashMapXMLDeserializer<K, V> extends BaseMapXMLDeserial
     /** {@inheritDoc} */
     @Override
     protected LinkedHashMap<K, V> newMap() {
-        return new LinkedHashMap<K, V>();
+        return new LinkedHashMap<>();
     }
 }

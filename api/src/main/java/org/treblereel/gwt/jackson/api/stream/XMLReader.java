@@ -16,6 +16,9 @@
 
 package org.treblereel.gwt.jackson.api.stream;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
 /**
  * <p>XMLReader interface.</p>
  *
@@ -23,40 +26,6 @@ package org.treblereel.gwt.jackson.api.stream;
  * @version $Id: $
  */
 public interface XMLReader {
-
-    /**
-     * Configure this parser to be  be liberal in what it accepts. By default,
-     * this parser is strict and only accepts JSON as specified by <a
-     * href="http://www.ietf.org/rfc/rfc4627.txt">RFC 4627</a>. Setting the
-     * parser to lenient causes it to ignore the following syntax errors:
-     * <div>
-     * <ul>
-     * <li>Streams that start with the <a href="#nonexecuteprefix">non-execute
-     * prefix</a>, <code>")]}'\n"</code>.
-     * <li>Streams that include multiple top-level values. With strict parsing,
-     * each stream must contain exactly one top-level value.
-     * <li>Top-level values of any type. With strict parsing, the top-level
-     * value must be an object or an array.
-     * <li>Numbers may be {@link Double#isNaN() NaNs} or {@link
-     * Double#isInfinite() infinities}.
-     * <li>End of line comments starting with {@code //} or {@code #} and
-     * ending with a newline character.
-     * <li>C-style comments starting with {@code /*} and ending with
-     * {@code *}{@code /}. Such comments may not be nested.
-     * <li>Names that are unquoted or {@code 'single quoted'}.
-     * <li>Strings that are unquoted or {@code 'single quoted'}.
-     * <li>Array elements separated by {@code ;} instead of {@code ,}.
-     * <li>Unnecessary array separators. These are interpreted as if null
-     * was the omitted value.
-     * <li>Names and values separated by {@code =} or {@code =>} instead of
-     * {@code :}.
-     * <li>Name/value pairs separated by {@code ;} instead of {@code ,}.
-     * </ul>
-     * </div>
-     *
-     * @param lenient a boolean.
-     */
-    void setLenient(boolean lenient);
 
     /**
      * Consumes the next token from the JSON stream and asserts that it is the
@@ -87,14 +56,14 @@ public interface XMLReader {
      *
      * @return a boolean.
      */
-    boolean hasNext();
+    boolean hasNext() throws XMLStreamException;
 
     /**
      * Returns the type of the next token without consuming it.
      *
      * @return a {@link XMLToken} object.
      */
-    XMLToken peek();
+    int peek() throws XMLStreamException;
 
     /**
      * Returns the next token, a {@link XMLToken#NAME property name}, and
@@ -113,7 +82,7 @@ public interface XMLReader {
      * @throws IllegalStateException if the next token is not a string or if
      *                               this reader is closed.
      */
-    String nextString();
+    String nextString() throws XMLStreamException;
 
     /**
      * Returns the {@link XMLToken#BOOLEAN boolean} value of the next token,
@@ -123,7 +92,7 @@ public interface XMLReader {
      * @throws IllegalStateException if the next token is not a boolean or if
      *                               this reader is closed.
      */
-    boolean nextBoolean();
+    boolean nextBoolean() throws XMLStreamException;
 
     /**
      * Consumes the next token from the JSON stream and asserts that it is a
@@ -144,7 +113,7 @@ public interface XMLReader {
      * @throws NumberFormatException if the next literal value cannot be parsed
      *                               as a double, or is non-finite.
      */
-    double nextDouble();
+    double nextDouble() throws XMLStreamException;
 
     /**
      * Returns the {@link XMLToken#NUMBER long} value of the next token,
@@ -157,7 +126,7 @@ public interface XMLReader {
      * @throws NumberFormatException if the next literal value cannot be parsed
      *                               as a number, or exactly represented as a long.
      */
-    long nextLong();
+    long nextLong() throws XMLStreamException;
 
     /**
      * Returns the {@link XMLToken#NUMBER int} value of the next token,
@@ -170,19 +139,19 @@ public interface XMLReader {
      * @throws NumberFormatException if the next literal value cannot be parsed
      *                               as a number, or exactly represented as an int.
      */
-    int nextInt();
+    int nextInt() throws XMLStreamException;
 
     /**
      * Closes this JSON reader and the underlying {@link java.io.Reader}.
      */
-    void close();
+    void close() throws XMLStreamException;
 
     /**
      * Skips the next value recursively. If it is an object or array, all nested
      * elements are skipped. This method is intended for use when the JSON token
      * stream contains unrecognized or unhandled values.
      */
-    void skipValue();
+    void skipValue() throws XMLStreamException;
 
     /**
      * Reads the next value recursively and returns it as a String. If it is an object or array, all nested
@@ -211,7 +180,7 @@ public interface XMLReader {
      *
      * @return a {@link String} object.
      */
-    String getInput();
+    String getInput() throws XMLStreamException;
 
     /**
      * Returns the {@link Number} value of the next token, consuming it.
@@ -225,6 +194,7 @@ public interface XMLReader {
      * @throws IllegalStateException if the next token is not a number.
      * @throws NumberFormatException if the next value cannot be parsed as a number.
      */
-    Number nextNumber();
+    Number nextNumber() throws XMLStreamException;
 
+    void next() throws XMLStreamException;
 }

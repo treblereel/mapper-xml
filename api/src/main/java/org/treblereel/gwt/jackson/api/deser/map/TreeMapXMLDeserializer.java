@@ -43,7 +43,7 @@ public final class TreeMapXMLDeserializer<K, V> extends BaseMapXMLDeserializer<T
      */
     public static <K, V> TreeMapXMLDeserializer<K, V> newInstance(KeyDeserializer<K> keyDeserializer,
                                                                    XMLDeserializer<V> valueDeserializer) {
-        return new TreeMapXMLDeserializer<K, V>(keyDeserializer, valueDeserializer);
+        return new TreeMapXMLDeserializer<>(keyDeserializer, valueDeserializer);
     }
 
     /**
@@ -57,6 +57,6 @@ public final class TreeMapXMLDeserializer<K, V> extends BaseMapXMLDeserializer<T
     /** {@inheritDoc} */
     @Override
     protected TreeMap<K, V> newMap() {
-        return new TreeMap<K, V>();
+        return new TreeMap<>();
     }
 }

@@ -16,12 +16,10 @@
 
 package org.treblereel.gwt.jackson.api.deser.collection;
 
-import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 /**
  * Base {@link XMLDeserializer} implementation for {@link java.lang.Iterable}.
- *
  * @param <I> {@link java.lang.Iterable} type
  * @param <T> Type of the elements inside the {@link java.lang.Iterable}
  * @author Nicolas Morel
@@ -33,7 +31,6 @@ public abstract class BaseIterableXMLDeserializer<I extends Iterable<T>, T> exte
 
     /**
      * <p>Constructor for BaseIterableXMLDeserializer.</p>
-     *
      * @param deserializer {@link XMLDeserializer} used to map the objects inside the {@link java.lang.Iterable}.
      */
     public BaseIterableXMLDeserializer(XMLDeserializer<T> deserializer) {
@@ -41,15 +38,5 @@ public abstract class BaseIterableXMLDeserializer<I extends Iterable<T>, T> exte
             throw new IllegalArgumentException("deserializer can't be null");
         }
         this.deserializer = deserializer;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setBackReference(String referenceName, Object reference, I value, XMLDeserializationContext ctx) {
-        if (null != value) {
-            for (T val : value) {
-                deserializer.setBackReference(referenceName, reference, val, ctx);
-            }
-        }
     }
 }

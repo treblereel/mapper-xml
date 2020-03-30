@@ -2,6 +2,8 @@ package org.treblereel.gwt.jackson.api.deser.array.cast;
 
 import java.util.Stack;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.GwtIncompatible;
 import org.treblereel.gwt.jackson.api.JacksonContext;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
@@ -17,8 +19,8 @@ import org.treblereel.gwt.jackson.api.stream.XMLToken;
 public class DefaultIntegerArrayReader implements JacksonContext.IntegerArrayReader {
     /** {@inheritDoc} */
     @Override
-    public int[] readArray(XMLReader reader) {
-        Stack<Integer> intStack = new Stack<>();
+    public int[] readArray(XMLReader reader) throws XMLStreamException {
+/*        Stack<Integer> intStack = new Stack<>();
         reader.beginArray();
         while (XMLToken.END_ARRAY != reader.peek()) {
             if (XMLToken.NULL == reader.peek()) {
@@ -29,6 +31,7 @@ public class DefaultIntegerArrayReader implements JacksonContext.IntegerArrayRea
             }
         }
         reader.endArray();
-        return intStack.stream().mapToInt(Integer::intValue).toArray();
+        return intStack.stream().mapToInt(Integer::intValue).toArray();*/
+        throw new UnsupportedOperationException();
     }
 }

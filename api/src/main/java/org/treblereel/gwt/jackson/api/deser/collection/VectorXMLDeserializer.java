@@ -37,7 +37,7 @@ public class VectorXMLDeserializer<T> extends BaseListXMLDeserializer<Vector<T>,
      * @return a new instance of {@link VectorXMLDeserializer}
      */
     public static <T> VectorXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
-        return new VectorXMLDeserializer<T>(deserializer);
+        return new VectorXMLDeserializer<>(deserializer);
     }
 
     /**
@@ -50,6 +50,6 @@ public class VectorXMLDeserializer<T> extends BaseListXMLDeserializer<Vector<T>,
     /** {@inheritDoc} */
     @Override
     protected Vector<T> newCollection() {
-        return new Vector<T>();
+        return new Vector<>();
     }
 }

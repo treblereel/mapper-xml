@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.deser;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -45,7 +47,7 @@ public class VoidXMLDeserializer extends XMLDeserializer<Void> {
 
     /** {@inheritDoc} */
     @Override
-    public Void doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    public Void doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         // we should never be here, the null value is already handled and it's the only possible value for Void
         reader.skipValue();
         return null;

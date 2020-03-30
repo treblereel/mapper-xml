@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.deser.bean;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
@@ -35,7 +37,7 @@ public abstract class BeanPropertyDeserializer<T, V> extends HasDeserializerAndP
      * @param bean   bean to set the deserialized property to
      * @param ctx    context of the deserialization process
      */
-    public void deserialize(XMLReader reader, T bean, XMLDeserializationContext ctx) {
+    public void deserialize(XMLReader reader, T bean, XMLDeserializationContext ctx) throws XMLStreamException {
         setValue(bean, deserialize(reader, ctx), ctx);
     }
 

@@ -16,17 +16,20 @@
 
 package org.treblereel.gwt.jackson.api.deser.array.cast;
 
-import org.treblereel.gwt.jackson.api.JacksonContextProvider;
+import java.util.List;
+
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
+import org.treblereel.gwt.jackson.api.deser.StringXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.array.AbstractArrayXMLDeserializer;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
  * Default {@link XMLDeserializer} implementation for array of {@link java.lang.String}.
  * <p>Not working in production mode, cast problem. Can maybe work with disableCastChecking</p>
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
@@ -34,30 +37,31 @@ public class StringArrayXMLDeserializer extends AbstractArrayXMLDeserializer<Str
 
     private static final StringArrayXMLDeserializer INSTANCE = new StringArrayXMLDeserializer();
 
+    private StringArrayXMLDeserializer() {
+    }
+
     /**
      * <p>getInstance</p>
-     *
      * @return an instance of {@link StringArrayXMLDeserializer}
      */
     public static StringArrayXMLDeserializer getInstance() {
         return INSTANCE;
     }
 
-
-
-    private StringArrayXMLDeserializer() {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+        List<String> list = deserializeIntoList(reader, ctx, StringXMLDeserializer.getInstance(), params);
+        return list.toArray(new String[list.size()]);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-        return JacksonContextProvider.get().stringArrayReader().readArray(reader);
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
-    protected String[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    protected String[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         return new String[]{reader.nextString()};
     }
 }

@@ -50,6 +50,6 @@ public class UUIDXMLSerializer extends XMLSerializer<UUID> {
     /** {@inheritDoc} */
     @Override
     public void doSerialize(XMLWriter writer, UUID value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        writer.unescapeValue(value.toString());
+        writer.value(value.toString());
     }
 }

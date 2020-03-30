@@ -16,17 +16,18 @@
 
 package org.treblereel.gwt.jackson.api.deser.collection;
 
+import java.util.Collection;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
-import org.treblereel.gwt.jackson.api.stream.XMLToken;
-
-import java.util.Collection;
 
 /**
  * Base {@link XMLDeserializer} implementation for {@link java.util.Collection}.
- *
  * @param <C> {@link java.util.Collection} type
  * @param <T> Type of the elements inside the {@link java.util.Collection}
  * @author Nicolas Morel
@@ -36,65 +37,57 @@ public abstract class BaseCollectionXMLDeserializer<C extends Collection<T>, T> 
 
     /**
      * <p>Constructor for BaseCollectionXMLDeserializer.</p>
-     *
      * @param deserializer {@link XMLDeserializer} used to map the objects inside the {@link java.util.Collection}.
      */
     public BaseCollectionXMLDeserializer(XMLDeserializer<T> deserializer) {
         super(deserializer);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public C doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-        if (XMLToken.BEGIN_ARRAY == reader.peek()) {
+    public C doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
 
-            C result = newCollection();
-
-            reader.beginArray();
-            while (XMLToken.END_ARRAY != reader.peek()) {
-                T element = deserializer.deserialize(reader, ctx, params);
-                if (isNullValueAllowed() || null != element) {
+        C result = newCollection();
+        int counter = 0;
+        while (reader.hasNext()) {
+            reader.next();
+            switch (reader.peek()) {
+                case XMLStreamReader.START_ELEMENT:
+                    counter++;
+                    T element = deserializer.deserialize(reader, ctx, params);
                     result.add(element);
-                }
+                    break;
+                case XMLStreamReader.END_ELEMENT:
+                    counter--;
+
+                    if (counter == -1) {
+                        return result;
+                    }
+
+                    break;
+                case XMLStreamReader.END_DOCUMENT:
+                    break;
+                default:
+                    throw new XMLStreamException();
             }
-            reader.endArray();
-
-            return result;
-
-        } else if (ctx.isAcceptSingleValueAsArray()) {
-
-            C result = newCollection();
-            result.add(deserializer.deserialize(reader, ctx, params));
-            return result;
-
-        } else {
-            throw ctx.traceError("Cannot deserialize a java.util.Collection out of " + reader.peek() + " token", reader);
         }
+        return result;
     }
 
     /**
      * Instantiates a new collection for deserialization process.
-     *
      * @return the new collection
      */
     protected abstract C newCollection();
 
     /**
      * <p>isNullValueAllowed</p>
-     *
      * @return true if the collection accepts null value
      */
     protected boolean isNullValueAllowed() {
         return true;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setBackReference(String referenceName, Object reference, C value, XMLDeserializationContext ctx) {
-        if (null != value && !value.isEmpty()) {
-            for (T val : value) {
-                deserializer.setBackReference(referenceName, reference, val, ctx);
-            }
-        }
-    }
 }

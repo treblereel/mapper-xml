@@ -37,7 +37,7 @@ public class PriorityQueueXMLDeserializer<T> extends BaseQueueXMLDeserializer<Pr
      * @return a new instance of {@link PriorityQueueXMLDeserializer}
      */
     public static <T> PriorityQueueXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
-        return new PriorityQueueXMLDeserializer<T>(deserializer);
+        return new PriorityQueueXMLDeserializer<>(deserializer);
     }
 
     /**
@@ -50,6 +50,6 @@ public class PriorityQueueXMLDeserializer<T> extends BaseQueueXMLDeserializer<Pr
     /** {@inheritDoc} */
     @Override
     protected PriorityQueue<T> newCollection() {
-        return new PriorityQueue<T>();
+        return new PriorityQueue<>();
     }
 }

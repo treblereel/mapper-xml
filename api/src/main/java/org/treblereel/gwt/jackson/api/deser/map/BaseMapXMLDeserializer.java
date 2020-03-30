@@ -25,6 +25,8 @@ import org.treblereel.gwt.jackson.api.stream.XMLToken;
 
 import java.util.Map;
 
+import javax.xml.stream.XMLStreamException;
+
 /**
  * Base {@link XMLDeserializer} implementation for {@link java.util.Map}.
  *
@@ -65,8 +67,8 @@ public abstract class BaseMapXMLDeserializer<M extends Map<K, V>, K, V> extends 
 
     /** {@inheritDoc} */
     @Override
-    public M doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-        M result = newMap();
+    public M doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+/*        M result = newMap();
 
         reader.beginObject();
         while (XMLToken.END_OBJECT != reader.peek()) {
@@ -77,7 +79,8 @@ public abstract class BaseMapXMLDeserializer<M extends Map<K, V>, K, V> extends 
         }
         reader.endObject();
 
-        return result;
+        return result;*/
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -87,13 +90,4 @@ public abstract class BaseMapXMLDeserializer<M extends Map<K, V>, K, V> extends 
      */
     protected abstract M newMap();
 
-    /** {@inheritDoc} */
-    @Override
-    public void setBackReference(String referenceName, Object reference, M value, XMLDeserializationContext ctx) {
-        if (null != value) {
-            for (V val : value.values()) {
-                valueDeserializer.setBackReference(referenceName, reference, val, ctx);
-            }
-        }
-    }
 }

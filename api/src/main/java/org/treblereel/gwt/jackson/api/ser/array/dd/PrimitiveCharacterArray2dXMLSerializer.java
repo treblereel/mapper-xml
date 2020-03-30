@@ -21,37 +21,41 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
+import org.treblereel.gwt.jackson.api.ser.array.BasicArrayXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.PrimitiveCharacterArrayXMLSerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for 2D array of char.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
-public class PrimitiveCharacterArray2dXMLSerializer extends XMLSerializer<char[][]> {
+public class PrimitiveCharacterArray2dXMLSerializer extends BasicArrayXMLSerializer<char[][]> {
 
     private static final PrimitiveCharacterArray2dXMLSerializer INSTANCE = new PrimitiveCharacterArray2dXMLSerializer();
-
-    /**
-     * <p>getInstance</p>
-     *
-     * @return an instance of {@link PrimitiveCharacterArray2dXMLSerializer}
-     */
-    public static PrimitiveCharacterArray2dXMLSerializer getInstance() {
-        return INSTANCE;
-    }
 
     private PrimitiveCharacterArray2dXMLSerializer() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * <p>getInstance</p>
+     * @return an instance of {@link PrimitiveCharacterArray2dXMLSerializer}
+     */
+    public static BasicArrayXMLSerializer getInstance(String propertyName) {
+        return INSTANCE.setPropertyName(propertyName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean isEmpty(char[][] value) {
         return null == value || value.length == 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSerialize(XMLWriter writer, char[][] values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
@@ -59,19 +63,12 @@ public class PrimitiveCharacterArray2dXMLSerializer extends XMLSerializer<char[]
             return;
         }
 
-        writer.beginArray();
-        for (char[] array : values) {
-            if (ctx.isWriteCharArraysAsJsonArrays()) {
-                writer.beginArray();
-                for (char value : array) {
-                    writer.value(Character.toString(value));
-                }
-                writer.endArray();
-            } else {
-                writer.value(new String(array));
-            }
-        }
-        writer.endArray();
+        BasicArrayXMLSerializer serializer = PrimitiveCharacterArrayXMLSerializer.getInstance(propertyName);
 
+        writer.beginObject(propertyName);
+        for (char[] value : values) {
+            serializer.serialize(writer, value, ctx, params);
+        }
+        writer.endObject();
     }
 }

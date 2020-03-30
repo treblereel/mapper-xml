@@ -38,7 +38,7 @@ public class AbstractListXMLDeserializer<T> extends BaseListXMLDeserializer<Abst
      * @return a new instance of {@link AbstractListXMLDeserializer}
      */
     public static <T> AbstractListXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
-        return new AbstractListXMLDeserializer<T>(deserializer);
+        return new AbstractListXMLDeserializer<>(deserializer);
     }
 
     /**
@@ -51,6 +51,6 @@ public class AbstractListXMLDeserializer<T> extends BaseListXMLDeserializer<Abst
     /** {@inheritDoc} */
     @Override
     protected AbstractList<T> newCollection() {
-        return new ArrayList<T>();
+        return new ArrayList<>();
     }
 }

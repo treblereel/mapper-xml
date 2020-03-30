@@ -51,7 +51,7 @@ public abstract class AbstractValueBeanXMLSerializer<T> extends AbstractBeanXMLS
     /** {@inheritDoc} */
     @Override
     protected void serializeObject(XMLWriter writer, T value, XMLSerializationContext ctx, Set<String> ignoredProperties,
-                                   IdentitySerializationInfo identityInfo, ObjectIdSerializer<?> idWriter, String typeName, String
+                                   IdentitySerializationInfo identityInfo, String typeName, TypeSerializationInfo
                                            typeInformation) throws XMLStreamException {
         serializer.serialize(writer, value, ctx);
     }

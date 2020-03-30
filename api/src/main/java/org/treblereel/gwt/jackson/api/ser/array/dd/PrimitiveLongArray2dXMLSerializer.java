@@ -21,37 +21,41 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
+import org.treblereel.gwt.jackson.api.ser.array.BasicArrayXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.array.PrimitiveLongArrayXMLSerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for 2D array of long.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
-public class PrimitiveLongArray2dXMLSerializer extends XMLSerializer<long[][]> {
+public class PrimitiveLongArray2dXMLSerializer extends BasicArrayXMLSerializer<long[][]> {
 
     private static final PrimitiveLongArray2dXMLSerializer INSTANCE = new PrimitiveLongArray2dXMLSerializer();
-
-    /**
-     * <p>getInstance</p>
-     *
-     * @return an instance of {@link PrimitiveLongArray2dXMLSerializer}
-     */
-    public static PrimitiveLongArray2dXMLSerializer getInstance() {
-        return INSTANCE;
-    }
 
     private PrimitiveLongArray2dXMLSerializer() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * <p>getInstance</p>
+     * @return an instance of {@link PrimitiveLongArray2dXMLSerializer}
+     */
+    public static BasicArrayXMLSerializer getInstance(String propertyName) {
+        return INSTANCE.setPropertyName(propertyName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean isEmpty(long[][] value) {
         return null == value || value.length == 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSerialize(XMLWriter writer, long[][] values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
@@ -59,14 +63,12 @@ public class PrimitiveLongArray2dXMLSerializer extends XMLSerializer<long[][]> {
             return;
         }
 
-        writer.beginArray();
-        for (long[] array : values) {
-            writer.beginArray();
-            for (long value : array) {
-                writer.value(value);
-            }
-            writer.endArray();
+        BasicArrayXMLSerializer serializer = PrimitiveLongArrayXMLSerializer.getInstance(propertyName);
+
+        writer.beginObject(propertyName);
+        for (long[] value : values) {
+            serializer.serialize(writer, value, ctx, params);
         }
-        writer.endArray();
+        writer.endObject();
     }
 }

@@ -16,19 +16,18 @@
 
 package org.treblereel.gwt.jackson.api.deser.array.dd;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.stream.XMLStreamException;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
 import org.treblereel.gwt.jackson.api.deser.CharacterXMLDeserializer;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
-import org.treblereel.gwt.jackson.api.stream.XMLToken;
 
 /**
  * Default {@link XMLDeserializer} implementation for 2D array of char.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
@@ -36,84 +35,47 @@ public class PrimitiveCharacterArray2dXMLDeserializer extends AbstractArray2dXML
 
     private static final PrimitiveCharacterArray2dXMLDeserializer INSTANCE = new PrimitiveCharacterArray2dXMLDeserializer();
 
+    private PrimitiveCharacterArray2dXMLDeserializer() {
+    }
+
     /**
      * <p>getInstance</p>
-     *
      * @return an instance of {@link PrimitiveCharacterArray2dXMLDeserializer}
      */
     public static PrimitiveCharacterArray2dXMLDeserializer getInstance() {
         return INSTANCE;
     }
 
-    private PrimitiveCharacterArray2dXMLDeserializer() {
-    }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public char[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+    public char[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+        List<List<Character>> list = deserializeIntoList(reader, ctx, CharacterXMLDeserializer.getInstance(), params);
 
-        char[][] result;
-
-        reader.beginArray();
-        XMLToken token = reader.peek();
-
-        if (XMLToken.END_ARRAY == token) {
-
-            // empty array
-            result = new char[0][0];
-
-        } else if (XMLToken.STRING == token) {
-
-            // char[] are encoded as String
-
-            List<char[]> list = new ArrayList<char[]>();
-            int size = 0;
-            while (XMLToken.END_ARRAY != token) {
-                char[] decoded = reader.nextString().toCharArray();
-                size = Math.max(size, decoded.length);
-                list.add(decoded);
-                token = reader.peek();
-            }
-
-            result = new char[list.size()][size];
-            int i = 0;
-            for (char[] value : list) {
-                if (null != value) {
-                    result[i] = value;
-                }
-                i++;
-            }
-
-        } else {
-
-            List<List<Character>> list = doDeserializeIntoList(reader, ctx, CharacterXMLDeserializer.getInstance(), params, token);
-
-            List<Character> firstList = list.get(0);
-            if (firstList.isEmpty()) {
-
-                result = new char[list.size()][0];
-
-            } else {
-
-                result = new char[list.size()][firstList.size()];
-
-                int i = 0;
-                int j;
-                for (List<Character> innerList : list) {
-                    j = 0;
-                    for (Character value : innerList) {
-                        if (null != value) {
-                            result[i][j] = value;
-                        }
-                        j++;
-                    }
-                    i++;
-                }
-            }
-
+        if (list.isEmpty()) {
+            return new char[0][0];
         }
 
-        reader.endArray();
-        return result;
+        List<Character> firstList = list.get(0);
+        if (firstList.isEmpty()) {
+            return new char[list.size()][0];
+        }
+
+        char[][] array = new char[list.size()][firstList.size()];
+
+        int i = 0;
+        int j;
+        for (List<Character> innerList : list) {
+            j = 0;
+            for (Character value : innerList) {
+                if (null != value) {
+                    array[i][j] = value;
+                }
+                j++;
+            }
+            i++;
+        }
+        return array;
     }
 }

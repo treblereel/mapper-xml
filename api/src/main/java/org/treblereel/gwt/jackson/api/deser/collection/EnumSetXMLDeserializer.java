@@ -37,7 +37,7 @@ public class EnumSetXMLDeserializer<E extends Enum<E>> extends BaseSetXMLDeseria
      * @return a new instance of {@link EnumSetXMLDeserializer}
      */
     public static <E extends Enum<E>> EnumSetXMLDeserializer<E> newInstance(EnumXMLDeserializer<E> deserializer) {
-        return new EnumSetXMLDeserializer<E>(deserializer);
+        return new EnumSetXMLDeserializer<>(deserializer);
     }
 
     private final Class<E> enumClass;

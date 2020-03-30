@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.deser.array.ArrayXMLDeserializer;
 import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 
@@ -49,7 +51,7 @@ public interface ObjectReader<T> {
      * @return the read object
      * @throws XMLDeserializationException if an exception occurs while reading the input
      */
-    T read(String input) throws XMLDeserializationException;
+    T read(String input) throws XMLDeserializationException, XMLStreamException;
 
     /**
      * Reads a XML input into an object.
@@ -59,29 +61,7 @@ public interface ObjectReader<T> {
      * @return the read object
      * @throws XMLDeserializationException if an exception occurs while reading the input
      */
-    T read(String input, XMLDeserializationContext ctx) throws XMLDeserializationException;
-
-    /**
-     * Reads a XML input into an array object.
-     *
-     * @param input        XML input to read
-     * @param arrayCreator Creator for initializing new instance of an array of specific length
-     * @return the read array object
-     * @throws XMLDeserializationException if an exception occurs while reading the input
-     */
-    T[] readArray(String input, ArrayXMLDeserializer.ArrayCreator<T> arrayCreator) throws XMLDeserializationException;
-
-    /**
-     * Reads a XML input into an array object.
-     *
-     * @param input        XML input to read
-     * @param ctx          Context for the full reading process
-     * @param arrayCreator Creator for initializing new instance of an array of specific length
-     * @return the read array object
-     * @throws XMLDeserializationException if an exception occurs while reading the input
-     */
-    T[] readArray(String input, XMLDeserializationContext ctx, ArrayXMLDeserializer.ArrayCreator<T> arrayCreator) throws XMLDeserializationException;
-
+    T read(String input, XMLDeserializationContext ctx) throws XMLDeserializationException, XMLStreamException;
 
     /**
      * <p>getDeserializer.</p>

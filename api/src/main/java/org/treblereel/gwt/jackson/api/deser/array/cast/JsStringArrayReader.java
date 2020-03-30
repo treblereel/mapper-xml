@@ -1,5 +1,7 @@
 package org.treblereel.gwt.jackson.api.deser.array.cast;
 
+import javax.xml.stream.XMLStreamException;
+
 import elemental2.core.JsArray;
 import elemental2.core.JsString;
 import jsinterop.base.Js;
@@ -16,8 +18,11 @@ import org.treblereel.gwt.jackson.api.stream.XMLToken;
 public class JsStringArrayReader implements JacksonContext.StringArrayReader {
     /** {@inheritDoc} */
     @Override
-    public String[] readArray(XMLReader reader) {
-        JsArray<JsString> jsArray = new JsArray<>();
+    public String[] readArray(XMLReader reader) throws XMLStreamException {
+
+
+
+/*        JsArray<JsString> jsArray = new JsArray<>();
         reader.beginArray();
         while (XMLToken.END_ARRAY != reader.peek()) {
             if (XMLToken.NULL == reader.peek()) {
@@ -29,11 +34,8 @@ public class JsStringArrayReader implements JacksonContext.StringArrayReader {
         }
         reader.endArray();
 
-        return reinterpretCast(jsArray);
+        return reinterpretCast(jsArray);*/
+        throw new UnsupportedOperationException();
     }
 
-    private static String[] reinterpretCast(JsArray<JsString> value) {
-        JsString[] sliced = value.slice();
-        return Js.uncheckedCast(sliced);
-    }
 }

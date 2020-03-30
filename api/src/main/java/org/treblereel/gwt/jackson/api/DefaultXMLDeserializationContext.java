@@ -20,6 +20,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import com.ctc.wstx.stax.WstxInputFactory;
 import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 import org.treblereel.gwt.jackson.api.stream.impl.NonBufferedXMLReader;
@@ -36,23 +41,24 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
      * Deserialization options
      */
     private final boolean failOnUnknownProperties;
-    private final boolean unwrapRootValue;
     private final boolean acceptSingleValueAsArray;
     private final boolean wrapExceptions;
     private final boolean useSafeEval;
     private final boolean readUnknownEnumValuesAsNull;
     private final boolean useBrowserTimezone;
+    private final XMLInputFactory xmlInputFactory;
 
-    private DefaultXMLDeserializationContext(boolean failOnUnknownProperties, boolean unwrapRootValue, boolean acceptSingleValueAsArray,
+
+    private DefaultXMLDeserializationContext(boolean failOnUnknownProperties, boolean acceptSingleValueAsArray,
                                              boolean wrapExceptions, boolean useSafeEval, boolean readUnknownEnumValuesAsNull,
                                              boolean useBrowserTimezone) {
         this.failOnUnknownProperties = failOnUnknownProperties;
-        this.unwrapRootValue = unwrapRootValue;
         this.acceptSingleValueAsArray = acceptSingleValueAsArray;
         this.wrapExceptions = wrapExceptions;
         this.useSafeEval = useSafeEval;
         this.readUnknownEnumValuesAsNull = readUnknownEnumValuesAsNull;
         this.useBrowserTimezone = useBrowserTimezone;
+        this.xmlInputFactory = new WstxInputFactory();
     }
 
     /**
@@ -72,17 +78,6 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
     @Override
     public boolean isFailOnUnknownProperties() {
         return failOnUnknownProperties;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>isUnwrapRootValue</p>
-     * @see Builder#unwrapRootValue(boolean)
-     */
-    @Override
-    public boolean isUnwrapRootValue() {
-        return unwrapRootValue;
     }
 
     /**
@@ -135,9 +130,8 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
      * <p>newXMLReader</p>
      */
     @Override
-    public XMLReader newXMLReader(String input) {
-        XMLReader reader = new NonBufferedXMLReader(input);
-        reader.setLenient(true);
+    public XMLReader newXMLReader(String input) throws XMLStreamException {
+        XMLReader reader = new NonBufferedXMLReader(xmlInputFactory, input);
         return reader;
     }
 
@@ -147,7 +141,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
      * Trace an error with current reader state and returns a corresponding exception.
      */
     @Override
-    public XMLDeserializationException traceError(String message) {
+    public XMLDeserializationException traceError(String message) throws XMLStreamException {
         return traceError(message, null);
     }
 
@@ -180,7 +174,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
      * Trace an error with current reader state and returns a corresponding exception.
      */
     @Override
-    public XMLDeserializationException traceError(String message, XMLReader reader) {
+    public XMLDeserializationException traceError(String message, XMLReader reader) throws XMLStreamException {
         getLogger().log(Level.SEVERE, message);
         traceReaderInfo(reader);
         return new XMLDeserializationException(message);
@@ -197,10 +191,9 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
     /**
      * Trace the current reader state
      */
-    private void traceReaderInfo(XMLReader reader) {
+    private void traceReaderInfo(XMLReader reader) throws XMLStreamException {
         if (null != reader && getLogger().isLoggable(Level.INFO)) {
-            getLogger().log(Level.INFO, "Error at line " + reader.getLineNumber() + " and column " + reader
-                    .getColumnNumber() + " of input <" + reader.getInput() + ">");
+            getLogger().log(Level.INFO, "Error in input <" + reader.getInput() + ">");
         }
     }
 
@@ -210,20 +203,10 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
      * Trace an error with current reader state and returns a corresponding exception.
      */
     @Override
-    public RuntimeException traceError(RuntimeException cause, XMLReader reader) {
+    public RuntimeException traceError(RuntimeException cause, XMLReader reader) throws XMLStreamException {
         RuntimeException exception = traceError(cause);
         traceReaderInfo(reader);
         return exception;
-    }
-
-    @Override
-    public void addObjectId(ObjectIdGenerator.IdKey id, Object instance) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Object getObjectWithId(ObjectIdGenerator.IdKey id) {
-        throw new UnsupportedOperationException();
     }
 
     /**
@@ -242,8 +225,6 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
     public static class Builder {
 
         protected boolean failOnUnknownProperties = true;
-
-        protected boolean unwrapRootValue = false;
 
         protected boolean acceptSingleValueAsArray = false;
 
@@ -281,24 +262,6 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
          */
         public Builder failOnUnknownProperties(boolean failOnUnknownProperties) {
             this.failOnUnknownProperties = failOnUnknownProperties;
-            return this;
-        }
-
-        /**
-         * Feature to allow "unwrapping" root-level JSON value, to match setting of
-         * {@link DefaultXMLSerializationContext.Builder#wrapRootValue(boolean)} used for serialization.
-         * Will verify that the root JSON value is a JSON Object, and that it has
-         * a single property with expected root name. If not, a
-         * {@link XMLDeserializationException} is thrown; otherwise value of the wrapped property
-         * will be deserialized as if it was the root value.
-         * <p>
-         * Feature is disabled by default.
-         * </p>
-         * @param unwrapRootValue true if should unwrapRootValue
-         * @return the builder
-         */
-        public Builder unwrapRootValue(boolean unwrapRootValue) {
-            this.unwrapRootValue = unwrapRootValue;
             return this;
         }
 
@@ -377,7 +340,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
         }
 
         public final XMLDeserializationContext build() {
-            return new DefaultXMLDeserializationContext(failOnUnknownProperties, unwrapRootValue, acceptSingleValueAsArray, wrapExceptions,
+            return new DefaultXMLDeserializationContext(failOnUnknownProperties, acceptSingleValueAsArray, wrapExceptions,
                                                         useSafeEval, readUnknownEnumValuesAsNull, useBrowserTimezone);
         }
     }

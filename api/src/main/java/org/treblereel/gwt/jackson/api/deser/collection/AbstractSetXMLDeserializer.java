@@ -38,7 +38,7 @@ public final class AbstractSetXMLDeserializer<T> extends BaseSetXMLDeserializer<
      * @return a new instance of {@link AbstractSetXMLDeserializer}
      */
     public static <T> AbstractSetXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
-        return new AbstractSetXMLDeserializer<T>(deserializer);
+        return new AbstractSetXMLDeserializer<>(deserializer);
     }
 
     /**
@@ -51,6 +51,6 @@ public final class AbstractSetXMLDeserializer<T> extends BaseSetXMLDeserializer<
     /** {@inheritDoc} */
     @Override
     protected AbstractSet<T> newCollection() {
-        return new LinkedHashSet<T>();
+        return new LinkedHashSet<>();
     }
 }

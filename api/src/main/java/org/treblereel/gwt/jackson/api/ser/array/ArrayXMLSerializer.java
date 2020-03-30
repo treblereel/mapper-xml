@@ -25,45 +25,52 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for array.
- *
  * @param <T> Type of the elements inside the array
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class ArrayXMLSerializer<T> extends XMLSerializer<T[]> {
 
-    /**
-     * <p>newInstance</p>
-     *
-     * @param serializer {@link XMLSerializer} used to serialize the objects inside the array.
-     * @param <T>        Type of the elements inside the array
-     * @return a new instance of {@link ArrayXMLSerializer}
-     */
-    public static <T> ArrayXMLSerializer<T> newInstance(XMLSerializer<T> serializer) {
-        return new ArrayXMLSerializer<T>(serializer);
-    }
-
     private final XMLSerializer<T> serializer;
+    protected final String propertyName;
+
 
     /**
      * <p>Constructor for ArrayJsonSerializer.</p>
-     *
      * @param serializer {@link XMLSerializer} used to serialize the objects inside the array.
      */
-    protected ArrayXMLSerializer(XMLSerializer<T> serializer) {
+    protected ArrayXMLSerializer(XMLSerializer<T> serializer, String propertyName) {
         if (null == serializer) {
             throw new IllegalArgumentException("serializer cannot be null");
         }
+        if (null == propertyName) {
+            throw new IllegalArgumentException("propertyName cannot be null");
+        }
         this.serializer = serializer;
+        this.propertyName = propertyName;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * <p>newInstance</p>
+     * @param serializer {@link XMLSerializer} used to serialize the objects inside the array.
+     * @param <T> Type of the elements inside the array
+     * @return a new instance of {@link ArrayXMLSerializer}
+     */
+    public static <T> ArrayXMLSerializer<T> getInstance(XMLSerializer<T> serializer, String propertyName) {
+        return new ArrayXMLSerializer<T>(serializer, propertyName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean isEmpty(T[] value) {
         return null == value || value.length == 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSerialize(XMLWriter writer, T[] values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
@@ -71,14 +78,10 @@ public class ArrayXMLSerializer<T> extends XMLSerializer<T[]> {
             return;
         }
 
-        if (ctx.isWriteSingleElemArraysUnwrapped() && values.length == 1) {
-            serializer.serialize(writer, values[0], ctx, params);
-        } else {
-            writer.beginArray();
-            for (T value : values) {
-                serializer.serialize(writer, value, ctx, params);
-            }
-            writer.endArray();
+        writer.beginObject(propertyName);
+        for (T value : values) {
+            serializer.serialize(writer, value, ctx, params);
         }
+        writer.endObject();
     }
 }

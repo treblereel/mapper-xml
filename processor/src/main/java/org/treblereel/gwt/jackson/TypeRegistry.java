@@ -69,6 +69,7 @@ import org.treblereel.gwt.jackson.api.deser.array.PrimitiveFloatArrayXMLDeserial
 import org.treblereel.gwt.jackson.api.deser.array.PrimitiveIntegerArrayXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.array.PrimitiveLongArrayXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.array.PrimitiveShortArrayXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.cast.StringArrayXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.array.dd.Array2dXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.array.dd.PrimitiveBooleanArray2dXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.array.dd.PrimitiveByteArray2dXMLDeserializer;
@@ -191,7 +192,7 @@ public final class TypeRegistry {
     private static Map<String, ClassMapper> customMappers = new HashMap<>();
     private static Set<String> inActiveGenSerializers = new HashSet<>();
     private static Set<String> inActiveGenDeserializers = new HashSet<>();
-    final ClassMapperFactory MAPPER = new ClassMapperFactory();
+    private final ClassMapperFactory MAPPER = new ClassMapperFactory();
     private final Types types;
     private final Elements elements;
     private final GenerationContext context;
@@ -658,7 +659,7 @@ public final class TypeRegistry {
         MAPPER
                 .forType(String[].class)
                 .serializer(ArrayXMLSerializer.class)
-                .deserializer(PrimitiveShortArray2dXMLDeserializer.class)
+                .deserializer(StringArrayXMLDeserializer.class)
                 .register(simpleTypes);
         MAPPER
                 .forType(String[][].class)
@@ -967,10 +968,10 @@ public final class TypeRegistry {
      * @return a {@link TypeElement} object.
      */
     public TypeElement getSerializer(TypeMirror typeMirror) {
-        return getSerializer(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+        return getSerializer(typeMirror.toString());
     }
 
-    private TypeElement getSerializer(String typeName) {
+    public TypeElement getSerializer(String typeName) {
         if (simpleTypes.containsKey(typeName)) {
             return get(typeName).serializer;
         }
@@ -1016,10 +1017,10 @@ public final class TypeRegistry {
      * @return a {@link TypeElement} object.
      */
     public TypeElement getDeserializer(TypeMirror typeMirror) {
-        return getDeserializer(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+        return getDeserializer(typeMirror.toString());
     }
 
-    private TypeElement getDeserializer(String typeName) {
+    public TypeElement getDeserializer(String typeName) {
         if (simpleTypes.containsKey(typeName)) {
             return simpleTypes.get(typeName).deserializer;
         }
@@ -1124,16 +1125,6 @@ public final class TypeRegistry {
 
         private ClassMapper deserializer(Class deserializer) {
             this.deserializer = elements.getTypeElement(deserializer.getCanonicalName());
-            return this;
-        }
-
-        private ClassMapper serializer(TypeElement serializer) {
-            this.serializer = serializer;
-            return this;
-        }
-
-        private ClassMapper deserializer(TypeElement deserializer) {
-            this.deserializer = deserializer;
             return this;
         }
 

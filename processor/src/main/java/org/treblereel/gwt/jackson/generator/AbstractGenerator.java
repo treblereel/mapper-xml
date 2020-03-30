@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.processing.FilerException;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.tools.JavaFileObject;
@@ -30,6 +31,7 @@ public abstract class AbstractGenerator {
     protected CompilationUnit cu;
     protected ClassOrInterfaceDeclaration declaration;
 
+
     public AbstractGenerator(GenerationContext context, TreeLogger logger) {
         this.context = context;
         this.logger = logger;
@@ -46,6 +48,8 @@ public abstract class AbstractGenerator {
         getType(type);
         init(type);
         write(type);
+
+
     }
 
     protected abstract String getMapperName(TypeElement type);
@@ -59,7 +63,10 @@ public abstract class AbstractGenerator {
     protected List<VariableElement> getFields(TypeElement bean) {
         return bean.getEnclosedElements().stream()
                 .filter(elm -> elm.getKind().isField())
-                .map(field -> MoreElements.asVariable(field))
+                .map(MoreElements::asVariable)
+                .filter(field -> !field.getModifiers().contains(Modifier.STATIC))
+                .filter(field -> !field.getModifiers().contains(Modifier.FINAL))
+                .filter(field -> !field.getModifiers().contains(Modifier.TRANSIENT))
                 .collect(Collectors.toList());
     }
 

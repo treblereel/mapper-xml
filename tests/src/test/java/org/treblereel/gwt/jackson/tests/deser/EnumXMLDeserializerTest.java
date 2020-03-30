@@ -4,9 +4,8 @@ import javax.xml.stream.XMLStreamException;
 
 import org.junit.Test;
 import org.treblereel.gwt.jackson.api.DefaultXMLDeserializationContext;
-import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
-import org.treblereel.gwt.jackson.tests.beans.EnumTest;
-import org.treblereel.gwt.jackson.tests.beans.EnumTest_MapperImpl;
+import org.treblereel.gwt.jackson.tests.beans.EnumBean;
+import org.treblereel.gwt.jackson.tests.beans.EnumBean_MapperImpl;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,8 +17,8 @@ public class EnumXMLDeserializerTest {
 
     @Test
     public void testDeserializeValue() throws XMLStreamException {
-        assertEquals(EnumTest.Enums.ONE, EnumTest_MapperImpl.INSTANCE.read("<?xml version='1.0' encoding='UTF-8'?><EnumTest><val>ONE</val></EnumTest>").getVal());
-        assertEquals(null, EnumTest_MapperImpl.INSTANCE.read("<?xml version='1.0' encoding='UTF-8'?><EnumTest><val>UNKNOWN</val></EnumTest>",
+        assertEquals(EnumBean.Enums.ONE, EnumBean_MapperImpl.INSTANCE.read("<?xml version='1.0' encoding='UTF-8'?><EnumBean><val>ONE</val></EnumBean>").getVal());
+        assertEquals(null, EnumBean_MapperImpl.INSTANCE.read("<?xml version='1.0' encoding='UTF-8'?><EnumBean><val>UNKNOWN</val></EnumBean>",
                                                              DefaultXMLDeserializationContext.builder().readUnknownEnumValuesAsNull(true).build()).getVal());
     }
 

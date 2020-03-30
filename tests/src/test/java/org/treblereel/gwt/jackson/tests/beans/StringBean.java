@@ -1,7 +1,5 @@
-package org.treblereel.gwt.jackson.tests.beans.date;
+package org.treblereel.gwt.jackson.tests.beans;
 
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.Objects;
 
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
@@ -11,15 +9,15 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
  * Created by treblereel 3/27/20
  */
 @XMLMapper
-public class TimestampTest {
+public class StringBean {
 
-    private Timestamp val;
+    private String val;
 
-    public Timestamp getVal() {
+    public String getVal() {
         return val;
     }
 
-    public void setVal(Timestamp val) {
+    public void setVal(String val) {
         this.val = val;
     }
 
@@ -28,10 +26,10 @@ public class TimestampTest {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof TimestampTest)) {
+        if (!(o instanceof StringBean)) {
             return false;
         }
-        TimestampTest that = (TimestampTest) o;
+        StringBean that = (StringBean) o;
         return Objects.equals(getVal(), that.getVal());
     }
 

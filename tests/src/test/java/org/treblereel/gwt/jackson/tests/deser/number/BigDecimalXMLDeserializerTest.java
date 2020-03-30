@@ -3,7 +3,7 @@ package org.treblereel.gwt.jackson.tests.deser.number;
 import javax.xml.stream.XMLStreamException;
 
 import org.junit.Test;
-import org.treblereel.gwt.jackson.tests.beans.number.BigDecimalTest_MapperImpl;
+import org.treblereel.gwt.jackson.tests.beans.number.BigDecimalBean_MapperImpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -19,7 +19,7 @@ public class BigDecimalXMLDeserializerTest {
 
     @Test
     public void testDeserializeValue() throws XMLStreamException {
-        assertNull(BigDecimalTest_MapperImpl.INSTANCE.read("<?xml version='1.0' encoding='UTF-8'?><BigDecimalTest><val/></BigDecimalTest>").getVal());
-        assertEquals(expected, BigDecimalTest_MapperImpl.INSTANCE.read("<?xml version='1.0' encoding='UTF-8'?><BigDecimalTest><val>" + value + "</val></BigDecimalTest>").getVal());
+        assertNull(BigDecimalBean_MapperImpl.INSTANCE.read("<?xml version='1.0' encoding='UTF-8'?><BigDecimalBean><val/></BigDecimalBean>").getVal());
+        assertEquals(expected, BigDecimalBean_MapperImpl.INSTANCE.read("<?xml version='1.0' encoding='UTF-8'?><BigDecimalBean><val>" + value + "</val></BigDecimalBean>").getVal());
     }
 }

@@ -3,8 +3,8 @@ package org.treblereel.gwt.jackson.tests.ser.number;
 import javax.xml.stream.XMLStreamException;
 
 import org.junit.Test;
-import org.treblereel.gwt.jackson.tests.beans.number.LongTest;
-import org.treblereel.gwt.jackson.tests.beans.number.LongTest_MapperImpl;
+import org.treblereel.gwt.jackson.tests.beans.number.LongBean;
+import org.treblereel.gwt.jackson.tests.beans.number.LongBean_MapperImpl;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,26 +14,26 @@ import static org.junit.Assert.assertEquals;
  */
 public class LongXMLSerializerTest {
 
-    LongTest_MapperImpl mapper = LongTest_MapperImpl.INSTANCE;
+    LongBean_MapperImpl mapper = LongBean_MapperImpl.INSTANCE;
 
 
     @Test
     public void testDeserializeValue() throws XMLStreamException {
-        LongTest test = new LongTest();
+        LongBean test = new LongBean();
 
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><LongTest><val/></LongTest>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><LongBean><val/></LongBean>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
         test.setVal(new Long("3441764551145441542"));
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><LongTest><val>3441764551145441542</val></LongTest>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><LongBean><val>3441764551145441542</val></LongBean>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
         test.setVal(new Long("-3441764551145441542"));
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><LongTest><val>-3441764551145441542</val></LongTest>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><LongBean><val>-3441764551145441542</val></LongBean>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
         test.setVal(new Long(Long.MIN_VALUE));
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><LongTest><val>-9223372036854775808</val></LongTest>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><LongBean><val>-9223372036854775808</val></LongBean>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
         test.setVal(new Long(Long.MAX_VALUE));
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><LongTest><val>9223372036854775807</val></LongTest>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><LongBean><val>9223372036854775807</val></LongBean>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
     }
 

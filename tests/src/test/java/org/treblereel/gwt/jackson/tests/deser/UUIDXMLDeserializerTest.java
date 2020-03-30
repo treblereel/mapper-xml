@@ -5,7 +5,7 @@ import java.util.UUID;
 import javax.xml.stream.XMLStreamException;
 
 import org.junit.Test;
-import org.treblereel.gwt.jackson.tests.beans.UUIDTest_MapperImpl;
+import org.treblereel.gwt.jackson.tests.beans.UUIDBean_MapperImpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -20,7 +20,7 @@ public class UUIDXMLDeserializerTest {
 
     @Test
     public void testDeserializeValue() throws XMLStreamException {
-        assertEquals(UUID.fromString(uuid), UUIDTest_MapperImpl.INSTANCE.read("<?xml version='1.0' encoding='UTF-8'?><UUIDTest><val>" + uuid + "</val></UUIDTest>").getVal());
-        assertNull(UUIDTest_MapperImpl.INSTANCE.read("<?xml version='1.0' encoding='UTF-8'?><UUIDTest><val/></UUIDTest>").getVal());
+        assertEquals(UUID.fromString(uuid), UUIDBean_MapperImpl.INSTANCE.read("<?xml version='1.0' encoding='UTF-8'?><UUIDBean><val>" + uuid + "</val></UUIDBean>").getVal());
+        assertNull(UUIDBean_MapperImpl.INSTANCE.read("<?xml version='1.0' encoding='UTF-8'?><UUIDBean><val/></UUIDBean>").getVal());
     }
 }

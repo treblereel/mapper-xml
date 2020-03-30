@@ -1,6 +1,7 @@
-package org.treblereel.gwt.jackson.tests.beans.number;
+package org.treblereel.gwt.jackson.tests.beans;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
@@ -9,15 +10,15 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
  * Created by treblereel 3/27/20
  */
 @XMLMapper
-public class ByteTest {
+public class UUIDBean {
 
-    private Byte val;
+    private UUID val;
 
-    public Byte getVal() {
+    public UUID getVal() {
         return val;
     }
 
-    public void setVal(Byte val) {
+    public void setVal(UUID val) {
         this.val = val;
     }
 
@@ -26,11 +27,11 @@ public class ByteTest {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ByteTest)) {
+        if (!(o instanceof UUIDBean)) {
             return false;
         }
-        ByteTest byteTest = (ByteTest) o;
-        return Objects.equals(getVal(), byteTest.getVal());
+        UUIDBean uuidTest = (UUIDBean) o;
+        return Objects.equals(getVal(), uuidTest.getVal());
     }
 
     @Override

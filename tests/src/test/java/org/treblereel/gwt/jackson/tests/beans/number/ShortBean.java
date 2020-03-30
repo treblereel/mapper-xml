@@ -9,7 +9,7 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
  * Created by treblereel 3/27/20
  */
 @XMLMapper
-public class ShortTest {
+public class ShortBean {
 
     private Short val;
 
@@ -26,11 +26,11 @@ public class ShortTest {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ShortTest)) {
+        if (!(o instanceof ShortBean)) {
             return false;
         }
-        ShortTest shortTest = (ShortTest) o;
-        return Objects.equals(getVal(), shortTest.getVal());
+        ShortBean shortBean = (ShortBean) o;
+        return Objects.equals(getVal(), shortBean.getVal());
     }
 
     @Override

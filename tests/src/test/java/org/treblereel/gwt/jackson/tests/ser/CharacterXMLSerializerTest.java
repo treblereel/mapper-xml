@@ -3,8 +3,8 @@ package org.treblereel.gwt.jackson.tests.ser;
 import javax.xml.stream.XMLStreamException;
 
 import org.junit.Test;
-import org.treblereel.gwt.jackson.tests.beans.CharacterTest;
-import org.treblereel.gwt.jackson.tests.beans.CharacterTest_MapperImpl;
+import org.treblereel.gwt.jackson.tests.beans.CharacterBean;
+import org.treblereel.gwt.jackson.tests.beans.CharacterBean_MapperImpl;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,13 +14,13 @@ import static org.junit.Assert.assertEquals;
  */
 public class CharacterXMLSerializerTest {
 
-    CharacterTest_MapperImpl mapper = CharacterTest_MapperImpl.INSTANCE;
+    CharacterBean_MapperImpl mapper = CharacterBean_MapperImpl.INSTANCE;
 
     @Test
     public void testDeserializeValue() throws XMLStreamException {
-        CharacterTest test = new CharacterTest();
+        CharacterBean test = new CharacterBean();
         test.setCharVal('c');
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><CharacterTest><charVal>c</charVal></CharacterTest>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><CharacterBean><charVal>c</charVal></CharacterBean>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
     }
 }

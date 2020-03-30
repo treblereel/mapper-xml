@@ -9,15 +9,15 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
  * Created by treblereel 3/27/20
  */
 @XMLMapper
-public class IntegerTest {
+public class LongBean {
 
-    private Integer val;
+    private Long val;
 
-    public Integer getVal() {
+    public Long getVal() {
         return val;
     }
 
-    public void setVal(Integer val) {
+    public void setVal(Long val) {
         this.val = val;
     }
 
@@ -26,11 +26,11 @@ public class IntegerTest {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof IntegerTest)) {
+        if (!(o instanceof LongBean)) {
             return false;
         }
-        IntegerTest that = (IntegerTest) o;
-        return Objects.equals(getVal(), that.getVal());
+        LongBean longBean = (LongBean) o;
+        return Objects.equals(getVal(), longBean.getVal());
     }
 
     @Override

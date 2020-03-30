@@ -9,16 +9,16 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
  * Created by treblereel 3/27/20
  */
 @XMLMapper
-public class BooleanTest {
+public class CharacterBean {
 
-    private boolean check;
+    private char charVal;
 
-    public boolean isCheck() {
-        return check;
+    public char getCharVal() {
+        return charVal;
     }
 
-    public void setCheck(boolean check) {
-        this.check = check;
+    public void setCharVal(char charVal) {
+        this.charVal = charVal;
     }
 
     @Override
@@ -26,15 +26,15 @@ public class BooleanTest {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof BooleanTest)) {
+        if (!(o instanceof CharacterBean)) {
             return false;
         }
-        BooleanTest that = (BooleanTest) o;
-        return isCheck() == that.isCheck();
+        CharacterBean that = (CharacterBean) o;
+        return getCharVal() == that.getCharVal();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(isCheck());
+        return Objects.hash(getCharVal());
     }
 }

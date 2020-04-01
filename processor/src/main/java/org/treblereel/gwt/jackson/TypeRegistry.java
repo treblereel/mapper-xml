@@ -15,7 +15,6 @@
  */
 package org.treblereel.gwt.jackson;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Time;

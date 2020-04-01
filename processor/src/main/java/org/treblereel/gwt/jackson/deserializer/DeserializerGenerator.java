@@ -7,6 +7,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
@@ -42,8 +43,11 @@ import org.treblereel.gwt.jackson.api.deser.bean.HasDeserializerAndParameters;
 import org.treblereel.gwt.jackson.api.deser.bean.Instance;
 import org.treblereel.gwt.jackson.api.deser.bean.InstanceBuilder;
 import org.treblereel.gwt.jackson.api.deser.bean.MapLike;
+import org.treblereel.gwt.jackson.api.deser.map.MapXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.map.key.EnumKeyDeserializer;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 import org.treblereel.gwt.jackson.context.GenerationContext;
+import org.treblereel.gwt.jackson.exception.GenerationException;
 import org.treblereel.gwt.jackson.generator.AbstractGenerator;
 import org.treblereel.gwt.jackson.logger.TreeLogger;
 
@@ -221,48 +225,103 @@ public class DeserializerGenerator extends AbstractGenerator {
         method.setType(new ClassOrInterfaceType().setName("XMLDeserializer<?>"));
 
         method.getBody().ifPresent(body -> body.addAndGetStatement(
-                new ReturnStmt().setExpression(getDeserializerExpression(field.asType()))));
+                new ReturnStmt().setExpression(getFieldDeserializer(field.asType()))));
         anonymousClassBody.add(method);
     }
 
-    private Expression getDeserializerExpression(TypeMirror type) {
-        if (typeUtils.isBasicType(type)) {
+    private Expression getFieldDeserializer(TypeMirror typeMirror) {
+        typeMirror = context.getTypeUtils().removeOuterWildCards(typeMirror);
+        if (typeUtils.isBasicType(typeMirror)) {
+            return getBasicOrCustomDeserializer(typeMirror);
+        }
+        if (context.getTypeUtils().isIterable(typeMirror)) {
+            return getIterableDeserializer(typeMirror);
+        }
+        if (context.getTypeUtils().isMap(typeMirror)) {
+            return getMapDeserializer(typeMirror);
+        }
+        if (context.getTypeUtils().isArray(typeMirror)) {
+            return getArrayDeserializer(typeMirror);
+        }
+        if (!typeMirror.getKind().isPrimitive() &&
+                MoreTypes.asElement(typeMirror).getKind().equals(ElementKind.ENUM)) {
+            return getEnumDeserializer(typeMirror);
+        }
+        return new ObjectCreationExpr().setType(new ClassOrInterfaceType()
+                                                        .setName(typeUtils.canonicalDeserializerName(typeUtils.getPackage(typeMirror), typeMirror)));
+
+    }
+
+    private Expression getBasicOrCustomDeserializer(TypeMirror typeMirror) {
             return new MethodCallExpr(
                     new NameExpr(context.getTypeRegistry()
-                                         .getDeserializer(context.getProcessingEnv().getTypeUtils().erasure(type)).toString()), "getInstance");
-        } else if (type.getKind().equals(TypeKind.ARRAY)) {
-            ArrayType array = (ArrayType) type;
+                                         .getDeserializer(typeMirror).toString()), "getInstance");
+    }
 
-            ClassOrInterfaceType typeOf = new ClassOrInterfaceType().setName(ArrayXMLDeserializer.ArrayCreator.class.getCanonicalName())
-                    .setTypeArguments(new ClassOrInterfaceType().setName(array.getComponentType().toString()));
+    private Expression getEnumDeserializer(TypeMirror typeMirror) {
+        return new MethodCallExpr(new NameExpr(EnumXMLDeserializer.class.getCanonicalName()), "newInstance")
+                .addArgument(MoreTypes.asTypeElement(typeMirror).getQualifiedName().toString() + ".class");
+    }
 
-            return new MethodCallExpr(
-                    new NameExpr(ArrayXMLDeserializer.class.getCanonicalName()), "newInstance")
-                    .addArgument(getDeserializerExpression(array.getComponentType()))
-                    .addArgument(new CastExpr().setType(typeOf).setExpression(new NameExpr(type.toString() + "::new")));
-        } else {
-            if (context.getTypeRegistry().get(context.getProcessingEnv()
-                                                      .getTypeUtils().erasure(type).toString()) == null) {
-                if (MoreTypes.asElement(type).getKind().equals(ElementKind.ENUM)) {
-                    return new MethodCallExpr(new NameExpr(EnumXMLDeserializer.class.getCanonicalName()), "newInstance")
-                            .addArgument(MoreTypes.asTypeElement(type).getQualifiedName().toString() + ".class");
-                }
-                return new ObjectCreationExpr().setType(new ClassOrInterfaceType()
-                                                                .setName(typeUtils.canonicalDeserializerName(typeUtils.getPackage(type), type)));
-            } else {
-                TypeElement serializer = context.getTypeRegistry().getDeserializer(context.getProcessingEnv().getTypeUtils().erasure(type));
+    private Expression getArrayDeserializer(TypeMirror typeMirror) {
+        cu.addImport(ArrayXMLDeserializer.ArrayCreator.class);
+        cu.addImport(ArrayXMLDeserializer.class);
 
-                MethodCallExpr method = new MethodCallExpr(
-                        new NameExpr(serializer.getQualifiedName().toString()), "newInstance");
-                if (typeUtils.isCollection(type)) {
-                    MoreTypes.asDeclared(type)
-                            .getTypeArguments()
-                            .forEach(param ->
-                                             method.addArgument(getDeserializerExpression(param)));
-                }
-                return method;
+        ArrayType array = (ArrayType) typeMirror;
+        String arrayType = array.getComponentType().toString();
+        if (array.getComponentType().getKind().isPrimitive()) {
+            arrayType = context.getProcessingEnv().getTypeUtils()
+                    .boxedClass((PrimitiveType) array.getComponentType()).getSimpleName().toString();
+        } else if (array.getComponentType().getKind().equals(TypeKind.ARRAY)) {
+            ArrayType array2d = (ArrayType) array.getComponentType();
+            if (array2d.getComponentType().getKind().isPrimitive()) {
+                arrayType = context.getProcessingEnv().getTypeUtils()
+                        .boxedClass((PrimitiveType) array2d.getComponentType()).getSimpleName().toString() + "[]";
             }
         }
+
+        ClassOrInterfaceType typeOf = new ClassOrInterfaceType()
+                .setName(ArrayXMLDeserializer.ArrayCreator.class.getSimpleName())
+                .setTypeArguments(new ClassOrInterfaceType().setName(arrayType));
+        return new MethodCallExpr(
+                new NameExpr(ArrayXMLDeserializer.class.getSimpleName()), "newInstance")
+                .addArgument(getFieldDeserializer(array.getComponentType()))
+                .addArgument(new CastExpr().setType(typeOf).setExpression(
+                        new NameExpr(arrayType + "[]::new")));
+    }
+
+    private Expression getMapDeserializer(TypeMirror typeMirror) {
+        DeclaredType declaredType = MoreTypes.asDeclared(typeMirror);
+        if (declaredType.getTypeArguments().size() != 2) {
+            throw new GenerationException(declaredType.toString() + " must have type args [" + typeMirror + "]");
+        }
+        MethodCallExpr deserializer;
+        if (MoreTypes.asElement(declaredType.getTypeArguments().get(0)).getKind().equals(ElementKind.ENUM)) {
+            deserializer = new MethodCallExpr(
+                    new NameExpr(EnumKeyDeserializer.class.getCanonicalName()), "getInstance")
+                    .addArgument(declaredType.getTypeArguments().get(0).toString() + ".class");
+        } else {
+            deserializer = new MethodCallExpr(
+                    new NameExpr(context.getTypeRegistry()
+                                         .getKeyDeserializer(declaredType.getTypeArguments().get(0).toString())
+                                         .getQualifiedName().toString()), "getInstance");
+        }
+        return new MethodCallExpr(
+                new NameExpr(MapXMLDeserializer.class.getCanonicalName()), "newInstance")
+                .addArgument(deserializer)
+                .addArgument(getFieldDeserializer(declaredType.getTypeArguments().get(1)));
+    }
+
+    private Expression getIterableDeserializer(TypeMirror typeMirror) {
+        TypeElement serializer = context.getTypeRegistry().getDeserializer(context.getProcessingEnv().getTypeUtils().erasure(typeMirror));
+
+        MethodCallExpr method = new MethodCallExpr(
+                new NameExpr(serializer.getQualifiedName().toString()), "newInstance");
+        MoreTypes.asDeclared(typeMirror)
+                .getTypeArguments()
+                .forEach(param ->
+                                 method.addArgument(getFieldDeserializer(param)));
+        return method;
     }
 
     private void setValue(TypeElement type, ClassOrInterfaceType fieldType, VariableElement field, NodeList<BodyDeclaration<?>> anonymousClassBody) {
@@ -273,7 +332,7 @@ public class DeserializerGenerator extends AbstractGenerator {
         method.setType("void");
         method.addParameter(type.getSimpleName().toString(), "bean");
         method.addParameter(fieldType, "value");
-        method.addParameter("XMLDeserializationContext", "ctx");
+        method.addParameter(XMLDeserializationContext.class.getSimpleName(), "ctx");
 
         method.getBody().ifPresent(body -> body.addAndGetStatement(
                 new MethodCallExpr(

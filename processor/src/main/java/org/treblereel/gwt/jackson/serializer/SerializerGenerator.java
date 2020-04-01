@@ -39,7 +39,10 @@ import org.treblereel.gwt.jackson.api.ser.array.ArrayXMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.array.dd.Array2dXMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.bean.AbstractBeanXMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.bean.BeanPropertySerializer;
+import org.treblereel.gwt.jackson.api.ser.map.MapXMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.map.key.EnumKeySerializer;
 import org.treblereel.gwt.jackson.context.GenerationContext;
+import org.treblereel.gwt.jackson.exception.GenerationException;
 import org.treblereel.gwt.jackson.generator.AbstractGenerator;
 import org.treblereel.gwt.jackson.logger.TreeLogger;
 
@@ -202,7 +205,109 @@ public class SerializerGenerator extends AbstractGenerator {
         anonymousClassBody.add(method);
     }
 
+    private Expression getFieldSerializer(TypeMirror typeMirror, String fieldName) {
+        typeMirror = context.getTypeUtils().removeOuterWildCards(typeMirror);
+
+        if (typeUtils.isBasicType(typeMirror)) {
+            return getBasicOrCustomSerializer(typeMirror, fieldName);
+        }
+        if (context.getTypeUtils().isIterable(typeMirror)) {
+            return getIterableSerializer(typeMirror, fieldName);
+        }
+        if (context.getTypeUtils().isMap(typeMirror)) {
+            return getMapSerializer(typeMirror, fieldName);
+        }
+        if (context.getTypeUtils().isArray(typeMirror)) {
+            return getArraySerializer(typeMirror, fieldName);
+        }
+        if (!typeMirror.getKind().isPrimitive() &&
+                MoreTypes.asElement(typeMirror).getKind().equals(ElementKind.ENUM)) {
+            return getEnumSerializer(typeMirror);
+        }
+
+        return new ObjectCreationExpr().setType(new ClassOrInterfaceType()
+                                                        .setName(typeUtils.canonicalSerializerName(typeUtils.getPackage(typeMirror), typeMirror)));
+    }
+
+    private Expression getIterableSerializer(TypeMirror typeMirror, String fieldName) {
+        TypeElement serializer = context.getTypeRegistry().getSerializer(context.getProcessingEnv().getTypeUtils().erasure(typeMirror));
+
+        MethodCallExpr method = new MethodCallExpr(
+                new NameExpr(serializer.getQualifiedName().toString()), "newInstance");
+        for (TypeMirror param : MoreTypes.asDeclared(typeMirror).getTypeArguments()) {
+            method.addArgument(getSerializerExpression(param, null));
+        }
+        method.addArgument(new StringLiteralExpr(fieldName));
+        return method;
+    }
+
+    private Expression getMapSerializer(TypeMirror typeMirror, String fieldName) {
+        DeclaredType declaredType = MoreTypes.asDeclared(typeMirror);
+        if (declaredType.getTypeArguments().size() != 2) {
+            throw new GenerationException(declaredType.toString() + " must have type args [" + fieldName + "]");
+        }
+        String keySerializer = null;
+
+        if (MoreTypes.asElement(declaredType.getTypeArguments().get(0)).getKind().equals(ElementKind.ENUM)) {
+            keySerializer = EnumKeySerializer.class.getCanonicalName();
+        } else {
+            keySerializer = context.getTypeRegistry()
+                    .getKeySerializer(declaredType.getTypeArguments().get(0).toString()).getQualifiedName().toString();
+        }
+
+        return new MethodCallExpr(
+                new NameExpr(MapXMLSerializer.class.getCanonicalName()), "newInstance")
+                .addArgument(new MethodCallExpr(
+                        new NameExpr(keySerializer), "getInstance"))
+                .addArgument(getSerializerExpression(declaredType.getTypeArguments().get(1), null))
+                .addArgument(new StringLiteralExpr(fieldName));
+    }
+
+    private Expression getArraySerializer(TypeMirror typeMirror, String fieldName) {
+        ArrayType array = (ArrayType) typeMirror;
+        String serializer = null;
+        Expression expression = null;
+        if (array.getComponentType().getKind().equals(TypeKind.ARRAY)) {
+            serializer = Array2dXMLSerializer.class.getCanonicalName();
+            ArrayType array2d = (ArrayType) array.getComponentType();
+
+            expression = getSerializerExpression(array2d.getComponentType(), null);
+        } else {
+            serializer = ArrayXMLSerializer.class.getCanonicalName();
+            expression = getSerializerExpression(array.getComponentType(), null);
+        }
+        return new MethodCallExpr(
+                new NameExpr(serializer), "getInstance")
+                .addArgument(expression)
+                .addArgument(new StringLiteralExpr(fieldName));
+    }
+
+    private Expression getEnumSerializer(TypeMirror typeMirror) {
+        return new MethodCallExpr(
+                new NameExpr(EnumXMLSerializer.class.getCanonicalName()), "getInstance");
+    }
+
+    private Expression getBasicOrCustomSerializer(TypeMirror typeMirror, String fieldName) {
+        if (typeUtils.isBasicType(typeMirror)) {
+            MethodCallExpr method = new MethodCallExpr(
+                    new NameExpr(context.getTypeRegistry()
+                                         .getSerializer(context.getProcessingEnv().getTypeUtils().erasure(typeMirror)).toString()), "getInstance");
+            if (typeMirror.getKind().equals(TypeKind.ARRAY)) {
+                method.addArgument(new StringLiteralExpr(fieldName));
+            }
+            return method;
+
+        } else {
+            return new ObjectCreationExpr().setType(new ClassOrInterfaceType()
+                                                            .setName(typeUtils.canonicalSerializerName(typeUtils.getPackage(typeMirror), typeMirror)));
+        }
+    }
+
     private Expression getSerializerExpression(TypeMirror field, String fieldName) {
+
+        if(true) {
+            return getFieldSerializer(field, fieldName);
+        }
 
         if (typeUtils.isBasicType(field)) {
             MethodCallExpr method = new MethodCallExpr(
@@ -228,6 +333,26 @@ public class SerializerGenerator extends AbstractGenerator {
             return new MethodCallExpr(
                     new NameExpr(serializer), "getInstance")
                     .addArgument(expression)
+                    .addArgument(new StringLiteralExpr(fieldName));
+        } else if (context.getTypeUtils().isMap(field)) {
+            DeclaredType declaredType = MoreTypes.asDeclared(field);
+            if (declaredType.getTypeArguments().size() != 2) {
+                throw new GenerationException(declaredType.toString() + " must have type args [" + fieldName + "]");
+            }
+            String keySerializer = null;
+
+            if (MoreTypes.asElement(declaredType.getTypeArguments().get(0)).getKind().equals(ElementKind.ENUM)) {
+                keySerializer = EnumKeySerializer.class.getCanonicalName();
+            } else {
+                keySerializer = context.getTypeRegistry()
+                        .getKeySerializer(declaredType.getTypeArguments().get(0).toString()).getQualifiedName().toString();
+            }
+
+            return new MethodCallExpr(
+                    new NameExpr(MapXMLSerializer.class.getCanonicalName()), "newInstance")
+                    .addArgument(new MethodCallExpr(
+                            new NameExpr(keySerializer), "getInstance"))
+                    .addArgument(getSerializerExpression(declaredType.getTypeArguments().get(1), null))
                     .addArgument(new StringLiteralExpr(fieldName));
         } else {
             if (context.getTypeRegistry().get(context.getProcessingEnv()

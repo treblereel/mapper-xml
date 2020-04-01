@@ -107,13 +107,8 @@ import org.treblereel.gwt.jackson.api.deser.map.LinkedHashMapXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.map.MapXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.map.SortedMapXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.map.TreeMapXMLDeserializer;
-import org.treblereel.gwt.jackson.api.deser.map.key.BaseDateKeyDeserializer;
-import org.treblereel.gwt.jackson.api.deser.map.key.BaseNumberKeyDeserializer;
-import org.treblereel.gwt.jackson.api.deser.map.key.BooleanKeyDeserializer;
-import org.treblereel.gwt.jackson.api.deser.map.key.CharacterKeyDeserializer;
 import org.treblereel.gwt.jackson.api.deser.map.key.EnumKeyDeserializer;
 import org.treblereel.gwt.jackson.api.deser.map.key.StringKeyDeserializer;
-import org.treblereel.gwt.jackson.api.deser.map.key.UUIDKeyDeserializer;
 import org.treblereel.gwt.jackson.api.ser.BooleanXMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.CharacterXMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.CollectionXMLSerializer;
@@ -141,13 +136,8 @@ import org.treblereel.gwt.jackson.api.ser.array.dd.PrimitiveIntegerArray2dXMLSer
 import org.treblereel.gwt.jackson.api.ser.array.dd.PrimitiveLongArray2dXMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.array.dd.PrimitiveShortArray2dXMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.map.MapXMLSerializer;
-import org.treblereel.gwt.jackson.api.ser.map.key.BooleanKeySerializer;
-import org.treblereel.gwt.jackson.api.ser.map.key.DateKeySerializer;
 import org.treblereel.gwt.jackson.api.ser.map.key.EnumKeySerializer;
-import org.treblereel.gwt.jackson.api.ser.map.key.NumberKeySerializer;
-import org.treblereel.gwt.jackson.api.ser.map.key.ObjectKeySerializer;
 import org.treblereel.gwt.jackson.api.ser.map.key.ToStringKeySerializer;
-import org.treblereel.gwt.jackson.api.ser.map.key.UUIDKeySerializer;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 
 import static java.util.Objects.nonNull;
@@ -196,7 +186,6 @@ public final class TypeRegistry {
     private final Types types;
     private final Elements elements;
     private final GenerationContext context;
-
 
     public TypeRegistry(GenerationContext context) {
         this.types = context.getProcessingEnv().getTypeUtils();
@@ -670,105 +659,9 @@ public final class TypeRegistry {
 
     private void initMapsKeyMappers() {
         MAPPER
-                .forType(Object.class)
-                .serializer(ObjectKeySerializer.class)
-                .deserializer(StringKeyDeserializer.class)
-                .register(keysMappers);
-
-        MAPPER
-                .forType(Serializable.class)
-                .serializer(ObjectKeySerializer.class)
-                .deserializer(StringKeyDeserializer.class)
-                .register(keysMappers);
-
-        MAPPER
-                .forType(BigDecimal.class)
-                .serializer(NumberKeySerializer.class)
-                .deserializer(BaseNumberKeyDeserializer.BigDecimalKeyDeserializer.class)
-                .register(keysMappers);
-
-        MAPPER
-                .forType(BigInteger.class)
-                .serializer(NumberKeySerializer.class)
-                .deserializer(BaseNumberKeyDeserializer.BigIntegerKeyDeserializer.class)
-                .register(keysMappers);
-
-        MAPPER
-                .forType(Boolean.class)
-                .serializer(BooleanKeySerializer.class)
-                .deserializer(BooleanKeyDeserializer.class)
-                .register(keysMappers);
-
-        MAPPER
-                .forType(Byte.class)
-                .serializer(NumberKeySerializer.class)
-                .deserializer(BaseNumberKeyDeserializer.ByteKeyDeserializer.class)
-                .register(keysMappers);
-
-        MAPPER
-                .forType(Character.class)
-                .serializer(ToStringKeySerializer.class)
-                .deserializer(CharacterKeyDeserializer.class)
-                .register(keysMappers);
-
-        MAPPER
-                .forType(Date.class)
-                .serializer(DateKeySerializer.class)
-                .deserializer(BaseDateKeyDeserializer.DateKeyDeserializer.class)
-                .register(keysMappers);
-
-        MAPPER
-                .forType(Double.class)
-                .serializer(NumberKeySerializer.class)
-                .deserializer(BaseNumberKeyDeserializer.DoubleKeyDeserializer.class)
-                .register(keysMappers);
-
-        MAPPER
                 .forType(Enum.class)
                 .serializer(EnumKeySerializer.class)
                 .deserializer(EnumKeyDeserializer.class)
-                .register(keysMappers);
-
-        MAPPER
-                .forType(Float.class)
-                .serializer(NumberKeySerializer.class)
-                .deserializer(BaseNumberKeyDeserializer.FloatKeyDeserializer.class)
-                .register(keysMappers);
-
-        MAPPER
-                .forType(Integer.class)
-                .serializer(NumberKeySerializer.class)
-                .deserializer(BaseNumberKeyDeserializer.IntegerKeyDeserializer.class)
-                .register(keysMappers);
-
-        MAPPER
-                .forType(Long.class)
-                .serializer(NumberKeySerializer.class)
-                .deserializer(BaseNumberKeyDeserializer.LongKeyDeserializer.class)
-                .register(keysMappers);
-
-        MAPPER
-                .forType(Short.class)
-                .serializer(NumberKeySerializer.class)
-                .deserializer(BaseNumberKeyDeserializer.ShortKeyDeserializer.class)
-                .register(keysMappers);
-
-        MAPPER
-                .forType(java.sql.Date.class)
-                .serializer(DateKeySerializer.class)
-                .deserializer(BaseDateKeyDeserializer.SqlDateKeyDeserializer.class)
-                .register(keysMappers);
-
-        MAPPER
-                .forType(Time.class)
-                .serializer(DateKeySerializer.class)
-                .deserializer(BaseDateKeyDeserializer.SqlTimeKeyDeserializer.class)
-                .register(keysMappers);
-
-        MAPPER
-                .forType(Timestamp.class)
-                .serializer(DateKeySerializer.class)
-                .deserializer(BaseDateKeyDeserializer.SqlTimestampKeyDeserializer.class)
                 .register(keysMappers);
 
         MAPPER
@@ -777,11 +670,6 @@ public final class TypeRegistry {
                 .deserializer(StringKeyDeserializer.class)
                 .register(keysMappers);
 
-        MAPPER
-                .forType(UUID.class)
-                .serializer(UUIDKeySerializer.class)
-                .deserializer(UUIDKeyDeserializer.class)
-                .register(keysMappers);
     }
 
     private void initCollectionsDeserializersMappers() {

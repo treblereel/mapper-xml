@@ -17,10 +17,10 @@
 package org.treblereel.gwt.jackson.api.ser.map.key;
 
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
+import org.treblereel.gwt.jackson.api.exception.XMLSerializationException;
 
 /**
  * {@link KeySerializer} implementation that uses {@link Object#toString()} method.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
@@ -28,21 +28,35 @@ public final class ToStringKeySerializer extends KeySerializer<Object> {
 
     private static final ToStringKeySerializer INSTANCE = new ToStringKeySerializer();
 
+    private ToStringKeySerializer() {
+    }
+
     /**
      * <p>getInstance</p>
-     *
      * @return an instance of {@link ToStringKeySerializer}
      */
     public static ToStringKeySerializer getInstance() {
         return INSTANCE;
     }
 
-    private ToStringKeySerializer() {
-    }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected String doSerialize(Object value, XMLSerializationContext ctx) {
+        //TODO Validation
+        if (isNumeric(value.toString())) {
+            throw new XMLSerializationException("Names cannot start with a number: " + value);
+        }
         return value.toString();
+    }
+
+    private static boolean isNumeric(String value) {
+        try {
+            Long.parseLong(value);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
 }

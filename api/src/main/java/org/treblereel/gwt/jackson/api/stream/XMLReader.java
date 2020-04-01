@@ -61,12 +61,19 @@ public interface XMLReader {
     /**
      * Returns the type of the next token without consuming it.
      *
-     * @return a {@link XMLToken} object.
+     * @return a {@link XMLStreamReader} object.
      */
     int peek() throws XMLStreamException;
 
     /**
-     * Returns the next token, a {@link XMLToken#NAME property name}, and
+     * Returns the text value of the current token.
+     *
+     * @return a {@link String} object.
+     */
+    String peekNodeName() throws XMLStreamException;
+
+    /**
+     * Returns the next token, a {@link String property name}, and
      * consumes it.
      *
      * @return a {@link String} object.
@@ -74,7 +81,7 @@ public interface XMLReader {
     String nextName();
 
     /**
-     * Returns the {@link XMLToken#STRING string} value of the next token,
+     * Returns the {@link String } value of the next token,
      * consuming it. If the next token is a number, this method will return its
      * string form.
      *
@@ -84,8 +91,10 @@ public interface XMLReader {
      */
     String nextString() throws XMLStreamException;
 
+    int nextTag() throws XMLStreamException;
+
     /**
-     * Returns the {@link XMLToken#BOOLEAN boolean} value of the next token,
+     * Returns the {@link boolean} value of the next token,
      * consuming it.
      *
      * @return a boolean.
@@ -104,7 +113,7 @@ public interface XMLReader {
     void nextNull();
 
     /**
-     * Returns the {@link XMLToken#NUMBER double} value of the next token,
+     * Returns the {@link double} value of the next token,
      * consuming it. If the next token is a string, this method will attempt to
      * parse it as a double using {@link Double#parseDouble(String)}.
      *
@@ -116,7 +125,7 @@ public interface XMLReader {
     double nextDouble() throws XMLStreamException;
 
     /**
-     * Returns the {@link XMLToken#NUMBER long} value of the next token,
+     * Returns the {@link long} value of the next token,
      * consuming it. If the next token is a string, this method will attempt to
      * parse it as a long. If the next token's numeric value cannot be exactly
      * represented by a Java {@code long}, this method throws.
@@ -129,7 +138,7 @@ public interface XMLReader {
     long nextLong() throws XMLStreamException;
 
     /**
-     * Returns the {@link XMLToken#NUMBER int} value of the next token,
+     * Returns the {@link int} value of the next token,
      * consuming it. If the next token is a string, this method will attempt to
      * parse it as an int. If the next token's numeric value cannot be exactly
      * represented by a Java {@code int}, this method throws.

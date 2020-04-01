@@ -89,7 +89,7 @@ public abstract class AbstractArray2dXMLDeserializer<T> extends XMLDeserializer<
         return list;
     }
 
-    private <C> List<C> doDeserializeInnerIntoList(XMLReader reader, XMLDeserializationContext ctx,
+    protected  <C> List<C> doDeserializeInnerIntoList(XMLReader reader, XMLDeserializationContext ctx,
                                                    XMLDeserializer<C> deserializer, XMLDeserializerParameters params) throws XMLStreamException {
         int counter = 0;
         List<C> innerList = new ArrayList<>();

@@ -25,13 +25,13 @@ package org.treblereel.gwt.jackson.api.exception;
 public class XMLMappingException extends RuntimeException {
 
     /**
-     * <p>Constructor for JsonMappingException.</p>
+     * <p>Constructor for XMLMappingException.</p>
      */
     public XMLMappingException() {
     }
 
     /**
-     * <p>Constructor for JsonMappingException.</p>
+     * <p>Constructor for XMLMappingException.</p>
      *
      * @param message a {@link String} object.
      */
@@ -40,7 +40,7 @@ public class XMLMappingException extends RuntimeException {
     }
 
     /**
-     * <p>Constructor for JsonMappingException.</p>
+     * <p>Constructor for XMLMappingException.</p>
      *
      * @param message a {@link String} object.
      * @param cause   a {@link Throwable} object.
@@ -50,7 +50,7 @@ public class XMLMappingException extends RuntimeException {
     }
 
     /**
-     * <p>Constructor for JsonMappingException.</p>
+     * <p>Constructor for XMLMappingException.</p>
      *
      * @param cause a {@link Throwable} object.
      */

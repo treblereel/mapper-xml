@@ -23,6 +23,7 @@ import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
 import org.treblereel.gwt.jackson.api.ser.BaseNumberXMLSerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
+import org.treblereel.gwt.jackson.api.utils.Base64Utils;
 
 /**
  * Default {@link XMLSerializer} implementation for array of byte.
@@ -62,11 +63,6 @@ public class PrimitiveByteArrayXMLSerializer extends BasicArrayXMLSerializer<byt
             writer.nullValue();
             return;
         }
-
-        writer.beginObject(propertyName);
-        for (byte value : values) {
-            byteXMLSerializer.doSerialize(writer, value, ctx, params);
-        }
-        writer.endObject();
+        writer.value(Base64Utils.toBase64(values));
     }
 }

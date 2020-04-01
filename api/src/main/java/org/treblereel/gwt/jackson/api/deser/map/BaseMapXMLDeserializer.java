@@ -16,20 +16,20 @@
 
 package org.treblereel.gwt.jackson.api.deser.map;
 
-import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
-import org.treblereel.gwt.jackson.api.XMLDeserializer;
-import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
-import org.treblereel.gwt.jackson.api.deser.map.key.KeyDeserializer;
-import org.treblereel.gwt.jackson.api.stream.XMLReader;
-import org.treblereel.gwt.jackson.api.stream.XMLToken;
-
 import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
+import org.treblereel.gwt.jackson.api.XMLDeserializer;
+import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
+import org.treblereel.gwt.jackson.api.deser.bean.AbstractBeanXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.map.key.KeyDeserializer;
+import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
  * Base {@link XMLDeserializer} implementation for {@link java.util.Map}.
- *
  * @param <M> Type of the {@link java.util.Map}
  * @param <K> Type of the keys inside the {@link java.util.Map}
  * @param <V> Type of the values inside the {@link java.util.Map}
@@ -50,8 +50,7 @@ public abstract class BaseMapXMLDeserializer<M extends Map<K, V>, K, V> extends 
 
     /**
      * <p>Constructor for BaseMapXMLDeserializer.</p>
-     *
-     * @param keyDeserializer   {@link KeyDeserializer} used to deserialize the keys.
+     * @param keyDeserializer {@link KeyDeserializer} used to deserialize the keys.
      * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
      */
     protected BaseMapXMLDeserializer(KeyDeserializer<K> keyDeserializer, XMLDeserializer<V> valueDeserializer) {
@@ -65,29 +64,68 @@ public abstract class BaseMapXMLDeserializer<M extends Map<K, V>, K, V> extends 
         this.valueDeserializer = valueDeserializer;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public M doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-/*        M result = newMap();
+        M result = newMap();
+        int counter = 0;
 
-        reader.beginObject();
-        while (XMLToken.END_OBJECT != reader.peek()) {
-            String name = reader.nextName();
-            K key = keyDeserializer.deserialize(name, ctx);
-            V value = valueDeserializer.deserialize(reader, ctx, params);
-            result.put(key, value);
+        if (!(valueDeserializer instanceof AbstractBeanXMLDeserializer)) {
+            while (reader.hasNext()) {
+                reader.next();
+                switch (reader.peek()) {
+                    case XMLStreamReader.START_ELEMENT:
+                        counter++;
+                        String name = reader.peekNodeName();
+                        K key = keyDeserializer.deserialize(name, ctx);
+                        V value = valueDeserializer.deserialize(reader, ctx, params);
+                        result.put(key, value);
+                        break;
+                    case XMLStreamReader.END_ELEMENT:
+                        counter--;
+
+                        if (counter == -1) {
+                            return result;
+                        }
+                        break;
+                    default:
+                        throw new XMLStreamException("Unable to process node  " + reader.peek());
+                }
+            }
+        } else {
+            while (reader.hasNext()) {
+                reader.next();
+                switch (reader.peek()) {
+                    case XMLStreamReader.START_ELEMENT:
+                        counter++;
+                        String name = reader.peekNodeName();
+                        if((counter % 2 == 1)) {
+                            K key = keyDeserializer.deserialize(name, ctx);
+                            V value = valueDeserializer.deserialize(reader, ctx, params);
+                            result.put(key, value);
+                        }
+                        break;
+                    case XMLStreamReader.END_ELEMENT:
+                        counter--;
+                        if (counter == -1) {
+                            return result;
+                        }
+                        break;
+                    case XMLStreamReader.CHARACTERS:
+                        break;
+                    default:
+                        throw new XMLStreamException("Unable to process node  " + reader.peek());
+                }
+            }
         }
-        reader.endObject();
-
-        return result;*/
-        throw new UnsupportedOperationException();
+        return result;
     }
 
     /**
      * Instantiates a new map for deserialization process.
-     *
      * @return the new map
      */
     protected abstract M newMap();
-
 }

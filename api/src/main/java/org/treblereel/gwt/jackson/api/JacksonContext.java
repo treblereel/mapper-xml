@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.xml.stream.XMLStreamException;
 
 import org.treblereel.gwt.jackson.api.deser.bean.MapLike;
-import org.treblereel.gwt.jackson.api.deser.map.key.DateKeyParser;
 import org.treblereel.gwt.jackson.api.stream.Stack;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
@@ -90,7 +89,6 @@ public interface JacksonContext {
 
         Date parse(boolean useBrowserTimezone, String pattern, Boolean hasTz, String date);
 
-        <D extends Date> DateKeyParser<D> makeDateKeyParser();
     }
 
     interface IntegerStackFactory {

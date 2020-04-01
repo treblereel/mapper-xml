@@ -100,7 +100,7 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
      * @param ctx    context of the serialization process
      */
     public void serialize(XMLWriter writer, T bean, XMLSerializationContext ctx) throws XMLStreamException {
-        writer.name(propertyName);
+        writer.unescapeName(propertyName);
         getSerializer().serialize(writer, getValue(bean, ctx), ctx, getParameters());
     }
 }

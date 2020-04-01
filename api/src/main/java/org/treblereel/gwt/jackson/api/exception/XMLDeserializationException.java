@@ -25,13 +25,13 @@ package org.treblereel.gwt.jackson.api.exception;
 public class XMLDeserializationException extends XMLMappingException {
 
     /**
-     * <p>Constructor for JsonDeserializationException.</p>
+     * <p>Constructor for XMLDeserializationException.</p>
      */
     public XMLDeserializationException() {
     }
 
     /**
-     * <p>Constructor for JsonDeserializationException.</p>
+     * <p>Constructor for XMLDeserializationException.</p>
      *
      * @param message a {@link String} object.
      */
@@ -40,7 +40,7 @@ public class XMLDeserializationException extends XMLMappingException {
     }
 
     /**
-     * <p>Constructor for JsonDeserializationException.</p>
+     * <p>Constructor for XMLDeserializationException.</p>
      *
      * @param message a {@link String} object.
      * @param cause   a {@link Throwable} object.
@@ -50,7 +50,7 @@ public class XMLDeserializationException extends XMLMappingException {
     }
 
     /**
-     * <p>Constructor for JsonDeserializationException.</p>
+     * <p>Constructor for XMLDeserializationException.</p>
      *
      * @param cause a {@link Throwable} object.
      */

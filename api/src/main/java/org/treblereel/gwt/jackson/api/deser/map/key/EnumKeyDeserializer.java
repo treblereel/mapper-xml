@@ -19,7 +19,7 @@ package org.treblereel.gwt.jackson.api.deser.map.key;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 
 /**
- * Default {@link KeyDeserializer} implementation for {@link java.lang.Enum}.
+ * Default {@link KeyDeserializer} implementation for {@link Enum}.
  *
  * @param <E> Type of the enum
  * @author Nicolas Morel
@@ -33,7 +33,7 @@ public final class EnumKeyDeserializer<E extends Enum<E>> extends KeyDeserialize
      * @param enumClass class of the enumeration
      * @return a new instance of {@link EnumKeyDeserializer}
      */
-    public static <E extends Enum<E>> EnumKeyDeserializer<E> newInstance(Class<E> enumClass) {
+    public static <E extends Enum<E>> EnumKeyDeserializer<E> getInstance(Class<E> enumClass) {
         return new EnumKeyDeserializer<>(enumClass);
     }
 
@@ -65,7 +65,7 @@ public final class EnumKeyDeserializer<E extends Enum<E>> extends KeyDeserialize
     /**
      * <p>Getter for the field <code>enumClass</code>.</p>
      *
-     * @return a {@link java.lang.Class} object.
+     * @return a {@link Class} object.
      */
     public Class<E> getEnumClass() {
         return enumClass;

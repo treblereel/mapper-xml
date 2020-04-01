@@ -16,15 +16,19 @@
 
 package org.treblereel.gwt.jackson.api.deser.array;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
 import org.treblereel.gwt.jackson.api.deser.BaseNumberXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.StringXMLDeserializer;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
+import org.treblereel.gwt.jackson.api.utils.Base64Utils;
 
 /**
  * Default {@link XMLDeserializer} implementation for array of byte.
@@ -51,17 +55,13 @@ public class PrimitiveByteArrayXMLDeserializer extends AbstractArrayXMLDeseriali
     /** {@inheritDoc} */
     @Override
     public byte[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<Byte> list = deserializeIntoList(reader, ctx, BaseNumberXMLDeserializer.ByteXMLDeserializer.getInstance(), params);
 
-        byte[] result = new byte[list.size()];
-        int i = 0;
-        for (Byte value : list) {
-            if (null != value) {
-                result[i] = value;
-            }
-            i++;
+        String result = StringXMLDeserializer.getInstance().doDeserialize(reader, ctx, params);
+        if(result != null) {
+            return Base64Utils.fromBase64(result);
         }
-        return result;
+
+        return new byte[0];
     }
 
     /** {@inheritDoc} */

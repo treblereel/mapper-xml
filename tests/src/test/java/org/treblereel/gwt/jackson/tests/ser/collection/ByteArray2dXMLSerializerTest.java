@@ -1,5 +1,7 @@
 package org.treblereel.gwt.jackson.tests.ser.collection;
 
+import java.util.Arrays;
+
 import javax.xml.stream.XMLStreamException;
 
 import org.junit.Test;
@@ -7,6 +9,7 @@ import org.treblereel.gwt.jackson.tests.beans.collection.ByteArray2d;
 import org.treblereel.gwt.jackson.tests.beans.collection.ByteArray2d_MapperImpl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -24,5 +27,6 @@ public class ByteArray2dXMLSerializerTest {
         ByteArray2d test = new ByteArray2d();
         test.setArray(array);
         assertEquals(ByteArray2d.XML, mapper.write(test));
+        assertTrue(Arrays.deepEquals(array, mapper.read(mapper.write(test)).getArray()));
     }
 }

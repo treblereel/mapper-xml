@@ -84,7 +84,7 @@ public class TypeUtils {
     /**
      * <p>wrapperType.</p>
      * @param type a {@link TypeMirror} object.
-     * @return a {@link com.squareup.javapoet.TypeName} object.
+     * @return a object.
      */
     public static String wrapperType(TypeMirror type) {
         if (isPrimitive(type)) {
@@ -197,6 +197,52 @@ public class TypeUtils {
      */
     public static TypeMirror secondTypeArgument(TypeMirror typeMirror) {
         return ((DeclaredType) typeMirror).getTypeArguments().get(SECOND_ARGUMENT);
+    }
+
+    /**
+     * If given type is bounded wildcard, remove the wildcard and returns extends bound
+     * if exists. If extends bounds is non existing - return the super bound.
+     * <p>
+     * <p>
+     * If given type is not wildcard, returns type.
+     *
+     * @param type TypeMirror to be processed
+     * @return extends or super bounds for given wildcard type
+     */
+    public TypeMirror removeOuterWildCards(TypeMirror type) {
+        return type.accept(new SimpleTypeVisitor8<TypeMirror, Void>() {
+            @Override
+            public TypeMirror visitDeclared(DeclaredType t, Void p) {
+                return t;
+            }
+
+            @Override
+            public TypeMirror visitTypeVariable(TypeVariable t, Void p) {
+                return t;
+            }
+
+            @Override
+            public TypeMirror visitWildcard(WildcardType t, Void p) {
+                return
+                        t.getExtendsBound() != null ?
+                                visit(t.getExtendsBound(), p)
+                                : t.getSuperBound() != null ?
+                                visit(t.getSuperBound(), p)
+                                : types.getDeclaredType(elements.getTypeElement(Object.class.getName()));
+            }
+
+            @Override
+            public TypeMirror visitArray(ArrayType t, Void p) {
+                return types.getArrayType(visit(t.getComponentType(), p));
+            }
+
+            @Override
+            public TypeMirror visitPrimitive(PrimitiveType t, Void p) {
+                return t;
+            }
+
+        }, null);
+
     }
 
     /**

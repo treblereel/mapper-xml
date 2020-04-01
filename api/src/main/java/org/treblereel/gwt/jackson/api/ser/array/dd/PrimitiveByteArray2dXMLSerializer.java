@@ -65,15 +65,15 @@ public class PrimitiveByteArray2dXMLSerializer extends BasicArrayXMLSerializer<b
 
         if (values.length == 0) {
             if (ctx.isWriteEmptyXMLArrays()) {
-                writer.beginArray();
-                writer.endArray();
+                writer.beginObject(propertyName);
+                writer.endObject();
             } else {
+                writer.unescapeName(propertyName);
                 writer.nullValue();
             }
             return;
         }
         BasicArrayXMLSerializer serializer = PrimitiveByteArrayXMLSerializer.getInstance(propertyName);
-
         writer.beginObject(propertyName);
         for (byte[] value : values) {
             serializer.serialize(writer, value, ctx, params);

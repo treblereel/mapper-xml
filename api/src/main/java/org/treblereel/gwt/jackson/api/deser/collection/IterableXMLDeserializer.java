@@ -16,36 +16,20 @@
 
 package org.treblereel.gwt.jackson.api.deser.collection;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
-import org.treblereel.gwt.jackson.api.stream.XMLToken;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
-import javax.xml.stream.XMLStreamException;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.lang.Iterable}. The deserialization process returns an {@link java.util.ArrayList}.
- *
  * @param <T> Type of the elements inside the {@link java.lang.Iterable}
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class IterableXMLDeserializer<T> extends BaseIterableXMLDeserializer<Iterable<T>, T> {
-
-    /**
-     * <p>newInstance</p>
-     *
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link java.lang.Iterable}.
-     * @param <T>          Type of the elements inside the {@link java.lang.Iterable}
-     * @return a new instance of {@link IterableXMLDeserializer}
-     */
-    public static <T> IterableXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
-        return new IterableXMLDeserializer<>(deserializer);
-    }
 
     /**
      * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link Iterable}.
@@ -54,7 +38,19 @@ public class IterableXMLDeserializer<T> extends BaseIterableXMLDeserializer<Iter
         super(deserializer);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * <p>newInstance</p>
+     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link java.lang.Iterable}.
+     * @param <T> Type of the elements inside the {@link java.lang.Iterable}
+     * @return a new instance of {@link IterableXMLDeserializer}
+     */
+    public static <T> IterableXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
+        return new IterableXMLDeserializer<>(deserializer);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Iterable<T> doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
 /*        if (XMLToken.BEGIN_ARRAY == reader.peek()) {

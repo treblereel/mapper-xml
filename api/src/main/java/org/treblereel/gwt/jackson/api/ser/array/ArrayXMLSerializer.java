@@ -36,7 +36,7 @@ public class ArrayXMLSerializer<T> extends XMLSerializer<T[]> {
 
 
     /**
-     * <p>Constructor for ArrayJsonSerializer.</p>
+     * <p>Constructor for ArrayXMLSerializer.</p>
      * @param serializer {@link XMLSerializer} used to serialize the objects inside the array.
      */
     protected ArrayXMLSerializer(XMLSerializer<T> serializer, String propertyName) {
@@ -57,7 +57,7 @@ public class ArrayXMLSerializer<T> extends XMLSerializer<T[]> {
      * @return a new instance of {@link ArrayXMLSerializer}
      */
     public static <T> ArrayXMLSerializer<T> getInstance(XMLSerializer<T> serializer, String propertyName) {
-        return new ArrayXMLSerializer<T>(serializer, propertyName);
+        return new ArrayXMLSerializer<>(serializer, propertyName);
     }
 
     /**

@@ -42,7 +42,7 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
     private final TypeSerializationInfo<T> defaultTypeInfo;
 
     /**
-     * <p>Constructor for AbstractBeanJsonSerializer.</p>
+     * <p>Constructor for AbstractBeanXMLSerializer.</p>
      */
     protected AbstractBeanXMLSerializer() {
         this.serializers = initSerializers();
@@ -60,7 +60,7 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
     }
 
     /**
-     * Initialize the {@link IdentitySerializationInfo}. Returns null if there is no {com.fasterxml.jackson.annotation.JsonIdentityInfo} annotation on bean.
+     * Initialize the {@link IdentitySerializationInfo}. Returns null if there is no {XMLIdentityInfo} annotation on bean.
      * @return a {@link IdentitySerializationInfo} object.
      */
     protected IdentitySerializationInfo<T> initIdentityInfo() {
@@ -68,7 +68,7 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
     }
 
     /**
-     * Initialize the {@link TypeSerializationInfo}. Returns null if there is no { com.fasterxml.jackson.annotation.JsonTypeInfo} annotation on bean.
+     * Initialize the {@link TypeSerializationInfo}. Returns null if there is no { XMLTypeInfo} annotation on bean.
      * @return a {@link TypeSerializationInfo} object.
      */
     protected TypeSerializationInfo<T> initTypeInfo() {

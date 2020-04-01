@@ -21,8 +21,6 @@ import org.gwtproject.i18n.client.TimeZone;
 import org.gwtproject.i18n.shared.DateTimeFormat;
 import org.treblereel.gwt.jackson.api.JacksonContext;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
-import org.treblereel.gwt.jackson.api.deser.map.key.DateKeyParser;
-import org.treblereel.gwt.jackson.api.deser.map.key.JsDateKeyParser;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -227,12 +225,6 @@ public final class JsDateFormat implements JacksonContext.DateFormat {
      */
     public Date parse(DateTimeFormat format, String date) {
         return format.parseStrict(date);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public <D extends Date> DateKeyParser<D> makeDateKeyParser() {
-        return new JsDateKeyParser<>();
     }
 
     private class DateParser {

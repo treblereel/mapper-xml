@@ -16,6 +16,7 @@
 
 package org.treblereel.gwt.jackson.api.deser.array.dd;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
@@ -23,8 +24,9 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
-import org.treblereel.gwt.jackson.api.deser.BaseNumberXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.StringXMLDeserializer;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
+import org.treblereel.gwt.jackson.api.utils.Base64Utils;
 
 /**
  * Default {@link XMLDeserializer} implementation for 2D array of byte.
@@ -54,27 +56,25 @@ public class PrimitiveByteArray2dXMLDeserializer extends AbstractArray2dXMLDeser
 
         byte[][] result;
 
-        List<List<Byte>> list = doDeserializeIntoList(reader, ctx, BaseNumberXMLDeserializer.ByteXMLDeserializer.getInstance(), params);
+        List<String> strings = doDeserializeInnerIntoList(reader, ctx, StringXMLDeserializer.getInstance(), params);
 
-        if(list.isEmpty()) {
-            return new byte[0][0];
-        }
-
-        List<Byte> firstList = list.get(0);
-        if (firstList.isEmpty()) {
-            result = new byte[list.size()][0];
+        if (strings.isEmpty()) {
+            result = new byte[0][0];
         } else {
-            result = new byte[list.size()][firstList.size()];
+            List<byte[]> list = new ArrayList<>();
 
+            int size = 0;
+            for (String string : strings) {
+                byte[] decoded = Base64Utils.fromBase64(string);
+                size = Math.max(size, decoded.length);
+                list.add(decoded);
+            }
+
+            result = new byte[list.size()][size];
             int i = 0;
-            int j;
-            for (List<Byte> innerList : list) {
-                j = 0;
-                for (Byte value : innerList) {
-                    if (null != value) {
-                        result[i][j] = value;
-                    }
-                    j++;
+            for (byte[] value : list) {
+                if (null != value) {
+                    result[i] = value;
                 }
                 i++;
             }

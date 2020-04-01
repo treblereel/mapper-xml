@@ -6,7 +6,7 @@ import org.treblereel.gwt.jackson.api.deser.bean.IdentityDeserializationInfo;
 import org.treblereel.gwt.jackson.api.deser.bean.TypeDeserializationInfo;
 
 /**
- * <p>JsonDeserializerParameters interface.</p>
+ * <p>XMLDeserializerParameters interface.</p>
  *
  * @author vegegoku
  * @version $Id: $Id

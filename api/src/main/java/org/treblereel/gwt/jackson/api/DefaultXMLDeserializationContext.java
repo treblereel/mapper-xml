@@ -16,18 +16,16 @@
 
 package org.treblereel.gwt.jackson.api;
 
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import com.ctc.wstx.stax.WstxInputFactory;
 import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
-import org.treblereel.gwt.jackson.api.stream.impl.NonBufferedXMLReader;
+import org.treblereel.gwt.jackson.api.stream.impl.DefaultXMLReader;
 
 /**
  * Context for the deserialization process.
@@ -131,7 +129,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
      */
     @Override
     public XMLReader newXMLReader(String input) throws XMLStreamException {
-        XMLReader reader = new NonBufferedXMLReader(xmlInputFactory, input);
+        XMLReader reader = new DefaultXMLReader(xmlInputFactory, input);
         return reader;
     }
 

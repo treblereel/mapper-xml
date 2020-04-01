@@ -30,8 +30,6 @@ import java.util.Map;
 import org.treblereel.gwt.jackson.api.GwtIncompatible;
 import org.treblereel.gwt.jackson.api.JacksonContext;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
-import org.treblereel.gwt.jackson.api.deser.map.key.DateKeyParser;
-import org.treblereel.gwt.jackson.api.deser.map.key.DefaultDateKeyParser;
 
 /**
  * <p>DefaultDateFormat class.</p>
@@ -71,7 +69,7 @@ public final class DefaultDateFormat implements JacksonContext.DateFormat {
      */
     public static final ZoneId UTC_TIMEZONE = ZoneOffset.UTC;
 
-    private static final Map<String, DateParser> CACHE_PARSERS = new HashMap<>();
+    private static final Map<String, DateParser> CACHE_PARSERS = new HashMap<String, DateParser>();
 
     /**
      * <p>Constructor for DefaultDateFormat.</p>
@@ -160,9 +158,6 @@ public final class DefaultDateFormat implements JacksonContext.DateFormat {
      * Parse a date using the pattern given in parameter or {@link #DATE_FORMAT_STR_ISO8601} and the browser timezone.
      */
     public Date parse(boolean useBrowserTimezone, String pattern, Boolean hasTz, String date) {
-        if(date == null) {
-            return null;
-        }
         if (null == pattern) {
             try {
                 return parse(DefaultDateFormat.DATE_FORMAT_STR_ISO8601, date);
@@ -255,12 +250,6 @@ public final class DefaultDateFormat implements JacksonContext.DateFormat {
         } catch (ParseException e) {
             return null;
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public <D extends Date> DateKeyParser<D> makeDateKeyParser() {
-        return new DefaultDateKeyParser<>();
     }
 
     private class DateParser {

@@ -39,7 +39,6 @@ public class DefaultXMLWriter implements XMLWriter {
 
     private final StringWriter sw = new StringWriter();
 
-    private String deferredUnescapeName;
     private String deferredName;
     private boolean serializeNulls = true;
     private int objCounter = 0;
@@ -97,7 +96,7 @@ public class DefaultXMLWriter implements XMLWriter {
      */
     @Override
     public DefaultXMLWriter beginObject(String name) throws XMLStreamException {
-        if(objCounter == 0) {
+        if (objCounter == 0) {
             out.writeStartDocument();
         }
         out.writeStartElement(name);
@@ -112,7 +111,7 @@ public class DefaultXMLWriter implements XMLWriter {
     public DefaultXMLWriter endObject() throws XMLStreamException {
         out.writeEndElement();
         objCounter--;
-        if(objCounter == 0) {
+        if (objCounter == 0) {
             out.writeEndDocument();
         }
         return this;
@@ -124,7 +123,9 @@ public class DefaultXMLWriter implements XMLWriter {
     @Override
     public DefaultXMLWriter name(String name) {
         checkName(name);
-        deferredName = name;
+        StringBuffer sb = new StringBuffer();
+        sb.append('\"').append(name).append('\"');
+        deferredName = sb.toString();
         return this;
     }
 
@@ -134,7 +135,7 @@ public class DefaultXMLWriter implements XMLWriter {
     @Override
     public DefaultXMLWriter unescapeName(String name) {
         checkName(name);
-        deferredUnescapeName = name;
+        deferredName = name;
         return this;
     }
 
@@ -175,7 +176,7 @@ public class DefaultXMLWriter implements XMLWriter {
      */
     @Override
     public DefaultXMLWriter nullValue() throws XMLStreamException {
-        out.writeEmptyElement(deferredUnescapeName);
+        out.writeEmptyElement(deferredName);
         return this;
     }
 
@@ -215,7 +216,7 @@ public class DefaultXMLWriter implements XMLWriter {
     @Override
     public DefaultXMLWriter value(Number value) throws XMLStreamException {
         if (value == null) {
-            out.writeEmptyElement(deferredUnescapeName);
+            out.writeEmptyElement(deferredName);
             return this;
         }
         String string = value.toString();
@@ -245,9 +246,9 @@ public class DefaultXMLWriter implements XMLWriter {
 
     private void string(String value) throws XMLStreamException {
         if (value == null) {
-            out.writeEmptyElement(deferredUnescapeName);
+            out.writeEmptyElement(deferredName);
         }
-        out.writeStartElement(deferredUnescapeName);
+        out.writeStartElement(deferredName);
         out.writeCharacters(value);
         out.writeEndElement();
     }

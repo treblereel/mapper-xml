@@ -94,4 +94,11 @@ public class Person {
     public int hashCode() {
         return Objects.hash(getFirstName(), getLastName(), getBirthday(), getAlive(), getAddress(), getChilds());
     }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "firstName='" + firstName + '\'' +
+                '}';
+    }
 }

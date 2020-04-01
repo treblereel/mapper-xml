@@ -11,7 +11,7 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 @XMLMapper
 public class ByteArray2d {
 
-    public static final String XML = "<?xml version='1.0' encoding='UTF-8'?><ByteArray2d><array><array><array>0</array><array>11</array><array>22</array><array>33</array></array><array><array>0</array><array>-11</array><array>-22</array><array>-33</array></array><array><array>0</array><array>100</array><array>-100</array><array>0</array></array><array><array>0</array><array>0</array><array>0</array><array>0</array></array></array></ByteArray2d>";
+    public static final String XML = "<?xml version='1.0' encoding='UTF-8'?><ByteArray2d><array><array>AAsWIQ==</array><array>APXq3w==</array><array>AGScAA==</array><array>AAAAAA==</array></array></ByteArray2d>";
 
     private byte[][] array;
 

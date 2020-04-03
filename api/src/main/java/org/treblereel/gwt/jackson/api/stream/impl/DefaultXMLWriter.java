@@ -41,6 +41,7 @@ public class DefaultXMLWriter implements XMLWriter {
 
     private String deferredName;
     private boolean serializeNulls = true;
+    private boolean beginNs = true;
     private int objCounter = 0;
 
     /**
@@ -260,5 +261,26 @@ public class DefaultXMLWriter implements XMLWriter {
     public String getOutput() {
         return sw.toString();
     }
+
+    @Override
+    public void writeDefaultNamespace(String namespace) throws XMLStreamException {
+        if (beginNs) {
+            out.writeDefaultNamespace(namespace);
+        }
+    }
+
+    @Override
+    public void writeNamespace(String prefix, String namespace) throws XMLStreamException {
+        if (beginNs) {
+            out.writeNamespace(prefix, namespace);
+        }
+    }
+
+    @Override
+    public void endNs() {
+        beginNs = false;
+    }
+
+
 }
 //@formatter:on

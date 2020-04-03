@@ -36,11 +36,10 @@ interface InternalSerializer<T> {
      * @param value               a T object.
      * @param ctx                 a {@link XMLSerializationContext} object.
      * @param params              a {@link XMLSerializerParameters} object.
-     * @param defaultIdentityInfo a {@link IdentitySerializationInfo} object.
      * @param defaultTypeInfo     a {@link TypeSerializationInfo} object.
      */
     void serializeInternally(XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters params,
-                             IdentitySerializationInfo<T> defaultIdentityInfo, TypeSerializationInfo<T> defaultTypeInfo) throws XMLStreamException;
+                             TypeSerializationInfo<T> defaultTypeInfo) throws XMLStreamException;
 
 }
 

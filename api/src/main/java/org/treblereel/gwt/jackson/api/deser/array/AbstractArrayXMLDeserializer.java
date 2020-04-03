@@ -17,10 +17,10 @@
 package org.treblereel.gwt.jackson.api.deser.array;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
@@ -71,28 +71,10 @@ public abstract class AbstractArrayXMLDeserializer<T> extends XMLDeserializer<T>
      */
     protected <C> List<C> deserializeIntoList(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializer<C> deserializer,
                                               XMLDeserializerParameters params) throws XMLStreamException {
-
         List<C> list = new ArrayList<>();
-        int counter = 0;
-        while (reader.hasNext()) {
-            reader.next();
-            switch (reader.peek()) {
-                case XMLStreamReader.START_ELEMENT:
-                    counter++;
-                    list.add(deserializer.deserialize(reader, ctx, params));
-                    break;
-                case XMLStreamReader.END_ELEMENT:
-                    counter--;
-                    if (counter == -1) {
-                        return list;
-                    }
-                    break;
-                case XMLStreamReader.END_DOCUMENT:
-                    break;
-                default:
-                    throw new XMLStreamException();
-            }
-        }
-        return list;
+        return (List<C>) doDeserializeCollection(reader, (Collection<T>) list, (reader1, ctx1, instance) -> {
+            list.add(deserializer.deserialize(reader1, ctx1, params));
+            return null;
+        }, ctx, params);
     }
 }

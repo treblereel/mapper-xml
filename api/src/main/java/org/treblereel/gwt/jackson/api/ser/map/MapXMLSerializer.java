@@ -25,7 +25,6 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
-import org.treblereel.gwt.jackson.api.ser.bean.TypeSerializationInfo;
 import org.treblereel.gwt.jackson.api.ser.map.key.KeySerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
@@ -107,10 +106,8 @@ public class MapXMLSerializer<M extends Map<K, V>, K, V> extends XMLSerializer<M
             writer.beginObject(propertyName);
             for (Map.Entry<K, V> entry : map.entrySet()) {
                 String name = keySerializer.serialize(entry.getKey(), ctx);
-                params.setTypeInfo(new TypeSerializationInfo(name));
                 writer.unescapeName(name);
-                valueSerializer.serialize(writer, entry.getValue(), ctx, params, true);
-                params.setTypeInfo(null);
+                valueSerializer.setPropertyName(name).serialize(writer, entry.getValue(), ctx, params, true);
             }
             writer.endObject();
         }

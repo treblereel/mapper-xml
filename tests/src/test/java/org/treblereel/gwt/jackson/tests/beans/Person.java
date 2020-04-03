@@ -17,7 +17,7 @@ public class Person {
     private String firstName;
     private String lastName;
 
-    private Date birthday = new Date();
+    private Date birthday = new Date(1234567890);
 
     private Timestamp alive = new Timestamp(1);
 

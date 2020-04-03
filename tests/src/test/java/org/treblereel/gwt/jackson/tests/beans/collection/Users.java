@@ -18,17 +18,9 @@ public class Users {
     private Map<TYPE, Person> types;
     private transient Iterable<Address> address;
 
-    public Map<TYPE, Person> getTypes() {
-        return types;
-    }
-
-    public void setTypes(Map<TYPE, Person> types) {
-        this.types = types;
-    }
-
     @Override
     public int hashCode() {
-        return Objects.hash(getActiveUsers());
+        return Objects.hash(getActiveUsers(), getTypes(), getAddress());
     }
 
     @Override
@@ -40,15 +32,20 @@ public class Users {
             return false;
         }
         Users users = (Users) o;
-        return Objects.deepEquals(getActiveUsers(), users.getActiveUsers());
+        return Objects.equals(getActiveUsers(), users.getActiveUsers()) &&
+                Objects.equals(getTypes(), users.getTypes());
     }
 
     public Map<String, Person> getActiveUsers() {
         return activeUsers;
     }
 
-    public void setActiveUsers(Map<String, Person> activeUsers) {
-        this.activeUsers = activeUsers;
+    public Map<TYPE, Person> getTypes() {
+        return types;
+    }
+
+    public void setTypes(Map<TYPE, Person> types) {
+        this.types = types;
     }
 
     public Iterable<Address> getAddress() {
@@ -57,6 +54,10 @@ public class Users {
 
     public void setAddress(Iterable<Address> address) {
         this.address = address;
+    }
+
+    public void setActiveUsers(Map<String, Person> activeUsers) {
+        this.activeUsers = activeUsers;
     }
 
     public enum TYPE {

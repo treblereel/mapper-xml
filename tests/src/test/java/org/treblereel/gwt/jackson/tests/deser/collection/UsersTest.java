@@ -2,8 +2,10 @@ package org.treblereel.gwt.jackson.tests.deser.collection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import javax.xml.stream.XMLStreamException;
@@ -15,6 +17,7 @@ import org.treblereel.gwt.jackson.tests.beans.collection.Users;
 import org.treblereel.gwt.jackson.tests.beans.collection.Users_MapperImpl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -56,10 +59,16 @@ public class UsersTest {
 
         String xml = mapper.write(test);
 
-        assertEquals(test, mapper.read(mapper.write(test)));
-        assertEquals(xml, mapper.write(mapper.read(mapper.write(mapper.read(mapper.write(test))))));
+        assertEquals(test, mapper.read(xml));
+
+        assertEquals(mapper.write(test), mapper.write(mapper.read(mapper.write(mapper.read(mapper.write(test))))));
 
         assertEquals(types, mapper.read(mapper.write(test)).getTypes());
+        assertEquals(test.getActiveUsers(), mapper.read(mapper.write(test)).getActiveUsers());
+        assertEquals(test.getTypes(), mapper.read(mapper.write(test)).getTypes());
+
+        assertEquals(test, mapper.read(mapper.write(test)));
 
     }
+
 }

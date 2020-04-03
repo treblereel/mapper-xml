@@ -1,5 +1,7 @@
 package org.treblereel.gwt.jackson.serializer;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +22,7 @@ import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
+import com.github.javaparser.ast.expr.NullLiteralExpr;
 import com.github.javaparser.ast.expr.ObjectCreationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
@@ -33,6 +36,7 @@ import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.bean.AbstractBeanXMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.bean.BeanPropertySerializer;
+import org.treblereel.gwt.jackson.api.utils.Pair;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 import org.treblereel.gwt.jackson.definition.BeanDefinition;
 import org.treblereel.gwt.jackson.definition.PropertyDefinition;
@@ -59,6 +63,8 @@ public class SerializerGenerator extends AbstractGenerator {
         cu.addImport(XMLSerializationContext.class);
         cu.addImport(XMLSerializer.class);
         cu.addImport(AbstractBeanXMLSerializer.class);
+        cu.addImport(Pair.class);
+        cu.addImport(List.class);
         cu.addImport(BeanPropertySerializer.class);
         cu.addImport(XMLSerializer.class);
         cu.addImport(type.getQualifiedName());
@@ -69,17 +75,68 @@ public class SerializerGenerator extends AbstractGenerator {
     }
 
     @Override
-    protected void getType(TypeElement type) {
+    protected void getType(BeanDefinition type) {
+        getSerializedType(type);
+        getXmlRootElement(type);
+        getXmlNs(type);
+    }
+
+    private void getSerializedType(BeanDefinition type) {
         declaration.addMethod("getSerializedType", Modifier.Keyword.PUBLIC)
                 .addAnnotation(Override.class)
                 .setType(Class.class)
                 .getBody().ifPresent(body -> body.addStatement(new ReturnStmt(
                 new FieldAccessExpr(
-                        new NameExpr(type.getSimpleName().toString()), "class"))));
+                        new NameExpr(type.getSimpleName()), "class"))));
+    }
+
+    private void getXmlRootElement(BeanDefinition type) {
+        declaration.addMethod("getXmlRootElement", Modifier.Keyword.PROTECTED)
+                .addAnnotation(Override.class)
+                .setType(String.class)
+                .getBody().ifPresent(body -> body.addStatement(new ReturnStmt(
+                new StringLiteralExpr(type.getXmlRootElement()))));
+    }
+
+    private void getXmlNs(BeanDefinition beanDefinition) {
+        declaration.addMethod("getXmlNs", Modifier.Keyword.PROTECTED)
+                .addAnnotation(Override.class)
+                .setType(new ClassOrInterfaceType().setName(List.class.getSimpleName())
+                                 .setTypeArguments(new ClassOrInterfaceType().setName(Pair.class.getSimpleName()).setTypeArguments(
+                                         new ClassOrInterfaceType().setName(
+                                                 String.class.getSimpleName()),
+                                         new ClassOrInterfaceType().setName(
+                                                 String.class.getSimpleName()))))
+                .getBody()
+                .ifPresent(body -> getXmlNsStatement(beanDefinition, body));
+    }
+
+    private void getXmlNsStatement(BeanDefinition beanDefinition, BlockStmt body) {
+        if (beanDefinition.getXmlNs().isEmpty()) {
+            cu.addImport(Collections.class);
+            body.addStatement(new ReturnStmt(new MethodCallExpr(new NameExpr("Collections"), "emptyList")));
+        } else {
+            cu.addImport(ArrayList.class);
+            body.addAndGetStatement(new AssignExpr().setTarget(new VariableDeclarationExpr(
+                    new ClassOrInterfaceType()
+                            .setName("List<Pair<String, String>>"),
+                    "result")).setValue(new NameExpr("new ArrayList<>()")));
+            beanDefinition.getXmlNs().forEach(pair -> {
+                body.addStatement(new MethodCallExpr(new NameExpr("result"), "add")
+                                          .addArgument(new ObjectCreationExpr().setType(
+                                                  new ClassOrInterfaceType().setName("Pair"))
+                                                               .addArgument(pair.key != null ? new StringLiteralExpr(pair.key)
+                                                                                    : new NullLiteralExpr())
+                                                               .addArgument(new StringLiteralExpr(pair.value))));
+            });
+
+            body.addAndGetStatement(new ReturnStmt(new NameExpr().setName("result")));
+        }
     }
 
     @Override
     protected void init(BeanDefinition beanDefinition) {
+        logger.log(TreeLogger.INFO, "Generating " + context.getTypeUtils().serializerName(beanDefinition.getBean()));
         MethodDeclaration initSerializers = declaration.addMethod("initSerializers", Modifier.Keyword.PROTECTED);
         initSerializers.addAnnotation(Override.class)
                 .setType(BeanPropertySerializer[].class)

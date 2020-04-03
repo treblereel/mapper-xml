@@ -67,7 +67,7 @@ public class MapperGenerator extends AbstractGenerator {
                 .setModifiers(Modifier.Keyword.PUBLIC)
                 .getBody()
                 .addStatement(new MethodCallExpr("super").addArgument(
-                        new StringLiteralExpr(type.getSimpleName())));
+                        new StringLiteralExpr(type.getXmlRootElement())));
 
         addNewDeserializer(type);
         newSerializer(type);

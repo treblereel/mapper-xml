@@ -79,17 +79,24 @@ public class DeserializerGenerator extends AbstractGenerator {
     }
 
     @Override
-    protected void getType(TypeElement type) {
+    protected void getType(BeanDefinition type) {
         declaration.addMethod("getDeserializedType", Modifier.Keyword.PUBLIC)
                 .addAnnotation(Override.class)
                 .setType(Class.class)
                 .getBody().ifPresent(body -> body.addStatement(new ReturnStmt(
                 new FieldAccessExpr(
                         new NameExpr(type.getSimpleName().toString()), "class"))));
+
+        declaration.addMethod("getXmlRootElement", Modifier.Keyword.PROTECTED)
+                .addAnnotation(Override.class)
+                .setType(String.class)
+                .getBody().ifPresent(body -> body.addStatement(new ReturnStmt(
+                new StringLiteralExpr(type.getXmlRootElement()))));
     }
 
     @Override
     protected void init(BeanDefinition beanDefinition) {
+        logger.log(TreeLogger.INFO, "Generating " + context.getTypeUtils().deserializerName(beanDefinition.getBean()));
         initDeserializers(beanDefinition);
         initInstanceBuilder(beanDefinition);
     }

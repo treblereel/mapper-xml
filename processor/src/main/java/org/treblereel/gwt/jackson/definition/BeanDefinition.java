@@ -1,14 +1,18 @@
 package org.treblereel.gwt.jackson.definition;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.auto.common.MoreElements;
+import org.treblereel.gwt.jackson.api.utils.Pair;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 
 /**
@@ -18,13 +22,20 @@ import org.treblereel.gwt.jackson.context.GenerationContext;
 public class BeanDefinition extends Definition {
 
     private final TypeElement element;
+    private final XmlRootElement xmlRootElement;
     private Set<PropertyDefinition> properties;
 
     public BeanDefinition(TypeElement element, GenerationContext context) {
         super(element.asType(), context);
         this.element = element;
 
+        xmlRootElement = getElement().getAnnotation(XmlRootElement.class);
+
         loadProperties();
+    }
+
+    public TypeElement getElement() {
+        return element;
     }
 
     private void loadProperties() {
@@ -69,12 +80,25 @@ public class BeanDefinition extends Definition {
                 '}';
     }
 
-    public String getSimpleName() {
+    public String getXmlRootElement() {
+        if (xmlRootElement != null && !xmlRootElement.name().equals("##default")) {
+            return xmlRootElement.name();
+        }
         return getElement().getSimpleName().toString();
     }
 
-    public TypeElement getElement() {
-        return element;
+    public List<Pair<String, String>> getXmlNs() {
+        List<Pair<String, String>> result = new ArrayList<>();
+
+        if (xmlRootElement != null && !xmlRootElement.namespace().equals("##default")) {
+            result.add(new Pair<>(null, xmlRootElement.namespace()));
+        }
+
+        return result;
+    }
+
+    public String getSimpleName() {
+        return getElement().getSimpleName().toString();
     }
 
     public String getQualifiedName() {

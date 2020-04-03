@@ -35,13 +35,12 @@ public abstract class AbstractGenerator {
     }
 
     public void generate(BeanDefinition type) {
-        logger.log(TreeLogger.INFO, "Generating " + type);
         cu = new CompilationUnit();
         cu.setPackageDeclaration(context.getTypeUtils().getPackage(type.getBean()));
         declaration = cu.addClass(getMapperName(type.getElement()));
 
         configureClassType(type);
-        getType(type.getElement());
+        getType(type);
         init(type);
         write(type.getElement());
     }
@@ -50,14 +49,14 @@ public abstract class AbstractGenerator {
 
     protected abstract void configureClassType(BeanDefinition type);
 
-    protected void getType(TypeElement type) {
+    protected void getType(BeanDefinition type) {
 
     }
 
     protected abstract void init(BeanDefinition type);
 
     protected void write(TypeElement type) {
-        logger.log(TreeLogger.INFO, "Writing " + type);
+        logger.branch(TreeLogger.INFO, "Writing " + getMapperName(type));
 
         try {
             build(MoreElements.getPackage(type) + "." + getMapperName(type), cu.toString());

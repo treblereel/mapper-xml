@@ -20,7 +20,6 @@ import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.treblereel.gwt.jackson.api.ser.bean.IdentitySerializationInfo;
 import org.treblereel.gwt.jackson.api.ser.bean.TypeSerializationInfo;
 
 /**
@@ -60,11 +59,6 @@ public final class ServerJacksonXMLSerializerParameters implements XMLSerializer
      * Names of properties to ignore.
      */
     private Set<String> ignoredProperties;
-
-    /**
-     * Bean identity informations
-     */
-    private IdentitySerializationInfo identityInfo;
 
     /**
      * Bean type informations
@@ -160,27 +154,6 @@ public final class ServerJacksonXMLSerializerParameters implements XMLSerializer
             ignoredProperties = new HashSet<String>();
         }
         ignoredProperties.add(ignoredProperty);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>Getter for the field <code>identityInfo</code>.</p>
-     */
-    @Override
-    public IdentitySerializationInfo getIdentityInfo() {
-        return identityInfo;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>Setter for the field <code>identityInfo</code>.</p>
-     */
-    @Override
-    public XMLSerializerParameters setIdentityInfo(IdentitySerializationInfo identityInfo) {
-        this.identityInfo = identityInfo;
         return this;
     }
 

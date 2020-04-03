@@ -16,17 +16,14 @@
 
 package org.treblereel.gwt.jackson.api.deser.bean;
 
-import java.util.Collections;
 import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import org.treblereel.gwt.jackson.api.JacksonContextProvider;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
-import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
@@ -79,23 +76,6 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
     }
 
     /**
-     * Initialize the {@link MapLike} containing the back reference deserializers. Returns an empty map if there are no back
-     * reference on the bean.
-     * @return a {@link MapLike} object.
-     */
-    protected MapLike<BackReferenceProperty<T, ?>> initBackReferenceDeserializers() {
-        return JacksonContextProvider.get().mapLikeFactory().make();
-    }
-
-    /**
-     * Initialize the {@link java.util.Map} containing the {@link SubtypeDeserializer}. Returns an empty map if the bean has no subtypes.
-     * @return a {@link java.util.Map} object.
-     */
-    protected Map<Class, SubtypeDeserializer> initMapSubtypeClassToDeserializer() {
-        return Collections.emptyMap();
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -105,11 +85,13 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
         return deserializeWrapped(reader, ctx, params, identityInfo, null, null);
     }
 
-    /**
-     * <p>getDeserializedType</p>
-     * @return a {@link java.lang.Class} object.
-     */
-    public abstract Class getDeserializedType();
+    private String getRootNodeName() {
+        if (getXmlRootElement() == null) {
+            return getDeserializedType().getSimpleName();
+        } else {
+            return getXmlRootElement();
+        }
+    }
 
     private BeanPropertyDeserializer<T, ?> getPropertyDeserializer(String propertyName, XMLDeserializationContext ctx) throws XMLStreamException {
         BeanPropertyDeserializer<T, ?> property = deserializers.get(propertyName);
@@ -119,42 +101,13 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
         return property;
     }
 
-    /**
-     * <p>canDeserialize</p>
-     * @return a boolean.
-     */
-    protected boolean canDeserialize() {
-        return null != instanceBuilder;
-    }
+    protected abstract String getXmlRootElement();
 
     /**
-     * Whether encountering of unknown
-     * properties should result in a failure (by throwing a
-     * {@link XMLDeserializationException}) or not.
-     * @return a boolean.
+     * <p>getDeserializedType</p>
+     * @return a {@link java.lang.Class} object.
      */
-    protected boolean isDefaultIgnoreUnknown() {
-        return false;
-    }
-
-    private InternalDeserializer<T, ? extends XMLDeserializer<T>> getDeserializer(XMLReader reader, XMLDeserializationContext ctx,
-                                                                                  TypeDeserializationInfo typeInfo, String
-                                                                                          typeInformation) throws XMLStreamException {
-        Class typeClass = typeInfo.getTypeClass(typeInformation);
-        if (null == typeClass) {
-            throw ctx.traceError("Could not find the type associated to " + typeInformation, reader);
-        }
-
-        return getDeserializer(reader, ctx, typeClass);
-    }
-
-    private InternalDeserializer<T, ? extends XMLDeserializer<T>> getDeserializer(XMLReader reader, XMLDeserializationContext ctx,
-                                                                                  Class typeClass) throws XMLStreamException {
-        if (typeClass == getDeserializedType()) {
-            return this;
-        }
-        throw ctx.traceError("No deserializer found for the type " + typeClass.getName(), reader);
-    }
+    public abstract Class getDeserializedType();
 
     /**
      * {@inheritDoc}
@@ -174,48 +127,18 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
                                      IdentityDeserializationInfo identityInfo, TypeDeserializationInfo typeInfo, String type,
                                      Map<String, String> bufferedProperties) throws XMLStreamException {
 
-        // we first instantiate the bean. It might buffer properties if there are properties required for constructor and they are not in
-        // first position
-        Instance<T> instance = instanceBuilder.newInstance(reader, ctx, params, null, null);
+        return iterateOver(reader, (reader1, ctx1, bean) -> {
+            String propertyName = reader1.nextName();
 
-        T bean = instance.getInstance();
-        String propertyName = null;
-        boolean rootIsFound = false;
-        int propertyCounter = 0;
-
-        while (reader.hasNext()) {
-            if(reader.peek() == XMLStreamReader.END_ELEMENT) {
-                propertyCounter--;
+            if (!propertyName.equals(getRootNodeName())) {
+                BeanPropertyDeserializer<T, ?> property = getPropertyDeserializer(propertyName, ctx1);
+                if (null != property) {
+                    property.deserialize(reader1, bean, ctx1);
+                }
             }
-            reader.next();
-            switch (reader.peek()) {
-                case XMLStreamReader.START_DOCUMENT:
-                    break;
-                case XMLStreamReader.START_ELEMENT:
-                    propertyCounter++;
-                    propertyName = reader.nextName();
-                    if (propertyName.equals(getDeserializedType().getSimpleName()) && !rootIsFound) {
-                        rootIsFound = true;
-                    } else {
-                        BeanPropertyDeserializer<T, ?> property = getPropertyDeserializer(propertyName, ctx);
-                        if (null != property) {
-                            property.deserialize(reader, bean, ctx);
-                        }
-                    }
-                    break;
-                case XMLStreamReader.END_ELEMENT:
-                    propertyCounter--;
-                    if (propertyCounter == -1) {
-                        return bean;
-                    }
-                    break;
-                case XMLStreamReader.END_DOCUMENT:
-                    return bean;
-                default:
-                    throw new XMLStreamException();
-            }
-        }
-        return bean;
+            return bean;
+        }, instanceBuilder.newInstance(reader, ctx, params,
+                                       null, null).getInstance(), ctx, params);
     }
 
     /**

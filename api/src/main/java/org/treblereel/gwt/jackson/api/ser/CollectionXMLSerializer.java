@@ -23,37 +23,20 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
-import org.treblereel.gwt.jackson.api.ser.bean.TypeSerializationInfo;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for {@link Collection}.
- *
  * @param <T> Type of the elements inside the {@link Collection}
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSerializer<C> {
 
-    /**
-     * <p>newInstance</p>
-     *
-     * @param serializer {@link XMLSerializer} used to serialize the objects inside the {@link Collection}.
-     * @param <C> Type of the {@link Collection}
-     * @return a new instance of {@link CollectionXMLSerializer}
-     */
-    public static <C extends Collection<?>> CollectionXMLSerializer<C, ?> newInstance(XMLSerializer<?> serializer, String propertyName) {
-        return new CollectionXMLSerializer(serializer, propertyName);
-    }
-
     protected final XMLSerializer<T> serializer;
     protected final String propertyName;
-
-
-
     /**
      * <p>Constructor for CollectionXMLSerializer.</p>
-     *
      * @param serializer {@link XMLSerializer} used to serialize the objects inside the {@link Collection}.
      */
     protected CollectionXMLSerializer(XMLSerializer<T> serializer, String propertyName) {
@@ -67,13 +50,27 @@ public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSeri
         this.propertyName = propertyName;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * <p>newInstance</p>
+     * @param serializer {@link XMLSerializer} used to serialize the objects inside the {@link Collection}.
+     * @param <C> Type of the {@link Collection}
+     * @return a new instance of {@link CollectionXMLSerializer}
+     */
+    public static <C extends Collection<?>> CollectionXMLSerializer<C, ?> newInstance(XMLSerializer<?> serializer, String propertyName) {
+        return new CollectionXMLSerializer(serializer, propertyName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean isEmpty(C value) {
         return null == value || value.isEmpty();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSerialize(XMLWriter writer, C values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         if (values.isEmpty()) {
@@ -87,10 +84,7 @@ public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSeri
         }
         writer.beginObject(propertyName);
         for (T value : values) {
-            params.setTypeInfo(new TypeSerializationInfo(propertyName));
-
-            serializer.serialize(writer, value, ctx, params);
-            params.setTypeInfo(null);
+            serializer.setPropertyName(propertyName).serialize(writer, value, ctx, params);
         }
         writer.endObject();
     }

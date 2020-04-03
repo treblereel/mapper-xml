@@ -2,7 +2,6 @@ package org.treblereel.gwt.jackson.api;
 
 import java.util.Set;
 
-import org.treblereel.gwt.jackson.api.ser.bean.IdentitySerializationInfo;
 import org.treblereel.gwt.jackson.api.ser.bean.TypeSerializationInfo;
 
 /**
@@ -73,21 +72,6 @@ public interface XMLSerializerParameters {
      * @return a {@link XMLSerializerParameters} object.
      */
     XMLSerializerParameters addIgnoredProperty(String ignoredProperty);
-
-    /**
-     * <p>getIdentityInfo.</p>
-     *
-     * @return a {@link IdentitySerializationInfo} object.
-     */
-    IdentitySerializationInfo getIdentityInfo();
-
-    /**
-     * <p>setIdentityInfo.</p>
-     *
-     * @param identityInfo a {@link IdentitySerializationInfo} object.
-     * @return a {@link XMLSerializerParameters} object.
-     */
-    XMLSerializerParameters setIdentityInfo(IdentitySerializationInfo identityInfo);
 
     /**
      * <p>getTypeInfo.</p>

@@ -33,7 +33,6 @@ import org.treblereel.gwt.jackson.api.utils.Base64Utils;
 public class PrimitiveByteArrayXMLSerializer extends BasicArrayXMLSerializer<byte[]> {
 
     private static final PrimitiveByteArrayXMLSerializer INSTANCE = new PrimitiveByteArrayXMLSerializer();
-    private BaseNumberXMLSerializer.ByteXMLSerializer byteXMLSerializer = BaseNumberXMLSerializer.ByteXMLSerializer.getInstance();
 
     private PrimitiveByteArrayXMLSerializer() {
     }

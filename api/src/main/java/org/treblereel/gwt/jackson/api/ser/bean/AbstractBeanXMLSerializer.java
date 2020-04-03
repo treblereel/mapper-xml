@@ -16,9 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.ser.bean;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 
 import javax.xml.stream.XMLStreamException;
@@ -27,6 +26,7 @@ import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
+import org.treblereel.gwt.jackson.api.utils.Pair;
 
 /**
  * Base implementation of {@link XMLSerializer} for beans.
@@ -37,8 +37,6 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
 
     protected final BeanPropertySerializer[] serializers;
 
-    private final IdentitySerializationInfo<T> defaultIdentityInfo;
-
     private final TypeSerializationInfo<T> defaultTypeInfo;
 
     /**
@@ -46,7 +44,6 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
      */
     protected AbstractBeanXMLSerializer() {
         this.serializers = initSerializers();
-        this.defaultIdentityInfo = initIdentityInfo();
         this.defaultTypeInfo = initTypeInfo();
     }
 
@@ -57,14 +54,6 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
      */
     protected BeanPropertySerializer[] initSerializers() {
         return new BeanPropertySerializer[0];
-    }
-
-    /**
-     * Initialize the {@link IdentitySerializationInfo}. Returns null if there is no {XMLIdentityInfo} annotation on bean.
-     * @return a {@link IdentitySerializationInfo} object.
-     */
-    protected IdentitySerializationInfo<T> initIdentityInfo() {
-        return null;
     }
 
     /**
@@ -80,18 +69,18 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
      */
     @Override
     public void doSerialize(XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        getSerializer(value, ctx).serializeInternally(writer, value, ctx, params, defaultIdentityInfo, defaultTypeInfo);
+        getSerializer(value, ctx).serializeInternally(writer, value, ctx, params, defaultTypeInfo);
     }
 
     private InternalSerializer<T> getSerializer(T value, XMLSerializationContext ctx) {
         if (value.getClass() == getSerializedType()) {
             return this;
         }
-            if (ctx.getLogger().isLoggable(Level.FINE)) {
-                ctx.getLogger().fine("Cannot find serializer for class " + value
-                        .getClass() + ". Fallback to the serializer of " + getSerializedType());
-            }
-            return this;
+        if (ctx.getLogger().isLoggable(Level.FINE)) {
+            ctx.getLogger().fine("Cannot find serializer for class " + value
+                    .getClass() + ". Fallback to the serializer of " + getSerializedType());
+        }
+        return this;
     }
 
     /**
@@ -104,13 +93,11 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
      * {@inheritDoc}
      */
     public void serializeInternally(XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters params,
-                                    IdentitySerializationInfo<T> defaultIdentityInfo, TypeSerializationInfo<T> defaultTypeInfo) throws XMLStreamException {
+                                    TypeSerializationInfo<T> defaultTypeInfo) throws XMLStreamException {
         // Processing the parameters. We fallback to default if parameter is not present.
-        final IdentitySerializationInfo identityInfo = null == params.getIdentityInfo() ? defaultIdentityInfo : params.getIdentityInfo();
         final TypeSerializationInfo typeInfo = null == params.getTypeInfo() ? defaultTypeInfo : params.getTypeInfo();
-        final Set<String> ignoredProperties = null == params.getIgnoredProperties() ? Collections.<String>emptySet() : params
-                .getIgnoredProperties();
-        serializeObject(writer, value, ctx, ignoredProperties, identityInfo, typeInfo);
+
+        serializeObject(writer, value, ctx, typeInfo);
     }
 
     /**
@@ -118,12 +105,10 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
      * @param writer writer
      * @param value bean to serialize
      * @param ctx context of the serialization process
-     * @param ignoredProperties ignored properties
-     * @param identityInfo identity info
      */
-    private void serializeObject(XMLWriter writer, T value, XMLSerializationContext ctx, Set<String> ignoredProperties,
-                                 IdentitySerializationInfo identityInfo, TypeSerializationInfo typeInfo) throws XMLStreamException {
-        serializeObject(writer, value, ctx, ignoredProperties, identityInfo, null, typeInfo);
+    private void serializeObject(XMLWriter writer, T value, XMLSerializationContext ctx,
+                                 TypeSerializationInfo typeInfo) throws XMLStreamException {
+        serializeObject(writer, value, ctx, getSerializeObjectName(), typeInfo);
     }
 
     /**
@@ -131,28 +116,47 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
      * @param writer writer
      * @param value bean to serialize
      * @param ctx context of the serialization process
-     * @param ignoredProperties ignored properties
-     * @param identityInfo identity info
      * @param typeName in case of type info as property, the name of the property
      * @param typeInformation in case of type info as property, the type information
      */
-    protected void serializeObject(XMLWriter writer, T value, XMLSerializationContext ctx, Set<String> ignoredProperties,
-                                   IdentitySerializationInfo identityInfo, String typeName, TypeSerializationInfo
-                                           typeInformation) throws XMLStreamException {
-        writer.beginObject(typeInformation != null ? typeInformation.getPropertyName() : getSerializedType().getSimpleName());
-        serializeProperties(writer, value, ctx, ignoredProperties, identityInfo);
+    protected void serializeObject(XMLWriter writer, T value, XMLSerializationContext ctx,
+                                   String typeName, TypeSerializationInfo typeInformation) throws XMLStreamException {
+        writer.beginObject(typeName);
+        writeNamespace(writer);
+        serializeProperties(writer, value, ctx);
         writer.endObject();
     }
 
-    private void serializeProperties(XMLWriter writer, T value, XMLSerializationContext ctx, Set<String> ignoredProperties,
-                                     IdentitySerializationInfo identityInfo) throws XMLStreamException {
-
-        for (BeanPropertySerializer<T, ?> propertySerializer : serializers) {
-            if ((null == identityInfo || !identityInfo.isProperty() || !identityInfo.getPropertyName().equals(propertySerializer
-                                                                                                                      .getPropertyName())) && !ignoredProperties.contains(propertySerializer.getPropertyName())) {
-                propertySerializer.serializePropertyName(writer, value, ctx);
-                propertySerializer.serialize(writer, value, ctx);
-            }
+    private String getSerializeObjectName() {
+        if (propertyName != null) {
+            return propertyName;
+        } else if (getXmlRootElement() != null) {
+            return getXmlRootElement();
+        } else {
+            return getSerializedType().getSimpleName();
         }
     }
+
+    private void writeNamespace(XMLWriter writer) throws XMLStreamException {
+        if (!getXmlNs().isEmpty()) {
+            for (Pair<String, String> pair : getXmlNs()) {
+                if (pair.key == null) {
+                    writer.writeDefaultNamespace(pair.value);
+                }
+            }
+        }
+        writer.endNs();
+    }
+
+    private void serializeProperties(XMLWriter writer, T value, XMLSerializationContext ctx) throws XMLStreamException {
+
+        for (BeanPropertySerializer<T, ?> propertySerializer : serializers) {
+            propertySerializer.serializePropertyName(writer, value, ctx); //TODO
+            propertySerializer.serialize(writer, value, ctx);
+        }
+    }
+
+    protected abstract String getXmlRootElement();
+
+    protected abstract List<Pair<String, String>> getXmlNs();
 }

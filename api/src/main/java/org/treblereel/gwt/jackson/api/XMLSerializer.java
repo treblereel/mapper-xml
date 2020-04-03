@@ -29,10 +29,17 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public abstract class XMLSerializer<T> {
 
+    protected String propertyName;
+
+    public XMLSerializer<T> setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
+        return this;
+    }
+
     /**
-     * Serializes an object into JSON output.
+     * Serializes an object into XML output.
      *
-     * @param writer {@link XMLWriter} used to write the serialized JSON
+     * @param writer {@link XMLWriter} used to write the serialized XML
      * @param value  Object to serialize
      * @param ctx    Context for the full serialization process
      * @throws XMLSerializationException if an error occurs during the serialization
@@ -42,9 +49,9 @@ public abstract class XMLSerializer<T> {
     }
 
     /**
-     * Serializes an object into JSON output.
+     * Serializes an object into XML output.
      *
-     * @param writer {@link XMLWriter} used to write the serialized JSON
+     * @param writer {@link XMLWriter} used to write the serialized XML
      * @param value  Object to serialize
      * @param ctx    Context for the full serialization process
      * @param params Parameters for this serialization
@@ -56,9 +63,9 @@ public abstract class XMLSerializer<T> {
     }
 
     /**
-     * Serializes an object into JSON output.
+     * Serializes an object into XML output.
      *
-     * @param writer     {@link XMLWriter} used to write the serialized JSON
+     * @param writer     {@link XMLWriter} used to write the serialized XML
      * @param value      Object to serialize
      * @param ctx        Context for the full serialization process
      * @param params     Parameters for this serialization
@@ -81,7 +88,7 @@ public abstract class XMLSerializer<T> {
     /**
      * Serialize the null value. This method allows children to override the default behaviour.
      *
-     * @param writer {@link XMLWriter} used to write the serialized JSON
+     * @param writer {@link XMLWriter} used to write the serialized XML
      * @param ctx    Context for the full serialization process
      * @param params Parameters for this serialization
      */
@@ -120,9 +127,9 @@ public abstract class XMLSerializer<T> {
     }
 
     /**
-     * Serializes a non-null object into JSON output.
+     * Serializes a non-null object into XML output.
      *
-     * @param writer {@link XMLWriter} used to write the serialized JSON
+     * @param writer {@link XMLWriter} used to write the serialized XML
      * @param value  Object to serialize
      * @param ctx    Context for the full serialization process
      * @param params Parameters for this serialization

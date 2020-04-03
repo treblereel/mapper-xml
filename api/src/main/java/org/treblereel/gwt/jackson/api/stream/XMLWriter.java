@@ -20,38 +20,33 @@ import javax.xml.stream.XMLStreamException;
 
 /**
  * <p>XMLWriter interface.</p>
- *
  * @author nicolasmorel
  * @version $Id: $
  */
 public interface XMLWriter {
 
     /**
-     * Sets whether object members are serialized when their value is null.
-     * This has no impact on array elements. The default is true.
-     *
-     * @param serializeNulls a boolean.
-     */
-    void setSerializeNulls(boolean serializeNulls);
-
-    /**
      * <p>getSerializeNulls</p>
-     *
      * @return a boolean.
      */
     boolean getSerializeNulls();
 
     /**
+     * Sets whether object members are serialized when their value is null.
+     * This has no impact on array elements. The default is true.
+     * @param serializeNulls a boolean.
+     */
+    void setSerializeNulls(boolean serializeNulls);
+
+    /**
      * Begins encoding a new array. Each call to this method must be paired with
      * a call to {@link #endArray}.
-     *
      * @return this writer.
      */
     XMLWriter beginArray() throws XMLStreamException;
 
     /**
      * Ends encoding the current array.
-     *
      * @return this writer.
      */
     XMLWriter endArray() throws XMLStreamException;
@@ -59,21 +54,18 @@ public interface XMLWriter {
     /**
      * Begins encoding a new object. Each call to this method must be paired
      * with a call to {@link #endObject}.
-     *
      * @return this writer.
      */
     XMLWriter beginObject(String name) throws XMLStreamException;
 
     /**
      * Ends encoding the current object.
-     *
      * @return this writer.
      */
     XMLWriter endObject() throws XMLStreamException;
 
     /**
      * Encodes the property name.
-     *
      * @param name the name of the forthcoming value. May not be null.
      * @return this writer.
      */
@@ -81,7 +73,6 @@ public interface XMLWriter {
 
     /**
      * Encodes the property name without escaping it.
-     *
      * @param name the name of the forthcoming value. May not be null.
      * @return this writer.
      */
@@ -89,7 +80,6 @@ public interface XMLWriter {
 
     /**
      * Encodes {@code value}.
-     *
      * @param value the literal string value, or null to encode a null literal.
      * @return this writer.
      */
@@ -97,7 +87,6 @@ public interface XMLWriter {
 
     /**
      * Encodes {@code value} without escaping it.
-     *
      * @param value the literal string value, or null to encode a null literal.
      * @return this writer.
      */
@@ -105,14 +94,12 @@ public interface XMLWriter {
 
     /**
      * Encodes {@code null}.
-     *
      * @return this writer.
      */
     XMLWriter nullValue() throws XMLStreamException;
 
     /**
      * Encodes {@code value}.
-     *
      * @param value a boolean.
      * @return this writer.
      */
@@ -120,16 +107,14 @@ public interface XMLWriter {
 
     /**
      * Encodes {@code value}.
-     *
      * @param value a finite value. May not be {@link java.lang.Double#isNaN() NaNs} or
-     *              {@link java.lang.Double#isInfinite() infinities}.
+     * {@link java.lang.Double#isInfinite() infinities}.
      * @return this writer.
      */
     XMLWriter value(double value) throws XMLStreamException;
 
     /**
      * Encodes {@code value}.
-     *
      * @param value a long.
      * @return this writer.
      */
@@ -137,9 +122,8 @@ public interface XMLWriter {
 
     /**
      * Encodes {@code value}.
-     *
      * @param value a finite value. May not be {@link java.lang.Double#isNaN() NaNs} or
-     *              {@link java.lang.Double#isInfinite() infinities}.
+     * {@link java.lang.Double#isInfinite() infinities}.
      * @return this writer.
      */
     XMLWriter value(Number value) throws XMLStreamException;
@@ -157,8 +141,13 @@ public interface XMLWriter {
 
     /**
      * <p>getOutput</p>
-     *
      * @return the output when the serialization is over
      */
     String getOutput();
+
+    void writeDefaultNamespace(String namespace) throws XMLStreamException;
+
+    void writeNamespace(String prefix, String namespace) throws XMLStreamException;
+
+    void endNs();
 }

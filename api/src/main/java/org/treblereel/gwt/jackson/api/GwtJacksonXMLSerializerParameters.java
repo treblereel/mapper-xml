@@ -18,9 +18,8 @@ package org.treblereel.gwt.jackson.api;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TimeZone;
 
-import org.gwtproject.i18n.shared.TimeZone;
-import org.treblereel.gwt.jackson.api.ser.bean.IdentitySerializationInfo;
 import org.treblereel.gwt.jackson.api.ser.bean.TypeSerializationInfo;
 
 /**
@@ -59,11 +58,6 @@ public final class GwtJacksonXMLSerializerParameters implements XMLSerializerPar
      * Names of properties to ignore.
      */
     private Set<String> ignoredProperties;
-
-    /**
-     * Bean identity informations
-     */
-    private IdentitySerializationInfo identityInfo;
 
     /**
      * Bean type informations
@@ -159,27 +153,6 @@ public final class GwtJacksonXMLSerializerParameters implements XMLSerializerPar
             ignoredProperties = new HashSet<String>();
         }
         ignoredProperties.add(ignoredProperty);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>Getter for the field <code>identityInfo</code>.</p>
-     */
-    @Override
-    public IdentitySerializationInfo getIdentityInfo() {
-        return identityInfo;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>Setter for the field <code>identityInfo</code>.</p>
-     */
-    @Override
-    public XMLSerializerParameters setIdentityInfo(IdentitySerializationInfo identityInfo) {
-        this.identityInfo = identityInfo;
         return this;
     }
 

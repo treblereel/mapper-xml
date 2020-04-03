@@ -19,7 +19,6 @@ package org.treblereel.gwt.jackson.api.deser.collection;
 import java.util.Collection;
 
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
@@ -48,32 +47,14 @@ public abstract class BaseCollectionXMLDeserializer<C extends Collection<T>, T> 
      */
     @Override
     public C doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-
-        C result = newCollection();
-        int counter = 0;
-        while (reader.hasNext()) {
-            reader.next();
-            switch (reader.peek()) {
-                case XMLStreamReader.START_ELEMENT:
-                    counter++;
-                    T element = deserializer.deserialize(reader, ctx, params);
-                    result.add(element);
-                    break;
-                case XMLStreamReader.END_ELEMENT:
-                    counter--;
-
-                    if (counter == -1) {
-                        return result;
-                    }
-
-                    break;
-                case XMLStreamReader.END_DOCUMENT:
-                    break;
-                default:
-                    throw new XMLStreamException();
+        Scanner scanner = (Scanner<C>) (reader1, ctx1, instance) -> {
+            T element = deserializer.deserialize(reader1, ctx1, params);
+            if (element != null) {
+                instance.add(element);
             }
-        }
-        return result;
+            return null;
+        };
+        return (C) doDeserializeCollection(reader, (Collection<C>) newCollection(), scanner, ctx, params);
     }
 
     /**
@@ -89,5 +70,4 @@ public abstract class BaseCollectionXMLDeserializer<C extends Collection<T>, T> 
     protected boolean isNullValueAllowed() {
         return true;
     }
-
 }

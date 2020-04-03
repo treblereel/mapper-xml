@@ -17,10 +17,10 @@
 package org.treblereel.gwt.jackson.api.deser.array.dd;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
@@ -45,8 +45,7 @@ public abstract class AbstractArray2dXMLDeserializer<T> extends XMLDeserializer<
      */
     protected <C> List<List<C>> deserializeIntoList(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializer<C> deserializer,
                                                     XMLDeserializerParameters params) throws XMLStreamException {
-        List<List<C>> list = doDeserializeIntoList(reader, ctx, deserializer, params);
-        return list;
+        return doDeserializeIntoList(reader, ctx, deserializer, params);
     }
 
     /**
@@ -62,58 +61,21 @@ public abstract class AbstractArray2dXMLDeserializer<T> extends XMLDeserializer<
                                                       XMLDeserializer<C> deserializer, XMLDeserializerParameters params) throws XMLStreamException {
         List<List<C>> list = new ArrayList<>();
         // we keep the size of the first inner list to initialize the next lists with the correct size
-        int size = -1;
-
-        int counter = 0;
-        while (reader.hasNext()) {
-            reader.next();
-
-            switch (reader.peek()) {
-                case XMLStreamReader.START_ELEMENT:
-                    counter++;
-                    List<C> innerList = doDeserializeInnerIntoList(reader, ctx, deserializer, params);
-                    list.add(innerList);
-                    break;
-                case XMLStreamReader.END_ELEMENT:
-                    counter--;
-                    if (counter == -1) {
-                        return list;
-                    }
-                    break;
-                case XMLStreamReader.END_DOCUMENT:
-                    break;
-                default:
-                    throw new XMLStreamException();
-            }
-        }
+        doDeserializeCollection(reader, (Collection<T>) list, (reader1, ctx1, instance) -> {
+            List<C> innerList = doDeserializeInnerIntoList(reader, ctx, deserializer, params);
+            list.add(innerList);
+            return null;
+        }, ctx, params);
         return list;
     }
 
-    protected  <C> List<C> doDeserializeInnerIntoList(XMLReader reader, XMLDeserializationContext ctx,
-                                                   XMLDeserializer<C> deserializer, XMLDeserializerParameters params) throws XMLStreamException {
-        int counter = 0;
+    protected <C> List<C> doDeserializeInnerIntoList(XMLReader reader, XMLDeserializationContext ctx,
+                                                     XMLDeserializer<C> deserializer, XMLDeserializerParameters params) throws XMLStreamException {
         List<C> innerList = new ArrayList<>();
-
-        while (reader.hasNext()) {
-            reader.next();
-            switch (reader.peek()) {
-                case XMLStreamReader.START_ELEMENT:
-                    counter++;
-                    innerList.add(deserializer.deserialize(reader, ctx, params));
-                    break;
-                case XMLStreamReader.END_ELEMENT:
-                    counter--;
-                    if (counter == -1) {
-                        return innerList;
-                    }
-
-                    break;
-                case XMLStreamReader.END_DOCUMENT:
-                    break;
-                default:
-                    throw new XMLStreamException();
-            }
-        }
+        doDeserializeCollection(reader, (Collection<T>) innerList, (reader1, ctx1, instance) -> {
+            innerList.add(deserializer.deserialize(reader1, ctx1, params));
+            return null;
+        }, ctx, params);
         return innerList;
     }
 }

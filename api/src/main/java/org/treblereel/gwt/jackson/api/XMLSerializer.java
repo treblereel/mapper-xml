@@ -31,8 +31,15 @@ public abstract class XMLSerializer<T> {
 
     protected String propertyName;
 
+    protected boolean cdata = false;
+
     public XMLSerializer<T> setPropertyName(String propertyName) {
         this.propertyName = propertyName;
+        return this;
+    }
+
+    public XMLSerializer<T> setCdata(boolean cdata) {
+        this.cdata = cdata;
         return this;
     }
 

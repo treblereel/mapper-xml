@@ -18,6 +18,7 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.ArrayAccessExpr;
 import com.github.javaparser.ast.expr.AssignExpr;
+import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
@@ -175,6 +176,9 @@ public class SerializerGenerator extends AbstractGenerator {
 
         beanProperty.setType(beanType);
         beanProperty.addArgument(new StringLiteralExpr(variableElement.getSimpleName()));
+        if (variableElement.isCData()) {
+            beanProperty.addArgument(new BooleanLiteralExpr(true));
+        }
         setTypeParams(beanDefinition, variableElement, beanType);
 
         body.addStatement(new AssignExpr().setTarget(

@@ -34,6 +34,8 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
 
     protected String propertyName;
 
+    protected boolean cdata = false;
+
     private XMLSerializerParameters parameters = newParameters();
 
     /**
@@ -43,6 +45,11 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
      */
     protected BeanPropertySerializer(String propertyName) {
         this.propertyName = propertyName;
+    }
+
+    protected BeanPropertySerializer(String propertyName, boolean cdata) {
+        this.propertyName = propertyName;
+        this.cdata = cdata;
     }
 
     /**
@@ -100,7 +107,6 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
      * @param ctx    context of the serialization process
      */
     public void serialize(XMLWriter writer, T bean, XMLSerializationContext ctx) throws XMLStreamException {
-        //writer.unescapeName(propertyName); //TODO
-        getSerializer().setPropertyName(propertyName).serialize(writer, getValue(bean, ctx), ctx, getParameters());
+        getSerializer().setPropertyName(propertyName).setCdata(cdata).serialize(writer, getValue(bean, ctx), ctx, getParameters());
     }
 }

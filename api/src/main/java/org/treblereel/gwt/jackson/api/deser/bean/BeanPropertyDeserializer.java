@@ -30,6 +30,16 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public abstract class BeanPropertyDeserializer<T, V> extends HasDeserializerAndParameters<V, XMLDeserializer<V>> {
 
+    private boolean cdata = false;
+
+    public BeanPropertyDeserializer() {
+
+    }
+
+    public BeanPropertyDeserializer(boolean cdata) {
+        this.cdata = cdata;
+    }
+
     /**
      * Deserializes the property defined for this instance.
      *

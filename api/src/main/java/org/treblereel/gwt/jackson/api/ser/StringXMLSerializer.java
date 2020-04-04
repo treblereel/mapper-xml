@@ -25,7 +25,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for {@link String}.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
@@ -33,27 +32,37 @@ public class StringXMLSerializer extends XMLSerializer<String> {
 
     private static final StringXMLSerializer INSTANCE = new StringXMLSerializer();
 
+    private StringXMLSerializer() {
+    }
+
     /**
      * <p>getInstance</p>
-     *
      * @return an instance of {@link StringXMLSerializer}
      */
     public static StringXMLSerializer getInstance() {
         return INSTANCE;
     }
 
-    private StringXMLSerializer() {
-    }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean isEmpty(String value) {
         return null == value || value.length() == 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSerialize(XMLWriter writer, String value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        writer.value(value);
+        if (cdata) {
+            writer.beginObject(propertyName);
+            writer.writeCData(value);
+            writer.endObject();
+            cdata = false;
+        } else {
+            writer.value(value);
+        }
     }
 }

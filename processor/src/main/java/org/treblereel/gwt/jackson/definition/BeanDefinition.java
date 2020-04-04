@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import com.google.auto.common.MoreElements;
 import org.treblereel.gwt.jackson.api.utils.Pair;
@@ -45,6 +46,7 @@ public class BeanDefinition extends Definition {
                 .filter(field -> !field.getModifiers().contains(Modifier.STATIC))
                 .filter(field -> !field.getModifiers().contains(Modifier.FINAL))
                 .filter(field -> !field.getModifiers().contains(Modifier.TRANSIENT))
+                .filter(field -> field.getAnnotation(XmlTransient.class) == null)
                 .map(field -> new PropertyDefinition(field, context))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }

@@ -175,7 +175,7 @@ public class SerializerGenerator extends AbstractGenerator {
                 .setName(BeanPropertySerializer.class.getSimpleName());
 
         beanProperty.setType(beanType);
-        beanProperty.addArgument(new StringLiteralExpr(variableElement.getSimpleName()));
+        beanProperty.addArgument(new StringLiteralExpr(variableElement.getPropertyName()));
         if (variableElement.isCData()) {
             beanProperty.addArgument(new BooleanLiteralExpr(true));
         }

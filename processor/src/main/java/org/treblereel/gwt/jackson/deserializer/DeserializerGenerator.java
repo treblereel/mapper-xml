@@ -173,7 +173,7 @@ public class DeserializerGenerator extends AbstractGenerator {
                 typeArg);
 
         body.addStatement(new MethodCallExpr(new NameExpr("map"), "put")
-                                  .addArgument(new StringLiteralExpr(field.getSimpleName()))
+                                  .addArgument(new StringLiteralExpr(field.getPropertyName()))
                                   .addArgument(new ObjectCreationExpr()
                                                        .setType(beanPropertyDeserializer)
                                                        .setAnonymousClassBody(anonymousClassBody)

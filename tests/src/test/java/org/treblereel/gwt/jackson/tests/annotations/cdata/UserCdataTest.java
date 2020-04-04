@@ -22,8 +22,6 @@ public class UserCdataTest {
         System.out.println(mapperEmployee.write(test));
 
         assertEquals("<?xml version='1.0' encoding='UTF-8'?><User><username><![CDATA[ANY]]></username></User>", mapperEmployee.write(test));
-        System.out.println("?? " + mapperEmployee.read(mapperEmployee.write(test)).getUsername());
-
         assertEquals(test, mapperEmployee.read(mapperEmployee.write(test)));
     }
 }

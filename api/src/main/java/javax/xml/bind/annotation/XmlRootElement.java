@@ -129,7 +129,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *     //Example: Code fragment
  *     &#64;XmlRootElement(name="PriceElement")
  *     public class USPrice {
- *         &#64;XmlElement
+ *         &#64;JacksonXmlProperty
  *         public java.math.BigDecimal price;
  *     }
  * {@code

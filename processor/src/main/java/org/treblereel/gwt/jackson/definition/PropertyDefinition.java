@@ -1,6 +1,7 @@
 package org.treblereel.gwt.jackson.definition;
 
 import javax.lang.model.element.VariableElement;
+import javax.xml.bind.annotation.JacksonXmlProperty;
 import javax.xml.bind.annotation.XmlCData;
 
 import com.github.javaparser.ast.CompilationUnit;
@@ -46,7 +47,11 @@ public class PropertyDefinition extends Definition {
         return property;
     }
 
-    public String getSimpleName() {
+    public String getPropertyName() {
+        if (property.getAnnotation(JacksonXmlProperty.class) != null &&
+                !property.getAnnotation(JacksonXmlProperty.class).localName().isEmpty()) {
+            return property.getAnnotation(JacksonXmlProperty.class).localName();
+        }
         return property.getSimpleName().toString();
     }
 }

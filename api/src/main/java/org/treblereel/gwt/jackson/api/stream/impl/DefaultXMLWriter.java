@@ -281,6 +281,9 @@ public class DefaultXMLWriter implements XMLWriter {
         beginNs = false;
     }
 
-
+    @Override
+    public void writeCData(String value) throws XMLStreamException {
+        out.writeCData(value);
+    }
 }
 //@formatter:on

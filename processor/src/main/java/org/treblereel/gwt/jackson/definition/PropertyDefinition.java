@@ -1,9 +1,12 @@
 package org.treblereel.gwt.jackson.definition;
 
 import javax.lang.model.element.VariableElement;
+import javax.xml.bind.annotation.XmlCData;
 
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.Expression;
+import com.github.javaparser.ast.expr.MethodCallExpr;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 
 /**
@@ -21,14 +24,22 @@ public class PropertyDefinition extends Definition {
 
     public Expression getFieldDeserializer(CompilationUnit cu) {
         FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(bean);
-        return fieldDefinition.getFieldDeserializer(cu);
+        Expression result = fieldDefinition.getFieldDeserializer(cu);
+        if (isCData()) {
+            result = new MethodCallExpr(result, "setCdata").addArgument(new BooleanLiteralExpr(true));
+        }
+        return result;
+    }
 
+    public boolean isCData() {
+        return property.asType().toString().equals(String.class.getCanonicalName()) &&
+                property.getAnnotation(XmlCData.class) != null &&
+                property.getAnnotation(XmlCData.class).value();
     }
 
     public Expression getFieldSerializer(CompilationUnit cu) {
         FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(bean);
         return fieldDefinition.getFieldSerializer(property.getSimpleName().toString(), cu);
-
     }
 
     public VariableElement getProperty() {

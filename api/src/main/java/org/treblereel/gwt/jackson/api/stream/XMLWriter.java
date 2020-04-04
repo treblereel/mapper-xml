@@ -150,4 +150,6 @@ public interface XMLWriter {
     void writeNamespace(String prefix, String namespace) throws XMLStreamException;
 
     void endNs();
+
+    void writeCData(String value) throws XMLStreamException;
 }

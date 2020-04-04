@@ -25,7 +25,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.lang.String}.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
@@ -33,21 +32,35 @@ public class StringXMLDeserializer extends XMLDeserializer<String> {
 
     private static final StringXMLDeserializer INSTANCE = new StringXMLDeserializer();
 
+    private boolean cdata = false;
+
+    private StringXMLDeserializer() {
+    }
+
     /**
      * <p>getInstance</p>
-     *
      * @return an instance of {@link StringXMLDeserializer}
      */
     public static StringXMLDeserializer getInstance() {
         return INSTANCE;
     }
 
-    private StringXMLDeserializer() {
-    }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+        if (cdata) {
+            this.cdata = false;
+            reader.next();
+            return reader.nextValue();
+        }
+
         return reader.nextString();
+    }
+
+    public StringXMLDeserializer setCdata(boolean cdata) {
+        this.cdata = cdata;
+        return this;
     }
 }

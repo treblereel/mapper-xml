@@ -21,6 +21,7 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
+import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
@@ -57,6 +58,12 @@ public class StringXMLDeserializer extends XMLDeserializer<String> {
         }
 
         return reader.nextString();
+    }
+
+    @Override
+    public String deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
+            XMLDeserializationException {
+        return value;
     }
 
     public StringXMLDeserializer setCdata(boolean cdata) {

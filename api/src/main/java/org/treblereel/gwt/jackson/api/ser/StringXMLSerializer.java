@@ -61,6 +61,9 @@ public class StringXMLSerializer extends XMLSerializer<String> {
             writer.writeCData(value);
             writer.endObject();
             cdata = false;
+        } else if (isAttribute) {
+            writer.writeAttribute(propertyName, value);
+            isAttribute = false;
         } else {
             writer.value(value);
         }

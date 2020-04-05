@@ -74,7 +74,7 @@ public abstract class BaseMapXMLDeserializer<M extends Map<K, V>, K, V> extends 
         if (!(valueDeserializer instanceof AbstractBeanXMLDeserializer)) {
 
             doDeserializeMap(reader, result, (reader1, ctx1, instance, counter1) -> {
-                String name = reader1.peekNodeName();
+                String name = reader1.peekNodeName().getLocalPart();
                 K key = keyDeserializer.deserialize(name, ctx1);
                 V value = valueDeserializer.deserialize(reader1, ctx1, params);
                 result.put(key, value);
@@ -94,7 +94,7 @@ public abstract class BaseMapXMLDeserializer<M extends Map<K, V>, K, V> extends 
                 switch (reader.peek()) {
                     case XMLStreamReader.START_ELEMENT:
                         propertyCounter.incrementAndGet();
-                        String name = reader.peekNodeName();
+                        String name = reader.peekNodeName().getLocalPart();
                         if ((propertyCounter.get() % 2 == 1)) {
                             K key = keyDeserializer.deserialize(name, ctx);
                             V value = valueDeserializer.deserialize(reader, ctx, params);

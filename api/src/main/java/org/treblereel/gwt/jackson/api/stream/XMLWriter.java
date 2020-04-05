@@ -152,4 +152,6 @@ public interface XMLWriter {
     void endNs();
 
     void writeCData(String value) throws XMLStreamException;
+
+    void writeAttribute(String propertyName, String value) throws XMLStreamException;
 }

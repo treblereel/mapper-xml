@@ -73,7 +73,7 @@ public class BeanProcessor {
             if (type.getKind().equals(TypeKind.ARRAY)) {
                 ArrayType arrayType = (ArrayType) type;
 
-                if (!context.getTypeUtils().isBasicType(arrayType.getComponentType())) {
+                if (!context.getTypeUtils().isSimpleType(arrayType.getComponentType())) {
                     processBean(typeUtils.toTypeElement(arrayType.getComponentType()));
                 }
             } else if (MoreTypes.isType(type)) {

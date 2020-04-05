@@ -18,7 +18,7 @@ public class Department {
 
     private List<Employee> employeeList;
 
-    @JacksonXmlProperty(localName = "department_name")
+    @JacksonXmlProperty(localName = "department_name", isAttribute = true)
     private String name;
 
     public List<Employee> getEmployeeList() {

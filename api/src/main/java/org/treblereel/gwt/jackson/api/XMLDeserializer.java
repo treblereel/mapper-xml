@@ -18,10 +18,12 @@ package org.treblereel.gwt.jackson.api;
 
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.treblereel.gwt.jackson.api.deser.bean.InstanceBuilder;
 import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
@@ -33,7 +35,7 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 public abstract class XMLDeserializer<T> {
 
     /**
-     * Deserializes a JSON input into an object.
+     * Deserializes a XML input into an object.
      * @param reader {@link XMLReader} used to read the JSON input
      * @param ctx Context for the full deserialization process
      * @return the deserialized object
@@ -64,6 +66,11 @@ public abstract class XMLDeserializer<T> {
      * @return the deserialized object
      */
     protected abstract T doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException;
+
+    public T deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
+            XMLDeserializationException {
+        throw new UnsupportedOperationException();
+    }
 
     protected T iterateOver(XMLReader reader, Scanner<T> scanner, T instance, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         T bean = null;
@@ -103,7 +110,7 @@ public abstract class XMLDeserializer<T> {
             switch (reader.peek()) {
                 case XMLStreamReader.START_ELEMENT:
                     counter++;
-                    scanner.accept(reader, ctx, (T)collection);
+                    scanner.accept(reader, ctx, (T) collection);
                     break;
                 case XMLStreamReader.END_ELEMENT:
                     counter--;
@@ -127,8 +134,6 @@ public abstract class XMLDeserializer<T> {
         }
         return collection;
     }
-
-
 
     @FunctionalInterface
     protected interface Scanner<T> {

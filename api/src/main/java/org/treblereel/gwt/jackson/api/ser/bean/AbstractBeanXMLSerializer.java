@@ -123,8 +123,17 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
                                    String typeName, TypeSerializationInfo typeInformation) throws XMLStreamException {
         writer.beginObject(typeName);
         writeNamespace(writer);
+        serializeAttribute(writer, value, ctx);
         serializeProperties(writer, value, ctx);
         writer.endObject();
+    }
+
+    private void serializeAttribute(XMLWriter writer, T value, XMLSerializationContext ctx) throws XMLStreamException {
+        for (BeanPropertySerializer<T, ?> propertySerializer : serializers) {
+            if (propertySerializer.isAttribute()) {
+                propertySerializer.serialize(writer, value, ctx);
+            }
+        }
     }
 
     private String getSerializeObjectName() {
@@ -151,8 +160,10 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
     private void serializeProperties(XMLWriter writer, T value, XMLSerializationContext ctx) throws XMLStreamException {
 
         for (BeanPropertySerializer<T, ?> propertySerializer : serializers) {
-            propertySerializer.serializePropertyName(writer, value, ctx); //TODO
-            propertySerializer.serialize(writer, value, ctx);
+            if (!propertySerializer.isAttribute()) {
+                propertySerializer.serializePropertyName(writer, value, ctx); //TODO
+                propertySerializer.serialize(writer, value, ctx);
+            }
         }
     }
 

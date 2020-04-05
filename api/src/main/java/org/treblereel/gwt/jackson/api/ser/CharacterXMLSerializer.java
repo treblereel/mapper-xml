@@ -42,20 +42,17 @@ public class CharacterXMLSerializer extends XMLSerializer<Character> {
         return INSTANCE;
     }
 
-    private static char defaultValue;
-
     private CharacterXMLSerializer() {
     }
 
     /** {@inheritDoc} */
     @Override
-    protected boolean isDefault(Character value) {
-        return null == value || value == defaultValue;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void doSerialize(XMLWriter writer, Character value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        writer.value(value.toString());
+        if (isAttribute) {
+            writer.writeAttribute(propertyName, value.toString());
+            isAttribute = false;
+        } else {
+            writer.value(value.toString());
+        }
     }
 }

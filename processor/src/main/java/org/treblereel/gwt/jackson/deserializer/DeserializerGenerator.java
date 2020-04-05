@@ -11,6 +11,7 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
@@ -180,6 +181,7 @@ public class DeserializerGenerator extends AbstractGenerator {
                                   ));
         addNewDeserializer(field, anonymousClassBody);
         setValue(type, typeArg, field, anonymousClassBody);
+        isAttribute(anonymousClassBody, field);
     }
 
     private void addInstanceBuilder(BeanDefinition type, BlockStmt body) {
@@ -239,6 +241,20 @@ public class DeserializerGenerator extends AbstractGenerator {
                 new MethodCallExpr(
                         new NameExpr("bean"), typeUtils.getSetter(field.getProperty()).getSimpleName().toString()).addArgument("value")));
         anonymousClassBody.add(method);
+    }
+
+    private void isAttribute(NodeList<BodyDeclaration<?>> anonymousClassBody, PropertyDefinition propertyDefinition) {
+        if (propertyDefinition.isAttribute()) {
+            MethodDeclaration method = new MethodDeclaration();
+            method.setModifiers(Modifier.Keyword.PROTECTED);
+            method.addAnnotation(Override.class);
+            method.setName("isAttribute");
+            method.setType(new ClassOrInterfaceType().setName("boolean"));
+
+            method.getBody().ifPresent(body -> body.addAndGetStatement(
+                    new ReturnStmt().setExpression(new BooleanLiteralExpr(true))));
+            anonymousClassBody.add(method);
+        }
     }
 
     private void newInstance(BeanDefinition type, NodeList<BodyDeclaration<?>> anonymousClassBody) {

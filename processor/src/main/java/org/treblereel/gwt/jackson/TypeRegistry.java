@@ -175,6 +175,7 @@ import static org.treblereel.gwt.jackson.api.ser.BaseNumberXMLSerializer.ShortXM
 public final class TypeRegistry {
 
     private static Map<String, ClassMapper> simpleTypes = new HashMap<>();
+    private static Map<String, ClassMapper> basicTypes = new HashMap<>();
     private static Map<String, ClassMapper> keysMappers = new HashMap<>();
     private static Map<String, Class> collectionsDeserializers = new HashMap<>();
     private static Map<String, Class> mapDeserializers = new HashMap<>();
@@ -209,49 +210,49 @@ public final class TypeRegistry {
                 .forType(boolean.class)
                 .serializer(BooleanXMLSerializer.class)
                 .deserializer(BooleanXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(char.class)
                 .serializer(CharacterXMLSerializer.class)
                 .deserializer(CharacterXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(byte.class)
                 .serializer(ByteXMLSerializer.class)
                 .deserializer(ByteXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(double.class)
                 .serializer(DoubleXMLSerializer.class)
                 .deserializer(DoubleXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(float.class)
                 .serializer(FloatXMLSerializer.class)
                 .deserializer(FloatXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(int.class)
                 .serializer(IntegerXMLSerializer.class)
                 .deserializer(IntegerXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(long.class)
                 .serializer(LongXMLSerializer.class)
                 .deserializer(LongXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(short.class)
                 .serializer(ShortXMLSerializer.class)
                 .deserializer(ShortXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
     }
 
     private void initCommonMappers() {
@@ -260,24 +261,24 @@ public final class TypeRegistry {
                 .forType(String.class)
                 .serializer(StringXMLSerializer.class)
                 .deserializer(StringXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
         MAPPER
                 .forType(Boolean.class)
                 .serializer(BooleanXMLSerializer.class)
                 .deserializer(BooleanXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(Character.class)
                 .serializer(CharacterXMLSerializer.class)
                 .deserializer(CharacterXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(UUID.class)
                 .serializer(UUIDXMLSerializer.class)
                 .deserializer(UUIDXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(Void.class)
@@ -289,7 +290,7 @@ public final class TypeRegistry {
                 .forType(Enum.class)
                 .serializer(EnumXMLSerializer.class)
                 .deserializer(EnumXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
     }
 
     private void initNumberMappers() {
@@ -297,55 +298,55 @@ public final class TypeRegistry {
                 .forType(BigDecimal.class)
                 .serializer(BigDecimalXMLSerializer.class)
                 .deserializer(BigDecimalXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(BigInteger.class)
                 .serializer(BigIntegerXMLSerializer.class)
                 .deserializer(BigIntegerXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(Byte.class)
                 .serializer(ByteXMLSerializer.class)
                 .deserializer(ByteXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(Double.class)
                 .serializer(DoubleXMLSerializer.class)
                 .deserializer(DoubleXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(Float.class)
                 .serializer(FloatXMLSerializer.class)
                 .deserializer(FloatXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(Integer.class)
                 .serializer(IntegerXMLSerializer.class)
                 .deserializer(IntegerXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(Long.class)
                 .serializer(LongXMLSerializer.class)
                 .deserializer(LongXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(Short.class)
                 .serializer(ShortXMLSerializer.class)
                 .deserializer(ShortXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(Number.class)
                 .serializer(NumberXMLSerializer.class)
                 .deserializer(NumberXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
     }
 
     private void initDataMappers() {
@@ -353,25 +354,25 @@ public final class TypeRegistry {
                 .forType(Date.class)
                 .serializer(DateXMLSerializer.class)
                 .deserializer(DateXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(java.sql.Date.class)
                 .serializer(SqlDateXMLSerializer.class)
                 .deserializer(SqlDateXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(Time.class)
                 .serializer(SqlTimeXMLSerializer.class)
                 .deserializer(SqlTimeXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
 
         MAPPER
                 .forType(Timestamp.class)
                 .serializer(SqlTimestampXMLSerializer.class)
                 .deserializer(SqlTimestampXMLDeserializer.class)
-                .register(simpleTypes);
+                .register(basicTypes);
     }
 
     private void initIterableMappers() {
@@ -668,7 +669,6 @@ public final class TypeRegistry {
                 .serializer(ToStringKeySerializer.class)
                 .deserializer(StringKeyDeserializer.class)
                 .register(keysMappers);
-
     }
 
     private void initCollectionsDeserializersMappers() {
@@ -756,7 +756,7 @@ public final class TypeRegistry {
      * @return a boolean.
      */
     public boolean isBasicType(String type) {
-        return simpleTypes.containsKey(type);
+        return basicTypes.containsKey(type);
     }
 
     /**
@@ -859,7 +859,7 @@ public final class TypeRegistry {
     }
 
     public TypeElement getSerializer(String typeName) {
-        if (simpleTypes.containsKey(typeName)) {
+        if (basicTypes.containsKey(typeName) || simpleTypes.containsKey(typeName)) {
             return get(typeName).serializer;
         }
         throw new TypeSerializerNotFoundException(typeName);
@@ -871,7 +871,14 @@ public final class TypeRegistry {
      * @return a {@link TypeRegistry.ClassMapper} object.
      */
     public ClassMapper get(String typeName) {
-        return simpleTypes.get(typeName);
+        if (isSimpleType(typeName)) {
+            return simpleTypes.get(typeName);
+        }
+        return basicTypes.get(typeName);
+    }
+
+    public boolean isSimpleType(String type) {
+        return simpleTypes.containsKey(type);
     }
 
     /**
@@ -908,8 +915,8 @@ public final class TypeRegistry {
     }
 
     public TypeElement getDeserializer(String typeName) {
-        if (simpleTypes.containsKey(typeName)) {
-            return simpleTypes.get(typeName).deserializer;
+        if (basicTypes.containsKey(typeName) || simpleTypes.containsKey(typeName)) {
+            return get(typeName).deserializer;
         }
         throw new TypeDeserializerNotFoundException(typeName);
     }

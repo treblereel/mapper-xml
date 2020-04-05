@@ -18,6 +18,7 @@ package org.treblereel.gwt.jackson.api.deser.bean;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.treblereel.gwt.jackson.api.GwtIncompatible;
 
@@ -42,5 +43,10 @@ public class DefaultMapLike<T> implements MapLike<T> {
     @Override
     public void put(String key, T value) {
         map.put(key, value);
+    }
+
+    @Override
+    public Set<String> keys() {
+        return map.keySet();
     }
 }

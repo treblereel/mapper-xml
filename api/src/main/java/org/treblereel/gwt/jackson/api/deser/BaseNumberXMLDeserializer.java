@@ -24,7 +24,9 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
+import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
+import org.treblereel.gwt.jackson.api.utils.NumberUtils;
 
 /**
  * Base implementation of {@link XMLDeserializer} for {@link java.lang.Number}.
@@ -58,6 +60,15 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
             }
             return new BigDecimal(value);
         }
+
+        @Override
+        public BigDecimal deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
+                XMLDeserializationException {
+            if (value.isEmpty()) {
+                return null;
+            }
+            return new BigDecimal(value);
+        }
     }
 
     /**
@@ -81,6 +92,15 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
         protected BigInteger doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
             String value = reader.nextString();
             if (value == null) {
+                return null;
+            }
+            return new BigInteger(value);
+        }
+
+        @Override
+        public BigInteger deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
+                XMLDeserializationException {
+            if (value.isEmpty()) {
                 return null;
             }
             return new BigInteger(value);
@@ -112,6 +132,15 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
             }
             return Byte.valueOf(value);
         }
+
+        @Override
+        public Byte deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
+                XMLDeserializationException {
+            if (value.isEmpty()) {
+                return null;
+            }
+            return Byte.valueOf(value);
+        }
     }
 
     /**
@@ -135,6 +164,15 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
         protected Double doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
             String value = reader.nextString();
             if (value == null) {
+                return null;
+            }
+            return Double.valueOf(value);
+        }
+
+        @Override
+        public Double deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
+                XMLDeserializationException {
+            if (value.isEmpty()) {
                 return null;
             }
             return Double.valueOf(value);
@@ -166,6 +204,15 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
             }
             return Float.parseFloat(value);
         }
+
+        @Override
+        public Float deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
+                XMLDeserializationException {
+            if (value.isEmpty()) {
+                return null;
+            }
+            return Float.parseFloat(value);
+        }
     }
 
     /**
@@ -189,6 +236,15 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
         protected Integer doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
             String value = reader.nextString();
             if (value == null) {
+                return null;
+            }
+            return Integer.valueOf(value);
+        }
+
+        @Override
+        public Integer deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
+                XMLDeserializationException {
+            if (value.isEmpty()) {
                 return null;
             }
             return Integer.valueOf(value);
@@ -220,6 +276,15 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
             }
             return Long.valueOf(value);
         }
+
+        @Override
+        public Long deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
+                XMLDeserializationException {
+            if (value.isEmpty()) {
+                return null;
+            }
+            return Long.valueOf(value);
+        }
     }
 
     /**
@@ -247,6 +312,15 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
             }
             return Short.valueOf(value);
         }
+
+        @Override
+        public Short deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
+                XMLDeserializationException {
+            if (value.isEmpty()) {
+                return null;
+            }
+            return Short.valueOf(value);
+        }
     }
 
     /**
@@ -269,6 +343,15 @@ public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDes
         @Override
         public Number doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
             return reader.nextNumber();
+        }
+
+        @Override
+        public Number deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
+                XMLDeserializationException {
+            if (value.isEmpty()) {
+                return null;
+            }
+            return NumberUtils.toNumber(value);
         }
     }
 }

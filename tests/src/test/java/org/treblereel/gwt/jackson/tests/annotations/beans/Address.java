@@ -2,12 +2,15 @@ package org.treblereel.gwt.jackson.tests.annotations.beans;
 
 import java.util.Objects;
 
+import javax.xml.bind.annotation.JacksonXmlProperty;
+
 /**
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/2/20
  */
 public class Address {
 
+    @JacksonXmlProperty(isAttribute = true)
     private String street;
 
     public String getStreet() {

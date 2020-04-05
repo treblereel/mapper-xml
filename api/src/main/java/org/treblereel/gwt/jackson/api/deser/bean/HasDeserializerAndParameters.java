@@ -26,7 +26,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
  * Lazy initialize a {@link XMLDeserializer}
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
@@ -35,8 +34,17 @@ public abstract class HasDeserializerAndParameters<V, S extends XMLDeserializer<
     private XMLDeserializerParameters parameters;
 
     /**
+     * Deserializes the property defined for this instance.
+     * @param reader reader
+     * @param ctx context of the deserialization process
+     * @return a V object.
+     */
+    public V deserialize(XMLReader reader, XMLDeserializationContext ctx) throws XMLStreamException {
+        return getDeserializer().deserialize(reader, ctx, getParameters());
+    }
+
+    /**
      * <p>Getter for the field <code>parameters</code>.</p>
-     *
      * @return a {@link XMLDeserializerParameters} object.
      */
     protected XMLDeserializerParameters getParameters() {
@@ -48,21 +56,13 @@ public abstract class HasDeserializerAndParameters<V, S extends XMLDeserializer<
 
     /**
      * <p>newParameters</p>
-     *
      * @return a {@link XMLDeserializerParameters} object.
      */
     protected XMLDeserializerParameters newParameters() {
         return JacksonContextProvider.get().defaultDeserializerParameters();
     }
 
-    /**
-     * Deserializes the property defined for this instance.
-     *
-     * @param reader reader
-     * @param ctx    context of the deserialization process
-     * @return a V object.
-     */
-    public V deserialize(XMLReader reader, XMLDeserializationContext ctx) throws XMLStreamException {
-        return getDeserializer().deserialize(reader, ctx, getParameters());
+    public V deserialize(String value, XMLDeserializationContext ctx) {
+        return getDeserializer().deserialize(value, ctx, getParameters());
     }
 }

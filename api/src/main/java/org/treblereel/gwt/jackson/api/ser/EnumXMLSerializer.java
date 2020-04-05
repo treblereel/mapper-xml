@@ -49,6 +49,11 @@ public class EnumXMLSerializer<E extends Enum<E>> extends XMLSerializer<E> {
     /** {@inheritDoc} */
     @Override
     public void doSerialize(XMLWriter writer, E value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        writer.value(value.name());
+        if (isAttribute) {
+            writer.writeAttribute(propertyName, value.toString());
+            isAttribute = false;
+        } else {
+            writer.value(value.name());
+        }
     }
 }

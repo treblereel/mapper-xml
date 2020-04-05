@@ -175,7 +175,7 @@ public class SerializerGenerator extends AbstractGenerator {
                 .setName(BeanPropertySerializer.class.getSimpleName());
 
         beanProperty.setType(beanType);
-        beanProperty.addArgument(new StringLiteralExpr(variableElement.getSimpleName()));
+        beanProperty.addArgument(new StringLiteralExpr(variableElement.getPropertyName()));
         if (variableElement.isCData()) {
             beanProperty.addArgument(new BooleanLiteralExpr(true));
         }
@@ -211,12 +211,13 @@ public class SerializerGenerator extends AbstractGenerator {
         beanType.setTypeArguments(typeArguments);
     }
 
-    private void addMethods(ObjectCreationExpr beanProperty, BeanDefinition beanDefinition, PropertyDefinition variableElement) {
+    private void addMethods(ObjectCreationExpr beanProperty, BeanDefinition beanDefinition, PropertyDefinition propertyDefinition) {
         NodeList<BodyDeclaration<?>> anonymousClassBody = new NodeList<>();
         beanProperty.setAnonymousClassBody(anonymousClassBody);
 
-        newSerializer(anonymousClassBody, variableElement);
-        getValue(anonymousClassBody, beanDefinition, variableElement);
+        newSerializer(anonymousClassBody, propertyDefinition);
+        getValue(anonymousClassBody, beanDefinition, propertyDefinition);
+        isAttribute(anonymousClassBody, propertyDefinition);
     }
 
     private void addTypeArguments(TypeMirror type, ClassOrInterfaceType interfaceType) {
@@ -259,5 +260,19 @@ public class SerializerGenerator extends AbstractGenerator {
                         new MethodCallExpr(
                                 new NameExpr("bean"), typeUtils.getGetter(field.getProperty()).getSimpleName().toString()))));
         anonymousClassBody.add(method);
+    }
+
+    private void isAttribute(NodeList<BodyDeclaration<?>> anonymousClassBody, PropertyDefinition propertyDefinition) {
+        if (propertyDefinition.isAttribute()) {
+            MethodDeclaration method = new MethodDeclaration();
+            method.setModifiers(Modifier.Keyword.PROTECTED);
+            method.addAnnotation(Override.class);
+            method.setName("isAttribute");
+            method.setType(new ClassOrInterfaceType().setName("boolean"));
+
+            method.getBody().ifPresent(body -> body.addAndGetStatement(
+                    new ReturnStmt().setExpression(new BooleanLiteralExpr(true))));
+            anonymousClassBody.add(method);
+        }
     }
 }

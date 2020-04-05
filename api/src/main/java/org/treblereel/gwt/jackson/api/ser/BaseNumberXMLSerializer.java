@@ -28,11 +28,23 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Base implementation of {@link XMLSerializer} for {@link Number}.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSerializer<N> {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void doSerialize(XMLWriter writer, N value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
+        if (isAttribute) {
+            writer.writeAttribute(propertyName, value + "");
+            isAttribute = false;
+        } else {
+            writer.value(value);
+        }
+    }
 
     /**
      * Default implementation of {@link BaseNumberXMLSerializer} for {@link BigDecimal}
@@ -41,19 +53,14 @@ public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSeria
 
         private static final BigDecimalXMLSerializer INSTANCE = new BigDecimalXMLSerializer();
 
+        private BigDecimalXMLSerializer() {
+        }
+
         /**
          * @return an instance of {@link BigDecimalXMLSerializer}
          */
         public static BigDecimalXMLSerializer getInstance() {
             return INSTANCE;
-        }
-
-        private BigDecimalXMLSerializer() {
-        }
-
-        @Override
-        protected boolean isDefault(BigDecimal value) {
-            return null == value || BigDecimal.ZERO.compareTo(value) == 0;
         }
     }
 
@@ -64,19 +71,14 @@ public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSeria
 
         private static final BigIntegerXMLSerializer INSTANCE = new BigIntegerXMLSerializer();
 
+        private BigIntegerXMLSerializer() {
+        }
+
         /**
          * @return an instance of {@link BigIntegerXMLSerializer}
          */
         public static BigIntegerXMLSerializer getInstance() {
             return INSTANCE;
-        }
-
-        private BigIntegerXMLSerializer() {
-        }
-
-        @Override
-        protected boolean isDefault(BigInteger value) {
-            return null == value || BigInteger.ZERO.compareTo(value) == 0;
         }
     }
 
@@ -87,21 +89,14 @@ public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSeria
 
         private static final ByteXMLSerializer INSTANCE = new ByteXMLSerializer();
 
+        private ByteXMLSerializer() {
+        }
+
         /**
          * @return an instance of {@link ByteXMLSerializer}
          */
         public static ByteXMLSerializer getInstance() {
             return INSTANCE;
-        }
-
-        private static byte defaultValue;
-
-        private ByteXMLSerializer() {
-        }
-
-        @Override
-        protected boolean isDefault(Byte value) {
-            return null == value || defaultValue == value;
         }
     }
 
@@ -112,6 +107,9 @@ public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSeria
 
         private static final DoubleXMLSerializer INSTANCE = new DoubleXMLSerializer();
 
+        private DoubleXMLSerializer() {
+        }
+
         /**
          * @return an instance of {@link DoubleXMLSerializer}
          */
@@ -119,18 +117,15 @@ public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSeria
             return INSTANCE;
         }
 
-        private DoubleXMLSerializer() {
-        }
-
-        @Override
-        protected boolean isDefault(Double value) {
-            return null == value || value == 0d;
-        }
-
         @Override
         public void doSerialize(XMLWriter writer, Double value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
             // writer has a special method to write double, let's use instead of default Number method.
-            writer.value(value.doubleValue());
+            if (isAttribute) {
+                writer.writeAttribute(propertyName, value.doubleValue() + "");
+                isAttribute = false;
+            } else {
+                writer.value(value.doubleValue());
+            }
         }
     }
 
@@ -141,19 +136,14 @@ public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSeria
 
         private static final FloatXMLSerializer INSTANCE = new FloatXMLSerializer();
 
+        private FloatXMLSerializer() {
+        }
+
         /**
          * @return an instance of {@link FloatXMLSerializer}
          */
         public static FloatXMLSerializer getInstance() {
             return INSTANCE;
-        }
-
-        private FloatXMLSerializer() {
-        }
-
-        @Override
-        protected boolean isDefault(Float value) {
-            return null == value || value == 0f;
         }
     }
 
@@ -164,19 +154,14 @@ public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSeria
 
         private static final IntegerXMLSerializer INSTANCE = new IntegerXMLSerializer();
 
+        private IntegerXMLSerializer() {
+        }
+
         /**
          * @return an instance of {@link IntegerXMLSerializer}
          */
         public static IntegerXMLSerializer getInstance() {
             return INSTANCE;
-        }
-
-        private IntegerXMLSerializer() {
-        }
-
-        @Override
-        protected boolean isDefault(Integer value) {
-            return null == value || value == 0;
         }
     }
 
@@ -187,6 +172,9 @@ public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSeria
 
         private static final LongXMLSerializer INSTANCE = new LongXMLSerializer();
 
+        private LongXMLSerializer() {
+        }
+
         /**
          * @return an instance of {@link LongXMLSerializer}
          */
@@ -194,18 +182,15 @@ public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSeria
             return INSTANCE;
         }
 
-        private LongXMLSerializer() {
-        }
-
-        @Override
-        protected boolean isDefault(Long value) {
-            return null == value || value == 0l;
-        }
-
         @Override
         public void doSerialize(XMLWriter writer, Long value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
             // writer has a special method to write long, let's use instead of default Number method.
-            writer.value(value.longValue());
+            if (isAttribute) {
+                writer.writeAttribute(propertyName, value.longValue() + "");
+                isAttribute = false;
+            } else {
+                writer.value(value.longValue());
+            }
         }
     }
 
@@ -216,21 +201,14 @@ public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSeria
 
         private static final ShortXMLSerializer INSTANCE = new ShortXMLSerializer();
 
+        private ShortXMLSerializer() {
+        }
+
         /**
          * @return an instance of {@link ShortXMLSerializer}
          */
         public static ShortXMLSerializer getInstance() {
             return INSTANCE;
-        }
-
-        private static short defaultValue;
-
-        private ShortXMLSerializer() {
-        }
-
-        @Override
-        protected boolean isDefault(Short value) {
-            return null == value || defaultValue == value;
         }
     }
 
@@ -241,25 +219,14 @@ public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSeria
 
         private static final NumberXMLSerializer INSTANCE = new NumberXMLSerializer();
 
+        private NumberXMLSerializer() {
+        }
+
         /**
          * @return an instance of {@link NumberXMLSerializer}
          */
         public static NumberXMLSerializer getInstance() {
             return INSTANCE;
         }
-
-        private NumberXMLSerializer() {
-        }
-
-        @Override
-        protected boolean isDefault(Number value) {
-            return null == value || value.intValue() == 0;
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void doSerialize(XMLWriter writer, N value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        writer.value(value);
     }
 }

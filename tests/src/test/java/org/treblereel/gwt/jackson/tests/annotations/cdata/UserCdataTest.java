@@ -1,5 +1,7 @@
 package org.treblereel.gwt.jackson.tests.annotations.cdata;
 
+import java.util.UUID;
+
 import javax.xml.stream.XMLStreamException;
 
 import org.junit.Test;
@@ -18,12 +20,12 @@ public class UserCdataTest {
     public void testDeserializeMapperEmployee() throws XMLStreamException {
         User test = new User();
         test.setUsername("ANY");
+        test.setUuid(UUID.fromString("bc8a6b10-f493-4aaf-bd1e-8c4710afa326"));
+        test.setId("FIRST");
+        test.setType(User.Type.ONE);
+        test.setTime(1111);
 
-        System.out.println(mapperEmployee.write(test));
-
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><User><username><![CDATA[ANY]]></username></User>", mapperEmployee.write(test));
-        System.out.println("?? " + mapperEmployee.read(mapperEmployee.write(test)).getUsername());
-
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><User xmlns=\"http://www.omg.org/bpmn20\" id=\"FIRST\" _uuid=\"bc8a6b10-f493-4aaf-bd1e-8c4710afa326\" time=\"1111\" type=\"ONE\"><username><![CDATA[ANY]]></username></User>", mapperEmployee.write(test));
         assertEquals(test, mapperEmployee.read(mapperEmployee.write(test)));
     }
 }

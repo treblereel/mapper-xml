@@ -31,7 +31,7 @@ public class XmlRootElementTest {
         Employee test = new Employee();
         test.setName("ANY");
 
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><employee xmlns=\"http://www.omg.org/bpmn20\"><name>ANY</name></employee>", (mapperEmployee.write(test)));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><employee xmlns=\"http://www.omg.org/bpmn20\" employee_name=\"ANY\"/>", (mapperEmployee.write(test)));
         assertEquals(test, mapperEmployee.read(mapperEmployee.write(test)));
     }
 
@@ -55,7 +55,7 @@ public class XmlRootElementTest {
 
         String xml = mapperCompany.write(test);
 
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><Company xmlns=\"http://www.omg.org/bpmn20\"><ceo><name>CEO</name></ceo><address><street>1ST</street></address><departmentList><departmentList><employeeList/><name>IT</name></departmentList></departmentList></Company>", mapperCompany.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><Company xmlns=\"http://www.omg.org/bpmn20\"><ceo employee_name=\"CEO\"/><address street=\"1ST\"/><departmentList><departmentList department_name=\"IT\"><employeeList/></departmentList></departmentList></Company>", mapperCompany.write(test));
 
         Company result = mapperCompany.read(xml);
 

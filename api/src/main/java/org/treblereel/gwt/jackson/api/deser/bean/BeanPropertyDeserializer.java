@@ -24,7 +24,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
  * Deserializes a bean's property
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
@@ -42,10 +41,9 @@ public abstract class BeanPropertyDeserializer<T, V> extends HasDeserializerAndP
 
     /**
      * Deserializes the property defined for this instance.
-     *
      * @param reader reader
-     * @param bean   bean to set the deserialized property to
-     * @param ctx    context of the deserialization process
+     * @param bean bean to set the deserialized property to
+     * @param ctx context of the deserialization process
      */
     public void deserialize(XMLReader reader, T bean, XMLDeserializationContext ctx) throws XMLStreamException {
         setValue(bean, deserialize(reader, ctx), ctx);
@@ -53,11 +51,18 @@ public abstract class BeanPropertyDeserializer<T, V> extends HasDeserializerAndP
 
     /**
      * <p>setValue</p>
-     *
-     * @param bean  a T object.
+     * @param bean a T object.
      * @param value a V object.
-     * @param ctx   a {@link XMLDeserializationContext} object.
+     * @param ctx a {@link XMLDeserializationContext} object.
      */
     public abstract void setValue(T bean, V value, XMLDeserializationContext ctx);
+
+    public void deserialize(String value, T bean, XMLDeserializationContext ctx) {
+        setValue(bean, deserialize(value, ctx), ctx);
+    }
+
+    protected boolean isAttribute() {
+        return false;
+    }
 }
 

@@ -25,7 +25,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for {@link Boolean}.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
@@ -33,27 +32,27 @@ public class BooleanXMLSerializer extends XMLSerializer<Boolean> {
 
     private static final BooleanXMLSerializer INSTANCE = new BooleanXMLSerializer();
 
+    private BooleanXMLSerializer() {
+    }
+
     /**
      * <p>getInstance</p>
-     *
      * @return an instance of {@link XMLSerializer}
      */
     public static BooleanXMLSerializer getInstance() {
         return INSTANCE;
     }
 
-    private BooleanXMLSerializer() {
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected boolean isDefault(Boolean value) {
-        return null == value || !value;
-    }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSerialize(XMLWriter writer, Boolean value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        writer.value(value);
+        if (isAttribute) {
+            writer.writeAttribute(propertyName, value.toString());
+            isAttribute = false;
+        } else {
+            writer.value(value);
+        }
     }
 }

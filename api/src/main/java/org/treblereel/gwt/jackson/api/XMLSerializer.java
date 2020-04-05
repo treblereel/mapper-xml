@@ -23,7 +23,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Base class for all the serializer. It handles null values and exceptions. The rest is delegated to implementations.
- *
  * @author Nicolas Morel
  * @version $Id: $Id
  */
@@ -32,6 +31,8 @@ public abstract class XMLSerializer<T> {
     protected String propertyName;
 
     protected boolean cdata = false;
+
+    protected boolean isAttribute = false;
 
     public XMLSerializer<T> setPropertyName(String propertyName) {
         this.propertyName = propertyName;
@@ -43,12 +44,16 @@ public abstract class XMLSerializer<T> {
         return this;
     }
 
+    public XMLSerializer<T> isAttribute(boolean isAttribute) {
+        this.isAttribute = isAttribute;
+        return this;
+    }
+
     /**
      * Serializes an object into XML output.
-     *
      * @param writer {@link XMLWriter} used to write the serialized XML
-     * @param value  Object to serialize
-     * @param ctx    Context for the full serialization process
+     * @param value Object to serialize
+     * @param ctx Context for the full serialization process
      * @throws XMLSerializationException if an error occurs during the serialization
      */
     public void serialize(XMLWriter writer, T value, XMLSerializationContext ctx) throws XMLSerializationException, XMLStreamException {
@@ -57,10 +62,9 @@ public abstract class XMLSerializer<T> {
 
     /**
      * Serializes an object into XML output.
-     *
      * @param writer {@link XMLWriter} used to write the serialized XML
-     * @param value  Object to serialize
-     * @param ctx    Context for the full serialization process
+     * @param value Object to serialize
+     * @param ctx Context for the full serialization process
      * @param params Parameters for this serialization
      * @throws XMLSerializationException if an error occurs during the serialization
      */
@@ -71,17 +75,16 @@ public abstract class XMLSerializer<T> {
 
     /**
      * Serializes an object into XML output.
-     *
-     * @param writer     {@link XMLWriter} used to write the serialized XML
-     * @param value      Object to serialize
-     * @param ctx        Context for the full serialization process
-     * @param params     Parameters for this serialization
+     * @param writer {@link XMLWriter} used to write the serialized XML
+     * @param value Object to serialize
+     * @param ctx Context for the full serialization process
+     * @param params Parameters for this serialization
      * @param isMapValue indicate if you're serializing a Map value
      * @throws XMLSerializationException if an error occurs during the serialization
      */
     public void serialize(XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters params, boolean isMapValue) throws
             XMLSerializationException, XMLStreamException {
-        if (null == value) {
+        if (null == value && !isAttribute) {
             if (ctx.isSerializeNulls() || (isMapValue && ctx.isWriteNullMapValues())) {
                 serializeNullValue(writer, ctx, params);
             } else {
@@ -94,9 +97,8 @@ public abstract class XMLSerializer<T> {
 
     /**
      * Serialize the null value. This method allows children to override the default behaviour.
-     *
      * @param writer {@link XMLWriter} used to write the serialized XML
-     * @param ctx    Context for the full serialization process
+     * @param ctx Context for the full serialization process
      * @param params Parameters for this serialization
      */
     protected void serializeNullValue(XMLWriter writer, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
@@ -104,43 +106,21 @@ public abstract class XMLSerializer<T> {
     }
 
     /**
-     * <p>isDefault.</p>
-     *
-     * @param value the value
-     * @return true if the value corresponds to the default one
+     * Serializes a non-null object into XML output.
+     * @param writer {@link XMLWriter} used to write the serialized XML
+     * @param value Object to serialize
+     * @param ctx Context for the full serialization process
+     * @param params Parameters for this serialization
      */
-    protected boolean isDefault(T value) {
-        return isEmpty(value);
-    }
+    protected abstract void doSerialize(XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters
+            params) throws XMLStreamException;
 
     /**
      * <p>isEmpty.</p>
-     *
      * @param value the value
      * @return true if the value is empty
      */
     protected boolean isEmpty(T value) {
         return null == value;
     }
-
-    /**
-     * <p>isAbsent.</p>
-     *
-     * @param value the value
-     * @return true if the value is absent
-     */
-    protected boolean isAbsent(T value) {
-        return null == value;
-    }
-
-    /**
-     * Serializes a non-null object into XML output.
-     *
-     * @param writer {@link XMLWriter} used to write the serialized XML
-     * @param value  Object to serialize
-     * @param ctx    Context for the full serialization process
-     * @param params Parameters for this serialization
-     */
-    protected abstract void doSerialize(XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters
-            params) throws XMLStreamException;
 }

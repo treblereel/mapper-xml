@@ -15,6 +15,8 @@
  */
 package org.treblereel.gwt.jackson.api.deser.bean;
 
+import java.util.Set;
+
 /**
  * <p>MapLike interface.</p>
  *
@@ -38,4 +40,6 @@ public interface MapLike<T> {
      * @param value a T object.
      */
     void put(String key, T value);
+
+    Set<String> keys();
 }

@@ -21,6 +21,7 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
+import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
@@ -49,6 +50,15 @@ public class CharacterXMLDeserializer extends XMLDeserializer<Character> {
     @Override
     public Character doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         String value = reader.nextString();
+        if (value.isEmpty()) {
+            return null;
+        }
+        return value.charAt(0);
+    }
+
+    @Override
+    public Character deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
+            XMLDeserializationException {
         if (value.isEmpty()) {
             return null;
         }

@@ -76,6 +76,7 @@ public class XmlRootElementTest {
         String xml = mapperDepartment.write(test);
 
         assertEquals(test.getName(), mapperDepartment.read(xml).getName());
+        assertEquals(test.getEmployeeList().size(), mapperDepartment.read(xml).getEmployeeList().size());
         assertEquals(test, mapperDepartment.read(xml));
         assertEquals(test.getEmployeeList().size(), mapperDepartment.read(mapperDepartment.write(test)).getEmployeeList().size());
         assertEquals(test, mapperDepartment.read(mapperDepartment.write(test)));

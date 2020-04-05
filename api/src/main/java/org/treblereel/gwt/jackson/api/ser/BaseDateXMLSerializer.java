@@ -62,14 +62,19 @@ public abstract class BaseDateXMLSerializer<D extends Date> extends XMLSerialize
 
         @Override
         protected void doSerialize(XMLWriter writer, Date value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-            if ((ctx.isWriteDatesAsTimestamps())) {
-                writer.value(value.getTime());
+            if (isAttribute) {
+                writer.writeAttribute(propertyName, value.getTime() + "");
+                isAttribute = false;
             } else {
-                String date = JacksonContextProvider.get().dateFormat().format(params, value);
-                if (null == params.getPattern()) {
-                    writer.unescapeValue(date);
+                if ((ctx.isWriteDatesAsTimestamps())) {
+                    writer.value(value.getTime());
                 } else {
-                    writer.value(date);
+                    String date = JacksonContextProvider.get().dateFormat().format(params, value);
+                    if (null == params.getPattern()) {
+                        writer.unescapeValue(date);
+                    } else {
+                        writer.value(date);
+                    }
                 }
             }
         }
@@ -95,7 +100,12 @@ public abstract class BaseDateXMLSerializer<D extends Date> extends XMLSerialize
         @Override
         protected void doSerialize(XMLWriter writer, java.sql.Date value, XMLSerializationContext ctx,
                                    XMLSerializerParameters params) throws XMLStreamException {
-            writer.unescapeValue(value.toString());
+            if (isAttribute) {
+                writer.writeAttribute(propertyName, value.toString());
+                isAttribute = false;
+            } else {
+                writer.unescapeValue(value.toString());
+            }
         }
     }
 
@@ -119,7 +129,12 @@ public abstract class BaseDateXMLSerializer<D extends Date> extends XMLSerialize
         @Override
         protected void doSerialize(XMLWriter writer, Time value, XMLSerializationContext ctx, XMLSerializerParameters params
         ) throws XMLStreamException {
-            writer.unescapeValue(value.toString());
+            if (isAttribute) {
+                writer.writeAttribute(propertyName, value.toString());
+                isAttribute = false;
+            } else {
+                writer.unescapeValue(value.toString());
+            }
         }
     }
 
@@ -143,14 +158,19 @@ public abstract class BaseDateXMLSerializer<D extends Date> extends XMLSerialize
         @Override
         protected void doSerialize(XMLWriter writer, Timestamp value, XMLSerializationContext ctx, XMLSerializerParameters
                 params) throws XMLStreamException {
-            if (ctx.isWriteDatesAsTimestamps()) {
-                writer.value(value.getTime());
+            if (isAttribute) {
+                writer.writeAttribute(propertyName, value.getTime() + "");
+                isAttribute = false;
             } else {
-                String date = JacksonContextProvider.get().dateFormat().format(params, value);
-                if (null == params.getPattern()) {
-                    writer.unescapeValue(date);
+                if (ctx.isWriteDatesAsTimestamps()) {
+                    writer.value(value.getTime());
                 } else {
-                    writer.value(date);
+                    String date = JacksonContextProvider.get().dateFormat().format(params, value);
+                    if (null == params.getPattern()) {
+                        writer.unescapeValue(date);
+                    } else {
+                        writer.value(date);
+                    }
                 }
             }
         }

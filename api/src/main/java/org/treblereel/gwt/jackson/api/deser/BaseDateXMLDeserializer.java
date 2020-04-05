@@ -26,6 +26,7 @@ import org.treblereel.gwt.jackson.api.JacksonContextProvider;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
+import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
@@ -43,13 +44,11 @@ public abstract class BaseDateXMLDeserializer<D extends Date> extends XMLDeseria
         return deserializeNumber(reader.nextLong(), params);
     }
 
-    /**
-     * <p>deserializeNumber</p>
-     * @param millis a long.
-     * @param params a {@link XMLDeserializerParameters} object.
-     * @return a D object.
-     */
-    protected abstract D deserializeNumber(long millis, XMLDeserializerParameters params);
+    @Override
+    public D deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
+            XMLDeserializationException {
+        return deserializeString(value, ctx, params);
+    }
 
     /**
      * <p>deserializeString</p>
@@ -59,6 +58,14 @@ public abstract class BaseDateXMLDeserializer<D extends Date> extends XMLDeseria
      * @return a D object.
      */
     protected abstract D deserializeString(String date, XMLDeserializationContext ctx, XMLDeserializerParameters params);
+
+    /**
+     * <p>deserializeNumber</p>
+     * @param millis a long.
+     * @param params a {@link XMLDeserializerParameters} object.
+     * @return a D object.
+     */
+    protected abstract D deserializeNumber(long millis, XMLDeserializerParameters params);
 
     /**
      * Default implementation of {@link BaseDateXMLDeserializer} for {@link Date}
@@ -90,7 +97,8 @@ public abstract class BaseDateXMLDeserializer<D extends Date> extends XMLDeseria
             if (date == null) {
                 return null;
             }
-            return JacksonContextProvider.get().dateFormat().parse(ctx.isUseBrowserTimezone(), params.getPattern(), null, date);
+            return new Date(Long.valueOf(date));
+            //return JacksonContextProvider.get().dateFormat().parse(ctx.isUseBrowserTimezone(), params.getPattern(), null, date);
         }
     }
 
@@ -123,7 +131,8 @@ public abstract class BaseDateXMLDeserializer<D extends Date> extends XMLDeseria
             if (date == null) {
                 return null;
             }
-            return new java.sql.Date(JacksonContextProvider.get().dateFormat().parse(ctx.isUseBrowserTimezone(), SQL_DATE_FORMAT, false, date).getTime());
+            return new java.sql.Date(Long.valueOf(date));
+            //return new java.sql.Date(JacksonContextProvider.get().dateFormat().parse(ctx.isUseBrowserTimezone(), SQL_DATE_FORMAT, false, date).getTime());
         }
     }
 

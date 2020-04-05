@@ -27,7 +27,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for {@link UUID}.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
@@ -35,21 +34,27 @@ public class UUIDXMLSerializer extends XMLSerializer<UUID> {
 
     private static final UUIDXMLSerializer INSTANCE = new UUIDXMLSerializer();
 
+    private UUIDXMLSerializer() {
+    }
+
     /**
      * <p>getInstance</p>
-     *
      * @return an instance of {@link UUIDXMLSerializer}
      */
     public static UUIDXMLSerializer getInstance() {
         return INSTANCE;
     }
 
-    private UUIDXMLSerializer() {
-    }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSerialize(XMLWriter writer, UUID value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        writer.value(value.toString());
+        if (isAttribute) {
+            writer.writeAttribute(propertyName, value.toString());
+            isAttribute = false;
+        } else {
+            writer.value(value.toString());
+        }
     }
 }

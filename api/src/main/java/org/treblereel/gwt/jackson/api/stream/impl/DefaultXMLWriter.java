@@ -57,14 +57,6 @@ public class DefaultXMLWriter implements XMLWriter {
 
     /**
      * {@inheritDoc}
-     */
-    @Override
-    public final void setSerializeNulls(boolean serializeNulls) {
-        this.serializeNulls = serializeNulls;
-    }
-
-    /**
-     * {@inheritDoc}
      * <p>
      * Returns true if object members are serialized when their value is null.
      * This has no impact on array elements. The default is true.
@@ -72,6 +64,14 @@ public class DefaultXMLWriter implements XMLWriter {
     @Override
     public final boolean getSerializeNulls() {
         return serializeNulls;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void setSerializeNulls(boolean serializeNulls) {
+        this.serializeNulls = serializeNulls;
     }
 
     /**
@@ -138,12 +138,6 @@ public class DefaultXMLWriter implements XMLWriter {
         checkName(name);
         deferredName = name;
         return this;
-    }
-
-    private void checkName(String name) {
-        if (name == null) {
-            throw new NullPointerException("name == null");
-        }
     }
 
     /**
@@ -245,15 +239,6 @@ public class DefaultXMLWriter implements XMLWriter {
         out.close();
     }
 
-    private void string(String value) throws XMLStreamException {
-        if (value == null) {
-            out.writeEmptyElement(deferredName);
-        }
-        out.writeStartElement(deferredName);
-        out.writeCharacters(value);
-        out.writeEndElement();
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -284,6 +269,28 @@ public class DefaultXMLWriter implements XMLWriter {
     @Override
     public void writeCData(String value) throws XMLStreamException {
         out.writeCData(value);
+    }
+
+    @Override
+    public void writeAttribute(String propertyName, String value) throws XMLStreamException {
+        if (propertyName != null && value != null) {
+            out.writeAttribute(propertyName, value);
+        }
+    }
+
+    private void string(String value) throws XMLStreamException {
+        if (value == null) {
+            out.writeEmptyElement(deferredName);
+        }
+        out.writeStartElement(deferredName);
+        out.writeCharacters(value);
+        out.writeEndElement();
+    }
+
+    private void checkName(String name) {
+        if (name == null) {
+            throw new NullPointerException("name == null");
+        }
     }
 }
 //@formatter:on

@@ -21,20 +21,18 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.math.BigInteger;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
+import org.treblereel.gwt.jackson.api.utils.NumberUtils;
 
 import static jdk.nashorn.internal.runtime.ECMAErrors.syntaxError;
 
 public class DefaultXMLReader implements XMLReader {
 
-    private final static long MIN_INT_L = Integer.MIN_VALUE;
-    private final static long MAX_INT_L = Integer.MAX_VALUE;
-    private final static BigInteger MIN_LONG_BIGINTEGER = new BigInteger("" + Long.MIN_VALUE);
-    private final static BigInteger MAX_LONG_BIGINTEGER = new BigInteger("" + Long.MAX_VALUE);
     private final XMLStreamReader reader;
 
     /**
@@ -103,8 +101,8 @@ public class DefaultXMLReader implements XMLReader {
     }
 
     @Override
-    public String peekNodeName() throws XMLStreamException {
-        return reader.getName().toString();
+    public QName peekNodeName() throws XMLStreamException {
+        return reader.getName();
     }
 
     /**
@@ -241,64 +239,32 @@ public class DefaultXMLReader implements XMLReader {
      */
     @Override
     public Number nextNumber() throws XMLStreamException {
-        String peekedString = nextString();
-        if (peekedString == null) {
-            return 0;
-        }
-        Number result;
+       return NumberUtils.toNumber(nextString());
 
-        if (peekedString.contains(".")) {
-            // decimal
-            double resultDouble = Double.parseDouble(peekedString); // don't catch this NumberFormatException.
-            if (Double.isNaN(resultDouble) || Double.isInfinite(resultDouble)) {
-                throw syntaxError("It forbids NaN and infinities: " + resultDouble);
-            }
-            result = resultDouble;
-        } else {
-            int length = peekedString.length();
-            if (length <= 9) { // fits in int
-                result = Integer.parseInt(peekedString);
-            } else if (length <= 18) { // fits in long and potentially int
-                long longResult = Long.parseLong(peekedString);
-                if (length == 10) { // can fits in int
-                    if (longResult < 0l) {
-                        if (longResult >= MIN_INT_L) {
-                            result = (int) longResult;
-                        } else {
-                            result = longResult;
-                        }
-                    } else {
-                        if (longResult <= MAX_INT_L) {
-                            result = (int) longResult;
-                        } else {
-                            result = longResult;
-                        }
-                    }
-                } else {
-                    result = longResult;
-                }
-            } else {
-                BigInteger bigIntegerResult = new BigInteger(peekedString);
-                if (bigIntegerResult.signum() == -1) {
-                    if (bigIntegerResult.compareTo(MIN_LONG_BIGINTEGER) >= 0) {
-                        result = bigIntegerResult.longValue();
-                    } else {
-                        result = bigIntegerResult;
-                    }
-                } else {
-                    if (bigIntegerResult.compareTo(MAX_LONG_BIGINTEGER) <= 0) {
-                        result = bigIntegerResult.longValue();
-                    } else {
-                        result = bigIntegerResult;
-                    }
-                }
-            }
-        }
-        return result;
     }
 
     @Override
     public void next() throws XMLStreamException {
         reader.next();
+    }
+
+    @Override
+    public int getAttributeCount() {
+        return reader.getAttributeCount();
+    }
+
+    @Override
+    public QName getAttributeName(int index) {
+        return reader.getAttributeName(index);
+    }
+
+    @Override
+    public String getAttributeValue(int index) {
+        return reader.getAttributeValue(index);
+    }
+
+    @Override
+    public String getAttributeType(int index) {
+        return reader.getAttributeType(index);
     }
 }

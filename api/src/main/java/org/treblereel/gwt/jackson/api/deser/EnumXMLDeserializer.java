@@ -16,11 +16,14 @@
 
 package org.treblereel.gwt.jackson.api.deser;
 
+import java.util.UUID;
+
 import javax.xml.stream.XMLStreamException;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
+import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
@@ -61,6 +64,19 @@ public class EnumXMLDeserializer<E extends Enum<E>> extends XMLDeserializer<E> {
     public E doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         try {
             return Enum.valueOf(enumClass, reader.nextString());
+        } catch (IllegalArgumentException ex) {
+            if (ctx.isReadUnknownEnumValuesAsNull()) {
+                return null;
+            }
+            throw ex;
+        }
+    }
+
+    @Override
+    public E deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
+            XMLDeserializationException {
+        try {
+            return Enum.valueOf(enumClass, value);
         } catch (IllegalArgumentException ex) {
             if (ctx.isReadUnknownEnumValuesAsNull()) {
                 return null;

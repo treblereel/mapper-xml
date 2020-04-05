@@ -26,7 +26,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Serializes a bean's property
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
@@ -40,7 +39,6 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
 
     /**
      * <p>Constructor for BeanPropertySerializer.</p>
-     *
      * @param propertyName a {@link String} object.
      */
     protected BeanPropertySerializer(String propertyName) {
@@ -53,17 +51,7 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
     }
 
     /**
-     * <p>Getter for the field <code>parameters</code>.</p>
-     *
-     * @return a {@link XMLSerializerParameters} object.
-     */
-    protected XMLSerializerParameters getParameters() {
-        return parameters;
-    }
-
-    /**
      * <p>newParameters</p>
-     *
      * @return a {@link XMLSerializerParameters} object.
      */
     protected XMLSerializerParameters newParameters() {
@@ -72,41 +60,52 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
 
     /**
      * <p>Getter for the field <code>propertyName</code>.</p>
-     *
      * @return a {@link String} object.
      */
     public String getPropertyName() {
         return propertyName;
     }
 
+    protected boolean isAttribute() {
+        return false;
+    }
+
     /**
      * Serializes the property name
-     *
      * @param writer writer
-     * @param bean   bean containing the property to serialize
-     * @param ctx    context of the serialization process
+     * @param bean bean containing the property to serialize
+     * @param ctx context of the serialization process
      */
     public void serializePropertyName(XMLWriter writer, T bean, XMLSerializationContext ctx) {
         writer.unescapeName(propertyName);
     }
 
     /**
-     * <p>getValue</p>
-     *
+     * Serializes the property defined for this instance.
+     * @param writer writer
      * @param bean bean containing the property to serialize
-     * @param ctx  context of the serialization process
+     * @param ctx context of the serialization process
+     */
+    public void serialize(XMLWriter writer, T bean, XMLSerializationContext ctx) throws XMLStreamException {
+        getSerializer().setPropertyName(propertyName)
+                .setCdata(cdata)
+                .isAttribute(isAttribute())
+                .serialize(writer, getValue(bean, ctx), ctx, getParameters());
+    }
+
+    /**
+     * <p>getValue</p>
+     * @param bean bean containing the property to serialize
+     * @param ctx context of the serialization process
      * @return the property's value
      */
     public abstract V getValue(T bean, XMLSerializationContext ctx);
 
     /**
-     * Serializes the property defined for this instance.
-     *
-     * @param writer writer
-     * @param bean   bean containing the property to serialize
-     * @param ctx    context of the serialization process
+     * <p>Getter for the field <code>parameters</code>.</p>
+     * @return a {@link XMLSerializerParameters} object.
      */
-    public void serialize(XMLWriter writer, T bean, XMLSerializationContext ctx) throws XMLStreamException {
-        getSerializer().setPropertyName(propertyName).setCdata(cdata).serialize(writer, getValue(bean, ctx), ctx, getParameters());
+    protected XMLSerializerParameters getParameters() {
+        return parameters;
     }
 }

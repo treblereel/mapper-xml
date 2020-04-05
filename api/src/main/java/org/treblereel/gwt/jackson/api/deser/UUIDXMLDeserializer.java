@@ -16,18 +16,18 @@
 
 package org.treblereel.gwt.jackson.api.deser;
 
-import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
-import org.treblereel.gwt.jackson.api.XMLDeserializer;
-import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
-import org.treblereel.gwt.jackson.api.stream.XMLReader;
-
 import java.util.UUID;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
+import org.treblereel.gwt.jackson.api.XMLDeserializer;
+import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
+import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
+import org.treblereel.gwt.jackson.api.stream.XMLReader;
+
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.UUID}.
- *
  * @author Nicolas Morel
  * @version $Id: $Id
  */
@@ -35,23 +35,33 @@ public class UUIDXMLDeserializer extends XMLDeserializer<UUID> {
 
     private static final UUIDXMLDeserializer INSTANCE = new UUIDXMLDeserializer();
 
+    private UUIDXMLDeserializer() {
+    }
+
     /**
      * <p>getInstance.</p>
-     *
      * @return an instance of {@link UUIDXMLDeserializer}
      */
     public static UUIDXMLDeserializer getInstance() {
         return INSTANCE;
     }
 
-    private UUIDXMLDeserializer() {
-    }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UUID doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         String uuid = reader.nextString();
-        if(uuid != null) {
+        if (uuid != null) {
+            return UUID.fromString(uuid);
+        }
+        return null;
+    }
+
+    @Override
+    public UUID deserialize(String uuid, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
+            XMLDeserializationException {
+        if (uuid != null) {
             return UUID.fromString(uuid);
         }
         return null;

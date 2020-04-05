@@ -38,11 +38,6 @@ public interface InstanceBuilder<T> {
      * @param params                   a {@link XMLDeserializerParameters} object.
      * @param bufferedProperties       a {@link java.util.Map} object.
      * @param bufferedPropertiesValues a {@link java.util.Map} object.
-     * @param bufferedPropertiesValues a {@link java.util.Map} object.
-     * @param bufferedPropertiesValues a {@link java.util.Map} object.
-     * @param bufferedPropertiesValues a {@link java.util.Map} object.
-     * @param bufferedPropertiesValues a {@link java.util.Map} object.
-     * @param bufferedPropertiesValues a {@link java.util.Map} object.
      * @return a {@link deser.bean.Instance} object.
      */
     Instance<T> newInstance(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params,

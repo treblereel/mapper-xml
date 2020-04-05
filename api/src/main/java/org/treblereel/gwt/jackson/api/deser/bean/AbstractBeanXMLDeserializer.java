@@ -19,6 +19,7 @@ package org.treblereel.gwt.jackson.api.deser.bean;
 import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import org.treblereel.gwt.jackson.api.JacksonContextProvider;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
@@ -85,20 +86,20 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
         return deserializeWrapped(reader, ctx, params, identityInfo, null, null);
     }
 
-    private String getRootNodeName() {
-        if (getXmlRootElement() == null) {
-            return getDeserializedType().getSimpleName();
-        } else {
-            return getXmlRootElement();
-        }
-    }
-
     private BeanPropertyDeserializer<T, ?> getPropertyDeserializer(String propertyName, XMLDeserializationContext ctx) throws XMLStreamException {
         BeanPropertyDeserializer<T, ?> property = deserializers.get(propertyName);
         if (null == property) {
             throw ctx.traceError("Unknown property '" + propertyName + "' in (de)serializer " + this.getClass().getCanonicalName());
         }
         return property;
+    }
+
+    private String getRootNodeName() {
+        if (getXmlRootElement() == null) {
+            return getDeserializedType().getSimpleName();
+        } else {
+            return getXmlRootElement();
+        }
     }
 
     protected abstract String getXmlRootElement();
@@ -126,19 +127,38 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
     public final T deserializeInline(final XMLReader reader, final XMLDeserializationContext ctx, XMLDeserializerParameters params,
                                      IdentityDeserializationInfo identityInfo, TypeDeserializationInfo typeInfo, String type,
                                      Map<String, String> bufferedProperties) throws XMLStreamException {
+        boolean attrNode = false;
+        if (reader.peek() == XMLStreamReader.START_DOCUMENT) {
+            reader.next();
+        }
 
-        return iterateOver(reader, (reader1, ctx1, bean) -> {
+        T instance = instanceBuilder.newInstance(reader, ctx, params, null, null).getInstance();
+
+        if (reader.getAttributeCount() > 0) {
+            attrNode = true;
+            for (int i = 0; i < reader.getAttributeCount(); i++) {
+                String attrName = reader.getAttributeName(i).getLocalPart();
+                BeanPropertyDeserializer<T, ?> property = getPropertyDeserializer(attrName, ctx);
+                property.deserialize(reader.getAttributeValue(i), instance, ctx);
+            }
+        }
+
+        T result = iterateOver(reader, (reader1, ctx1, bean) -> {
             String propertyName = reader1.nextName();
-
             if (!propertyName.equals(getRootNodeName())) {
                 BeanPropertyDeserializer<T, ?> property = getPropertyDeserializer(propertyName, ctx1);
-                if (null != property) {
+                if (property != null) {
                     property.deserialize(reader1, bean, ctx1);
                 }
             }
             return bean;
-        }, instanceBuilder.newInstance(reader, ctx, params,
-                                       null, null).getInstance(), ctx, params);
+        }, instance, ctx, params);
+
+        if (result == null && attrNode) {
+            return instance;
+        }
+
+        return result;
     }
 
     /**

@@ -477,13 +477,17 @@ public class TypeUtils {
         return !TypeUtils.isPrimitive(typeMirror) && isAssignableFrom(typeMirror, Map.class);
     }
 
+    public boolean isBasicType(TypeMirror typeMirror) {
+        return typeRegistry.isBasicType(stringifyTypeWithPackage(typeMirror));
+    }
     /**
      * <p>isBasicType.</p>
      * @param typeMirror a {@link TypeMirror} object.
      * @return a boolean.
      */
-    public boolean isBasicType(TypeMirror typeMirror) {
-        return typeRegistry.isBasicType(stringifyTypeWithPackage(typeMirror));
+    public boolean isSimpleType(TypeMirror typeMirror) {
+        return typeRegistry.isBasicType(stringifyTypeWithPackage(typeMirror)) ||
+                typeRegistry.isSimpleType(stringifyTypeWithPackage(typeMirror));
     }
 
     /**

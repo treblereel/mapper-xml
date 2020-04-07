@@ -21,7 +21,7 @@ public class LongXMLSerializerTest {
     public void testDeserializeValue() throws XMLStreamException {
         LongBean test = new LongBean();
 
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><LongBean><val/></LongBean>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><LongBean/>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
         test.setVal(new Long("3441764551145441542"));
         assertEquals("<?xml version='1.0' encoding='UTF-8'?><LongBean><val>3441764551145441542</val></LongBean>", mapper.write(test));

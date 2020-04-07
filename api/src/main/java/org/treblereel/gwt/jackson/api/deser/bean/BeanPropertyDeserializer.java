@@ -64,5 +64,6 @@ public abstract class BeanPropertyDeserializer<T, V> extends HasDeserializerAndP
     protected boolean isAttribute() {
         return false;
     }
+
 }
 

@@ -61,6 +61,8 @@ public abstract class AbstractArray2dXMLDeserializer<T> extends XMLDeserializer<
                                                       XMLDeserializer<C> deserializer, XMLDeserializerParameters params) throws XMLStreamException {
         List<List<C>> list = new ArrayList<>();
         // we keep the size of the first inner list to initialize the next lists with the correct size
+
+        System.out.println(getClass().getSimpleName() + " doDeserializeIntoList " + reader.peekNodeName());
         doDeserializeCollection(reader, (Collection<T>) list, (reader1, ctx1, instance) -> {
             List<C> innerList = doDeserializeInnerIntoList(reader, ctx, deserializer, params);
             list.add(innerList);
@@ -71,9 +73,14 @@ public abstract class AbstractArray2dXMLDeserializer<T> extends XMLDeserializer<
 
     protected <C> List<C> doDeserializeInnerIntoList(XMLReader reader, XMLDeserializationContext ctx,
                                                      XMLDeserializer<C> deserializer, XMLDeserializerParameters params) throws XMLStreamException {
+        System.out.println("doDeserializeInnerIntoList " + reader.peek() + " " + reader.peekNodeName());
+
         List<C> innerList = new ArrayList<>();
         doDeserializeCollection(reader, (Collection<T>) innerList, (reader1, ctx1, instance) -> {
-            innerList.add(deserializer.deserialize(reader1, ctx1, params));
+            C val = deserializer.deserialize(reader1, ctx1, params);
+            System.out.println("val " +val);
+
+            innerList.add(val);
             return null;
         }, ctx, params);
         return innerList;

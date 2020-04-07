@@ -13,6 +13,7 @@ import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import org.treblereel.gwt.jackson.api.deser.array.ArrayXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.array.dd.Array2dXMLDeserializer;
 import org.treblereel.gwt.jackson.api.ser.array.ArrayXMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.array.dd.Array2dXMLSerializer;
 import org.treblereel.gwt.jackson.context.GenerationContext;
@@ -29,6 +30,8 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
 
     @Override
     public Expression getFieldDeserializer(CompilationUnit cu) {
+        System.out.println("ZgetFieldSerializer " + bean);
+
         cu.addImport(ArrayXMLDeserializer.ArrayCreator.class);
         cu.addImport(ArrayXMLDeserializer.class);
 
@@ -42,12 +45,28 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
             if (array2d.getComponentType().getKind().isPrimitive()) {
                 arrayType = context.getProcessingEnv().getTypeUtils()
                         .boxedClass((PrimitiveType) array2d.getComponentType()).getSimpleName().toString() + "[]";
+            } else {
+                cu.addImport(Array2dXMLDeserializer.class);
+                cu.addImport(Array2dXMLDeserializer.Array2dCreator.class);
+                arrayType = array2d.getComponentType().toString();
+
+                ClassOrInterfaceType typeOf = new ClassOrInterfaceType()
+                        .setName(Array2dXMLDeserializer.Array2dCreator.class.getSimpleName())
+                        .setTypeArguments(new ClassOrInterfaceType().setName(arrayType));
+
+                return new MethodCallExpr(
+                        new NameExpr(Array2dXMLDeserializer.class.getSimpleName()), "newInstance")
+                        .addArgument(propertyDefinitionFactory.getFieldDefinition(array2d.getComponentType())
+                                             .getFieldDeserializer(cu))
+                        .addArgument(new CastExpr().setType(typeOf).setExpression(
+                                new NameExpr("(first, second) -> new " + arrayType + "[first][second]")));
             }
         }
 
         ClassOrInterfaceType typeOf = new ClassOrInterfaceType()
                 .setName(ArrayXMLDeserializer.ArrayCreator.class.getSimpleName())
                 .setTypeArguments(new ClassOrInterfaceType().setName(arrayType));
+
         return new MethodCallExpr(
                 new NameExpr(ArrayXMLDeserializer.class.getSimpleName()), "newInstance")
                 .addArgument(propertyDefinitionFactory.getFieldDefinition(array.getComponentType())

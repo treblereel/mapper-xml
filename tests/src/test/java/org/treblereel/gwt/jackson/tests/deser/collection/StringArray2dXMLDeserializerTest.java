@@ -1,7 +1,5 @@
 package org.treblereel.gwt.jackson.tests.deser.collection;
 
-import java.util.Arrays;
-
 import javax.xml.stream.XMLStreamException;
 
 import org.junit.Test;
@@ -21,6 +19,23 @@ public class StringArray2dXMLDeserializerTest {
 
     @Test
     public void testDeserializeValue() throws XMLStreamException {
+        test.setCheck1("Check1");
+        test.setCheck2("Check2");
+        System.out.println("xml " + mapper.write(test));
+        //show(test);
+        //show(mapper.read(mapper.write(test)));
+        //System.out.println("2 " + mapper.read(mapper.write(test)).toString());
         assertEquals(test, mapper.read(mapper.write(test)));
+    }
+
+    private void show(StringArray2d arr) {
+        int c = 0;
+        for (String[] strings : arr.getArray()) {
+
+            for (String string : strings) {
+                System.out.println(c + " " + string);
+            }
+            c++;
+        }
     }
 }

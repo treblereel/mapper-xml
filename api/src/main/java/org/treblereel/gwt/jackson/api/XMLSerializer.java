@@ -16,10 +16,13 @@
 
 package org.treblereel.gwt.jackson.api;
 
+import java.util.List;
+
 import javax.xml.stream.XMLStreamException;
 
 import org.treblereel.gwt.jackson.api.exception.XMLSerializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
+import org.treblereel.gwt.jackson.api.utils.Pair;
 
 /**
  * Base class for all the serializer. It handles null values and exceptions. The rest is delegated to implementations.
@@ -34,6 +37,12 @@ public abstract class XMLSerializer<T> {
 
     protected boolean isAttribute = false;
 
+    protected List<Pair<String, String>> parentNs;
+
+    protected String namespace;
+
+    protected String prefix;
+
     public XMLSerializer<T> setPropertyName(String propertyName) {
         this.propertyName = propertyName;
         return this;
@@ -46,6 +55,21 @@ public abstract class XMLSerializer<T> {
 
     public XMLSerializer<T> isAttribute(boolean isAttribute) {
         this.isAttribute = isAttribute;
+        return this;
+    }
+
+    public XMLSerializer<T> setNamespace(String namespace) {
+        this.namespace = namespace;
+        return this;
+    }
+
+    public XMLSerializer<T> setPrefix(String prefix) {
+        this.prefix = prefix;
+        return this;
+    }
+
+    public XMLSerializer<T> setParentNS(List<Pair<String, String>> parentNs) {
+        this.parentNs = parentNs;
         return this;
     }
 

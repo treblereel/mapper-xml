@@ -19,6 +19,7 @@ public class FloatArray2dXMLDeserializerTest {
 
     @Test
     public void testDeserializeValue() throws XMLStreamException {
+        System.out.println(mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
     }
 }

@@ -23,6 +23,11 @@ public class StringArray2dXMLDeserializerTest {
 
         assertEquals("<?xml version='1.0' encoding='UTF-8'?><StringArray2d><array><array><array>AAA</array><array>BB</array></array><array><array>CCC</array><array>DDD</array></array></array></StringArray2d>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
+        test.setCheck1("ONE");
+        test.setCheck2("TWO");
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><StringArray2d><check1>ONE</check1><array><array><array>AAA</array><array>BB</array></array><array><array>CCC</array><array>DDD</array></array></array><check2>TWO</check2></StringArray2d>", mapper.write(test));
+        assertEquals(test, mapper.read(mapper.write(test)));
+
     }
 
 }

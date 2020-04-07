@@ -32,6 +32,14 @@ public class BoxedSetsXMLSerializerTest {
         Set<Short> shorts = Arrays.asList((short) 3, (short) 13, (short) 123, (short) 233).stream().collect(Collectors.toSet());
 
         BoxedSets test = new BoxedSets(strings, booleans, chars, bytes, doubles, ints, longs, shorts);
+
+        System.out.println("XML " + mapper.write(test));
+
+
+        mapper.read(mapper.write(test)).getStrings().forEach(v -> {
+            System.out.println("getStrings " + v);
+        });
+
         assertEquals(test, mapper.read(mapper.write(test)));
     }
 }

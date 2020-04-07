@@ -24,7 +24,7 @@ public class BigDecimalXMLSerializerTest {
     @Test
     public void testDeserializeValue() throws XMLStreamException {
         BigDecimalBean test = new BigDecimalBean();
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><BigDecimalBean><val/></BigDecimalBean>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><BigDecimalBean/>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
         test.setVal(expected);
         assertEquals("<?xml version='1.0' encoding='UTF-8'?><BigDecimalBean><val>" + expected + "</val></BigDecimalBean>", mapper.write(test));

@@ -20,7 +20,7 @@ public class IntegerXMLSerializerTest {
     public void testDeserializeValue() throws XMLStreamException {
         IntegerBean test = new IntegerBean();
 
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><IntegerBean><val/></IntegerBean>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><IntegerBean/>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
         test.setVal(new Integer("34"));
         assertEquals("<?xml version='1.0' encoding='UTF-8'?><IntegerBean><val>34</val></IntegerBean>", mapper.write(test));

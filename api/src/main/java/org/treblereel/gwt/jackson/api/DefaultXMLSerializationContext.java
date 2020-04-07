@@ -241,15 +241,11 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
 
         protected boolean useEqualityForObjectId = false;
 
-        protected boolean serializeNulls = true;
+        protected boolean serializeNulls = false;
 
         protected boolean writeDatesAsTimestamps = true;
 
         protected boolean writeDateKeysAsTimestamps = false;
-
-        protected boolean indent = false;
-
-        protected boolean wrapRootValue = false;
 
         protected boolean writeNullMapValues = true;
 

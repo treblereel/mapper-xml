@@ -1,12 +1,8 @@
 package org.treblereel.gwt.jackson.tests.deser.collection;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -29,20 +25,19 @@ public class UsersTest {
 
     @Test
     public void testDeserializeValue() throws XMLStreamException {
-        Map<String, Person> map1 = new HashMap<>();
+        Map<String, Person> map1 = new LinkedHashMap<>();
         Person p1 = new Person();
-        p1.setFirstName("1");
+        p1.setFirstName("Person1");
 
         Person p2 = new Person();
-        p1.setFirstName("2");
+        p2.setFirstName("Person2");
 
         map1.put("_1", p1);
         map1.put("_22", p2);
         map1.put("_333", new Person());
         map1.put("_444", new Person());
 
-
-        Map<Users.TYPE, Person> types = new HashMap<>();
+        Map<Users.TYPE, Person> types = new LinkedHashMap<>();
         types.put(Users.TYPE.ONE, p1);
         types.put(Users.TYPE.TWO, p2);
 
@@ -50,16 +45,35 @@ public class UsersTest {
         test.setActiveUsers(map1);
         test.setTypes(types);
 
-        Iterable<Address> address = new ArrayList<>();
-        Address a1  = new Address();
-        a1.setId(11);
-        Address a2  = new Address();
-        a2.setId(22);
-        test.setAddress(address);
-
         String xml = mapper.write(test);
 
-        assertEquals(test, mapper.read(xml));
+        System.out.println(xml);
+
+        Users parsed = mapper.read(xml);
+        System.out.println("P1 " + parsed.getActiveUsers().size());
+        parsed.getActiveUsers().forEach((k, v) -> {
+            System.out.println("          " + k + " " + v + " addr " + v.getAddress());
+        });
+
+        System.out.println("P2 " + parsed.getTypes().size());
+        parsed.getTypes().forEach((k, v) -> {
+            System.out.println("          " + k + " " + v);
+        });
+        System.out.println("P3 " + parsed.getAddress());
+        assertEquals(test.getAddress(), parsed.getAddress());
+
+        parsed.getActiveUsers().forEach((k, v) -> {
+
+            System.out.println(" K1 " + v);
+            System.out.println(" K2 " + test.getActiveUsers().get(k));
+            System.out.println("-< " + k + " " + test.getActiveUsers().get(k).equals(v));
+        });
+
+        assertEquals(test.getActiveUsers(), parsed.getActiveUsers());
+        assertEquals(test.getTypes(), parsed.getTypes());
+        //assertEquals(test.getTypes(), parsed.getTypes());
+        assertTrue(test.equals(parsed));
+        assertEquals(test, parsed);
 
         assertEquals(mapper.write(test), mapper.write(mapper.read(mapper.write(mapper.read(mapper.write(test))))));
 
@@ -68,7 +82,5 @@ public class UsersTest {
         assertEquals(test.getTypes(), mapper.read(mapper.write(test)).getTypes());
 
         assertEquals(test, mapper.read(mapper.write(test)));
-
     }
-
 }

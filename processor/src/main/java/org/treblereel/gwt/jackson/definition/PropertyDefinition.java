@@ -2,14 +2,17 @@ package org.treblereel.gwt.jackson.definition;
 
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.xml.bind.annotation.JacksonXmlProperty;
 import javax.xml.bind.annotation.XmlCData;
+import javax.xml.bind.annotation.XmlSchema;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 
@@ -53,6 +56,23 @@ public class PropertyDefinition extends Definition {
     public Expression getFieldSerializer(CompilationUnit cu) {
         FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(bean);
         return fieldDefinition.getFieldSerializer(property.getSimpleName().toString(), cu);
+    }
+
+    public String getNamespace() {
+        if (property.getAnnotation(JacksonXmlProperty.class) != null &&
+                !property.getAnnotation(JacksonXmlProperty.class).namespace().equals("")
+                && !property.getAnnotation(JacksonXmlProperty.class).isAttribute()) {
+            return property.getAnnotation(JacksonXmlProperty.class).namespace();
+        }
+
+        XmlSchema schema = null;
+        if (!context.getTypeUtils().isSimpleType(property.asType()) && !property.asType().getKind().equals(TypeKind.ARRAY)) {
+            schema = MoreElements.getPackage(MoreTypes.asTypeElement(property.asType())).getAnnotation(XmlSchema.class);
+        }
+        if (schema != null && !schema.namespace().isEmpty()) {
+            return schema.namespace();
+        }
+        return null;
     }
 
     public VariableElement getProperty() {

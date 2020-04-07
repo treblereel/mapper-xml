@@ -105,6 +105,19 @@ public class DefaultXMLWriter implements XMLWriter {
         return this;
     }
 
+    @Override
+    public DefaultXMLWriter beginObject(String prefix, String namespace, String name) throws XMLStreamException {
+        System.out.println("beginObject " + prefix + " " + namespace + " " + name);
+
+        if (objCounter == 0) {
+            out.writeStartDocument();
+        }
+        out.setPrefix(prefix, namespace);
+        out.writeStartElement(namespace, name);
+        objCounter++;
+        return this;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -276,6 +289,30 @@ public class DefaultXMLWriter implements XMLWriter {
         if (propertyName != null && value != null) {
             out.writeAttribute(propertyName, value);
         }
+    }
+
+    @Override
+    public void writeSchemaLocation(String xsi, String schemaLocation) throws XMLStreamException {
+        if (beginNs) {
+            out.writeAttribute(xsi, schemaLocation);
+        }
+    }
+
+    @Override
+    public void writeTargetNamespace(String targetNamespace) throws XMLStreamException {
+        if (beginNs) {
+            out.writeAttribute("targetNamespace", targetNamespace);
+        }
+    }
+
+    @Override
+    public void writeAttrNamespace(String namespace) throws XMLStreamException {
+        out.writeDefaultNamespace(namespace);
+    }
+
+    @Override
+    public void setPrefix(String prefix, String namespace) throws XMLStreamException {
+        out.setPrefix(prefix, namespace);
     }
 
     private void string(String value) throws XMLStreamException {

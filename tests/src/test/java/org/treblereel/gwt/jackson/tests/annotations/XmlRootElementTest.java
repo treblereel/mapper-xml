@@ -31,7 +31,7 @@ public class XmlRootElementTest {
         Employee test = new Employee();
         test.setName("ANY");
 
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><employee xmlns=\"http://www.omg.org/bpmn20\" employee_name=\"ANY\"/>", (mapperEmployee.write(test)));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><employee xmlns=\"http://www.omg.org/bpmn20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:bpmn2=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:bpsim=\"http://www.bpsim.org/schemas/1.0\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:drools=\"http://www.jboss.org/drools\" xsi:schemaLocation=\"http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd http://www.omg.org/spec/DD/20100524/DC DC.xsd http://www.omg.org/spec/DD/20100524/DI DI.xsd\" employee_name=\"ANY\"/>", (mapperEmployee.write(test)));
         assertEquals(test, mapperEmployee.read(mapperEmployee.write(test)));
     }
 
@@ -54,8 +54,8 @@ public class XmlRootElementTest {
         test.setDepartmentList(departments);
 
         String xml = mapperCompany.write(test);
-
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><Company xmlns=\"http://www.omg.org/bpmn20\"><ceo employee_name=\"CEO\"/><address street=\"1ST\"/><departmentList><departmentList department_name=\"IT\"><employeeList/></departmentList></departmentList></Company>", mapperCompany.write(test));
+        System.out.println(xml);
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><Company xmlns=\"http://www.omg.org/bpmn20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:bpmn2=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:bpsim=\"http://www.bpsim.org/schemas/1.0\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:drools=\"http://www.jboss.org/drools\" xsi:schemaLocation=\"http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd http://www.omg.org/spec/DD/20100524/DC DC.xsd http://www.omg.org/spec/DD/20100524/DI DI.xsd\" targetNamespace=\"http://www.omg.org/bpmn20\"><ceo employee_name=\"CEO\"/><address street=\"1ST\"/><departmentList><departmentList department_name=\"IT\"/></departmentList></Company>", mapperCompany.write(test));
 
         Company result = mapperCompany.read(xml);
 
@@ -71,6 +71,7 @@ public class XmlRootElementTest {
     @Test
     public void testDeserializeMapperDepartment() throws XMLStreamException {
         Department test = new Department();
+        test.setName("ZZ");
         Employee employee1 = new Employee();
         employee1.setName("Employee 1");
 
@@ -84,6 +85,8 @@ public class XmlRootElementTest {
         test.setEmployeeList(employeeList);
 
         String xml = mapperDepartment.write(test);
+
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><my_department xmlns=\"http://www.omg.org/bpmn20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:bpmn2=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:bpsim=\"http://www.bpsim.org/schemas/1.0\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:drools=\"http://www.jboss.org/drools\" xsi:schemaLocation=\"http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd http://www.omg.org/spec/DD/20100524/DC DC.xsd http://www.omg.org/spec/DD/20100524/DI DI.xsd\" department_name=\"ZZ\"><employeeList><employeeList employee_name=\"Employee 1\"/><employeeList employee_name=\"Employee 2\"/></employeeList></my_department>", mapperDepartment.write(test));
 
         assertEquals(test.getName(), mapperDepartment.read(xml).getName());
         assertEquals(test, mapperDepartment.read(xml));

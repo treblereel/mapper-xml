@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.treblereel.gwt.jackson.tests.beans.collection.ByteArray2d;
 import org.treblereel.gwt.jackson.tests.beans.collection.ByteArray2d_MapperImpl;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -24,7 +25,7 @@ public class ByteArray2dXMLDeserializerTest {
     public void testDeserializeValue() throws XMLStreamException {
         ByteArray2d test = new ByteArray2d();
 
-        assertTrue(Arrays.deepEquals(new byte[0][0], mapper.read(mapper.write(test)).getArray()));
+        assertNull(mapper.read(mapper.write(test)).getArray());
         test.setArray(array);
 
         byte[][] result = mapper.read(ByteArray2d.XML).getArray();

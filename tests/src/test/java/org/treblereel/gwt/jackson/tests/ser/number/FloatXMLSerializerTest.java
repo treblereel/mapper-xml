@@ -23,7 +23,7 @@ public class FloatXMLSerializerTest {
     public void testDeserializeValue() throws XMLStreamException {
         FloatBean test = new FloatBean();
 
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><FloatBean><val/></FloatBean>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><FloatBean/>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
         test.setVal(new Float("34.10245"));
         assertEquals("<?xml version='1.0' encoding='UTF-8'?><FloatBean><val>34.10245</val></FloatBean>", mapper.write(test));

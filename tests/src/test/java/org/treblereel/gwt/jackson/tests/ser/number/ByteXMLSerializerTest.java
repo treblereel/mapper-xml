@@ -19,7 +19,7 @@ public class ByteXMLSerializerTest {
     @Test
     public void testDeserializeValue() throws XMLStreamException {
         ByteBean test = new ByteBean();
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><ByteBean><val/></ByteBean>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><ByteBean/>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
         test.setVal(new Byte("34"));
         assertEquals("<?xml version='1.0' encoding='UTF-8'?><ByteBean><val>34</val></ByteBean>", mapper.write(test));

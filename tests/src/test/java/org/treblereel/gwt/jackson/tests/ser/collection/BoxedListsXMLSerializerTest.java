@@ -31,8 +31,9 @@ public class BoxedListsXMLSerializerTest {
         List<Short> shorts = Arrays.asList((short) 3, (short) 13, (short) 123, (short) 233);
 
         BoxedLists test = new BoxedLists(strings, booleans, chars, bytes, doubles, ints, longs, shorts);
-
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><BoxedLists><strings><strings>A</strings><strings>B</strings><strings>C</strings><strings>D</strings></strings><booleans><booleans>true</booleans><booleans>true</booleans><booleans>false</booleans><booleans>false</booleans></booleans><chars><chars>a</chars><chars>z</chars><chars>F</chars><chars>!</chars></chars><bytes><bytes>2</bytes><bytes>12</bytes><bytes>122</bytes><bytes>3</bytes></bytes><doubles><doubles>17222.0</doubles><doubles>2111.0</doubles><doubles>32223.0</doubles><doubles>6226.0</doubles></doubles><ints><ints>17222</ints><ints>2111</ints><ints>32223</ints><ints>6226</ints></ints><longs><longs>17222</longs><longs>2111</longs><longs>32223</longs><longs>6226</longs></longs><shorts><shorts>3</shorts><shorts>13</shorts><shorts>123</shorts><shorts>233</shorts></shorts></BoxedLists>", mapper.write(test));
+        String xml  = "<?xml version='1.0' encoding='UTF-8'?><BoxedLists><strings><strings>A</strings><strings>B</strings><strings>C</strings><strings>D</strings></strings><booleans><booleans>true</booleans><booleans>true</booleans><booleans>false</booleans><booleans>false</booleans></booleans><chars><chars>a</chars><chars>z</chars><chars>F</chars><chars>!</chars></chars><bytes><bytes>2</bytes><bytes>12</bytes><bytes>122</bytes><bytes>3</bytes></bytes><doubles><doubles>17222.0</doubles><doubles>2111.0</doubles><doubles>32223.0</doubles><doubles>6226.0</doubles></doubles><ints><ints>17222</ints><ints>2111</ints><ints>32223</ints><ints>6226</ints></ints><longs><longs>17222</longs><longs>2111</longs><longs>32223</longs><longs>6226</longs></longs><shorts><shorts>3</shorts><shorts>13</shorts><shorts>123</shorts><shorts>233</shorts></shorts></BoxedLists>";
+        assertEquals(xml, mapper.write(test));
+        assertEquals(xml, mapper.write(mapper.read(mapper.write(test))));
         assertEquals(test, mapper.read(mapper.write(test)));
     }
 }

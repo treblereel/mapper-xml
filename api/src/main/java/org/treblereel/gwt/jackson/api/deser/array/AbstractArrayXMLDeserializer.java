@@ -71,9 +71,12 @@ public abstract class AbstractArrayXMLDeserializer<T> extends XMLDeserializer<T>
      */
     protected <C> List<C> deserializeIntoList(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializer<C> deserializer,
                                               XMLDeserializerParameters params) throws XMLStreamException {
+        System.out.println("deserializeIntoList " + reader.peekNodeName() + " " + deserializer.getClass().getSimpleName());
         List<C> list = new ArrayList<>();
         return (List<C>) doDeserializeCollection(reader, (Collection<T>) list, (reader1, ctx1, instance) -> {
-            list.add(deserializer.deserialize(reader1, ctx1, params));
+            C bean = deserializer.deserialize(reader1, ctx1, params);
+            System.out.println("INTO " + bean.toString() + " " + bean.getClass().getSimpleName());
+            list.add(bean);
             return null;
         }, ctx, params);
     }

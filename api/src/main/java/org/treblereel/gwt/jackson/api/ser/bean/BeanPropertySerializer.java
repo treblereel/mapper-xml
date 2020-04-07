@@ -35,6 +35,8 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
 
     protected boolean cdata = false;
 
+    protected AbstractBeanXMLSerializer parent;
+
     private XMLSerializerParameters parameters = newParameters();
 
     /**
@@ -42,12 +44,21 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
      * @param propertyName a {@link String} object.
      */
     protected BeanPropertySerializer(String propertyName) {
+        this(null, propertyName, false);
+    }
+
+    protected BeanPropertySerializer(AbstractBeanXMLSerializer parent, String propertyName, boolean cdata) {
         this.propertyName = propertyName;
+        this.parent = parent;
+        this.cdata = cdata;
     }
 
     protected BeanPropertySerializer(String propertyName, boolean cdata) {
-        this.propertyName = propertyName;
-        this.cdata = cdata;
+        this(null, propertyName, cdata);
+    }
+
+    protected BeanPropertySerializer(AbstractBeanXMLSerializer parent, String propertyName) {
+        this(parent, propertyName, false);
     }
 
     /**
@@ -66,17 +77,14 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
         return propertyName;
     }
 
-    protected boolean isAttribute() {
-        return false;
-    }
-
     /**
      * Serializes the property name
      * @param writer writer
      * @param bean bean containing the property to serialize
      * @param ctx context of the serialization process
      */
-    public void serializePropertyName(XMLWriter writer, T bean, XMLSerializationContext ctx) {
+    public void serializePropertyName(XMLWriter writer, T bean, XMLSerializationContext ctx) throws XMLStreamException {
+        writer.setPrefix("aaa", "bbb");
         writer.unescapeName(propertyName);
     }
 
@@ -87,10 +95,22 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
      * @param ctx context of the serialization process
      */
     public void serialize(XMLWriter writer, T bean, XMLSerializationContext ctx) throws XMLStreamException {
+
         getSerializer().setPropertyName(propertyName)
                 .setCdata(cdata)
+                .setParentNS(parent.getXmlNs())
+                .setNamespace(getNamespace())
+                .setPrefix(getPrefix())
                 .isAttribute(isAttribute())
                 .serialize(writer, getValue(bean, ctx), ctx, getParameters());
+    }
+
+    protected String getNamespace() {
+        return null;
+    }
+
+    protected boolean isAttribute() {
+        return false;
     }
 
     /**
@@ -107,5 +127,9 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
      */
     protected XMLSerializerParameters getParameters() {
         return parameters;
+    }
+
+    protected String getPrefix() {
+        return null;
     }
 }

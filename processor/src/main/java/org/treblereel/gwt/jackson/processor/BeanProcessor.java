@@ -14,8 +14,8 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+import javax.xml.bind.annotation.XmlTransient;
 
-import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.context.GenerationContext;
@@ -53,11 +53,7 @@ public class BeanProcessor {
     private void processBean(TypeElement bean) {
         if (!beans.contains(bean)) {
             beans.add(checkBean(bean));
-
-            bean.getEnclosedElements().stream()
-                    .filter(elm -> context.getTypeUtils().isXMLMapper(bean.asType()))
-                    .filter(elm -> elm.getKind().isField())
-                    .map(MoreElements::asVariable)
+            context.getTypeUtils().getAllFieldsIn(bean)
                     .forEach(this::processField);
         }
     }
@@ -92,6 +88,7 @@ public class BeanProcessor {
     private boolean checkField(VariableElement field) {
         if (field.getModifiers().contains(Modifier.STATIC) ||
                 field.getModifiers().contains(Modifier.TRANSIENT) ||
+                field.getAnnotation(XmlTransient.class) != null ||
                 field.getModifiers().contains(Modifier.FINAL)) {
             return false;
         }

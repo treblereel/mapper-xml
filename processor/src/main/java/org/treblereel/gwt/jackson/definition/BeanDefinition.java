@@ -40,9 +40,8 @@ public class BeanDefinition extends Definition {
     }
 
     private void loadProperties() {
-        properties = element.getEnclosedElements().stream()
-                .filter(elm -> elm.getKind().isField())
-                .map(MoreElements::asVariable)
+        properties = context.getTypeUtils().getAllFieldsIn(element)
+                .stream()
                 .filter(field -> !field.getModifiers().contains(Modifier.STATIC))
                 .filter(field -> !field.getModifiers().contains(Modifier.FINAL))
                 .filter(field -> !field.getModifiers().contains(Modifier.TRANSIENT))

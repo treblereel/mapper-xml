@@ -16,7 +16,12 @@
 package org.treblereel.gwt.jackson;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,6 +44,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import javax.lang.model.type.WildcardType;
+import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.SimpleTypeVisitor8;
 import javax.lang.model.util.Types;
@@ -197,52 +203,6 @@ public class TypeUtils {
      */
     public static TypeMirror secondTypeArgument(TypeMirror typeMirror) {
         return ((DeclaredType) typeMirror).getTypeArguments().get(SECOND_ARGUMENT);
-    }
-
-    /**
-     * If given type is bounded wildcard, remove the wildcard and returns extends bound
-     * if exists. If extends bounds is non existing - return the super bound.
-     * <p>
-     * <p>
-     * If given type is not wildcard, returns type.
-     *
-     * @param type TypeMirror to be processed
-     * @return extends or super bounds for given wildcard type
-     */
-    public TypeMirror removeOuterWildCards(TypeMirror type) {
-        return type.accept(new SimpleTypeVisitor8<TypeMirror, Void>() {
-            @Override
-            public TypeMirror visitDeclared(DeclaredType t, Void p) {
-                return t;
-            }
-
-            @Override
-            public TypeMirror visitTypeVariable(TypeVariable t, Void p) {
-                return t;
-            }
-
-            @Override
-            public TypeMirror visitWildcard(WildcardType t, Void p) {
-                return
-                        t.getExtendsBound() != null ?
-                                visit(t.getExtendsBound(), p)
-                                : t.getSuperBound() != null ?
-                                visit(t.getSuperBound(), p)
-                                : types.getDeclaredType(elements.getTypeElement(Object.class.getName()));
-            }
-
-            @Override
-            public TypeMirror visitArray(ArrayType t, Void p) {
-                return types.getArrayType(visit(t.getComponentType(), p));
-            }
-
-            @Override
-            public TypeMirror visitPrimitive(PrimitiveType t, Void p) {
-                return t;
-            }
-
-        }, null);
-
     }
 
     /**
@@ -437,21 +397,127 @@ public class TypeUtils {
     }
 
     /**
+     * see: typetools/checker-framework
+     * Return all methods declared in the given type or any superclass/interface.
+     * Note that no constructors will be returned.
+     * TODO: should this use javax.lang.model.util.Elements.getAllMembers(TypeElement)
+     * instead of our own getSuperTypes?
+     */
+    public Collection<VariableElement> getAllFieldsIn(TypeElement type) {
+        Map<String, VariableElement> fields = new LinkedHashMap<>();
+        ElementFilter.fieldsIn(type.getEnclosedElements())
+                .forEach(field -> fields.put(field.getSimpleName().toString(), field));
+
+        List<TypeElement> alltypes = getSuperTypes(elements, type);
+        for (TypeElement atype : alltypes) {
+            ElementFilter.fieldsIn(atype.getEnclosedElements())
+                    .stream()
+                    .filter(field -> !fields.containsKey(field.getSimpleName().toString()))
+                    .forEach(field -> fields.put(field.getSimpleName().toString(), field));
+        }
+        return fields.values();
+    }
+
+    /**
+     * see: typetools/checker-framework
+     * Determine all type elements for the classes and interfaces referenced
+     * in the extends/implements clauses of the given type element.
+     * TODO: can we learn from the implementation of
+     * com.sun.tools.javac.model.JavacElements.getAllMembers(TypeElement)?
+     */
+    public List<TypeElement> getSuperTypes(Elements elements, TypeElement type) {
+
+        List<TypeElement> superelems = new ArrayList<>();
+        if (type == null) {
+            return superelems;
+        }
+
+        // Set up a stack containing type, which is our starting point.
+        Deque<TypeElement> stack = new ArrayDeque<>();
+        stack.push(type);
+
+        while (!stack.isEmpty()) {
+            TypeElement current = stack.pop();
+
+            // For each direct supertype of the current type element, if it
+            // hasn't already been visited, push it onto the stack and
+            // add it to our superelems set.
+            TypeMirror supertypecls = current.getSuperclass();
+            if (supertypecls.getKind() != TypeKind.NONE) {
+                TypeElement supercls = (TypeElement) ((DeclaredType) supertypecls).asElement();
+                if (!superelems.contains(supercls)) {
+                    stack.push(supercls);
+                    superelems.add(supercls);
+                }
+            }
+            for (TypeMirror supertypeitf : current.getInterfaces()) {
+                TypeElement superitf = (TypeElement) ((DeclaredType) supertypeitf).asElement();
+                if (!superelems.contains(superitf)) {
+                    stack.push(superitf);
+                    superelems.add(superitf);
+                }
+            }
+        }
+
+        // Include java.lang.Object as implicit superclass for all classes and interfaces.
+        TypeElement jlobject = elements.getTypeElement(Object.class.getCanonicalName());
+        if (!superelems.contains(jlobject)) {
+            superelems.add(jlobject);
+        }
+
+        return Collections.unmodifiableList(superelems);
+    }
+
+    /**
+     * If given type is bounded wildcard, remove the wildcard and returns extends bound
+     * if exists. If extends bounds is non existing - return the super bound.
+     * <p>
+     * <p>
+     * If given type is not wildcard, returns type.
+     * @param type TypeMirror to be processed
+     * @return extends or super bounds for given wildcard type
+     */
+    public TypeMirror removeOuterWildCards(TypeMirror type) {
+        return type.accept(new SimpleTypeVisitor8<TypeMirror, Void>() {
+            @Override
+            public TypeMirror visitPrimitive(PrimitiveType t, Void p) {
+                return t;
+            }
+
+            @Override
+            public TypeMirror visitArray(ArrayType t, Void p) {
+                return types.getArrayType(visit(t.getComponentType(), p));
+            }
+
+            @Override
+            public TypeMirror visitDeclared(DeclaredType t, Void p) {
+                return t;
+            }
+
+            @Override
+            public TypeMirror visitTypeVariable(TypeVariable t, Void p) {
+                return t;
+            }
+
+            @Override
+            public TypeMirror visitWildcard(WildcardType t, Void p) {
+                return
+                        t.getExtendsBound() != null ?
+                                visit(t.getExtendsBound(), p)
+                                : t.getSuperBound() != null ?
+                                visit(t.getSuperBound(), p)
+                                : types.getDeclaredType(elements.getTypeElement(Object.class.getName()));
+            }
+        }, null);
+    }
+
+    /**
      * <p>isCollection.</p>
      * @param typeMirror a {@link TypeMirror} object.
      * @return a boolean.
      */
     public boolean isCollection(TypeMirror typeMirror) {
         return !TypeUtils.isPrimitive(typeMirror) && isAssignableFrom(typeMirror, Collection.class);
-    }
-
-    /**
-     * <p>isIterable.</p>
-     * @param typeMirror a {@link TypeMirror} object.
-     * @return a boolean.
-     */
-    public boolean isIterable(TypeMirror typeMirror) {
-        return !TypeUtils.isPrimitive(typeMirror) && isAssignableFrom(typeMirror, Iterable.class);
     }
 
     /**
@@ -462,6 +528,15 @@ public class TypeUtils {
      */
     public boolean isAssignableFrom(TypeMirror typeMirror, Class<?> targetClass) {
         return types.isAssignable(typeMirror, types.getDeclaredType(elements.getTypeElement(targetClass.getCanonicalName())));
+    }
+
+    /**
+     * <p>isIterable.</p>
+     * @param typeMirror a {@link TypeMirror} object.
+     * @return a boolean.
+     */
+    public boolean isIterable(TypeMirror typeMirror) {
+        return !TypeUtils.isPrimitive(typeMirror) && isAssignableFrom(typeMirror, Iterable.class);
     }
 
     public boolean isAssignableFrom(Element element, Class<?> targetClass) {
@@ -479,15 +554,6 @@ public class TypeUtils {
 
     public boolean isBasicType(TypeMirror typeMirror) {
         return typeRegistry.isBasicType(stringifyTypeWithPackage(typeMirror));
-    }
-    /**
-     * <p>isBasicType.</p>
-     * @param typeMirror a {@link TypeMirror} object.
-     * @return a boolean.
-     */
-    public boolean isSimpleType(TypeMirror typeMirror) {
-        return typeRegistry.isBasicType(stringifyTypeWithPackage(typeMirror)) ||
-                typeRegistry.isSimpleType(stringifyTypeWithPackage(typeMirror));
     }
 
     /**
@@ -551,6 +617,16 @@ public class TypeUtils {
     public String getPackage(TypeMirror typeMirror) {
         return types.asElement(types.erasure(typeMirror)) != null ?
                 elements.getPackageOf(types.asElement(types.erasure(typeMirror))).toString() : "";
+    }
+
+    /**
+     * <p>isBasicType.</p>
+     * @param typeMirror a {@link TypeMirror} object.
+     * @return a boolean.
+     */
+    public boolean isSimpleType(TypeMirror typeMirror) {
+        return typeRegistry.isBasicType(stringifyTypeWithPackage(typeMirror)) ||
+                typeRegistry.isSimpleType(stringifyTypeWithPackage(typeMirror));
     }
 
     /**

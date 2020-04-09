@@ -47,14 +47,21 @@ public abstract class BaseCollectionXMLDeserializer<C extends Collection<T>, T> 
      */
     @Override
     public C doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+        //reader.next();
         Scanner scanner = (Scanner<C>) (reader1, ctx1, instance) -> {
             T element = deserializer.deserialize(reader1, ctx1, params);
+            System.out.println("element " + element.toString());
+
             if (element != null) {
                 instance.add(element);
             }
+            //reader.next();
             return null;
         };
-        return (C) doDeserializeCollection(reader, (Collection<C>) newCollection(), scanner, ctx, params);
+
+        //doDeserializeCollection(reader, deserializer, ctx, params);
+
+        return (C) doDeserializeCollection(reader, (Collection<C>) newCollection(),scanner,  ctx, params);
     }
 
     /**

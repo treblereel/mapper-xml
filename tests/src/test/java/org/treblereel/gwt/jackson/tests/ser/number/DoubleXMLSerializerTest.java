@@ -19,7 +19,7 @@ public class DoubleXMLSerializerTest {
     @Test
     public void testDeserializeValue() throws XMLStreamException {
         DoubleBean test = new DoubleBean();
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><DoubleBean><val/></DoubleBean>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><DoubleBean/>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
         test.setVal(new Double("34.100247d"));
         assertEquals("<?xml version='1.0' encoding='UTF-8'?><DoubleBean><val>34.100247</val></DoubleBean>", mapper.write(test));

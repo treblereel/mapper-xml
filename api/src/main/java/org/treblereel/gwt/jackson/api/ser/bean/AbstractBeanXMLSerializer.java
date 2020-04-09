@@ -38,6 +38,8 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
     protected final BeanPropertySerializer[] serializers;
 
     private final TypeSerializationInfo<T> defaultTypeInfo;
+    private String defaultNamespace;
+    private Pair<String, String> objNamespace;
 
     /**
      * <p>Constructor for AbstractBeanXMLSerializer.</p>
@@ -121,19 +123,21 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
      */
     protected void serializeObject(XMLWriter writer, T value, XMLSerializationContext ctx,
                                    String typeName, TypeSerializationInfo typeInformation) throws XMLStreamException {
-        writer.beginObject(typeName);
+        System.out.println("serializeObject " + getClass().getSimpleName() + " " + prefix + " " + namespace + " " + propertyName + " " + value.toString());
+        if (value == null && !ctx.isSerializeNulls()) {
+            return;
+        }
+
+        if (prefix != null) {
+            writer.beginObject(prefix, namespace, typeName);
+        } else {
+            writer.beginObject(typeName);
+        }
+
         writeNamespace(writer);
         serializeAttribute(writer, value, ctx);
         serializeProperties(writer, value, ctx);
         writer.endObject();
-    }
-
-    private void serializeAttribute(XMLWriter writer, T value, XMLSerializationContext ctx) throws XMLStreamException {
-        for (BeanPropertySerializer<T, ?> propertySerializer : serializers) {
-            if (propertySerializer.isAttribute()) {
-                propertySerializer.serialize(writer, value, ctx);
-            }
-        }
     }
 
     private String getSerializeObjectName() {
@@ -150,17 +154,37 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
         if (!getXmlNs().isEmpty()) {
             for (Pair<String, String> pair : getXmlNs()) {
                 if (pair.key == null) {
-                    writer.writeDefaultNamespace(pair.value);
+                    this.defaultNamespace = pair.value;
+                    writer.writeDefaultNamespace(defaultNamespace);
+                } else {
+                    writer.writeNamespace(pair.key, pair.value);
                 }
             }
         }
+        if (prefix == null && namespace != null) {
+            writer.writeAttrNamespace(namespace);
+        }
+
+        writeSchemaLocation(writer);
+        writeTargetNamespace(writer);
         writer.endNs();
+    }
+
+    private void serializeAttribute(XMLWriter writer, T value, XMLSerializationContext ctx) throws XMLStreamException {
+        for (BeanPropertySerializer<T, ?> propertySerializer : serializers) {
+            if (propertySerializer.isAttribute()) {
+                propertySerializer.serialize(writer, value, ctx);
+            }
+        }
     }
 
     private void serializeProperties(XMLWriter writer, T value, XMLSerializationContext ctx) throws XMLStreamException {
 
         for (BeanPropertySerializer<T, ?> propertySerializer : serializers) {
             if (!propertySerializer.isAttribute()) {
+                if (propertySerializer.getValue(value, ctx) == null && !ctx.isSerializeNulls()) {
+                    continue;
+                }
                 propertySerializer.serializePropertyName(writer, value, ctx); //TODO
                 propertySerializer.serialize(writer, value, ctx);
             }
@@ -170,4 +194,21 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
     protected abstract String getXmlRootElement();
 
     protected abstract List<Pair<String, String>> getXmlNs();
+
+    private void writeSchemaLocation(XMLWriter writer) throws XMLStreamException {
+        if (getSchemaLocation() != null) {
+            writer.writeSchemaLocation("xsi:schemaLocation", getSchemaLocation());
+        }
+    }
+
+    private void writeTargetNamespace(XMLWriter writer) throws XMLStreamException {
+        if (getTargetNamespace() != null) {
+            System.out.println("getTargetNamespace " + getTargetNamespace().key + " " + getTargetNamespace().value);
+            writer.writeTargetNamespace(getTargetNamespace().value);
+        }
+    }
+
+    protected abstract String getSchemaLocation();
+
+    protected abstract Pair<String, String> getTargetNamespace();
 }

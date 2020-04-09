@@ -18,6 +18,8 @@ package org.treblereel.gwt.jackson.api.stream;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.treblereel.gwt.jackson.api.stream.impl.DefaultXMLWriter;
+
 /**
  * <p>XMLWriter interface.</p>
  * @author nicolasmorel
@@ -58,10 +60,13 @@ public interface XMLWriter {
      */
     XMLWriter beginObject(String name) throws XMLStreamException;
 
-    /**
-     * Ends encoding the current object.
-     * @return this writer.
-     */
+    XMLWriter beginObject(String prefix, String namespace, String name) throws XMLStreamException;
+
+
+        /**
+         * Ends encoding the current object.
+         * @return this writer.
+         */
     XMLWriter endObject() throws XMLStreamException;
 
     /**
@@ -154,4 +159,12 @@ public interface XMLWriter {
     void writeCData(String value) throws XMLStreamException;
 
     void writeAttribute(String propertyName, String value) throws XMLStreamException;
+
+    void writeSchemaLocation(String s, String schemaLocation) throws XMLStreamException;
+
+    void writeTargetNamespace(String targetNamespace) throws XMLStreamException;
+
+    void writeAttrNamespace(String namespace) throws XMLStreamException;
+
+    void setPrefix(String prefix, String namespace) throws XMLStreamException;
 }

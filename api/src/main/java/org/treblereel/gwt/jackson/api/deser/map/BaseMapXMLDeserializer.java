@@ -72,7 +72,7 @@ public abstract class BaseMapXMLDeserializer<M extends Map<K, V>, K, V> extends 
     public M doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         M result = newMap();
         if (!(valueDeserializer instanceof AbstractBeanXMLDeserializer)) {
-
+            System.out.println("MAP 1");
             doDeserializeMap(reader, result, (reader1, ctx1, instance, counter1) -> {
                 String name = reader1.peekNodeName().getLocalPart();
                 K key = keyDeserializer.deserialize(name, ctx1);
@@ -88,7 +88,52 @@ public abstract class BaseMapXMLDeserializer<M extends Map<K, V>, K, V> extends 
                     result.put(key, value);
                 }
             }, ctx, params);*/
-            AtomicInteger propertyCounter = new AtomicInteger(0);
+            System.out.println("MAP 2");
+
+            int counter = 0;
+
+            while (reader.hasNext()) {
+                System.out.println("COUNTER " + counter);
+
+                if (reader.peek() == XMLStreamReader.START_ELEMENT) {
+                    counter++;
+                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$ on START_ELEMENT " + reader.peekNodeName() + " " + counter);
+
+                    String name = reader.peekNodeName().getLocalPart();
+                    if ((counter % 2 == 0)) {
+                        K key = keyDeserializer.deserialize(name, ctx);
+                        System.out.println("^^^^^^^^^^^^^^^ " + key.toString());
+
+                        V value = valueDeserializer.deserialize(reader, ctx, params);
+                        result.put(key, value);
+                    }
+                }
+
+                if (reader.peek() == XMLStreamReader.END_ELEMENT) {
+                    counter--;
+
+                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$ on END_ELEMENT " + reader.peekNodeName());
+                }
+
+                if (counter == 0) {
+                    break;
+                }
+                reader.next();
+            }
+
+            if (result.isEmpty()) {
+                return null;
+            }
+
+            return result;
+
+
+
+
+
+
+
+/*            AtomicInteger propertyCounter = new AtomicInteger(0);
             while (reader.hasNext()) {
                 reader.next();
                 switch (reader.peek()) {
@@ -115,7 +160,7 @@ public abstract class BaseMapXMLDeserializer<M extends Map<K, V>, K, V> extends 
                     default:
                         throw new XMLStreamException("Unable to process node  " + reader.peek());
                 }
-            }
+            }*/
         }
         return result;
     }

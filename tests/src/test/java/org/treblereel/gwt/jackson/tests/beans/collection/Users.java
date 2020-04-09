@@ -20,7 +20,7 @@ public class Users {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getActiveUsers(), getTypes(), getAddress());
+        return Objects.hash(activeUsers, types, address);
     }
 
     @Override
@@ -32,12 +32,17 @@ public class Users {
             return false;
         }
         Users users = (Users) o;
-        return Objects.equals(getActiveUsers(), users.getActiveUsers()) &&
-                Objects.equals(getTypes(), users.getTypes());
+        return Objects.equals(activeUsers, users.activeUsers) &&
+                Objects.equals(types, users.types) &&
+                Objects.equals(address, users.address);
     }
 
     public Map<String, Person> getActiveUsers() {
         return activeUsers;
+    }
+
+    public void setActiveUsers(Map<String, Person> activeUsers) {
+        this.activeUsers = activeUsers;
     }
 
     public Map<TYPE, Person> getTypes() {
@@ -54,10 +59,6 @@ public class Users {
 
     public void setAddress(Iterable<Address> address) {
         this.address = address;
-    }
-
-    public void setActiveUsers(Map<String, Person> activeUsers) {
-        this.activeUsers = activeUsers;
     }
 
     public enum TYPE {

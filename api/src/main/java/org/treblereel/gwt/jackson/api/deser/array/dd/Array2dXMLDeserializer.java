@@ -74,6 +74,8 @@ public class Array2dXMLDeserializer<T> extends AbstractArray2dXMLDeserializer<T[
     /** {@inheritDoc} */
     @Override
     protected T[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+        System.out.println(getClass().getSimpleName() + " doDeserialize " + deserializer.getClass().getSimpleName());
+
         List<List<T>> list = deserializeIntoList(reader, ctx, deserializer, params);
 
         if (list.isEmpty()) {

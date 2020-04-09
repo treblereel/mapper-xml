@@ -18,6 +18,7 @@ package org.treblereel.gwt.jackson.api.deser.bean;
 
 import java.util.Map;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -86,20 +87,20 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
         return deserializeWrapped(reader, ctx, params, identityInfo, null, null);
     }
 
-    private BeanPropertyDeserializer<T, ?> getPropertyDeserializer(String propertyName, XMLDeserializationContext ctx) throws XMLStreamException {
-        BeanPropertyDeserializer<T, ?> property = deserializers.get(propertyName);
-        if (null == property) {
-            throw ctx.traceError("Unknown property '" + propertyName + "' in (de)serializer " + this.getClass().getCanonicalName());
-        }
-        return property;
-    }
-
     private String getRootNodeName() {
         if (getXmlRootElement() == null) {
             return getDeserializedType().getSimpleName();
         } else {
             return getXmlRootElement();
         }
+    }
+
+    private BeanPropertyDeserializer<T, ?> getPropertyDeserializer(String propertyName, XMLDeserializationContext ctx) throws XMLStreamException {
+        BeanPropertyDeserializer<T, ?> property = deserializers.get(propertyName);
+        if (null == property) {
+            throw ctx.traceError("Unknown property '" + propertyName + "' in (de)serializer " + this.getClass().getCanonicalName());
+        }
+        return property;
     }
 
     protected abstract String getXmlRootElement();
@@ -132,21 +133,27 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
             reader.next();
         }
 
+        System.out.println("deserializeInline " + getClass().getSimpleName());
+        System.out.println(" on deserializeInline 1 " + reader.peek());
+        System.out.println(" on deserializeInline 2 " + reader.peekNodeName());
+
+
         T instance = instanceBuilder.newInstance(reader, ctx, params, null, null).getInstance();
 
         if (reader.getAttributeCount() > 0) {
-            attrNode = true;
             for (int i = 0; i < reader.getAttributeCount(); i++) {
                 String attrName = reader.getAttributeName(i).getLocalPart();
-                BeanPropertyDeserializer<T, ?> property = getPropertyDeserializer(attrName, ctx);
-                property.deserialize(reader.getAttributeValue(i), instance, ctx);
+                BeanPropertyDeserializer<T, ?> property = deserializers.get(attrName);
+                if (property != null) {
+                    attrNode = true;
+                    property.deserialize(reader.getAttributeValue(i), instance, ctx);
+                }
             }
         }
-
-        T result = iterateOver(reader, (reader1, ctx1, bean) -> {
-            String propertyName = reader1.nextName();
-            if (!propertyName.equals(getRootNodeName())) {
-                BeanPropertyDeserializer<T, ?> property = getPropertyDeserializer(propertyName, ctx1);
+        T result = iterateOver(reader, (reader1, propertyName, ctx1, bean) -> {
+            if (!propertyName.getLocalPart().equals(getRootNodeName())) {
+                System.out.println("propertyName " + getClass().getSimpleName() + " " + propertyName);
+                BeanPropertyDeserializer<T, ?> property = getPropertyDeserializer(propertyName.getLocalPart(), ctx1);
                 if (property != null) {
                     property.deserialize(reader1, bean, ctx1);
                 }

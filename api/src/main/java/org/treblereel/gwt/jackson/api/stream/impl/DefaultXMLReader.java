@@ -19,7 +19,6 @@ package org.treblereel.gwt.jackson.api.stream.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.math.BigInteger;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -28,8 +27,6 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 import org.treblereel.gwt.jackson.api.utils.NumberUtils;
-
-import static jdk.nashorn.internal.runtime.ECMAErrors.syntaxError;
 
 public class DefaultXMLReader implements XMLReader {
 
@@ -118,8 +115,16 @@ public class DefaultXMLReader implements XMLReader {
      */
     @Override
     public String nextString() throws XMLStreamException {
-        next();
-        if (peek() == XMLStreamReader.END_ELEMENT) {
+        System.out.println("nex ? " + peek());
+
+        if (peek() == 1) {
+            reader.next();
+            System.out.println("do next " + peek());
+
+        }
+
+        if (peek() == 2) {
+            System.out.println("deff " + peek());
             return null;
         }
         return reader.getText();
@@ -239,8 +244,7 @@ public class DefaultXMLReader implements XMLReader {
      */
     @Override
     public Number nextNumber() throws XMLStreamException {
-       return NumberUtils.toNumber(nextString());
-
+        return NumberUtils.toNumber(nextString());
     }
 
     @Override

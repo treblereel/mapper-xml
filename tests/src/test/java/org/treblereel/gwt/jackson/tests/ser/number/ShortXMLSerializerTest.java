@@ -21,7 +21,7 @@ public class ShortXMLSerializerTest {
     public void testDeserializeValue() throws XMLStreamException {
         ShortBean test = new ShortBean();
 
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><ShortBean><val/></ShortBean>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><ShortBean/>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
         test.setVal(new Short("34"));
         assertEquals("<?xml version='1.0' encoding='UTF-8'?><ShortBean><val>34</val></ShortBean>", mapper.write(test));

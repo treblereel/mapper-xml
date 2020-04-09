@@ -3,8 +3,9 @@ package org.treblereel.gwt.jackson.tests.annotations.beans;
 import java.util.List;
 import java.util.Objects;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.JacksonXmlProperty;
 
+import org.treblereel.gwt.jackson.api.annotation.TargetNamespace;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
 /**
@@ -12,7 +13,7 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
  * Created by treblereel 4/2/20
  */
 @XMLMapper
-@XmlRootElement(namespace = "http://www.omg.org/bpmn20")
+@TargetNamespace(prefix = "bpmn2", namespace = "http://www.omg.org/bpmn20")
 public class Company {
 
     private Employee ceo;
@@ -61,4 +62,5 @@ public class Company {
     public void setAddress(Address address) {
         this.address = address;
     }
+
 }

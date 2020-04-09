@@ -19,6 +19,7 @@ import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.ArrayAccessExpr;
 import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
+import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
@@ -26,6 +27,7 @@ import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.NullLiteralExpr;
 import com.github.javaparser.ast.expr.ObjectCreationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.github.javaparser.ast.expr.ThisExpr;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
@@ -80,6 +82,8 @@ public class SerializerGenerator extends AbstractGenerator {
         getSerializedType(type);
         getXmlRootElement(type);
         getXmlNs(type);
+        getSchemaLocation(type);
+        getTargetNamespace(type);
     }
 
     private void getSerializedType(BeanDefinition type) {
@@ -110,6 +114,39 @@ public class SerializerGenerator extends AbstractGenerator {
                                                  String.class.getSimpleName()))))
                 .getBody()
                 .ifPresent(body -> getXmlNsStatement(beanDefinition, body));
+    }
+
+    private void getSchemaLocation(BeanDefinition type) {
+        declaration.addMethod("getSchemaLocation", Modifier.Keyword.PUBLIC)
+                .addAnnotation(Override.class)
+                .setType(String.class)
+                .getBody().ifPresent(body -> body.addStatement(
+                new ReturnStmt(type.getSchemaLocation() != null ?
+                                       new StringLiteralExpr(type.getSchemaLocation()) : new NullLiteralExpr()))
+        );
+    }
+
+    //TODO
+    private void getTargetNamespace(BeanDefinition type) {
+        cu.addImport(Pair.class);
+        Pair<String, String> targetNamespace = type.getTargetNamespace();
+        Expression result;
+        ClassOrInterfaceType pair = new ClassOrInterfaceType()
+                .setName("Pair")
+                .setTypeArguments(new ClassOrInterfaceType().setName("String"),
+                                  new ClassOrInterfaceType().setName("String"));
+        if (targetNamespace == null) {
+            result = new NullLiteralExpr();
+        } else {
+            result = new ObjectCreationExpr().setType(pair)
+                    .addArgument(new StringLiteralExpr(targetNamespace.key))
+                    .addArgument(new StringLiteralExpr(targetNamespace.value));
+        }
+        declaration.addMethod("getTargetNamespace", Modifier.Keyword.PROTECTED)
+                .addAnnotation(Override.class)
+                .setType(pair)
+                .getBody().ifPresent(body -> body.addStatement(
+                new ReturnStmt(result)));
     }
 
     private void getXmlNsStatement(BeanDefinition beanDefinition, BlockStmt body) {
@@ -175,6 +212,7 @@ public class SerializerGenerator extends AbstractGenerator {
                 .setName(BeanPropertySerializer.class.getSimpleName());
 
         beanProperty.setType(beanType);
+        beanProperty.addArgument(new ThisExpr());
         beanProperty.addArgument(new StringLiteralExpr(variableElement.getPropertyName()));
         if (variableElement.isCData()) {
             beanProperty.addArgument(new BooleanLiteralExpr(true));
@@ -218,6 +256,8 @@ public class SerializerGenerator extends AbstractGenerator {
         newSerializer(anonymousClassBody, propertyDefinition);
         getValue(anonymousClassBody, beanDefinition, propertyDefinition);
         isAttribute(anonymousClassBody, propertyDefinition);
+        getNamespace(anonymousClassBody, propertyDefinition);
+        getPrefix(anonymousClassBody, beanDefinition, propertyDefinition);
     }
 
     private void addTypeArguments(TypeMirror type, ClassOrInterfaceType interfaceType) {
@@ -272,6 +312,51 @@ public class SerializerGenerator extends AbstractGenerator {
 
             method.getBody().ifPresent(body -> body.addAndGetStatement(
                     new ReturnStmt().setExpression(new BooleanLiteralExpr(true))));
+            anonymousClassBody.add(method);
+        }
+    }
+
+    private void getNamespace(NodeList<BodyDeclaration<?>> anonymousClassBody, PropertyDefinition field) {
+        if (field.getNamespace() != null) {
+            MethodDeclaration method = new MethodDeclaration();
+            method.setModifiers(Modifier.Keyword.PROTECTED);
+            method.addAnnotation(Override.class);
+            method.setName("getNamespace");
+            method.setType(new ClassOrInterfaceType().setName("String"));
+
+            method.getBody().ifPresent(body -> body.addAndGetStatement(
+                    new ReturnStmt().setExpression(new StringLiteralExpr(field.getNamespace()))));
+            anonymousClassBody.add(method);
+        }
+    }
+
+    private void getPrefix(NodeList<BodyDeclaration<?>> anonymousClassBody, BeanDefinition beanDefinition, PropertyDefinition propertyDefinition) {
+        String prefix = null;
+        if (propertyDefinition.getNamespace() != null) {
+            for (Pair<String, String> xmlN : beanDefinition.getXmlNs()) {
+                if (xmlN.value.equals(propertyDefinition.getNamespace()) && xmlN.key != null) {
+                    prefix = xmlN.key;
+                    break;
+                }
+            }
+            if (prefix == null) {
+                if (beanDefinition.getTargetNamespace() != null &&
+                        beanDefinition.getTargetNamespace().value.equals(propertyDefinition.getNamespace())) {
+                    prefix = beanDefinition.getTargetNamespace().key;
+                }
+            }
+        }
+
+        if (prefix != null) {
+            MethodDeclaration method = new MethodDeclaration();
+            method.setModifiers(Modifier.Keyword.PROTECTED);
+            method.addAnnotation(Override.class);
+            method.setName("getPrefix");
+            method.setType(new ClassOrInterfaceType().setName("String"));
+
+            String finalPrefix = prefix;
+            method.getBody().ifPresent(body -> body.addAndGetStatement(
+                    new ReturnStmt().setExpression(new StringLiteralExpr(finalPrefix))));
             anonymousClassBody.add(method);
         }
     }

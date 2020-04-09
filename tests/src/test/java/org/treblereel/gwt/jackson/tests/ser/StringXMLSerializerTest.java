@@ -19,7 +19,7 @@ public class StringXMLSerializerTest {
     @Test
     public void testDeserializeValue() throws XMLStreamException {
         StringBean test = new StringBean();
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><StringBean><val/></StringBean>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><StringBean/>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
         test.setVal("XML");
         assertEquals("<?xml version='1.0' encoding='UTF-8'?><StringBean><val>XML</val></StringBean>", mapper.write(test));

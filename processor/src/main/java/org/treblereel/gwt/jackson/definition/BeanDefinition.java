@@ -9,10 +9,13 @@ import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.xml.bind.annotation.XmlNs;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchema;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.google.auto.common.MoreElements;
+import org.treblereel.gwt.jackson.api.annotation.TargetNamespace;
 import org.treblereel.gwt.jackson.api.utils.Pair;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 
@@ -24,6 +27,7 @@ public class BeanDefinition extends Definition {
 
     private final TypeElement element;
     private final XmlRootElement xmlRootElement;
+    private final XmlSchema xmlSchema;
     private Set<PropertyDefinition> properties;
 
     public BeanDefinition(TypeElement element, GenerationContext context) {
@@ -31,6 +35,7 @@ public class BeanDefinition extends Definition {
         this.element = element;
 
         xmlRootElement = getElement().getAnnotation(XmlRootElement.class);
+        xmlSchema = MoreElements.getPackage(element).getAnnotation(XmlSchema.class);
 
         loadProperties();
     }
@@ -93,9 +98,37 @@ public class BeanDefinition extends Definition {
 
         if (xmlRootElement != null && !xmlRootElement.namespace().equals("##default")) {
             result.add(new Pair<>(null, xmlRootElement.namespace()));
+        } else if (xmlSchema != null && !xmlSchema.namespace().isEmpty()) {
+            result.add(new Pair<>(null, xmlSchema.namespace()));
+        }
+
+        if (xmlSchema != null && xmlSchema.xmlns().length > 0) {
+            for (XmlNs xmln : xmlSchema.xmlns()) {
+                System.out.println("XmlNs " + xmln);
+                result.add(new Pair<>(xmln.prefix(), xmln.namespaceURI()));
+            }
         }
 
         return result;
+    }
+
+    public String getNamespace() {
+        if (xmlSchema != null && !xmlSchema.namespace().isEmpty()) {
+            return xmlSchema.namespace();
+        }
+
+        if (xmlRootElement != null && !xmlRootElement.namespace().equals("##default")) {
+            return xmlRootElement.namespace();
+        }
+
+        return null;
+    }
+
+    public String getSchemaLocation() {
+        if (xmlSchema != null && !xmlSchema.location().equals("##generate")) {
+            return xmlSchema.location();
+        }
+        return null;
     }
 
     public String getSimpleName() {
@@ -104,5 +137,13 @@ public class BeanDefinition extends Definition {
 
     public String getQualifiedName() {
         return getElement().getQualifiedName().toString();
+    }
+
+    public Pair<String, String> getTargetNamespace() {
+        TargetNamespace targetNamespace = getElement().getAnnotation(TargetNamespace.class);
+        if (targetNamespace != null) {
+            return new Pair<>(targetNamespace.prefix(), targetNamespace.namespace());
+        }
+        return null;
     }
 }

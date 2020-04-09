@@ -25,7 +25,37 @@ public class Person {
 
     private List<Person> childs;
 
-      public String getFirstName() {
+    @Override
+    public int hashCode() {
+        return Objects.hash(getFirstName(), getLastName(), getBirthday(), getAlive(), getAddress(), getChilds());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Person)) {
+            return false;
+        }
+        Person person = (Person) o;
+
+        System.out.println("1 " + Objects.equals(getFirstName(), person.getFirstName()));
+        System.out.println("2 " + Objects.equals(getLastName(), person.getLastName()));
+        System.out.println("3 " + Objects.equals(getBirthday(), person.getBirthday()));
+        System.out.println("4 " + Objects.equals(getAlive(), person.getAlive()));
+        System.out.println("5 " + Objects.equals(getAddress(), person.getAddress()));
+        System.out.println("6 " + Objects.equals(getChilds(), person.getChilds()));
+
+        return Objects.equals(getFirstName(), person.getFirstName()) &&
+                Objects.equals(getLastName(), person.getLastName()) &&
+                Objects.equals(getBirthday(), person.getBirthday()) &&
+                Objects.equals(getAlive(), person.getAlive()) &&
+                Objects.equals(getAddress(), person.getAddress())
+                && Objects.equals(getChilds(), person.getChilds());
+    }
+
+    public String getFirstName() {
         return firstName;
     }
 
@@ -39,6 +69,18 @@ public class Person {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public Timestamp getAlive() {
+        return alive;
     }
 
     public Address getAddress() {
@@ -57,42 +99,8 @@ public class Person {
         this.childs = childs;
     }
 
-    public Date getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
-
-    public Timestamp getAlive() {
-        return alive;
-    }
-
     public void setAlive(Timestamp alive) {
         this.alive = alive;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Person)) {
-            return false;
-        }
-        Person person = (Person) o;
-        return Objects.equals(getFirstName(), person.getFirstName()) &&
-                Objects.equals(getLastName(), person.getLastName()) &&
-                Objects.equals(getBirthday(), person.getBirthday()) &&
-                Objects.equals(getAlive(), person.getAlive()) &&
-                Objects.equals(getAddress(), person.getAddress()) &&
-                Objects.equals(getChilds(), person.getChilds());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getFirstName(), getLastName(), getBirthday(), getAlive(), getAddress(), getChilds());
     }
 
     @Override

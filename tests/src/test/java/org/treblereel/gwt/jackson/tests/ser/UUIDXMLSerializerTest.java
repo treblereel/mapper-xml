@@ -22,7 +22,7 @@ public class UUIDXMLSerializerTest {
     @Test
     public void testDeserializeValue() throws XMLStreamException {
         UUIDBean test = new UUIDBean();
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><UUIDBean><val/></UUIDBean>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><UUIDBean/>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
         test.setVal(UUID.fromString(uuid));
         assertEquals("<?xml version='1.0' encoding='UTF-8'?><UUIDBean><val>" + uuid + "</val></UUIDBean>", mapper.write(test));

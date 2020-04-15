@@ -26,27 +26,21 @@ public class FieldDefinitionFactory {
     }
 
     FieldDefinition getFieldDefinition(TypeMirror property) {
-        System.out.println("getFieldDefinition " + property + " " + TypeUtils.isArray(property));
         property = context.getTypeUtils().removeOuterWildCards(property);
-        System.out.println("   after  " + property);
-
         FieldDefinition result;
         if (holder.containsKey(property)) {
             result = holder.get(property);
         } else if (typeUtils.isSimpleType(property)) {
-            System.out.println("isSimpleType");
             result = new BasicTypeFieldDefinition(property, context);
         } else if (context.getTypeUtils().isIterable(property)) {
             result = new IterableBeanFieldDefinition(property, context);
         } else if (context.getTypeUtils().isMap(property)) {
             result = new MapBeanFieldDefinition(property, context);
         } else if (TypeUtils.isArray(property)) {
-            System.out.println("HERE");
             result = new ArrayBeanFieldDefinition(property, context);
         } else if (MoreTypes.asElement(property).getKind().equals(ElementKind.ENUM)) {
             result = new EnumBeanFieldDefinition(property, context);
         } else {
-            System.out.println("default");
             result = new DefaultBeanFieldDefinition(property, context);
         }
         holder.put(property, result);

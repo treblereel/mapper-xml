@@ -39,55 +39,31 @@ public abstract class XMLDeserializer<T> {
 
     protected T iterateOver(XMLReader reader, Scanner2<T> scanner, T instance, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         QName rootNode = reader.peekNodeName();
-
-        System.out.println("########################## root node " + rootNode);
-
         reader.next();
-
         if (reader.peek() == XMLStreamReader.CHARACTERS) {
-            System.out.println("return from CHARACTERS");
             return scanner.accept(reader, rootNode, ctx, instance);
         }
-
         T bean = null;
         QName name = reader.peekNodeName();
         QName property = null;
-        System.out.println("########################## start node " + name);
-
-        //reader.next();
         int counter = 0;
 
         while (reader.hasNext()) {
-            System.out.println("iterateOver " + counter);
             //System.out.println("########################## next node " + reader.peek() + " " + reader.peekNodeName());
             if (reader.peek() == XMLStreamReader.START_ELEMENT) {
                 counter++;
                 property = reader.peekNodeName();
-                System.out.println("########################## START_ELEMENT  process to deser " + property);
                 scanner.accept(reader, property, ctx, instance);
-                //System.out.println("########################## result  " + bean.toString());
-/*            } else if (reader.peek() == XMLStreamReader.CHARACTERS) {
-                System.out.println("return from CHARACTERS");
-                scanner.accept(reader, property, ctx, instance);*/
             }
             if (reader.peek() == XMLStreamReader.END_ELEMENT) {
                 counter--;
                 System.out.println("########################## END_ELEMENT " + reader.peekNodeName() + " " +counter);
-
-
-/*                if (property.equals(reader.peekNodeName())) {
-                    System.out.println("########################## done with   " + property);
-                } else if (name.equals(reader.peekNodeName())) {
-                    System.out.println("########################## Object done, exit   ");
-                    //return bean;
-                }*/
                 if (counter < 0) {
                     break;
                 }
             } else if (reader.peek() == XMLStreamReader.END_DOCUMENT) {
                 return instance;
             }
-            System.out.println("do next -> " + counter);
             reader.next();
         }
         return instance;

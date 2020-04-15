@@ -1,18 +1,15 @@
 package org.bpmn.di;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Objects;
 
 import javax.xml.bind.annotation.JacksonXmlProperty;
 
 import org.bpmn.dc.Bounds;
-import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
 /**
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/6/20
  */
-@XMLMapper
 public class BPMNShape {
 
     @JacksonXmlProperty(isAttribute = true)
@@ -26,6 +23,36 @@ public class BPMNShape {
 
     private Bounds bounds;
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getBpmnElement(), isExpanded(), getBounds());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof BPMNShape)) {
+            return false;
+        }
+        BPMNShape bpmnShape = (BPMNShape) o;
+        return isExpanded() == bpmnShape.isExpanded() &&
+                Objects.equals(getId(), bpmnShape.getId()) &&
+                Objects.equals(getBpmnElement(), bpmnShape.getBpmnElement()) &&
+                Objects.equals(getBounds(), bpmnShape.getBounds());
+    }
+
+    @Override
+    public String toString() {
+        return "BPMNShape{" +
+                "id='" + id + '\'' +
+                ", bpmnElement='" + bpmnElement + '\'' +
+                ", expanded=" + expanded +
+                ", bounds=" + bounds +
+                '}';
+    }
+
     public String getId() {
         return id;
     }
@@ -38,16 +65,8 @@ public class BPMNShape {
         return bpmnElement;
     }
 
-    public void setBpmnElement(String bpmnElement) {
-        this.bpmnElement = bpmnElement;
-    }
-
     public boolean isExpanded() {
         return expanded;
-    }
-
-    public void setExpanded(boolean expanded) {
-        this.expanded = expanded;
     }
 
     public Bounds getBounds() {
@@ -56,5 +75,13 @@ public class BPMNShape {
 
     public void setBounds(Bounds bounds) {
         this.bounds = bounds;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
+    }
+
+    public void setBpmnElement(String bpmnElement) {
+        this.bpmnElement = bpmnElement;
     }
 }

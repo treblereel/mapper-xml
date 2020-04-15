@@ -10,6 +10,7 @@ import org.drools.MetaData;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -88,6 +89,13 @@ public class BPMNTest {
 
         String xml = mapper.write(tested);
         System.out.println("XML " + xml);
-        assertEquals(tested, mapper.read(xml));
+
+        System.out.println("ORIGINAL " + tested.toString());
+        Definitions encoded = mapper.read(xml);
+        System.out.println("ENCODED " + encoded.toString());
+
+        assertEquals(xml, mapper.write(encoded));
+
+        assertEquals(tested, mapper.read(mapper.write(encoded)));
     }
 }

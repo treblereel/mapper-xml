@@ -6,6 +6,7 @@ import java.util.List;
 import javax.xml.bind.annotation.JacksonXmlProperty;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.google.common.base.Objects;
 import org.bpmn.di.BPMNDiagram;
 import org.treblereel.gwt.jackson.api.annotation.TargetNamespace;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
@@ -92,5 +93,51 @@ public class Definitions {
 
     public void setBpmnDiagram(BPMNDiagram bpmnDiagram) {
         this.bpmnDiagram = bpmnDiagram;
+    }
+
+    @Override
+    public String toString() {
+        return "Definitions{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", itemDefinitions=" + itemDefinitions +
+                ", exporter='" + exporter + '\'' +
+                ", exporterVersion='" + exporterVersion + '\'' +
+                ", process=" + process +
+                ", bpmnDiagram=" + bpmnDiagram +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Definitions)) {
+            return false;
+        }
+        Definitions that = (Definitions) o;
+
+        return Objects.equal(getId(), that.getId())
+                &&
+                Objects.equal(getName(), that.getName()) &&
+                Objects.equal(getItemDefinitions(), that.getItemDefinitions()) &&
+                Objects.equal(getExporter(), that.getExporter()) &&
+                Objects.equal(getExporterVersion(), that.getExporterVersion()) &&
+                Objects.equal(getProcess(), that.getProcess()) &&
+                Objects.equal(getBpmnDiagram(), that.getBpmnDiagram());
+
+        /*        return Objects.equal(getId(), that.getId()) &&
+                Objects.equal(getName(), that.getName())  &&
+                Objects.equal(getItemDefinitions(), that.getItemDefinitions()) &&
+                Objects.equal(getExporter(), that.getExporter()) &&
+                Objects.equal(getExporterVersion(), that.getExporterVersion()) &&
+                Objects.equal(getProcess(), that.getProcess()) &&
+                Objects.equal(getBpmnDiagram(), that.getBpmnDiagram());*/
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId(), getName(), getItemDefinitions(), getExporter(), getExporterVersion(), getProcess(), getBpmnDiagram());
     }
 }

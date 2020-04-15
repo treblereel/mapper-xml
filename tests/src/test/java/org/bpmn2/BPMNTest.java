@@ -88,14 +88,8 @@ public class BPMNTest {
         shape.setBounds(bounds);
 
         String xml = mapper.write(tested);
-        System.out.println("XML " + xml);
-
-        System.out.println("ORIGINAL " + tested.toString());
         Definitions encoded = mapper.read(xml);
-        System.out.println("ENCODED " + encoded.toString());
-
         assertEquals(xml, mapper.write(encoded));
-
         assertEquals(tested, mapper.read(mapper.write(encoded)));
     }
 }

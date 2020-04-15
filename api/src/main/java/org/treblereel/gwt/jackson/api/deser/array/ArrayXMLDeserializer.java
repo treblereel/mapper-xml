@@ -67,19 +67,10 @@ public class ArrayXMLDeserializer<T> extends AbstractArrayXMLDeserializer<T[]> {
      */
     @Override
     public T[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        System.out.println("P1 " + reader.peekNodeName());
-        //reader.next();
-        System.out.println("P2 " + reader.peekNodeName());
-
         List<T> list = deserializeIntoList(reader, ctx, deserializer, params);
         if (list == null) {
             return null;
         }
-        System.out.println("LIST " + list.size());
-        list.forEach(v -> {
-            System.out.println("                 " + v);
-        });
-
         return list.toArray(arrayCreator.create(list.size()));
     }
 

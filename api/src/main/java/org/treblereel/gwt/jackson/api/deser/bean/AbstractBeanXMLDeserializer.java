@@ -142,18 +142,10 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
         if (reader.peek() == XMLStreamReader.START_DOCUMENT) {
             reader.next();
         }
-
-        System.out.println("deserializeInline " + getClass().getSimpleName());
-        System.out.println(" on deserializeInline 1 " + reader.peek());
-        System.out.println(" on deserializeInline 2 " + reader.peekNodeName());
-
         T instance = instanceBuilder.newInstance(reader, ctx, params, null, null).getInstance();
 
         if (reader.getAttributeCount() > 0) {
             for (int i = 0; i < reader.getAttributeCount(); i++) {
-
-                System.out.println("attr prop " + reader.getAttributeName(i) + " " + getPropertyName(reader.getAttributeName(i)));
-
                 BeanPropertyDeserializer<T, ?> property = deserializers.get(getPropertyName(reader.getAttributeName(i)));
                 if (property != null) {
                     attrNode = true;
@@ -163,8 +155,6 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
         }
         T result = iterateOver(reader, (reader1, propertyName, ctx1, bean) -> {
             if (!propertyName.getLocalPart().equals(getRootNodeName())) {
-                System.out.println("propertyName " + getClass().getSimpleName() + " " + propertyName);
-
                 BeanPropertyDeserializer<T, ?> property = getPropertyDeserializer(propertyName.getLocalPart(), ctx1);
                 if (property != null) {
                     property.deserialize(reader1, bean, ctx1);

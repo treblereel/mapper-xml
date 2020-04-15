@@ -16,6 +16,8 @@ public class Users {
 
     private Map<String, Person> activeUsers;
     private Map<TYPE, Person> types;
+    private Map<Person, Address> addressMap;
+
     private transient Iterable<Address> address;
 
     @Override
@@ -34,6 +36,7 @@ public class Users {
         Users users = (Users) o;
         return Objects.equals(activeUsers, users.activeUsers) &&
                 Objects.equals(types, users.types) &&
+                Objects.equals(addressMap, users.addressMap) &&
                 Objects.equals(address, users.address);
     }
 
@@ -59,6 +62,14 @@ public class Users {
 
     public void setAddress(Iterable<Address> address) {
         this.address = address;
+    }
+
+    public Map<Person, Address> getAddressMap() {
+        return addressMap;
+    }
+
+    public void setAddressMap(Map<Person, Address> addressMap) {
+        this.addressMap = addressMap;
     }
 
     public enum TYPE {

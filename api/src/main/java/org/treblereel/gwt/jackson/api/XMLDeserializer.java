@@ -43,21 +43,15 @@ public abstract class XMLDeserializer<T> {
         if (reader.peek() == XMLStreamReader.CHARACTERS) {
             return scanner.accept(reader, rootNode, ctx, instance);
         }
-        T bean = null;
-        QName name = reader.peekNodeName();
-        QName property = null;
         int counter = 0;
 
         while (reader.hasNext()) {
-            //System.out.println("########################## next node " + reader.peek() + " " + reader.peekNodeName());
             if (reader.peek() == XMLStreamReader.START_ELEMENT) {
                 counter++;
-                property = reader.peekNodeName();
-                scanner.accept(reader, property, ctx, instance);
+                scanner.accept(reader, reader.peekNodeName(), ctx, instance);
             }
             if (reader.peek() == XMLStreamReader.END_ELEMENT) {
                 counter--;
-                System.out.println("########################## END_ELEMENT " + reader.peekNodeName() + " " +counter);
                 if (counter < 0) {
                     break;
                 }
@@ -68,71 +62,6 @@ public abstract class XMLDeserializer<T> {
         }
         return instance;
     }
-
-/*
-    protected Collection<T> doDeserializeCollection(XMLReader reader, Collection<T> collection, Scanner<T> scanner, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        System.out.println("ZZZZ " + reader.peek() + " " + reader.peekNodeName());
-        QName collectionName = reader.peekNodeName();
-        QName priv = null;
-
-        do {
-            reader.next();
-            if (reader.peek() == XMLStreamReader.START_ELEMENT) {
-                System.out.println("*************** START_ELEMENT " + reader.peekNodeName().getLocalPart());
-
-                priv = reader.peekNodeName();
-
-                //collection node
-                if (collectionName.equals(reader.peekNodeName())) {
-                    System.out.println("*************** Collection node");
-                } else {
-                    System.out.println("value node " + deserialize(reader, ctx).getClass().getName());
-                    //T elm = deserialize(reader, ctx);
-
-                }
-
-                //scanner.accept(reader, ctx, (T) collection);
-            } else if (reader.peek() == XMLStreamReader.END_ELEMENT) {
-
-                System.out.println("*************** END_ELEMENT " + reader.peekNodeName().getLocalPart());
-            }
-        } while (reader.hasNext());
-
-        return Collections.EMPTY_LIST;
-
-
-        */
-/*        QName name = reader.peekNodeName();
-        reader.next(); //into collection
-        System.out.println(" doDeserializeCollection " + name + " " + collection.size());
-        do {
-
-
-            if (reader.peek() == XMLStreamReader.START_ELEMENT) {
-                System.out.println("         START_ELEMENT " + reader.peekNodeName().getLocalPart());
-                //scanner.accept(reader, ctx, (T) collection);
-            } else if (reader.peek() == XMLStreamReader.END_ELEMENT) {
-                System.out.println("         END_ELEMENT " + reader.peekNodeName().getLocalPart() + " but start node is " + name.getLocalPart());
-                System.out.println("maybe exit ? " + name.equals(reader.peekNodeName()));
-                if (name.equals(reader.peekNodeName())) {
-                    System.out.println("               EXIT " + collection.size());
-                    break;
-                }
-            }
-            reader.next();
-        } while (reader.hasNext());
-
-        System.out.println("ON END start node " + name + " " + reader.peek() + " " + reader.peekNodeName());
-        reader.next(); //next elm collection
-        System.out.println("next elm  " + reader.peek() + " " + reader.peekNodeName());
-
-        if (collection.isEmpty()) {
-            return null;
-        }
-        return collection;*//*
-
-    }
-*/
 
     /**
      * Deserializes a XML input into an object.
@@ -169,39 +98,16 @@ public abstract class XMLDeserializer<T> {
 
     protected Collection<T> doDeserializeCollection(XMLReader reader, Collection<T> collection, Scanner<T> scanner, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         int counter = 0;
-
-        System.out.println("doDeserializeCollection " + reader.peek() + " " + reader.peekNodeName());
-        QName collectionName = reader.peekNodeName();
-        QName priv = null;
-
-        boolean rootLocated = false;
-
         while (reader.hasNext()) {
             reader.next();
-
-            System.out.println("peek " + reader.peek());
-            System.out.println("! counter " + counter);
-
             if (reader.peek() == XMLStreamReader.START_ELEMENT) {
                 counter++;
-                System.out.println("*************** START_ELEMENT " + reader.peekNodeName().getLocalPart());
                 scanner.accept(reader, ctx, (T) collection);
-
-                System.out.println("*************** Scanner done " + reader.peek());
-                if(reader.peek() == 1 || reader.peek() == 2) {
-                    System.out.println("*************** Scanner done plus " + reader.peekNodeName());
-
-                }
             }
             if (reader.peek() == XMLStreamReader.END_ELEMENT) {
                 counter--;
-                System.out.println("*************** END_ELEMENT " + reader.peekNodeName().getLocalPart() + " and counter " + counter);
             }
             if (counter < 0) {
-
-                System.out.println("SIZE on EXIT " + collection.size() + " and counter " + counter);
-                System.out.println("SIZE on EXIT " + reader.peek() + " " + reader.peekNodeName());
-
                 break;
             }
         }

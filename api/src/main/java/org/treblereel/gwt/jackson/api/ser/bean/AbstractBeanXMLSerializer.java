@@ -123,7 +123,6 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
      */
     protected void serializeObject(XMLWriter writer, T value, XMLSerializationContext ctx,
                                    String typeName, TypeSerializationInfo typeInformation) throws XMLStreamException {
-        System.out.println("serializeObject " + getClass().getSimpleName() + " " + prefix + " " + namespace + " " + propertyName + " " + value.toString());
         if (value == null && !ctx.isSerializeNulls()) {
             return;
         }
@@ -203,7 +202,6 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
 
     private void writeTargetNamespace(XMLWriter writer) throws XMLStreamException {
         if (getTargetNamespace() != null) {
-            System.out.println("getTargetNamespace " + getTargetNamespace().key + " " + getTargetNamespace().value);
             writer.writeTargetNamespace(getTargetNamespace().value);
         }
     }

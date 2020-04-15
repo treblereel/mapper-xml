@@ -83,6 +83,11 @@ public class BeanProcessor {
             DeclaredType collection = (DeclaredType) type;
             collection.getTypeArguments().forEach(this::checkTypeAndAdd);
         }
+
+        if (context.getTypeUtils().isMap(type)) {
+            DeclaredType collection = (DeclaredType) type;
+            collection.getTypeArguments().forEach(this::checkTypeAndAdd);
+        }
     }
 
     private boolean checkField(VariableElement field) {

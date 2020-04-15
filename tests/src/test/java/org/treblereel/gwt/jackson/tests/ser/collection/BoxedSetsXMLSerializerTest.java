@@ -33,13 +33,6 @@ public class BoxedSetsXMLSerializerTest {
 
         BoxedSets test = new BoxedSets(strings, booleans, chars, bytes, doubles, ints, longs, shorts);
 
-        System.out.println("XML " + mapper.write(test));
-
-
-        mapper.read(mapper.write(test)).getStrings().forEach(v -> {
-            System.out.println("getStrings " + v);
-        });
-
         assertEquals(test, mapper.read(mapper.write(test)));
     }
 }

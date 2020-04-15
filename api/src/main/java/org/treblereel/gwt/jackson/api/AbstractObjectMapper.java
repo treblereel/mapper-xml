@@ -64,7 +64,6 @@ public abstract class AbstractObjectMapper<T> implements ObjectMapper<T> {
             // already logged, we just throw it
             throw e;
         } catch (RuntimeException e) {
-            System.out.println("RuntimeException " + e);
             throw ctx.traceError(e, reader);
         }
     }

@@ -19,7 +19,6 @@ package org.treblereel.gwt.jackson.api.deser.map;
 import java.util.IdentityHashMap;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
-import org.treblereel.gwt.jackson.api.deser.map.key.KeyDeserializer;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.IdentityHashMap}.
@@ -35,22 +34,22 @@ public final class IdentityHashMapXMLDeserializer<K, V> extends BaseMapXMLDeseri
     /**
      * <p>newInstance</p>
      *
-     * @param keyDeserializer   {@link KeyDeserializer} used to deserialize the keys.
+     * @param keyDeserializer   {@link XMLDeserializer} used to deserialize the keys.
      * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
      * @param <K>               Type of the keys inside the {@link java.util.IdentityHashMap}
      * @param <V>               Type of the values inside the {@link java.util.IdentityHashMap}
      * @return a new instance of {@link IdentityHashMapXMLDeserializer}
      */
-    public static <K, V> IdentityHashMapXMLDeserializer<K, V> newInstance(KeyDeserializer<K> keyDeserializer,
+    public static <K, V> IdentityHashMapXMLDeserializer<K, V> newInstance(XMLDeserializer<K> keyDeserializer,
                                                                            XMLDeserializer<V> valueDeserializer) {
         return new IdentityHashMapXMLDeserializer<>(keyDeserializer, valueDeserializer);
     }
 
     /**
-     * @param keyDeserializer   {@link KeyDeserializer} used to deserialize the keys.
+     * @param keyDeserializer   {@link XMLDeserializer} used to deserialize the keys.
      * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
      */
-    private IdentityHashMapXMLDeserializer(KeyDeserializer<K> keyDeserializer, XMLDeserializer<V> valueDeserializer) {
+    private IdentityHashMapXMLDeserializer(XMLDeserializer<K> keyDeserializer, XMLDeserializer<V> valueDeserializer) {
         super(keyDeserializer, valueDeserializer);
     }
 

@@ -30,8 +30,6 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
 
     @Override
     public Expression getFieldDeserializer(CompilationUnit cu) {
-        System.out.println("ZgetFieldSerializer " + bean);
-
         cu.addImport(ArrayXMLDeserializer.ArrayCreator.class);
         cu.addImport(ArrayXMLDeserializer.class);
 

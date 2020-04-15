@@ -106,8 +106,6 @@ import org.treblereel.gwt.jackson.api.deser.map.LinkedHashMapXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.map.MapXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.map.SortedMapXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.map.TreeMapXMLDeserializer;
-import org.treblereel.gwt.jackson.api.deser.map.key.EnumKeyDeserializer;
-import org.treblereel.gwt.jackson.api.deser.map.key.StringKeyDeserializer;
 import org.treblereel.gwt.jackson.api.ser.BooleanXMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.CharacterXMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.CollectionXMLSerializer;
@@ -135,8 +133,6 @@ import org.treblereel.gwt.jackson.api.ser.array.dd.PrimitiveIntegerArray2dXMLSer
 import org.treblereel.gwt.jackson.api.ser.array.dd.PrimitiveLongArray2dXMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.array.dd.PrimitiveShortArray2dXMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.map.MapXMLSerializer;
-import org.treblereel.gwt.jackson.api.ser.map.key.EnumKeySerializer;
-import org.treblereel.gwt.jackson.api.ser.map.key.ToStringKeySerializer;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 
 import static java.util.Objects.nonNull;
@@ -176,7 +172,6 @@ public final class TypeRegistry {
 
     private static Map<String, ClassMapper> simpleTypes = new HashMap<>();
     private static Map<String, ClassMapper> basicTypes = new HashMap<>();
-    private static Map<String, ClassMapper> keysMappers = new HashMap<>();
     private static Map<String, Class> collectionsDeserializers = new HashMap<>();
     private static Map<String, Class> mapDeserializers = new HashMap<>();
     private static Map<String, ClassMapper> customMappers = new HashMap<>();
@@ -200,7 +195,6 @@ public final class TypeRegistry {
         initMapMappers();
         initPrimitiveArraysMappers();
         initPrimitive2DArraysMappers();
-        initMapsKeyMappers();
         initCollectionsDeserializersMappers();
         initMapsDeserializersMappers();
     }
@@ -657,20 +651,6 @@ public final class TypeRegistry {
                 .register(simpleTypes);
     }
 
-    private void initMapsKeyMappers() {
-        MAPPER
-                .forType(Enum.class)
-                .serializer(EnumKeySerializer.class)
-                .deserializer(EnumKeyDeserializer.class)
-                .register(keysMappers);
-
-        MAPPER
-                .forType(String.class)
-                .serializer(ToStringKeySerializer.class)
-                .deserializer(StringKeyDeserializer.class)
-                .register(keysMappers);
-    }
-
     private void initCollectionsDeserializersMappers() {
         collectionsDeserializers.put(AbstractCollection.class.getCanonicalName(), AbstractCollectionXMLDeserializer.class);
         collectionsDeserializers.put(AbstractList.class.getCanonicalName(), AbstractListXMLDeserializer.class);
@@ -879,30 +859,6 @@ public final class TypeRegistry {
 
     public boolean isSimpleType(String type) {
         return simpleTypes.containsKey(type);
-    }
-
-    /**
-     * <p>getKeySerializer.</p>
-     * @param typeName a {@link String} object.
-     * @return a {@link TypeElement} object.
-     */
-    public TypeElement getKeySerializer(String typeName) {
-        if (keysMappers.containsKey(typeName)) {
-            return keysMappers.get(typeName).serializer;
-        }
-        throw new TypeSerializerNotFoundException(typeName);
-    }
-
-    /**
-     * <p>getKeyDeserializer.</p>
-     * @param typeName a {@link String} object.
-     * @return a {@link TypeElement} object.
-     */
-    public TypeElement getKeyDeserializer(String typeName) {
-        if (keysMappers.containsKey(typeName)) {
-            return keysMappers.get(typeName).deserializer;
-        }
-        throw new TypeDeserializerNotFoundException(typeName);
     }
 
     /**

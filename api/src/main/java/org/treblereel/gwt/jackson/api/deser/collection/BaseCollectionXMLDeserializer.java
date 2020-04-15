@@ -50,12 +50,9 @@ public abstract class BaseCollectionXMLDeserializer<C extends Collection<T>, T> 
         //reader.next();
         Scanner scanner = (Scanner<C>) (reader1, ctx1, instance) -> {
             T element = deserializer.deserialize(reader1, ctx1, params);
-            System.out.println("element " + element.toString());
-
             if (element != null) {
                 instance.add(element);
             }
-            //reader.next();
             return null;
         };
 

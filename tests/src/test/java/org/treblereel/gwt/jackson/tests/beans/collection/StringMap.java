@@ -14,6 +14,8 @@ public class StringMap {
 
     private Map<String, String> map;
 
+    private String checkNewLine;
+
     public Map<String, String> getMap() {
         return map;
     }
@@ -37,5 +39,13 @@ public class StringMap {
     @Override
     public int hashCode() {
         return Objects.hash(getMap());
+    }
+
+    public String getCheckNewLine() {
+        return checkNewLine;
+    }
+
+    public void setCheckNewLine(String checkNewLine) {
+        this.checkNewLine = checkNewLine;
     }
 }

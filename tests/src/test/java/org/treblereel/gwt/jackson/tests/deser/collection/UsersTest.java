@@ -1,8 +1,8 @@
 package org.treblereel.gwt.jackson.tests.deser.collection;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -45,42 +45,15 @@ public class UsersTest {
         test.setActiveUsers(map1);
         test.setTypes(types);
 
+        Map<Person, Address> personAddressMap = new LinkedHashMap<>();
+        personAddressMap.put(p1, new Address(1, "AAA", "BBB"));
+        personAddressMap.put(p2, new Address(2, "AAA2", "BBB2"));
+        test.setAddressMap(personAddressMap);
+
         String xml = mapper.write(test);
 
-        System.out.println(xml);
-
         Users parsed = mapper.read(xml);
-        System.out.println("P1 " + parsed.getActiveUsers().size());
-        parsed.getActiveUsers().forEach((k, v) -> {
-            System.out.println("          " + k + " " + v + " addr " + v.getAddress());
-        });
-
-        System.out.println("P2 " + parsed.getTypes().size());
-        parsed.getTypes().forEach((k, v) -> {
-            System.out.println("          " + k + " " + v);
-        });
-        System.out.println("P3 " + parsed.getAddress());
-        assertEquals(test.getAddress(), parsed.getAddress());
-
-        parsed.getActiveUsers().forEach((k, v) -> {
-
-            System.out.println(" K1 " + v);
-            System.out.println(" K2 " + test.getActiveUsers().get(k));
-            System.out.println("-< " + k + " " + test.getActiveUsers().get(k).equals(v));
-        });
-
-        assertEquals(test.getActiveUsers(), parsed.getActiveUsers());
-        assertEquals(test.getTypes(), parsed.getTypes());
-        //assertEquals(test.getTypes(), parsed.getTypes());
-        assertTrue(test.equals(parsed));
         assertEquals(test, parsed);
-
         assertEquals(mapper.write(test), mapper.write(mapper.read(mapper.write(mapper.read(mapper.write(test))))));
-
-        assertEquals(types, mapper.read(mapper.write(test)).getTypes());
-        assertEquals(test.getActiveUsers(), mapper.read(mapper.write(test)).getActiveUsers());
-        assertEquals(test.getTypes(), mapper.read(mapper.write(test)).getTypes());
-
-        assertEquals(test, mapper.read(mapper.write(test)));
     }
 }

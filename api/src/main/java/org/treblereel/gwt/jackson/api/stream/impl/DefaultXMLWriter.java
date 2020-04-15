@@ -107,8 +107,6 @@ public class DefaultXMLWriter implements XMLWriter {
 
     @Override
     public DefaultXMLWriter beginObject(String prefix, String namespace, String name) throws XMLStreamException {
-        System.out.println("beginObject " + prefix + " " + namespace + " " + name);
-
         if (objCounter == 0) {
             out.writeStartDocument();
         }

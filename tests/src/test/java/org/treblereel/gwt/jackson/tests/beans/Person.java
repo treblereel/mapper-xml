@@ -39,14 +39,6 @@ public class Person {
             return false;
         }
         Person person = (Person) o;
-
-        System.out.println("1 " + Objects.equals(getFirstName(), person.getFirstName()));
-        System.out.println("2 " + Objects.equals(getLastName(), person.getLastName()));
-        System.out.println("3 " + Objects.equals(getBirthday(), person.getBirthday()));
-        System.out.println("4 " + Objects.equals(getAlive(), person.getAlive()));
-        System.out.println("5 " + Objects.equals(getAddress(), person.getAddress()));
-        System.out.println("6 " + Objects.equals(getChilds(), person.getChilds()));
-
         return Objects.equals(getFirstName(), person.getFirstName()) &&
                 Objects.equals(getLastName(), person.getLastName()) &&
                 Objects.equals(getBirthday(), person.getBirthday()) &&

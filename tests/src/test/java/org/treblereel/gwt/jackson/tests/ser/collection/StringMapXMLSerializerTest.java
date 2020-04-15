@@ -28,8 +28,9 @@ public class StringMapXMLSerializerTest {
 
         StringMap test = new StringMap();
         test.setMap(map);
+        test.setCheckNewLine("one more line");
 
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><StringMap><map><key1>value1</key1><key2>value2</key2><key3>value3</key3></map></StringMap>", mapper.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><StringMap><map><entry><key>key1</key><value>value1</value></entry><entry><key>key2</key><value>value2</value></entry><entry><key>key3</key><value>value3</value></entry></map><checkNewLine>one more line</checkNewLine></StringMap>", mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
     }
 }

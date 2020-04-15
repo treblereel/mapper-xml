@@ -115,16 +115,11 @@ public class DefaultXMLReader implements XMLReader {
      */
     @Override
     public String nextString() throws XMLStreamException {
-        System.out.println("nex ? " + peek());
-
         if (peek() == 1) {
             reader.next();
-            System.out.println("do next " + peek());
-
         }
 
         if (peek() == 2) {
-            System.out.println("deff " + peek());
             return null;
         }
         return reader.getText();

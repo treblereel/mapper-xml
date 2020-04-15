@@ -63,7 +63,6 @@ public class EnumXMLDeserializer<E extends Enum<E>> extends XMLDeserializer<E> {
     @Override
     public E doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         try {
-            System.out.println("ENUM " + reader.peek());
             return Enum.valueOf(enumClass, reader.nextString());
         } catch (IllegalArgumentException ex) {
             if (ctx.isReadUnknownEnumValuesAsNull()) {

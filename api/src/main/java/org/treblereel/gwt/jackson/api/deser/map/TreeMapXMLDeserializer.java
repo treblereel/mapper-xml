@@ -19,7 +19,6 @@ package org.treblereel.gwt.jackson.api.deser.map;
 import java.util.TreeMap;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
-import org.treblereel.gwt.jackson.api.deser.map.key.KeyDeserializer;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.TreeMap}.
@@ -35,22 +34,22 @@ public final class TreeMapXMLDeserializer<K, V> extends BaseMapXMLDeserializer<T
     /**
      * <p>newInstance</p>
      *
-     * @param keyDeserializer   {@link KeyDeserializer} used to deserialize the keys.
+     * @param keyDeserializer   {@link XMLDeserializer} used to deserialize the keys.
      * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
      * @param <K>               Type of the keys inside the {@link java.util.TreeMap}
      * @param <V>               Type of the values inside the {@link java.util.TreeMap}
      * @return a new instance of {@link TreeMapXMLDeserializer}
      */
-    public static <K, V> TreeMapXMLDeserializer<K, V> newInstance(KeyDeserializer<K> keyDeserializer,
+    public static <K, V> TreeMapXMLDeserializer<K, V> newInstance(XMLDeserializer<K> keyDeserializer,
                                                                    XMLDeserializer<V> valueDeserializer) {
         return new TreeMapXMLDeserializer<>(keyDeserializer, valueDeserializer);
     }
 
     /**
-     * @param keyDeserializer   {@link KeyDeserializer} used to deserialize the keys.
+     * @param keyDeserializer   {@link XMLDeserializer} used to deserialize the keys.
      * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
      */
-    private TreeMapXMLDeserializer(KeyDeserializer<K> keyDeserializer, XMLDeserializer<V> valueDeserializer) {
+    private TreeMapXMLDeserializer(XMLDeserializer<K> keyDeserializer, XMLDeserializer<V> valueDeserializer) {
         super(keyDeserializer, valueDeserializer);
     }
 

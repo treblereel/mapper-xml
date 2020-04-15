@@ -87,6 +87,16 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
         return deserializeWrapped(reader, ctx, params, identityInfo, null, null);
     }
 
+    private String getPropertyName(QName property) {
+        StringBuffer attrName = new StringBuffer();
+        if (!property.getPrefix().isEmpty()) {
+            attrName.append(property.getPrefix());
+            attrName.append(":");
+        }
+        attrName.append(property.getLocalPart());
+        return attrName.toString();
+    }
+
     private String getRootNodeName() {
         if (getXmlRootElement() == null) {
             return getDeserializedType().getSimpleName();
@@ -132,18 +142,11 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
         if (reader.peek() == XMLStreamReader.START_DOCUMENT) {
             reader.next();
         }
-
-        System.out.println("deserializeInline " + getClass().getSimpleName());
-        System.out.println(" on deserializeInline 1 " + reader.peek());
-        System.out.println(" on deserializeInline 2 " + reader.peekNodeName());
-
-
         T instance = instanceBuilder.newInstance(reader, ctx, params, null, null).getInstance();
 
         if (reader.getAttributeCount() > 0) {
             for (int i = 0; i < reader.getAttributeCount(); i++) {
-                String attrName = reader.getAttributeName(i).getLocalPart();
-                BeanPropertyDeserializer<T, ?> property = deserializers.get(attrName);
+                BeanPropertyDeserializer<T, ?> property = deserializers.get(getPropertyName(reader.getAttributeName(i)));
                 if (property != null) {
                     attrNode = true;
                     property.deserialize(reader.getAttributeValue(i), instance, ctx);
@@ -152,7 +155,6 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
         }
         T result = iterateOver(reader, (reader1, propertyName, ctx1, bean) -> {
             if (!propertyName.getLocalPart().equals(getRootNodeName())) {
-                System.out.println("propertyName " + getClass().getSimpleName() + " " + propertyName);
                 BeanPropertyDeserializer<T, ?> property = getPropertyDeserializer(propertyName.getLocalPart(), ctx1);
                 if (property != null) {
                     property.deserialize(reader1, bean, ctx1);

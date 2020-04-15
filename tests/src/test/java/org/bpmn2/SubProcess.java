@@ -5,14 +5,13 @@ import java.util.List;
 
 import javax.xml.bind.annotation.JacksonXmlProperty;
 
+import com.google.common.base.Objects;
 import org.drools.MetaData;
-import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
 /**
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/6/20
  */
-@XMLMapper
 public class SubProcess {
 
     @JacksonXmlProperty(isAttribute = true)
@@ -29,6 +28,38 @@ public class SubProcess {
 
     private List<DataObjectReference> dataObjectReference = new ArrayList<>();
 
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId(), getName(), isTriggeredByEvent(), getExtensionElements(), getDataObjectReference());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SubProcess)) {
+            return false;
+        }
+        SubProcess that = (SubProcess) o;
+        return isTriggeredByEvent() == that.isTriggeredByEvent() &&
+                Objects.equal(getId(), that.getId()) &&
+                Objects.equal(getName(), that.getName()) &&
+                Objects.equal(getExtensionElements(), that.getExtensionElements()) &&
+                Objects.equal(getDataObjectReference(), that.getDataObjectReference());
+    }
+
+    @Override
+    public String toString() {
+        return "SubProcess{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", triggeredByEvent=" + triggeredByEvent +
+                ", extensionElements=" + extensionElements +
+                ", dataObjectReference=" + dataObjectReference +
+                '}';
+    }
+
     public String getId() {
         return id;
     }
@@ -41,16 +72,8 @@ public class SubProcess {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public boolean isTriggeredByEvent() {
         return triggeredByEvent;
-    }
-
-    public void setTriggeredByEvent(boolean triggeredByEvent) {
-        this.triggeredByEvent = triggeredByEvent;
     }
 
     public List<MetaData> getExtensionElements() {
@@ -67,5 +90,13 @@ public class SubProcess {
 
     public void setDataObjectReference(List<DataObjectReference> dataObjectReference) {
         this.dataObjectReference = dataObjectReference;
+    }
+
+    public void setTriggeredByEvent(boolean triggeredByEvent) {
+        this.triggeredByEvent = triggeredByEvent;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

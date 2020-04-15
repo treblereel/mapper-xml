@@ -53,15 +53,6 @@ public class PrimitiveFloatArray2dXMLDeserializer extends AbstractArray2dXMLDese
     public float[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         List<List<Float>> list = deserializeIntoList(reader, ctx, BaseNumberXMLDeserializer.FloatXMLDeserializer.getInstance(), params);
 
-        System.out.println("RESULT " + list.size());
-
-        list.forEach(v -> {
-            System.out.println("V " + v.size());
-            v.forEach(d -> {
-                System.out.println("DD  " + d);
-            });
-        });
-
         if (list.isEmpty()) {
             return new float[0][0];
         }

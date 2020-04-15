@@ -2,8 +2,6 @@ package org.treblereel.gwt.jackson.api.utils;
 
 import java.math.BigInteger;
 
-import static jdk.nashorn.internal.runtime.ECMAErrors.syntaxError;
-
 /**
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/4/20
@@ -25,7 +23,7 @@ public class NumberUtils {
             // decimal
             double resultDouble = Double.parseDouble(peekedString); // don't catch this NumberFormatException.
             if (Double.isNaN(resultDouble) || Double.isInfinite(resultDouble)) {
-                throw syntaxError("It forbids NaN and infinities: " + resultDouble);
+                throw new UnsupportedOperationException("It forbids NaN and infinities: " + resultDouble);
             }
             result = resultDouble;
         } else {

@@ -1,17 +1,15 @@
 package org.bpmn.di;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.xml.bind.annotation.JacksonXmlProperty;
-
-import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
 /**
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/6/20
  */
-@XMLMapper
 public class BPMNPlane {
 
     @JacksonXmlProperty(isAttribute = true)
@@ -20,7 +18,29 @@ public class BPMNPlane {
     @JacksonXmlProperty(isAttribute = true)
     private String bpmnElement;
 
-    private Set<BPMNShape> shapes = new HashSet<>();
+    private Set<BPMNShape> shapes = new LinkedHashSet<>();
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getBpmnElement(), getShapes());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof BPMNPlane)) {
+            return false;
+        }
+        BPMNPlane bpmnPlane = (BPMNPlane) o;
+        return Objects.equals(getId(), bpmnPlane.getId()) &&
+                Objects.equals(getBpmnElement(), bpmnPlane.getBpmnElement());
+    }
+
+    public Set<BPMNShape> getShapes() {
+        return shapes;
+    }
 
     public String getId() {
         return id;
@@ -36,10 +56,6 @@ public class BPMNPlane {
 
     public void setBpmnElement(String bpmnElement) {
         this.bpmnElement = bpmnElement;
-    }
-
-    public Set<BPMNShape> getShapes() {
-        return shapes;
     }
 
     public void setShapes(Set<BPMNShape> shapes) {

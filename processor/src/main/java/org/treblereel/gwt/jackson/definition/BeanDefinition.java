@@ -104,7 +104,6 @@ public class BeanDefinition extends Definition {
 
         if (xmlSchema != null && xmlSchema.xmlns().length > 0) {
             for (XmlNs xmln : xmlSchema.xmlns()) {
-                System.out.println("XmlNs " + xmln);
                 result.add(new Pair<>(xmln.prefix(), xmln.namespaceURI()));
             }
         }

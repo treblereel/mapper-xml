@@ -25,7 +25,6 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
-import org.treblereel.gwt.jackson.api.ser.map.key.KeySerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
@@ -38,16 +37,16 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public class MapXMLSerializer<M extends Map<K, V>, K, V> extends XMLSerializer<M> {
 
-    protected final KeySerializer<K> keySerializer;
+    protected final XMLSerializer<K> keySerializer;
     protected final XMLSerializer<V> valueSerializer;
     protected final String propertyName;
 
     /**
      * <p>Constructor for MapXMLSerializer.</p>
-     * @param keySerializer {@link KeySerializer} used to serialize the keys.
+     * @param keySerializer {@link XMLSerializer} used to serialize the keys.
      * @param valueSerializer {@link XMLSerializer} used to serialize the values.
      */
-    protected MapXMLSerializer(KeySerializer<K> keySerializer, XMLSerializer<V> valueSerializer, String propertyName) {
+    protected MapXMLSerializer(XMLSerializer<K> keySerializer, XMLSerializer<V> valueSerializer, String propertyName) {
         if (null == keySerializer) {
             throw new IllegalArgumentException("keySerializer cannot be null");
         }
@@ -64,12 +63,12 @@ public class MapXMLSerializer<M extends Map<K, V>, K, V> extends XMLSerializer<M
 
     /**
      * <p>newInstance</p>
-     * @param keySerializer {@link KeySerializer} used to serialize the keys.
+     * @param keySerializer {@link XMLSerializer} used to serialize the keys.
      * @param valueSerializer {@link XMLSerializer} used to serialize the values.
      * @param <M> Type of the {@link Map}
      * @return a new instance of {@link MapXMLSerializer}
      */
-    public static <M extends Map<?, ?>> MapXMLSerializer<M, ?, ?> newInstance(KeySerializer<?> keySerializer, XMLSerializer<?>
+    public static <M extends Map<?, ?>> MapXMLSerializer<M, ?, ?> newInstance(XMLSerializer<?> keySerializer, XMLSerializer<?>
             valueSerializer, String propertyName) {
         return new MapXMLSerializer(keySerializer, valueSerializer, propertyName);
     }
@@ -78,16 +77,16 @@ public class MapXMLSerializer<M extends Map<K, V>, K, V> extends XMLSerializer<M
      * {@inheritDoc}
      */
     @Override
-    protected boolean isEmpty(M value) {
-        return null == value || value.isEmpty();
+    public void doSerialize(XMLWriter writer, M values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
+        serializeValues(writer, values, ctx, params);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void doSerialize(XMLWriter writer, M values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        serializeValues(writer, values, ctx, params);
+    protected boolean isEmpty(M value) {
+        return null == value || value.isEmpty();
     }
 
     /**
@@ -105,9 +104,17 @@ public class MapXMLSerializer<M extends Map<K, V>, K, V> extends XMLSerializer<M
             }
             writer.beginObject(propertyName);
             for (Map.Entry<K, V> entry : map.entrySet()) {
-                String name = keySerializer.serialize(entry.getKey(), ctx);
-                writer.unescapeName(name);
-                valueSerializer.setPropertyName(name).serialize(writer, entry.getValue(), ctx, params, true);
+                writer.beginObject("entry");
+
+                writer.unescapeName("key");
+                keySerializer.setPropertyName("key")
+                        .serialize(writer, entry.getKey(), ctx, params, true);
+
+                writer.unescapeName("value");
+                valueSerializer.setPropertyName("value")
+                        .serialize(writer, entry.getValue(), ctx, params, true);
+
+                writer.endObject();
             }
             writer.endObject();
         }

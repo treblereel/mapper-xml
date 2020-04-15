@@ -17,7 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.map;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
-import org.treblereel.gwt.jackson.api.deser.map.key.EnumKeyDeserializer;
+import org.treblereel.gwt.jackson.api.deser.EnumXMLDeserializer;
 
 import java.util.EnumMap;
 
@@ -35,12 +35,12 @@ public final class EnumMapXMLDeserializer<E extends Enum<E>, V> extends BaseMapX
     /**
      * <p>newInstance</p>
      *
-     * @param keyDeserializer   {@link EnumKeyDeserializer} used to deserialize the enum keys.
+     * @param keyDeserializer   {@link EnumXMLDeserializer} used to deserialize the enum keys.
      * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
      * @param <V>               Type of the values inside the {@link java.util.EnumMap}
      * @return a new instance of {@link EnumMapXMLDeserializer}
      */
-    public static <E extends Enum<E>, V> EnumMapXMLDeserializer<E, V> newInstance(EnumKeyDeserializer<E> keyDeserializer,
+    public static <E extends Enum<E>, V> EnumMapXMLDeserializer<E, V> newInstance(EnumXMLDeserializer<E> keyDeserializer,
                                                                                    XMLDeserializer<V> valueDeserializer) {
         return new EnumMapXMLDeserializer<>(keyDeserializer, valueDeserializer);
     }
@@ -51,10 +51,10 @@ public final class EnumMapXMLDeserializer<E extends Enum<E>, V> extends BaseMapX
     private final Class<E> enumClass;
 
     /**
-     * @param keyDeserializer   {@link EnumKeyDeserializer} used to deserialize the enum keys.
+     * @param keyDeserializer   {@link XMLDeserializer} used to deserialize the enum keys.
      * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
      */
-    private EnumMapXMLDeserializer(EnumKeyDeserializer<E> keyDeserializer, XMLDeserializer<V> valueDeserializer) {
+    private EnumMapXMLDeserializer(EnumXMLDeserializer<E> keyDeserializer, XMLDeserializer<V> valueDeserializer) {
         super(keyDeserializer, valueDeserializer);
         this.enumClass = keyDeserializer.getEnumClass();
     }

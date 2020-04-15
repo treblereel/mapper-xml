@@ -18,7 +18,6 @@ package org.treblereel.gwt.jackson.api;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TimeZone;
 
 import org.treblereel.gwt.jackson.api.ser.bean.TypeSerializationInfo;
 
@@ -48,11 +47,6 @@ public final class GwtJacksonXMLSerializerParameters implements XMLSerializerPar
      * Locale to use for serialization (if needed).
      */
     private String locale;
-
-    /**
-     * Timezone to use for serialization (if needed).
-     */
-    private TimeZone timezone;
 
     /**
      * Names of properties to ignore.
@@ -111,25 +105,14 @@ public final class GwtJacksonXMLSerializerParameters implements XMLSerializerPar
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>Getter for the field <code>timezone</code>.</p>
-     */
     @Override
-    public TimeZone getTimezone() {
-        return timezone;
+    public Object getTimezone() {
+        return null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>Setter for the field <code>timezone</code>.</p>
-     */
     @Override
     public XMLSerializerParameters setTimezone(Object timezone) {
-        this.timezone = (TimeZone) timezone;
-        return this;
+        return null;
     }
 
     /**

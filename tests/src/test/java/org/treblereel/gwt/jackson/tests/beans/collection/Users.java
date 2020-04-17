@@ -1,7 +1,10 @@
 package org.treblereel.gwt.jackson.tests.beans.collection;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import javax.xml.bind.annotation.JacksonXmlProperty;
 
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 import org.treblereel.gwt.jackson.tests.beans.Address;
@@ -15,6 +18,9 @@ import org.treblereel.gwt.jackson.tests.beans.Person;
 public class Users {
 
     private Map<String, Person> activeUsers;
+    @JacksonXmlProperty(localName = "all_users", namespace = "do")
+    private List<Person> allUsers;
+    @JacksonXmlProperty(localName = "_types", namespace = "do")
     private Map<TYPE, Person> types;
     private Map<Person, Address> addressMap;
 
@@ -22,7 +28,7 @@ public class Users {
 
     @Override
     public int hashCode() {
-        return Objects.hash(activeUsers, types, address);
+        return Objects.hash(activeUsers, types, address, allUsers);
     }
 
     @Override
@@ -37,6 +43,7 @@ public class Users {
         return Objects.equals(activeUsers, users.activeUsers) &&
                 Objects.equals(types, users.types) &&
                 Objects.equals(addressMap, users.addressMap) &&
+                Objects.equals(allUsers, users.allUsers) &&
                 Objects.equals(address, users.address);
     }
 
@@ -70,6 +77,14 @@ public class Users {
 
     public void setAddressMap(Map<Person, Address> addressMap) {
         this.addressMap = addressMap;
+    }
+
+    public List<Person> getAllUsers() {
+        return allUsers;
+    }
+
+    public void setAllUsers(List<Person> allUsers) {
+        this.allUsers = allUsers;
     }
 
     public enum TYPE {

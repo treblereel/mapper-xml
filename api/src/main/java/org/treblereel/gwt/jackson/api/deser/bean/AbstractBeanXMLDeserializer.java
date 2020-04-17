@@ -38,7 +38,7 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
 
     protected final InstanceBuilder<T> instanceBuilder;
 
-    private final MapLike<BeanPropertyDeserializer<T, ?>> deserializers;
+    private MapLike<BeanPropertyDeserializer<T, ?>> deserializers;
 
     private final IdentityDeserializationInfo defaultIdentityInfo;
 
@@ -47,7 +47,6 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
      */
     protected AbstractBeanXMLDeserializer() {
         this.instanceBuilder = initInstanceBuilder();
-        this.deserializers = initDeserializers();
         this.defaultIdentityInfo = initIdentityInfo();
     }
 
@@ -82,6 +81,7 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
      */
     @Override
     public T doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+        deserializers = initDeserializers();
         // Processing the parameters. We fallback to default if parameter is not present.
         final IdentityDeserializationInfo identityInfo = null == params.getIdentityInfo() ? defaultIdentityInfo : params.getIdentityInfo();
         return deserializeWrapped(reader, ctx, params, identityInfo, null, null);

@@ -43,6 +43,8 @@ public abstract class XMLSerializer<T> {
 
     protected String prefix;
 
+    protected String defaultNamespace;
+
     public XMLSerializer<T> setPropertyName(String propertyName) {
         this.propertyName = propertyName;
         return this;
@@ -117,6 +119,54 @@ public abstract class XMLSerializer<T> {
         } else {
             doSerialize(writer, value, ctx, params);
         }
+    }
+
+    protected void writeNamespace(XMLWriter writer) throws XMLStreamException {
+        if (!getXmlNs().isEmpty()) {
+            for (Pair<String, String> pair : getXmlNs()) {
+                if (pair.key == null) {
+                    this.defaultNamespace = pair.value;
+                    writer.writeDefaultNamespace(defaultNamespace);
+                } else {
+                    writer.writeNamespace(pair.key, pair.value);
+                }
+            }
+        }
+        if (prefix == null && namespace != null) {
+            writer.writeAttrNamespace(namespace);
+        }
+
+        writeSchemaLocation(writer);
+        writeTargetNamespace(writer);
+        writer.endNs();
+    }
+
+    private void writeSchemaLocation(XMLWriter writer) throws XMLStreamException {
+        if (getSchemaLocation() != null) {
+            writer.writeSchemaLocation("xsi:schemaLocation", getSchemaLocation());
+        }
+    }
+
+    private void writeTargetNamespace(XMLWriter writer) throws XMLStreamException {
+        if (getTargetNamespace() != null) {
+            writer.writeTargetNamespace(getTargetNamespace().value);
+        }
+    }
+
+    protected String getXmlRootElement() {
+        return null;
+    }
+
+    protected List<Pair<String, String>> getXmlNs() {
+        return null;
+    }
+
+    protected String getSchemaLocation() {
+        return null;
+    }
+
+    protected Pair<String, String> getTargetNamespace() {
+        return null;
     }
 
     /**

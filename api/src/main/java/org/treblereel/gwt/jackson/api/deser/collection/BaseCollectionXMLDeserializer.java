@@ -34,6 +34,8 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public abstract class BaseCollectionXMLDeserializer<C extends Collection<T>, T> extends BaseIterableXMLDeserializer<C, T> {
 
+    C collection = newCollection();
+
     /**
      * <p>Constructor for BaseCollectionXMLDeserializer.</p>
      * @param deserializer {@link XMLDeserializer} used to map the objects inside the {@link java.util.Collection}.
@@ -47,7 +49,7 @@ public abstract class BaseCollectionXMLDeserializer<C extends Collection<T>, T> 
      */
     @Override
     public C doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        //reader.next();
+
         Scanner scanner = (Scanner<C>) (reader1, ctx1, instance) -> {
             T element = deserializer.deserialize(reader1, ctx1, params);
             if (element != null) {
@@ -55,10 +57,8 @@ public abstract class BaseCollectionXMLDeserializer<C extends Collection<T>, T> 
             }
             return null;
         };
-
-        //doDeserializeCollection(reader, deserializer, ctx, params);
-
-        return (C) doDeserializeCollection(reader, (Collection<C>) newCollection(),scanner,  ctx, params);
+        return (C) doDeserializeCollection(reader, ctx.isWrapCollections() ? ((Collection<C>) newCollection()) : (Collection<C>) collection,
+                                           scanner, ctx, params);
     }
 
     /**

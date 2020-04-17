@@ -84,7 +84,6 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
      * @param ctx context of the serialization process
      */
     public void serializePropertyName(XMLWriter writer, T bean, XMLSerializationContext ctx) throws XMLStreamException {
-        writer.setPrefix("aaa", "bbb");
         writer.unescapeName(propertyName);
     }
 

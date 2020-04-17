@@ -1,8 +1,8 @@
 package org.treblereel.gwt.jackson.tests.deser.collection;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -13,7 +13,6 @@ import org.treblereel.gwt.jackson.tests.beans.collection.Users;
 import org.treblereel.gwt.jackson.tests.beans.collection.Users_MapperImpl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -44,6 +43,10 @@ public class UsersTest {
         Users test = new Users();
         test.setActiveUsers(map1);
         test.setTypes(types);
+
+        test.setAllUsers(new ArrayList<>());
+        test.getAllUsers().add(p1);
+        test.getAllUsers().add(p2);
 
         Map<Person, Address> personAddressMap = new LinkedHashMap<>();
         personAddressMap.put(p1, new Address(1, "AAA", "BBB"));

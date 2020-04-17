@@ -132,4 +132,18 @@ public class BoxedLists {
     public int hashCode() {
         return Objects.hash(getStrings(), getBooleans(), getChars(), getBytes(), getDoubles(), getInts(), getLongs(), getShorts());
     }
+
+    @Override
+    public String toString() {
+        return "BoxedLists{" +
+                "strings=" + strings +
+                ", booleans=" + booleans +
+                ", chars=" + chars +
+                ", bytes=" + bytes +
+                ", doubles=" + doubles +
+                ", ints=" + ints +
+                ", longs=" + longs +
+                ", shorts=" + shorts +
+                '}';
+    }
 }

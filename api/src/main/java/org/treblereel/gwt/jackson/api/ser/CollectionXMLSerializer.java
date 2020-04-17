@@ -35,6 +35,7 @@ public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSeri
 
     protected final XMLSerializer<T> serializer;
     protected final String propertyName;
+
     /**
      * <p>Constructor for CollectionXMLSerializer.</p>
      * @param serializer {@link XMLSerializer} used to serialize the objects inside the {@link Collection}.
@@ -64,14 +65,6 @@ public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSeri
      * {@inheritDoc}
      */
     @Override
-    protected boolean isEmpty(C value) {
-        return null == value || value.isEmpty();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void doSerialize(XMLWriter writer, C values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
         if (values.isEmpty()) {
             if (ctx.isWriteEmptyXMLArrays()) {
@@ -82,10 +75,27 @@ public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSeri
             }
             return;
         }
-        writer.beginObject(propertyName);
+        if (ctx.isWrapCollections()) {
+            if (prefix != null) {
+                writer.beginObject(prefix, namespace, propertyName);
+            } else {
+                writer.beginObject(propertyName);
+            }
+        }
+
         for (T value : values) {
             serializer.setPropertyName(propertyName).serialize(writer, value, ctx, params);
         }
-        writer.endObject();
+        if (ctx.isWrapCollections()) {
+            writer.endObject();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean isEmpty(C value) {
+        return null == value || value.isEmpty();
     }
 }

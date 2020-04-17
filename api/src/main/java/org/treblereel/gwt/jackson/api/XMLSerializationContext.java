@@ -63,6 +63,13 @@ public interface XMLSerializationContext extends XMLMappingContext {
     boolean isMapKeyAndValueCanonical();
 
     /**
+     * <p>isWrapCollections.</p>
+     *
+     * @return a boolean.
+     */
+    boolean isWrapCollections();
+
+    /**
      * <p>newXMLWriter.</p>
      *
      * @return a {@link XMLWriter} object.

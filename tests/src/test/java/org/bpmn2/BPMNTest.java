@@ -1,5 +1,8 @@
 package org.bpmn2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.stream.XMLStreamException;
 
 import org.bpmn.dc.Bounds;
@@ -8,9 +11,12 @@ import org.bpmn.di.BPMNPlane;
 import org.bpmn.di.BPMNShape;
 import org.drools.MetaData;
 import org.junit.Test;
+import org.treblereel.gwt.jackson.api.DefaultXMLDeserializationContext;
+import org.treblereel.gwt.jackson.api.DefaultXMLSerializationContext;
+import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
+import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -91,5 +97,40 @@ public class BPMNTest {
         Definitions encoded = mapper.read(xml);
         assertEquals(xml, mapper.write(encoded));
         assertEquals(tested, mapper.read(mapper.write(encoded)));
+    }
+
+    @Test
+    public void testUnwrappedCollections() throws XMLStreamException {
+        XMLSerializationContext serializationContext = DefaultXMLSerializationContext.builder()
+                .wrapCollections(false)
+                .build();
+
+        XMLDeserializationContext deserializationContext = DefaultXMLDeserializationContext.builder()
+                .wrapCollections(false)
+                .build();
+
+        Definitions definition = new Definitions();
+
+        List<ItemDefinition> itemDefinitionList = new ArrayList<>();
+        definition.setItemDefinitions(itemDefinitionList);
+
+        ItemDefinition itemDefinition = new ItemDefinition();
+        itemDefinition.setId("_DataObjectItem");
+        itemDefinition.setStructureRef("String");
+        definition.getItemDefinitions().add(itemDefinition);
+
+        itemDefinition = new ItemDefinition();
+        itemDefinition.setId("_DataObjectItem_1");
+        itemDefinition.setStructureRef("String_1");
+        definition.getItemDefinitions().add(itemDefinition);
+
+        Definitions_MapperImpl mapper = new Definitions_MapperImpl();
+        String xml = mapper.write(definition, serializationContext);
+        Definitions result = mapper.read(mapper.write(definition,
+                                                      serializationContext),
+                                         deserializationContext);
+        assertEquals(definition, result);
+        assertEquals(xml, mapper.write(mapper.read(mapper.write(result, serializationContext), deserializationContext), serializationContext));
+        assertEquals(xml, mapper.write(mapper.read(mapper.write(result, serializationContext), deserializationContext), serializationContext));
     }
 }

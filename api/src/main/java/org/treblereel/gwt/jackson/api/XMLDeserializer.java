@@ -98,17 +98,21 @@ public abstract class XMLDeserializer<T> {
 
     protected Collection<T> doDeserializeCollection(XMLReader reader, Collection<T> collection, Scanner<T> scanner, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         int counter = 0;
-        while (reader.hasNext()) {
-            reader.next();
-            if (reader.peek() == XMLStreamReader.START_ELEMENT) {
-                counter++;
-                scanner.accept(reader, ctx, (T) collection);
-            }
-            if (reader.peek() == XMLStreamReader.END_ELEMENT) {
-                counter--;
-            }
-            if (counter < 0) {
-                break;
+        if (!ctx.isWrapCollections()) {
+            scanner.accept(reader, ctx, (T) collection);
+        } else {
+            while (reader.hasNext()) {
+                reader.next();
+                if (reader.peek() == XMLStreamReader.START_ELEMENT) {
+                    counter++;
+                    scanner.accept(reader, ctx, (T) collection);
+                }
+                if (reader.peek() == XMLStreamReader.END_ELEMENT) {
+                    counter--;
+                }
+                if (counter < 0) {
+                    break;
+                }
             }
         }
 

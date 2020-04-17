@@ -45,16 +45,17 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
     private final boolean readUnknownEnumValuesAsNull;
     private final boolean useBrowserTimezone;
     private final XMLInputFactory xmlInputFactory;
-
+    private final boolean wrapCollections;
 
     private DefaultXMLDeserializationContext(boolean failOnUnknownProperties, boolean acceptSingleValueAsArray,
-                                             boolean wrapExceptions, boolean useSafeEval, boolean readUnknownEnumValuesAsNull,
+                                             boolean wrapExceptions, boolean wrapCollections, boolean useSafeEval, boolean readUnknownEnumValuesAsNull,
                                              boolean useBrowserTimezone) {
         this.failOnUnknownProperties = failOnUnknownProperties;
         this.acceptSingleValueAsArray = acceptSingleValueAsArray;
         this.wrapExceptions = wrapExceptions;
         this.useSafeEval = useSafeEval;
         this.readUnknownEnumValuesAsNull = readUnknownEnumValuesAsNull;
+        this.wrapCollections = wrapCollections;
         this.useBrowserTimezone = useBrowserTimezone;
         this.xmlInputFactory = new WstxInputFactory();
     }
@@ -122,6 +123,11 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
         return useBrowserTimezone;
     }
 
+    @Override
+    public boolean isWrapCollections() {
+        return wrapCollections;
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -146,6 +152,18 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
     /**
      * {@inheritDoc}
      * <p>
+     * Trace an error with current reader state and returns a corresponding exception.
+     */
+    @Override
+    public XMLDeserializationException traceError(String message, XMLReader reader) throws XMLStreamException {
+        getLogger().log(Level.SEVERE, message);
+        traceReaderInfo(reader);
+        return new XMLDeserializationException(message);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
      * Trace an error and returns a corresponding exception.
      */
     @Override
@@ -160,22 +178,22 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
 
     /**
      * {@inheritDoc}
-     */
-    @Override
-    public XMLDeserializerParameters defaultParameters() {
-        return JacksonContextProvider.get().defaultDeserializerParameters();
-    }
-
-    /**
-     * {@inheritDoc}
      * <p>
      * Trace an error with current reader state and returns a corresponding exception.
      */
     @Override
-    public XMLDeserializationException traceError(String message, XMLReader reader) throws XMLStreamException {
-        getLogger().log(Level.SEVERE, message);
+    public RuntimeException traceError(RuntimeException cause, XMLReader reader) throws XMLStreamException {
+        RuntimeException exception = traceError(cause);
         traceReaderInfo(reader);
-        return new XMLDeserializationException(message);
+        return exception;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public XMLDeserializerParameters defaultParameters() {
+        return JacksonContextProvider.get().defaultDeserializerParameters();
     }
 
     /**
@@ -193,18 +211,6 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
         if (null != reader && getLogger().isLoggable(Level.INFO)) {
             getLogger().log(Level.INFO, "Error in input <" + reader.getInput() + ">");
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Trace an error with current reader state and returns a corresponding exception.
-     */
-    @Override
-    public RuntimeException traceError(RuntimeException cause, XMLReader reader) throws XMLStreamException {
-        RuntimeException exception = traceError(cause);
-        traceReaderInfo(reader);
-        return exception;
     }
 
     /**
@@ -233,6 +239,8 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
         protected boolean readUnknownEnumValuesAsNull = false;
 
         protected boolean useBrowserTimezone = false;
+
+        private boolean wrapCollections = true;
 
         /**
          * @deprecated Use {@link DefaultXMLDeserializationContext#builder()} instead. This constructor will be made protected in v1.0.
@@ -326,6 +334,11 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
             return this;
         }
 
+        public Builder wrapCollections(boolean wrapCollections) {
+            this.wrapCollections = wrapCollections;
+            return this;
+        }
+
         /**
          * Feature that specifies whether dates that doesn't contain timezone information
          * are interpreted using the browser timezone or being relative to UTC (the default).
@@ -339,7 +352,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
 
         public final XMLDeserializationContext build() {
             return new DefaultXMLDeserializationContext(failOnUnknownProperties, acceptSingleValueAsArray, wrapExceptions,
-                                                        useSafeEval, readUnknownEnumValuesAsNull, useBrowserTimezone);
+                                                        wrapCollections, useSafeEval, readUnknownEnumValuesAsNull, useBrowserTimezone);
         }
     }
 

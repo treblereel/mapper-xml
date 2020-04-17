@@ -55,7 +55,7 @@ public class PropertyDefinition extends Definition {
 
     public Expression getFieldSerializer(CompilationUnit cu) {
         FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(bean);
-        return fieldDefinition.getFieldSerializer(property.getSimpleName().toString(), cu);
+        return fieldDefinition.getFieldSerializer(getPropertyName(), cu);
     }
 
     public String getNamespace() {

@@ -105,18 +105,26 @@ public class MapXMLSerializer<M extends Map<K, V>, K, V> extends XMLSerializer<M
             writer.beginObject(propertyName);
             for (Map.Entry<K, V> entry : map.entrySet()) {
                 writer.beginObject("entry");
-
-                writer.unescapeName("key");
-                keySerializer.setPropertyName("key")
+                String keyName = getNodeName(entry.getKey().getClass(), ctx);
+                String valueName = getNodeName(entry.getValue().getClass(), ctx);
+                writer.unescapeName(keyName);
+                keySerializer.setPropertyName(keyName)
                         .serialize(writer, entry.getKey(), ctx, params, true);
 
-                writer.unescapeName("value");
-                valueSerializer.setPropertyName("value")
+                writer.unescapeName(valueName);
+                valueSerializer.setPropertyName(valueName)
                         .serialize(writer, entry.getValue(), ctx, params, true);
 
                 writer.endObject();
             }
             writer.endObject();
         }
+    }
+
+    private String getNodeName(Class clazz, XMLSerializationContext ctx) {
+        if (ctx.isMapKeyAndValueCanonical()) {
+            return clazz.getCanonicalName();
+        }
+        return clazz.getSimpleName();
     }
 }

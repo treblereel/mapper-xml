@@ -56,6 +56,13 @@ public interface XMLSerializationContext extends XMLMappingContext {
     boolean isOrderMapEntriesByKeys();
 
     /**
+     * <p>isMapKeyAndValueCanonical.</p>
+     *
+     * @return a boolean.
+     */
+    boolean isMapKeyAndValueCanonical();
+
+    /**
      * <p>newXMLWriter.</p>
      *
      * @return a {@link XMLWriter} object.

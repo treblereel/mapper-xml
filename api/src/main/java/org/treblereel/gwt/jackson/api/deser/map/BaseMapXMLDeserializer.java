@@ -19,6 +19,7 @@ package org.treblereel.gwt.jackson.api.deser.map;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -71,12 +72,14 @@ public abstract class BaseMapXMLDeserializer<M extends Map<K, V>, K, V> extends 
         M result = newMap();
         doDeserializeMap(reader, result, (reader1, ctx1, instance, counter1) -> {
             reader1.next();
+            QName keyName = reader1.peekNodeName();
             K key = keyDeserializer.deserialize(reader1, ctx1, params);
             reader1.next();
-            //in case of primitive type
-            if (reader1.peekNodeName().getLocalPart().equals("key")) {
+
+            if (reader1.peekNodeName().equals(keyName)) {
                 reader1.next();
             }
+
             V value = valueDeserializer.deserialize(reader1, ctx1, params);
             //value isn't an object, in a primitive type
             if (reader1.peek() == XMLStreamReader.CHARACTERS) {

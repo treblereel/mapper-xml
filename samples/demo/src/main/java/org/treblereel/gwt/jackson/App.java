@@ -129,11 +129,19 @@ public class App implements EntryPoint {
         bounds.setY(210.0);
         shape.setBounds(bounds);
 
+        double startTime = DomGlobal.window.performance.now();
         String xml = mapper.write(tested);
+        double stopTime = DomGlobal.window.performance.now();
+        DomGlobal.console.log("marhsalling " + (stopTime - startTime));
 
         generatedXML.value = xml;
 
+        startTime = DomGlobal.window.performance.now();
         generatedPOJO.value = mapper.read(xml).toString();
+        stopTime = DomGlobal.window.performance.now();
+        DomGlobal.console.log("demarhsalling " + (stopTime - startTime));
+
+
     }
 
     String helloWorldString() {

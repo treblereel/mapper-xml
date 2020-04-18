@@ -12,7 +12,7 @@
     <webappdir>${project.build.directory}/webapp</webappdir>
     <webapp.libdir>${webappdir}/WEB-INF/lib</webapp.libdir>
 
-    <j2cl.maven.plugin.version>0.12-SNAPSHOT</j2cl.maven.plugin.version>
+    <j2cl.maven.plugin.version>0.13-SNAPSHOT</j2cl.maven.plugin.version>
     <elemental2.version>1.0.0</elemental2.version>
 
     <google.jsinterop.version>1.0.0</google.jsinterop.version>
@@ -53,7 +53,6 @@
       <groupId>org.treblereel.gwt.jackson</groupId>
       <artifactId>api</artifactId>
       <version>0.1-SNAPSHOT</version>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -173,9 +172,6 @@
           <defaultWebappDirectory>${project.build.directory}/gwt/launcherDir</defaultWebappDirectory>
           <compilationLevel>ADVANCED</compilationLevel>
           <entrypoint>org.treblereel.gwt.jackson.App</entrypoint>
-<!--          <tests>
-            <test>org.treblereel.gwt.jackson.AppTest</test>
-          </tests>-->
         </configuration>
       </plugin>
       <plugin>

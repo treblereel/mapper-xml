@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.treblereel.gwt.jackson.api.deser.array.cast;
+package org.treblereel.gwt.jackson.api.deser;
 
 import java.util.List;
 
@@ -23,7 +23,6 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
-import org.treblereel.gwt.jackson.api.deser.StringXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.array.AbstractArrayXMLDeserializer;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 

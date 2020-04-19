@@ -22,40 +22,10 @@ public interface JacksonContext {
     DateFormat dateFormat();
 
     /**
-     * <p>integerStackFactory.</p>
-     * @return a {@link JacksonContext.IntegerStackFactory} object.
-     */
-    IntegerStackFactory integerStackFactory();
-
-    /**
      * <p>mapLikeFactory.</p>
      * @return a {@link JacksonContext.MapLikeFactory} object.
      */
     MapLikeFactory mapLikeFactory();
-
-    /**
-     * <p>stringArrayReader.</p>
-     * @return a {@link JacksonContext.StringArrayReader} object.
-     */
-    StringArrayReader stringArrayReader();
-
-    /**
-     * <p>shortArrayReader.</p>
-     * @return a {@link JacksonContext.ShortArrayReader} object.
-     */
-    ShortArrayReader shortArrayReader();
-
-    /**
-     * <p>integerArrayReader.</p>
-     * @return a {@link JacksonContext.IntegerArrayReader} object.
-     */
-    IntegerArrayReader integerArrayReader();
-
-    /**
-     * <p>doubleArrayReader.</p>
-     * @return a {@link JacksonContext.DoubleArrayReader} object.
-     */
-    DoubleArrayReader doubleArrayReader();
 
     /**
      * <p>defaultSerializerParameters.</p>

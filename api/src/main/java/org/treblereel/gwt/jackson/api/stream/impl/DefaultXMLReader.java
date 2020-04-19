@@ -32,6 +32,8 @@ public class DefaultXMLReader implements XMLReader {
 
     private final XMLStreamReader reader;
 
+    private final String in;
+
     /**
      * Creates a new instance that reads a JSON-encoded stream from {@code in}.
      * @param in a {@link String} object.
@@ -40,6 +42,7 @@ public class DefaultXMLReader implements XMLReader {
         if (in == null) {
             throw new NullPointerException("in == null");
         }
+        this.in = in;
 
         if (xmlInputFactory == null) {
             throw new NullPointerException("xmlInputFactory == null");
@@ -47,38 +50,6 @@ public class DefaultXMLReader implements XMLReader {
 
         InputStream byteArrayInputStream = new ByteArrayInputStream(in.getBytes());
         reader = xmlInputFactory.createXMLStreamReader(byteArrayInputStream);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void beginArray() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void endArray() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void beginObject() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void endObject() {
-        throw new UnsupportedOperationException();
     }
 
     /**
@@ -106,14 +77,6 @@ public class DefaultXMLReader implements XMLReader {
      * {@inheritDoc}
      */
     @Override
-    public String nextName() {
-        return reader.getLocalName();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public String nextString() throws XMLStreamException {
         if (peek() == 1) {
             reader.next();
@@ -123,11 +86,6 @@ public class DefaultXMLReader implements XMLReader {
             return null;
         }
         return reader.getText();
-    }
-
-    @Override
-    public int nextTag() throws XMLStreamException {
-        return reader.nextTag();
     }
 
     /**
@@ -140,14 +98,6 @@ public class DefaultXMLReader implements XMLReader {
             return false;
         }
         return Boolean.valueOf(value);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void nextNull() {
-        throw new UnsupportedOperationException();
     }
 
     /**
@@ -214,24 +164,8 @@ public class DefaultXMLReader implements XMLReader {
      * {@inheritDoc}
      */
     @Override
-    public int getLineNumber() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getColumnNumber() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public String getInput() throws XMLStreamException {
-        return nextString();
+        return in;
     }
 
     /**

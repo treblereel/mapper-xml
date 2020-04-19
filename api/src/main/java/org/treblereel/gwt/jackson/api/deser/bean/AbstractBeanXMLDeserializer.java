@@ -153,7 +153,8 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
                 }
             }
         }
-        T result = iterateOver(reader, (reader1, propertyName, ctx1, bean) -> {
+
+        T result = ctx.iterator().iterateOverBean(reader, (reader1, propertyName, ctx1, bean) -> {
             if (!propertyName.getLocalPart().equals(getRootNodeName())) {
                 BeanPropertyDeserializer<T, ?> property = getPropertyDeserializer(propertyName.getLocalPart(), ctx1);
                 if (property != null) {

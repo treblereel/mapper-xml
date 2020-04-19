@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.treblereel.gwt.jackson</groupId>
-  <artifactId>demo</artifactId>
+  <parent>
+    <groupId>org.treblereel.gwt.jackson</groupId>
+    <artifactId>tests</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <relativePath>..</relativePath>
+  </parent>
+
+  <artifactId>j2cl</artifactId>
   <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.1-SNAPSHOT</version>
 
   <properties>
     <webappdir>${project.build.directory}/webapp</webappdir>
@@ -43,13 +48,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.vertispan.j2cl</groupId>
-      <artifactId>junit-annotations</artifactId>
-      <version>${j2cl.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.treblereel.gwt.jackson</groupId>
       <artifactId>api</artifactId>
       <version>0.1-SNAPSHOT</version>
@@ -63,9 +61,10 @@
     </dependency>
 
     <dependency>
-      <groupId>org.gwtproject.nio</groupId>
-      <artifactId>gwt-nio</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <groupId>com.vertispan.j2cl</groupId>
+      <artifactId>junit-annotations</artifactId>
+      <version>${j2cl.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -116,7 +115,7 @@
               <outputDirectory>${project.build.directory}</outputDirectory>
               <resources>
                 <resource>
-                  <targetPath>${basedir}/target/gwt/launcherDir</targetPath>
+                  <targetPath>${basedir}/target/gwt/launcherDir/j2cl</targetPath>
                   <directory>src/main/webapp</directory>
                   <filtering>true</filtering>
                 </resource>
@@ -140,20 +139,16 @@
         <version>${maven.war.plugin.version}</version>
         <configuration>
           <packagingExcludes>WEB-INF/classes/**</packagingExcludes>
+          <webResources>
+            <resource>
+              <directory>${project.build.directory}/gwt/launcherDir/j2cl</directory>
+              <targetPath>/</targetPath>
+              <includes>
+                <include>**/*</include>
+              </includes>
+            </resource>
+          </webResources>
         </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>3.0.1</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>com.vertispan.j2cl</groupId>
@@ -169,9 +164,12 @@
           </execution>
         </executions>
         <configuration>
-          <defaultWebappDirectory>${project.build.directory}/gwt/launcherDir</defaultWebappDirectory>
-          <compilationLevel>ADVANCED</compilationLevel>
-          <entrypoint>org.treblereel.gwt.jackson.App</entrypoint>
+          <webappDirectory>${project.build.directory}/gwt/launcherDir/</webappDirectory>
+          <compilationLevel>BUNDLE</compilationLevel>
+          <entrypoint>org.treblereel.gwt.jackson.tests.Tests</entrypoint>
+          <tests>
+            <test>org.treblereel.gwt.jackson.tests.TestsTest</test>
+          </tests>
         </configuration>
       </plugin>
       <plugin>
@@ -179,7 +177,7 @@
         <artifactId>tomcat7-maven-plugin</artifactId>
         <version>${maven.tomcat7.plugin.version}</version>
         <configuration>
-          <warSourceDirectory>target/gwt/launcherDir/</warSourceDirectory>
+          <warSourceDirectory>target/gwt/launcherDir/j2cl</warSourceDirectory>
           <path>/</path>
         </configuration>
       </plugin>
@@ -190,7 +188,7 @@
         <configuration>
           <scanIntervalSeconds>2</scanIntervalSeconds>
           <webApp>
-            <resourceBase>target/gwt/launcherDir/</resourceBase>
+            <resourceBase>target/gwt/launcherDir/j2cl</resourceBase>
             <contextPath>/</contextPath>
           </webApp>
         </configuration>
@@ -204,17 +202,14 @@
       <name>Vertispan hosted artifacts-releases</name>
       <url>https://repo.vertispan.com/j2cl</url>
       <releases>
-        <enabled>true</enabled>
       </releases>
       <snapshots>
-        <enabled>true</enabled>
       </snapshots>
     </pluginRepository>
     <pluginRepository>
       <id>sonatype-snapshots-repo</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
       <snapshots>
-        <enabled>true</enabled>
         <updatePolicy>daily</updatePolicy>
         <checksumPolicy>fail</checksumPolicy>
       </snapshots>
@@ -227,10 +222,8 @@
       <name>google-snapshots</name>
       <url>https://oss.sonatype.org/content/repositories/google-snapshots/</url>
       <releases>
-        <enabled>true</enabled>
       </releases>
       <snapshots>
-        <enabled>true</enabled>
       </snapshots>
     </repository>
     <repository>
@@ -238,10 +231,8 @@
       <name>Vertispan hosted artifacts-releases</name>
       <url>https://repo.vertispan.com/j2cl</url>
       <releases>
-        <enabled>true</enabled>
       </releases>
       <snapshots>
-        <enabled>true</enabled>
       </snapshots>
     </repository>
     <repository>
@@ -249,7 +240,6 @@
       <name>Vertispan Snapshots</name>
       <url>https://repo.vertispan.com/gwt-snapshot/</url>
       <snapshots>
-        <enabled>true</enabled>
         <updatePolicy>daily</updatePolicy>
         <checksumPolicy>fail</checksumPolicy>
       </snapshots>
@@ -258,16 +248,6 @@
       <id>sonatype-snapshots-repo</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
       <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>fail</checksumPolicy>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>sonatype-repo</id>
-      <url>https://oss.sonatype.org/content/repositories/repositories</url>
-      <snapshots>
-        <enabled>true</enabled>
         <updatePolicy>daily</updatePolicy>
         <checksumPolicy>fail</checksumPolicy>
       </snapshots>

@@ -3,6 +3,7 @@ package org.treblereel.gwt.jackson.api;
 import javax.xml.stream.XMLStreamException;
 
 import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
+import org.treblereel.gwt.jackson.api.stream.XMLIterator;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
@@ -51,11 +52,13 @@ public interface XMLDeserializationContext extends XMLMappingContext {
      */
     XMLReader newXMLReader(String input) throws XMLStreamException;
 
-    /**
-     * <p>traceError.</p>
-     * @param message a {@link String} object.
-     * @return a {@link XMLDeserializationException} object.
-     */
+    XMLIterator iterator();
+
+        /**
+         * <p>traceError.</p>
+         * @param message a {@link String} object.
+         * @return a {@link XMLDeserializationException} object.
+         */
     XMLDeserializationException traceError(String message) throws XMLStreamException;
 
     /**

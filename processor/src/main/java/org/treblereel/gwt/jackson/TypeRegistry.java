@@ -57,6 +57,7 @@ import javax.lang.model.util.Types;
 import org.treblereel.gwt.jackson.api.deser.BooleanXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.CharacterXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.EnumXMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.StringArrayXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.StringXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.UUIDXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.VoidXMLDeserializer;
@@ -68,7 +69,6 @@ import org.treblereel.gwt.jackson.api.deser.array.PrimitiveFloatArrayXMLDeserial
 import org.treblereel.gwt.jackson.api.deser.array.PrimitiveIntegerArrayXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.array.PrimitiveLongArrayXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.array.PrimitiveShortArrayXMLDeserializer;
-import org.treblereel.gwt.jackson.api.deser.array.cast.StringArrayXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.array.dd.Array2dXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.array.dd.PrimitiveBooleanArray2dXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.array.dd.PrimitiveByteArray2dXMLDeserializer;

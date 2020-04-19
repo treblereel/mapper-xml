@@ -23,6 +23,7 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
+import org.treblereel.gwt.jackson.api.stream.XMLIterator;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
@@ -50,14 +51,14 @@ public abstract class BaseCollectionXMLDeserializer<C extends Collection<T>, T> 
     @Override
     public C doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
 
-        Scanner scanner = (Scanner<C>) (reader1, ctx1, instance) -> {
+        XMLIterator.Scanner scanner = (XMLIterator.Scanner<C>) (reader1, ctx1, instance) -> {
             T element = deserializer.deserialize(reader1, ctx1, params);
             if (element != null) {
                 instance.add(element);
             }
             return null;
         };
-        return (C) doDeserializeCollection(reader, ctx.isWrapCollections() ? ((Collection<C>) newCollection()) : (Collection<C>) collection,
+        return (C) ctx.iterator().iterateOverCollection(reader, ctx.isWrapCollections() ? ((Collection<C>) newCollection()) : (Collection<C>) collection,
                                            scanner, ctx, params);
     }
 

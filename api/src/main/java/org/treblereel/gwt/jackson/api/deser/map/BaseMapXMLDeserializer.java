@@ -17,11 +17,8 @@
 package org.treblereel.gwt.jackson.api.deser.map;
 
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
@@ -70,23 +67,7 @@ public abstract class BaseMapXMLDeserializer<M extends Map<K, V>, K, V> extends 
     @Override
     public M doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         M result = newMap();
-        doDeserializeMap(reader, result, (reader1, ctx1, instance, counter1) -> {
-            reader1.next();
-            QName keyName = reader1.peekNodeName();
-            K key = keyDeserializer.deserialize(reader1, ctx1, params);
-            reader1.next();
-
-            if (reader1.peekNodeName().equals(keyName)) {
-                reader1.next();
-            }
-
-            V value = valueDeserializer.deserialize(reader1, ctx1, params);
-            //value isn't an object, in a primitive type
-            if (reader1.peek() == XMLStreamReader.CHARACTERS) {
-                reader1.next();
-            }
-            result.put(key, value);
-        }, ctx, params);
+        ctx.iterator().doDeserializeMap(reader, result, keyDeserializer, valueDeserializer, ctx, params);
         return result;
     }
 
@@ -95,43 +76,4 @@ public abstract class BaseMapXMLDeserializer<M extends Map<K, V>, K, V> extends 
      * @return the new map
      */
     protected abstract M newMap();
-
-    private Map<K, V> doDeserializeMap(XMLReader reader, M collection, Scanner<M> scanner, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        AtomicInteger propertyCounter = new AtomicInteger(0);
-
-        while (reader.hasNext()) {
-            reader.next();
-            switch (reader.peek()) {
-                case XMLStreamReader.START_ELEMENT:
-                    propertyCounter.incrementAndGet();
-                    if (reader.peekNodeName().getLocalPart().equals("entry")) {
-                        scanner.accept(reader, ctx, collection, propertyCounter);
-                    }
-                    break;
-                case XMLStreamReader.END_ELEMENT:
-                    propertyCounter.decrementAndGet();
-                    if (propertyCounter.get() < 0) {
-                        if (collection.isEmpty()) {
-                            return null;
-                        }
-                        return collection;
-                    }
-                    break;
-                case XMLStreamReader.END_DOCUMENT:
-                    break;
-                default:
-                    throw new XMLStreamException();
-            }
-        }
-
-        if (collection.isEmpty()) {
-            return null;
-        }
-        return collection;
-    }
-
-    @FunctionalInterface
-    protected interface Scanner<M> {
-        void accept(XMLReader reader, XMLDeserializationContext ctx, M instance, AtomicInteger counter) throws XMLStreamException;
-    }
 }

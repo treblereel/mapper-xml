@@ -64,4 +64,15 @@ public class User {
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", tasks=" + tasks +
+                ", active=" + active +
+                ", age=" + age +
+                '}';
+    }
 }

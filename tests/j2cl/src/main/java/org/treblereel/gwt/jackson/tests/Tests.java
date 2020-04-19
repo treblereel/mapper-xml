@@ -11,25 +11,29 @@ import elemental2.dom.HTMLDivElement;
 
 import com.google.gwt.core.client.EntryPoint;
 import org.treblereel.gwt.jackson.api.AbstractObjectMapper;
+import org.treblereel.gwt.jackson.api.JsXMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.JsXMLSerializationContext;
+import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 
 public class Tests implements EntryPoint {
 
     public static final String HELLO_WORLD = "Hello J2CL world!";
+    public static final String XML = "<?xml version='1.0' encoding='UTF-8'?><User active=\"false\" age=\"0\"><username>setUsername</username><password>setPassword</password><tasks><tasks id=\"1\"><taskName>Task1</taskName><active>false</active></tasks><tasks id=\"12\"><taskName>Task2</taskName><active>true</active></tasks><tasks id=\"13\"><taskName>Task3</taskName><active>false</active></tasks><tasks id=\"14\"><taskName>Task4</taskName><active>false</active></tasks><tasks id=\"15\"><taskName>Task5</taskName><active>true</active></tasks><tasks id=\"16\"><taskName>Task6</taskName><active>true</active></tasks><tasks id=\"18\"><taskName>Task7</taskName><active>true</active></tasks><tasks id=\"19\"><taskName>Task8</taskName><active>false</active></tasks></tasks></User>";
 
     @Override
     public void onModuleLoad() {
         AbstractObjectMapper<User> mapper = new User_MapperImpl();
 
-        XMLSerializationContext context = JsXMLSerializationContext.builder().build();
+        XMLSerializationContext serializationContext = JsXMLSerializationContext.builder().build();
+        XMLDeserializationContext deserializationContext = JsXMLDeserializationContext.builder().build();
 
         User user = new User();
         user.setUsername("setUsername");
         user.setPassword("setPassword");
         user.setActive(false);
 
-        DomGlobal.console.log("wrap ? " + context.isWrapCollections());
+        DomGlobal.console.log("wrap ? " + serializationContext.isWrapCollections());
 
         List<Task> tasks = new ArrayList<>();
         tasks.add(new Task("Task1", false,"1"));
@@ -45,7 +49,12 @@ public class Tests implements EntryPoint {
 
         String result = null;
         try {
-            result = mapper.write(user, context);
+            result = mapper.write(user, serializationContext);
+
+            User xmlUser = mapper.read(XML, deserializationContext);
+
+            DomGlobal.console.log(xmlUser.toString());
+
         } catch (XMLStreamException e) {
             e.printStackTrace();
         }

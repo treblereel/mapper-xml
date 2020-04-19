@@ -28,30 +28,6 @@ import javax.xml.stream.XMLStreamReader;
 public interface XMLReader {
 
     /**
-     * Consumes the next token from the JSON stream and asserts that it is the
-     * beginning of a new array.
-     */
-    void beginArray();
-
-    /**
-     * Consumes the next token from the JSON stream and asserts that it is the
-     * end of the current array.
-     */
-    void endArray();
-
-    /**
-     * Consumes the next token from the JSON stream and asserts that it is the
-     * beginning of a new object.
-     */
-    void beginObject();
-
-    /**
-     * Consumes the next token from the JSON stream and asserts that it is the
-     * end of the current object.
-     */
-    void endObject();
-
-    /**
      * Returns true if the current array or object has another element.
      * @return a boolean.
      */
@@ -70,13 +46,6 @@ public interface XMLReader {
     QName peekNodeName() throws XMLStreamException;
 
     /**
-     * Returns the next token, a {@link String property name}, and
-     * consumes it.
-     * @return a {@link String} object.
-     */
-    String nextName();
-
-    /**
      * Returns the {@link String } value of the next token,
      * consuming it. If the next token is a number, this method will return its
      * string form.
@@ -86,8 +55,6 @@ public interface XMLReader {
      */
     String nextString() throws XMLStreamException;
 
-    int nextTag() throws XMLStreamException;
-
     /**
      * Returns the {@link boolean} value of the next token,
      * consuming it.
@@ -96,14 +63,6 @@ public interface XMLReader {
      * this reader is closed.
      */
     boolean nextBoolean() throws XMLStreamException;
-
-    /**
-     * Consumes the next token from the JSON stream and asserts that it is a
-     * literal null.
-     * @throws IllegalStateException if the next token is not null or if this
-     * reader is closed.
-     */
-    void nextNull();
 
     /**
      * Returns the {@link double} value of the next token,
@@ -160,24 +119,6 @@ public interface XMLReader {
     String nextValue();
 
     /**
-     * <p>getLineNumber</p>
-     * @return a int.
-     */
-    int getLineNumber();
-
-    /**
-     * <p>getColumnNumber</p>
-     * @return a int.
-     */
-    int getColumnNumber();
-
-    /**
-     * <p>getInput</p>
-     * @return a {@link String} object.
-     */
-    String getInput() throws XMLStreamException;
-
-    /**
      * Returns the {@link Number} value of the next token, consuming it.
      * This method will attempt to return the best matching number.
      * For non-decimal number, if it fits into an int, an int is returned,
@@ -191,6 +132,8 @@ public interface XMLReader {
     Number nextNumber() throws XMLStreamException;
 
     void next() throws XMLStreamException;
+
+    String getInput() throws XMLStreamException;
 
     int getAttributeCount();
 

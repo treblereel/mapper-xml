@@ -72,7 +72,7 @@ public abstract class AbstractArrayXMLDeserializer<T> extends XMLDeserializer<T>
     protected <C> List<C> deserializeIntoList(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializer<C> deserializer,
                                               XMLDeserializerParameters params) throws XMLStreamException {
         List<C> list = new ArrayList<>();
-        return (List<C>) doDeserializeCollection(reader, (Collection<T>) list, (reader1, ctx1, instance) -> {
+        return (List<C>) ctx.iterator().iterateOverCollection(reader, (Collection<T>) list, (reader1, ctx1, instance) -> {
             C bean = deserializer.deserialize(reader1, ctx1, params);
             list.add(bean);
             return null;

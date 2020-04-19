@@ -1,40 +1,22 @@
-/*
- * Copyright 2013 Nicolas Morel
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package org.treblereel.gwt.jackson.api;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 
-import com.ctc.wstx.stax.WstxInputFactory;
+import elemental2.dom.DomGlobal;
 import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLIterator;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 import org.treblereel.gwt.jackson.api.stream.impl.DefaultXMLIterator;
-import org.treblereel.gwt.jackson.api.stream.impl.DefaultXMLReader;
+import org.treblereel.gwt.jackson.api.stream.impl.JsNativeXMLReader;
 
 /**
- * Context for the deserialization process.
- * @author Nicolas Morel
- * @version $Id: $
+ * @author Dmitrii Tikhomirov
+ * Created by treblereel 4/19/20
  */
-public class DefaultXMLDeserializationContext implements XMLDeserializationContext {
+public class JsXMLDeserializationContext implements XMLDeserializationContext {
 
     private static final Logger logger = Logger.getLogger("XMLDeserialization");
     /*
@@ -46,13 +28,12 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
     private final boolean useSafeEval;
     private final boolean readUnknownEnumValuesAsNull;
     private final boolean useBrowserTimezone;
-    private final XMLInputFactory xmlInputFactory;
     private final XMLIterator iterator;
     private final boolean wrapCollections;
 
-    private DefaultXMLDeserializationContext(boolean failOnUnknownProperties, boolean acceptSingleValueAsArray,
-                                             boolean wrapExceptions, boolean wrapCollections, boolean useSafeEval, boolean readUnknownEnumValuesAsNull,
-                                             boolean useBrowserTimezone) {
+    private JsXMLDeserializationContext(boolean failOnUnknownProperties, boolean acceptSingleValueAsArray,
+                                        boolean wrapExceptions, boolean wrapCollections, boolean useSafeEval, boolean readUnknownEnumValuesAsNull,
+                                        boolean useBrowserTimezone) {
         this.failOnUnknownProperties = failOnUnknownProperties;
         this.acceptSingleValueAsArray = acceptSingleValueAsArray;
         this.wrapExceptions = wrapExceptions;
@@ -60,7 +41,6 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
         this.readUnknownEnumValuesAsNull = readUnknownEnumValuesAsNull;
         this.wrapCollections = wrapCollections;
         this.useBrowserTimezone = useBrowserTimezone;
-        this.xmlInputFactory = new WstxInputFactory();
         this.iterator = new DefaultXMLIterator();
     }
 
@@ -76,7 +56,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
      * {@inheritDoc}
      *
      * <p>isFailOnUnknownProperties</p>
-     * @see Builder#failOnUnknownProperties(boolean)
+     * @see DefaultXMLDeserializationContext.Builder#failOnUnknownProperties(boolean)
      */
     @Override
     public boolean isFailOnUnknownProperties() {
@@ -87,7 +67,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
      * {@inheritDoc}
      *
      * <p>isAcceptSingleValueAsArray</p>
-     * @see Builder#acceptSingleValueAsArray(boolean)
+     * @see DefaultXMLDeserializationContext.Builder#acceptSingleValueAsArray(boolean)
      */
     @Override
     public boolean isAcceptSingleValueAsArray() {
@@ -98,7 +78,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
      * {@inheritDoc}
      *
      * <p>isUseSafeEval</p>
-     * @see Builder#useSafeEval(boolean)
+     * @see DefaultXMLDeserializationContext.Builder#useSafeEval(boolean)
      */
     @Override
     public boolean isUseSafeEval() {
@@ -109,7 +89,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
      * {@inheritDoc}
      *
      * <p>isReadUnknownEnumValuesAsNull</p>
-     * @see Builder#readUnknownEnumValuesAsNull(boolean)
+     * @see DefaultXMLDeserializationContext.Builder#readUnknownEnumValuesAsNull(boolean)
      */
     @Override
     public boolean isReadUnknownEnumValuesAsNull() {
@@ -120,7 +100,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
      * {@inheritDoc}
      *
      * <p>isUseBrowserTimezone</p>
-     * @see Builder#isUseBrowserTimezone()
+     * @see DefaultXMLDeserializationContext.Builder#isUseBrowserTimezone()
      */
     @Override
     public boolean isUseBrowserTimezone() {
@@ -138,8 +118,9 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
      * <p>newXMLReader</p>
      */
     @Override
-    public XMLReader newXMLReader(String input) throws XMLStreamException {
-        XMLReader reader = new DefaultXMLReader(xmlInputFactory, input);
+    public XMLReader newXMLReader(String input) {
+        DomGlobal.console.log("newXMLReader " + input);
+        XMLReader reader = new JsNativeXMLReader(input);
         return reader;
     }
 
@@ -356,8 +337,8 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
         }
 
         public final XMLDeserializationContext build() {
-            return new DefaultXMLDeserializationContext(failOnUnknownProperties, acceptSingleValueAsArray, wrapExceptions,
-                                                        wrapCollections, useSafeEval, readUnknownEnumValuesAsNull, useBrowserTimezone);
+            return new JsXMLDeserializationContext(failOnUnknownProperties, acceptSingleValueAsArray, wrapExceptions,
+                                                   wrapCollections, useSafeEval, readUnknownEnumValuesAsNull, useBrowserTimezone);
         }
     }
 

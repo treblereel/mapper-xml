@@ -165,7 +165,7 @@
         </executions>
         <configuration>
           <webappDirectory>${project.build.directory}/gwt/launcherDir/</webappDirectory>
-          <compilationLevel>ADVANCED</compilationLevel>
+          <compilationLevel>BUNDLE</compilationLevel>
           <entrypoint>org.treblereel.gwt.jackson.tests.Tests</entrypoint>
           <tests>
             <test>org.treblereel.gwt.jackson.tests.TestsTest</test>

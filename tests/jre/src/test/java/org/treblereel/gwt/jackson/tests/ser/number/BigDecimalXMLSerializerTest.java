@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.tests.beans.number.BigDecimalBean;
 import org.treblereel.gwt.jackson.tests.beans.number.BigDecimalBean_MapperImpl;
@@ -14,6 +15,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/26/20
  */
+@J2clTestInput(BigDecimalXMLSerializerTest.class)
 public class BigDecimalXMLSerializerTest {
 
     BigDecimalBean_MapperImpl mapper = BigDecimalBean_MapperImpl.INSTANCE;

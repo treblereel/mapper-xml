@@ -2,6 +2,7 @@ package org.treblereel.gwt.jackson.tests.deser.collection;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.tests.beans.collection.FloatArray2d;
 import org.treblereel.gwt.jackson.tests.beans.collection.FloatArray2d_MapperImpl;
@@ -12,6 +13,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/29/20
  */
+@J2clTestInput(FloatArray2dXMLDeserializerTest.class)
 public class FloatArray2dXMLDeserializerTest {
 
     FloatArray2d test = new FloatArray2d();

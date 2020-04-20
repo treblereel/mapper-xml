@@ -2,6 +2,7 @@ package org.treblereel.gwt.jackson.tests.deser;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 import org.treblereel.gwt.jackson.tests.beans.StringBean_MapperImpl;
@@ -13,6 +14,7 @@ import static org.junit.Assert.assertNull;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/26/20
  */
+@J2clTestInput(StringXMLDeserializerTest.class)
 public class StringXMLDeserializerTest {
 
     @Test

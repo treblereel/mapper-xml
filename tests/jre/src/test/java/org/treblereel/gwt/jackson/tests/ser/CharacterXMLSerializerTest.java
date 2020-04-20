@@ -2,6 +2,7 @@ package org.treblereel.gwt.jackson.tests.ser;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.tests.beans.CharacterBean;
 import org.treblereel.gwt.jackson.tests.beans.CharacterBean_MapperImpl;
@@ -12,6 +13,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/26/20
  */
+@J2clTestInput(CharacterXMLSerializerTest.class)
 public class CharacterXMLSerializerTest {
 
     CharacterBean_MapperImpl mapper = CharacterBean_MapperImpl.INSTANCE;

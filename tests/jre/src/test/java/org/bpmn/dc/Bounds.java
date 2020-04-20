@@ -1,9 +1,8 @@
 package org.bpmn.dc;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import java.util.Objects;
 
-import com.google.common.base.Objects;
-import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
+import javax.xml.bind.annotation.JacksonXmlProperty;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -72,7 +71,7 @@ public class Bounds {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getHeight(), getWidth(), getX(), getY());
+        return Objects.hash(getHeight(), getWidth(), getX(), getY());
     }
 
     @Override

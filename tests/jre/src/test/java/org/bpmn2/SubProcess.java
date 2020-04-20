@@ -2,10 +2,10 @@ package org.bpmn2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.xml.bind.annotation.JacksonXmlProperty;
 
-import com.google.common.base.Objects;
 import org.drools.MetaData;
 
 /**
@@ -30,7 +30,7 @@ public class SubProcess {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId(), getName(), isTriggeredByEvent(), getExtensionElements(), getDataObjectReference());
+        return Objects.hash(getId(), getName(), isTriggeredByEvent(), getExtensionElements(), getDataObjectReference());
     }
 
     @Override
@@ -43,10 +43,10 @@ public class SubProcess {
         }
         SubProcess that = (SubProcess) o;
         return isTriggeredByEvent() == that.isTriggeredByEvent() &&
-                Objects.equal(getId(), that.getId()) &&
-                Objects.equal(getName(), that.getName()) &&
-                Objects.equal(getExtensionElements(), that.getExtensionElements()) &&
-                Objects.equal(getDataObjectReference(), that.getDataObjectReference());
+                Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getExtensionElements(), that.getExtensionElements()) &&
+                Objects.equals(getDataObjectReference(), that.getDataObjectReference());
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.treblereel.gwt.jackson.tests.deser;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.api.DefaultXMLDeserializationContext;
 import org.treblereel.gwt.jackson.tests.beans.EnumBean;
@@ -13,6 +14,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/26/20
  */
+@J2clTestInput(EnumXMLDeserializerTest.class)
 public class EnumXMLDeserializerTest {
 
     @Test

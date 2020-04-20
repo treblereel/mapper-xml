@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.bpmn.dc.Bounds;
 import org.bpmn.di.BPMNDiagram;
 import org.bpmn.di.BPMNPlane;
@@ -22,6 +23,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/6/20
  */
+@J2clTestInput(BPMNTest.class)
 public class BPMNTest {
 
     Definitions_MapperImpl mapper = Definitions_MapperImpl.INSTANCE;

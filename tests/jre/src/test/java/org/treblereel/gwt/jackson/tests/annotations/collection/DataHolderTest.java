@@ -2,6 +2,7 @@ package org.treblereel.gwt.jackson.tests.annotations.collection;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -10,6 +11,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/6/20
  */
+@J2clTestInput(DataHolderTest.class)
 public class DataHolderTest {
 
     DataHolder_MapperImpl mapperEmployee = DataHolder_MapperImpl.INSTANCE;

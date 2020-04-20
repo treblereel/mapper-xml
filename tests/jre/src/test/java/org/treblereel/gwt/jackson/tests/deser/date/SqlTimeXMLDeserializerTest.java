@@ -4,6 +4,7 @@ import java.sql.Time;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.tests.beans.date.TimeBean_MapperImpl;
 import org.treblereel.gwt.jackson.tests.beans.date.TimestampBean_MapperImpl;
@@ -14,6 +15,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/27/20
  */
+@J2clTestInput(SqlTimeXMLDeserializerTest.class)
 public class SqlTimeXMLDeserializerTest {
 
     @Test

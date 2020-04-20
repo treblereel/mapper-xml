@@ -1,8 +1,8 @@
 package org.bpmn2;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import java.util.Objects;
 
-import com.google.common.base.Objects;
+import javax.xml.bind.annotation.JacksonXmlProperty;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -41,12 +41,12 @@ public class ItemDefinition {
             return false;
         }
         ItemDefinition that = (ItemDefinition) o;
-        return Objects.equal(getId(), that.getId()) &&
-                Objects.equal(getStructureRef(), that.getStructureRef());
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getStructureRef(), that.getStructureRef());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId(), getStructureRef());
+        return Objects.hash(getId(), getStructureRef());
     }
 }

@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.tests.beans.number.BigIntegerBean;
 import org.treblereel.gwt.jackson.tests.beans.number.BigIntegerBean_MapperImpl;
@@ -14,6 +15,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/26/20
  */
+@J2clTestInput(BigIntegerXMLSerializerTest.class)
 public class BigIntegerXMLSerializerTest {
 
     BigIntegerBean_MapperImpl mapper = BigIntegerBean_MapperImpl.INSTANCE;

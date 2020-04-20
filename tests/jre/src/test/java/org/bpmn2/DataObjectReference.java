@@ -1,8 +1,8 @@
 package org.bpmn2;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import java.util.Objects;
 
-import com.google.common.base.Objects;
+import javax.xml.bind.annotation.JacksonXmlProperty;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -18,7 +18,7 @@ public class DataObjectReference {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId(), getDataObjectRef());
+        return Objects.hash(getId(), getDataObjectRef());
     }
 
     @Override
@@ -30,8 +30,8 @@ public class DataObjectReference {
             return false;
         }
         DataObjectReference that = (DataObjectReference) o;
-        return Objects.equal(getId(), that.getId()) &&
-                Objects.equal(getDataObjectRef(), that.getDataObjectRef());
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getDataObjectRef(), that.getDataObjectRef());
     }
 
     public String getId() {

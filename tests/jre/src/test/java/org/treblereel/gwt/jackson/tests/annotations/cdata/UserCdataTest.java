@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -12,6 +13,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/4/20
  */
+@J2clTestInput(UserCdataTest.class)
 public class UserCdataTest {
 
     User_MapperImpl mapperEmployee = User_MapperImpl.INSTANCE;
@@ -22,10 +24,9 @@ public class UserCdataTest {
         test.setUsername("ANY");
         test.setUuid(UUID.fromString("bc8a6b10-f493-4aaf-bd1e-8c4710afa326"));
         test.setId("FIRST");
-        test.setType(User.Type.ONE);
         test.setTime(1111);
 
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><User xmlns=\"http://www.omg.org/bpmn20\" id=\"FIRST\" _uuid=\"bc8a6b10-f493-4aaf-bd1e-8c4710afa326\" time=\"1111\" type=\"ONE\"><username><![CDATA[ANY]]></username></User>", mapperEmployee.write(test));
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><User xmlns=\"http://www.omg.org/bpmn20\" id=\"FIRST\" _uuid=\"bc8a6b10-f493-4aaf-bd1e-8c4710afa326\" time=\"1111\"><username><![CDATA[ANY]]></username></User>", mapperEmployee.write(test));
         assertEquals(test, mapperEmployee.read(mapperEmployee.write(test)));
     }
 }

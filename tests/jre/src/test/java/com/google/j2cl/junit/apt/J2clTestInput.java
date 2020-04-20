@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Google Inc.
+ * Copyright 2015 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,17 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.google.gwt.core.client;
+package com.google.j2cl.junit.apt;
 
 /**
- * Implement this interface to allow a class to act as a module entry point.
- * Please see the developer guide for more information on modules.
+ * Annotation used to specify which class should be processed by the j2cl_test annotation processor.
  */
-public interface EntryPoint {
-
-    /**
-     * The entry point method, called automatically by loading a module that
-     * declares an implementing class as an entry point.
-     */
-    void onModuleLoad();
+public @interface J2clTestInput {
+    /** @return the class to be processed */
+    Class<?> value();
 }
+

@@ -2,6 +2,7 @@ package org.treblereel.gwt.jackson.tests.ser.collection;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.tests.beans.collection.BoxedArrays;
 import org.treblereel.gwt.jackson.tests.beans.collection.BoxedArrays_MapperImpl;
@@ -12,6 +13,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/28/20
  */
+@J2clTestInput(BoxedArraysXMLSerializerTest.class)
 public class BoxedArraysXMLSerializerTest {
 
     BoxedArrays_MapperImpl mapper = BoxedArrays_MapperImpl.INSTANCE;

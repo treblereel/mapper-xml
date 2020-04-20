@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.tests.beans.Address;
 import org.treblereel.gwt.jackson.tests.beans.Person;
@@ -18,6 +19,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/30/20
  */
+@J2clTestInput(UsersTest.class)
 public class UsersTest {
 
     Users_MapperImpl mapper = Users_MapperImpl.INSTANCE;
@@ -36,13 +38,8 @@ public class UsersTest {
         map1.put("_333", new Person());
         map1.put("_444", new Person());
 
-        Map<Users.TYPE, Person> types = new LinkedHashMap<>();
-        types.put(Users.TYPE.ONE, p1);
-        types.put(Users.TYPE.TWO, p2);
-
         Users test = new Users();
         test.setActiveUsers(map1);
-        test.setTypes(types);
 
         test.setAllUsers(new ArrayList<>());
         test.getAllUsers().add(p1);

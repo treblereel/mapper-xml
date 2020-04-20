@@ -23,7 +23,6 @@ public class SubProcess {
     @JacksonXmlProperty(isAttribute = true)
     private boolean triggeredByEvent;
 
-    //@JacksonXmlProperty(localName = "drools:metaData")
     private List<MetaData> extensionElements = new ArrayList<>();
 
     private List<DataObjectReference> dataObjectReference = new ArrayList<>();
@@ -51,12 +50,23 @@ public class SubProcess {
 
     @Override
     public String toString() {
+        StringBuilder extensionElementsToString = new StringBuilder();
+        if (extensionElements != null) {
+            extensionElements.stream().map(elm -> "</br> &nbsp;&nbsp;&nbsp;&nbsp;" + elm.toString()).forEach(elm -> extensionElementsToString.append(elm));
+        }
+
+        StringBuilder dataObjectReferenceToString = new StringBuilder();
+        if (dataObjectReference != null) {
+            dataObjectReference.stream().map(elm -> "</br> &nbsp;&nbsp;&nbsp;&nbsp;" + elm.toString()).forEach(elm -> dataObjectReferenceToString.append(elm));
+        }
+
+
         return "SubProcess{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", triggeredByEvent=" + triggeredByEvent +
-                ", extensionElements=" + extensionElements +
-                ", dataObjectReference=" + dataObjectReference +
+                "</br> extensionElements=" + extensionElementsToString +
+                "</br> dataObjectReference=" + dataObjectReferenceToString +
                 '}';
     }
 

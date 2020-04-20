@@ -5,6 +5,10 @@ import javax.xml.stream.XMLStreamException;
 import com.google.gwt.core.client.EntryPoint;
 import elemental2.dom.CSSProperties;
 import elemental2.dom.DomGlobal;
+import elemental2.dom.Event;
+import elemental2.dom.EventListener;
+import elemental2.dom.HTMLButtonElement;
+import elemental2.dom.HTMLDivElement;
 import elemental2.dom.HTMLLabelElement;
 import elemental2.dom.HTMLTextAreaElement;
 import org.treblereel.gwt.jackson.bpmn.dc.Bounds;
@@ -28,7 +32,7 @@ public class App implements EntryPoint {
 
     private HTMLTextAreaElement generatedXML = (HTMLTextAreaElement) DomGlobal.document.createElement("textarea");
 
-    private HTMLTextAreaElement generatedPOJO = (HTMLTextAreaElement) DomGlobal.document.createElement("textarea");
+    private HTMLDivElement generatedPOJO = (HTMLDivElement) DomGlobal.document.createElement("div");
 
     @Override
     public void onModuleLoad() {
@@ -45,15 +49,41 @@ public class App implements EntryPoint {
 
         DomGlobal.document.body.appendChild(DomGlobal.document.createElement("br"));
 
+        HTMLButtonElement doDemarshalling = (HTMLButtonElement) DomGlobal.document.createElement("button");
+        doDemarshalling.addEventListener("click", new EventListener() {
+            @Override
+            public void handleEvent(Event evt) {
+                for (int i = 0; i < generatedPOJO.childNodes.getLength(); i++) {
+                    generatedPOJO.removeChild(generatedPOJO.childNodes.item(i));
+                }
+                try {
+                    Definitions result = mapper.read(generatedXML.value.replaceAll("[\n\r]", "")
+                                                             .replaceAll(">\\s+<", "><"));
+                    generatedPOJO.innerHTML = result.toString();
+                } catch (XMLStreamException e) {
+                    DomGlobal.window.alert("XMLStreamException " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        doDemarshalling.textContent = "do demarshalling";
+        DomGlobal.document.body.appendChild(doDemarshalling);
+        DomGlobal.document.body.appendChild(DomGlobal.document.createElement("br"));
+
+        DomGlobal.document.body.appendChild(DomGlobal.document.createElement("br"));
+
         HTMLLabelElement label2 = (HTMLLabelElement) DomGlobal.document.createElement("label");
         label2.textContent = "... and back to Pojo";
         DomGlobal.document.body.appendChild(label2);
+
+        DomGlobal.document.body.appendChild(DomGlobal.document.createElement("br"));
         DomGlobal.document.body.appendChild(DomGlobal.document.createElement("br"));
 
         DomGlobal.document.body.appendChild(generatedPOJO);
         generatedPOJO.classList.add("prettyprint", "lang-html");
         generatedPOJO.style.height = CSSProperties.HeightUnionType.of("20pc");
-        generatedPOJO.style.width = CSSProperties.WidthUnionType.of("700px");
+        generatedPOJO.style.width = CSSProperties.WidthUnionType.of("1200px");
         generatedPOJO.style.overflow = "scroll";
 
         try {
@@ -62,7 +92,6 @@ public class App implements EntryPoint {
             DomGlobal.console.log(ex);
         }
     }
-
 
     private void ser() throws XMLStreamException {
         Definitions tested = new Definitions();
@@ -137,11 +166,9 @@ public class App implements EntryPoint {
         generatedXML.value = xml;
 
         startTime = DomGlobal.window.performance.now();
-        generatedPOJO.value = mapper.read(xml).toString();
+        generatedPOJO.innerHTML = mapper.read(xml).toString();
         stopTime = DomGlobal.window.performance.now();
         DomGlobal.console.log("demarhsalling " + (stopTime - startTime));
-
-
     }
 
     String helloWorldString() {

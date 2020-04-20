@@ -65,10 +65,16 @@ public class BPMNPlane {
 
     @Override
     public String toString() {
+        StringBuilder shapesToString = new StringBuilder();
+        if (shapes != null) {
+            shapes.stream().map(elm -> "</br> &nbsp;&nbsp;&nbsp;&nbsp;" + elm.toString()).forEach(elm -> shapesToString.append(elm));
+        }
+
+
         return "BPMNPlane{" +
                 "id='" + id + '\'' +
                 ", bpmnElement='" + bpmnElement + '\'' +
-                ", shapes=" + shapes +
+                "</br> shapes=" + shapesToString +
                 '}';
     }
 }

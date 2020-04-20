@@ -50,4 +50,12 @@ public class MetaData {
     public int hashCode() {
         return Objects.hash(getName(), getMetaValue());
     }
+
+    @Override
+    public String toString() {
+        return "MetaData{" +
+                "name='" + name + '\'' +
+                ", metaValue='" + metaValue + '\'' +
+                '}';
+    }
 }

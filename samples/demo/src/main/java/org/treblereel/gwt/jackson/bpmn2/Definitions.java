@@ -39,6 +39,70 @@ public class Definitions {
     @JacksonXmlProperty(localName = "BPMNDiagram")
     private BPMNDiagram bpmnDiagram;
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getItemDefinitions(), getExporter(), getExporterVersion(), getProcess(), getBpmnDiagram());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Definitions)) {
+            return false;
+        }
+        Definitions that = (Definitions) o;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getItemDefinitions(), that.getItemDefinitions()) &&
+                Objects.equals(getExporter(), that.getExporter()) &&
+                Objects.equals(getExporterVersion(), that.getExporterVersion()) &&
+                Objects.equals(getProcess(), that.getProcess()) &&
+                Objects.equals(getBpmnDiagram(), that.getBpmnDiagram());
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("Definitions ").append(" id='").append(id)
+                .append("', name='").append(name)
+                .append("', exporter='").append(exporter)
+                .append("', exporterVersion='").append(exporterVersion);
+
+        if (itemDefinitions == null || itemDefinitions.isEmpty()) {
+            sb.append(" no itemDefinitions\\n");
+        } else {
+            itemDefinitions.forEach(item ->{
+                sb.append("</br>&nbsp;&nbsp;&nbsp;&nbsp;").append(item.toString());
+            });
+        }
+        
+        if(process != null) {
+            sb.append("</br>&nbsp;&nbsp;&nbsp;&nbsp;").append(process.toString());
+        }
+        if(bpmnDiagram != null) {
+            sb.append("</br>&nbsp;&nbsp;&nbsp;&nbsp;").append(bpmnDiagram.toString());
+        }
+
+
+        return sb.toString();
+
+/*        return "Definitions " +
+                "id='" + id + " " +
+                ", name='" + name + '\'' +
+                ", itemDefinitions=" + itemDefinitions +
+                ", exporter='" + exporter + '\'' +
+                ", exporterVersion='" + exporterVersion + '\'' +
+                ", process=" + process +
+                ", bpmnDiagram=" + bpmnDiagram +
+                '}';*/
+    }
+
+    public String getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -71,14 +135,6 @@ public class Definitions {
         this.exporterVersion = exporterVersion;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public Process getProcess() {
         return process;
     }
@@ -95,39 +151,7 @@ public class Definitions {
         this.bpmnDiagram = bpmnDiagram;
     }
 
-    @Override
-    public String toString() {
-        return "Definitions{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", itemDefinitions=" + itemDefinitions +
-                ", exporter='" + exporter + '\'' +
-                ", exporterVersion='" + exporterVersion + '\'' +
-                ", process=" + process +
-                ", bpmnDiagram=" + bpmnDiagram +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Definitions)) {
-            return false;
-        }
-        Definitions that = (Definitions) o;
-        return Objects.equals(getId(), that.getId()) &&
-                Objects.equals(getName(), that.getName()) &&
-                Objects.equals(getItemDefinitions(), that.getItemDefinitions()) &&
-                Objects.equals(getExporter(), that.getExporter()) &&
-                Objects.equals(getExporterVersion(), that.getExporterVersion()) &&
-                Objects.equals(getProcess(), that.getProcess()) &&
-                Objects.equals(getBpmnDiagram(), that.getBpmnDiagram());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getName(), getItemDefinitions(), getExporter(), getExporterVersion(), getProcess(), getBpmnDiagram());
+    public void setId(String id) {
+        this.id = id;
     }
 }

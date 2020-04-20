@@ -53,9 +53,16 @@ public class BPMNDiagram {
 
     @Override
     public String toString() {
+
+        StringBuilder planesToString = new StringBuilder();
+        if (planes != null) {
+            planes.stream().map(elm -> "</br> &nbsp;&nbsp;&nbsp;&nbsp;" + elm.toString()).forEach(elm -> planesToString.append(elm));
+        }
+
+
         return "BPMNDiagram{" +
                 "id='" + id + '\'' +
-                ", planes=" + planes +
+                "</br> planes=" + planesToString +
                 '}';
     }
 }

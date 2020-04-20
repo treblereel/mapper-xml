@@ -13,7 +13,7 @@
     <webapp.libdir>${webappdir}/WEB-INF/lib</webapp.libdir>
 
     <j2cl.maven.plugin.version>0.13-SNAPSHOT</j2cl.maven.plugin.version>
-    <elemental2.version>1.0.0</elemental2.version>
+    <elemental2.version>1.0.0-RC1</elemental2.version>
 
     <google.jsinterop.version>1.0.0</google.jsinterop.version>
     <j2cl.version>0.7-SNAPSHOT</j2cl.version>

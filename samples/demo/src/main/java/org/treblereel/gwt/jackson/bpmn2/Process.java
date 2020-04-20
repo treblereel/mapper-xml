@@ -37,6 +37,11 @@ public class Process {
     private List<DataObjectReference> dataObjectReferences = new ArrayList<>();
 
     @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), isExecutable(), getPackageName(), getVersion(), isAdHoc(), getSubProcesses(), getDataObjects(), getDataObjectReferences());
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -57,12 +62,22 @@ public class Process {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getName(), isExecutable(), getPackageName(), getVersion(), isAdHoc(), getSubProcesses(), getDataObjects(), getDataObjectReferences());
-    }
-
-    @Override
     public String toString() {
+        StringBuilder subProcessesToString = new StringBuilder();
+        StringBuilder dataObjectsToString = new StringBuilder();
+        StringBuilder dataObjectReferencesToString = new StringBuilder();
+        if (subProcesses != null) {
+            subProcesses.stream().map(elm -> "</br> &nbsp;&nbsp;&nbsp;&nbsp;" + elm.toString()).forEach(elm -> subProcessesToString.append(elm));
+        }
+
+        if (dataObjectsToString != null) {
+            dataObjects.stream().map(elm -> "</br> &nbsp;&nbsp;&nbsp;&nbsp;" + elm.toString()).forEach(elm -> dataObjectsToString.append(elm));
+        }
+
+        if (dataObjectReferencesToString != null) {
+            dataObjectReferences.stream().map(elm -> "</br> &nbsp;&nbsp;&nbsp;&nbsp;" + elm.toString()).forEach(elm -> dataObjectReferencesToString.append(elm));
+        }
+
         return "Process{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
@@ -70,18 +85,10 @@ public class Process {
                 ", packageName='" + packageName + '\'' +
                 ", version='" + version + '\'' +
                 ", adHoc=" + adHoc +
-                ", subProcesses=" + subProcesses +
-                ", dataObjects=" + dataObjects +
-                ", dataObjectReferences=" + dataObjectReferences +
+                "</br> subProcesses=" + subProcessesToString +
+                "</br> dataObjects :" + dataObjectsToString +
+                "</br> dataObjectReferences :" + dataObjectReferencesToString +
                 '}';
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public boolean isExecutable() {
@@ -90,6 +97,18 @@ public class Process {
 
     public void setExecutable(boolean executable) {
         this.executable = executable;
+    }
+
+    public boolean isAdHoc() {
+        return adHoc;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getPackageName() {
@@ -102,10 +121,6 @@ public class Process {
 
     public String getVersion() {
         return version;
-    }
-
-    public boolean isAdHoc() {
-        return adHoc;
     }
 
     public List<SubProcess> getSubProcesses() {
@@ -132,10 +147,6 @@ public class Process {
         this.dataObjectReferences = dataObjectReferences;
     }
 
-    public void setAdHoc(boolean adHoc) {
-        this.adHoc = adHoc;
-    }
-
     public void setVersion(String version) {
         this.version = version;
     }
@@ -146,5 +157,9 @@ public class Process {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setAdHoc(boolean adHoc) {
+        this.adHoc = adHoc;
     }
 }

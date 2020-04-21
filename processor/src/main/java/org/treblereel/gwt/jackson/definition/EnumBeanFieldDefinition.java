@@ -1,5 +1,7 @@
 package org.treblereel.gwt.jackson.definition;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeMirror;
 
 import com.github.javaparser.ast.CompilationUnit;
@@ -26,8 +28,16 @@ public class EnumBeanFieldDefinition extends FieldDefinition {
         cu.addImport(EnumXMLDeserializer.class);
         cu.addImport(MoreTypes.asTypeElement(bean).getQualifiedName().toString());
 
-        return new MethodCallExpr(new NameExpr(EnumXMLDeserializer.class.getSimpleName()), "newInstance")
+        MethodCallExpr expr = new MethodCallExpr(new NameExpr(EnumXMLDeserializer.class.getSimpleName()), "newInstance")
                 .addArgument(MoreTypes.asTypeElement(bean).getSimpleName().toString() + ".class");
+
+        for (Element enumConstant : MoreTypes.asTypeElement(bean).getEnclosedElements()) {
+            if (enumConstant.getKind().equals(ElementKind.ENUM_CONSTANT)) {
+                expr.addArgument(bean.toString() + "." + enumConstant);
+            }
+        }
+
+        return expr;
     }
 
     @Override

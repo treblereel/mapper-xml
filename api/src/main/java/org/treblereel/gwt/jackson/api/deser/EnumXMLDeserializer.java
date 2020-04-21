@@ -16,8 +16,6 @@
 
 package org.treblereel.gwt.jackson.api.deser;
 
-import java.util.UUID;
-
 import javax.xml.stream.XMLStreamException;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
@@ -41,35 +39,46 @@ public class EnumXMLDeserializer<E extends Enum<E>> extends XMLDeserializer<E> {
      * @param enumClass class of the enumeration
      * @return a new instance of {@link EnumXMLDeserializer}
      */
-    public static <E extends Enum<E>> EnumXMLDeserializer<E> newInstance(Class<E> enumClass) {
-        return new EnumXMLDeserializer<>(enumClass);
+    public static <E extends Enum<E>> EnumXMLDeserializer<E> newInstance(Class<E> enumClass, E... values) {
+        return new EnumXMLDeserializer<>(enumClass,values);
     }
 
     private final Class<E> enumClass;
+    private final E[] values;
 
     /**
      * <p>Constructor for EnumXMLDeserializer.</p>
      *
      * @param enumClass class of the enumeration
      */
-    protected EnumXMLDeserializer(Class<E> enumClass) {
+    protected EnumXMLDeserializer(Class<E> enumClass, E[] values) {
         if (null == enumClass) {
             throw new IllegalArgumentException("enumClass cannot be null");
         }
         this.enumClass = enumClass;
+        this.values = values;
     }
 
     /** {@inheritDoc} */
     @Override
     public E doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         try {
-            return Enum.valueOf(enumClass, reader.nextString());
+            return getEnum(values, reader.nextString());
         } catch (IllegalArgumentException ex) {
             if (ctx.isReadUnknownEnumValuesAsNull()) {
                 return null;
             }
             throw ex;
         }
+    }
+
+    public <E extends Enum<E>> E getEnum(E[] values, String name){
+        for(int i=0;i<values.length;i++){
+            if(values[i].name().equals(name)){
+                return values[i];
+            }
+        }
+        throw new IllegalArgumentException("["+name + "] is not a valid enum constant for Enum type "+ getEnumClass().getName());
     }
 
     @Override

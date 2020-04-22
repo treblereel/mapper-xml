@@ -46,7 +46,10 @@ public abstract class BeanPropertyDeserializer<T, V> extends HasDeserializerAndP
      * @param ctx context of the deserialization process
      */
     public void deserialize(XMLReader reader, T bean, XMLDeserializationContext ctx) throws XMLStreamException {
-        setValue(bean, deserialize(reader, ctx), ctx);
+        V value = deserialize(reader, ctx);
+        if (value != null) {
+            setValue(bean, value, ctx);
+        }
     }
 
     /**
@@ -64,6 +67,5 @@ public abstract class BeanPropertyDeserializer<T, V> extends HasDeserializerAndP
     protected boolean isAttribute() {
         return false;
     }
-
 }
 

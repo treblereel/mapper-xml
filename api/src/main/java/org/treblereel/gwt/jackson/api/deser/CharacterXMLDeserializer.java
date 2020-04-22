@@ -44,22 +44,22 @@ public class CharacterXMLDeserializer extends XMLDeserializer<Character> {
         return INSTANCE;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Character doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        String value = reader.nextString();
+    public Character deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
+            XMLDeserializationException {
         if (value.isEmpty()) {
             return null;
         }
         return value.charAt(0);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Character deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
-            XMLDeserializationException {
-        if (value.isEmpty()) {
+    public Character doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+        String value = reader.nextString();
+        if (value == null || value.isEmpty()) {
             return null;
         }
         return value.charAt(0);

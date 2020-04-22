@@ -1,4 +1,4 @@
-package org.treblereel.gwt.jackson.tests;
+package org.treblereel.gwt.jackson.tests.annotations;
 
 import javax.xml.stream.XMLStreamException;
 

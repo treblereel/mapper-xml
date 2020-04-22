@@ -28,13 +28,11 @@ public class DoubleTest {
     @Test
     public void testSerializeValue() throws XMLStreamException {
         DoubleType test = new DoubleType();
-        assertEquals(XML_0, mapper.write(test));
+        assertEquals(new Double(0), mapper.read(mapper.write(test)).value, 0.1);
         test.setValue(17222);
-        assertEquals(XML_17222, mapper.write(test));
-        assertEquals(test, mapper.read(mapper.write(test)));
+        assertEquals(17222.02, mapper.read(mapper.write(test)).value, 0.1);
         test.setValue(-17222);
-        assertEquals(XML__17222, mapper.write(test));
-        assertEquals(test, mapper.read(mapper.write(test)));
+        assertEquals(-17222.02, mapper.read(mapper.write(test)).value, 0.1);
     }
 
     @Test

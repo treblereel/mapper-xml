@@ -1,4 +1,4 @@
-package org.treblereel.gwt.jackson.tests.primitive;
+package org.treblereel.gwt.jackson.tests.boxed;
 
 import java.util.Objects;
 
@@ -16,18 +16,19 @@ import static org.junit.Assert.assertTrue;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/22/20
  */
-@J2clTestInput(BooleanTest.class)
-public class BooleanTest {
+@J2clTestInput(BooleanBoxedTest.class)
+public class BooleanBoxedTest {
 
+    private static final String XML_EMPTY = "<?xml version='1.0' encoding='UTF-8'?><BooleanBean/>";
     private static final String XML_TRUE = "<?xml version='1.0' encoding='UTF-8'?><BooleanBean><check>true</check></BooleanBean>";
     private static final String XML_FALSE = "<?xml version='1.0' encoding='UTF-8'?><BooleanBean><check>false</check></BooleanBean>";
 
-    private BooleanTest_BooleanBean_MapperImpl mapper = BooleanTest_BooleanBean_MapperImpl.INSTANCE;
+    private BooleanBoxedTest_BooleanBean_MapperImpl mapper = BooleanBoxedTest_BooleanBean_MapperImpl.INSTANCE;
 
     @Test
     public void testSerializeValue() throws XMLStreamException {
         BooleanBean test = new BooleanBean();
-        assertEquals(XML_FALSE, mapper.write(test));
+        assertEquals(XML_EMPTY, mapper.write(test));
         test.setCheck(true);
         assertEquals(XML_TRUE, mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));
@@ -45,7 +46,7 @@ public class BooleanTest {
     @XMLMapper
     public static class BooleanBean {
 
-        private boolean check;
+        private Boolean check;
 
         @Override
         public int hashCode() {
@@ -64,11 +65,11 @@ public class BooleanTest {
             return isCheck() == that.isCheck();
         }
 
-        public boolean isCheck() {
+        public Boolean isCheck() {
             return check;
         }
 
-        public void setCheck(boolean check) {
+        public void setCheck(Boolean check) {
             this.check = check;
         }
     }

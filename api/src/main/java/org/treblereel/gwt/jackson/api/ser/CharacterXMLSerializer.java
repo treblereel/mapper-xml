@@ -25,7 +25,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for {@link Character}.
- *
  * @author Nicolas Morel
  * @version $Id: $
  */
@@ -33,26 +32,34 @@ public class CharacterXMLSerializer extends XMLSerializer<Character> {
 
     private static final CharacterXMLSerializer INSTANCE = new CharacterXMLSerializer();
 
+    private CharacterXMLSerializer() {
+    }
+
     /**
      * <p>getInstance</p>
-     *
      * @return an instance of {@link CharacterXMLSerializer}
      */
     public static CharacterXMLSerializer getInstance() {
         return INSTANCE;
     }
 
-    private CharacterXMLSerializer() {
-    }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doSerialize(XMLWriter writer, Character value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
+        String _value;
+        if(value.charValue() == '\u0000') {
+            _value = "";
+        } else {
+            _value = value.toString();
+        }
+
         if (isAttribute) {
-            writer.writeAttribute(propertyName, value.toString());
+            writer.writeAttribute(propertyName, _value);
             isAttribute = false;
         } else {
-            writer.value(value.toString());
+            writer.value(_value);
         }
     }
 }

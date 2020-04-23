@@ -2,11 +2,11 @@ package org.bpmn2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.xml.bind.annotation.JacksonXmlProperty;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.google.common.base.Objects;
 import org.bpmn.di.BPMNDiagram;
 import org.treblereel.gwt.jackson.api.annotation.TargetNamespace;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
@@ -118,26 +118,17 @@ public class Definitions {
         }
         Definitions that = (Definitions) o;
 
-        return Objects.equal(getId(), that.getId())
-                &&
-                Objects.equal(getName(), that.getName()) &&
-                Objects.equal(getItemDefinitions(), that.getItemDefinitions()) &&
-                Objects.equal(getExporter(), that.getExporter()) &&
-                Objects.equal(getExporterVersion(), that.getExporterVersion()) &&
-                Objects.equal(getProcess(), that.getProcess()) &&
-                Objects.equal(getBpmnDiagram(), that.getBpmnDiagram());
-
-        /*        return Objects.equal(getId(), that.getId()) &&
-                Objects.equal(getName(), that.getName())  &&
-                Objects.equal(getItemDefinitions(), that.getItemDefinitions()) &&
-                Objects.equal(getExporter(), that.getExporter()) &&
-                Objects.equal(getExporterVersion(), that.getExporterVersion()) &&
-                Objects.equal(getProcess(), that.getProcess()) &&
-                Objects.equal(getBpmnDiagram(), that.getBpmnDiagram());*/
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getItemDefinitions(), that.getItemDefinitions()) &&
+                Objects.equals(getExporter(), that.getExporter()) &&
+                Objects.equals(getExporterVersion(), that.getExporterVersion()) &&
+                Objects.equals(getProcess(), that.getProcess()) &&
+                Objects.equals(getBpmnDiagram(), that.getBpmnDiagram());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId(), getName(), getItemDefinitions(), getExporter(), getExporterVersion(), getProcess(), getBpmnDiagram());
+        return Objects.hash(getId(), getName(), getItemDefinitions(), getExporter(), getExporterVersion(), getProcess(), getBpmnDiagram());
     }
 }

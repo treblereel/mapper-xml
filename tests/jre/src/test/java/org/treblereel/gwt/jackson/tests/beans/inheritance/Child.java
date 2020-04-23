@@ -1,8 +1,9 @@
 package org.treblereel.gwt.jackson.tests.beans.inheritance;
 
+import java.util.Objects;
+
 import javax.xml.bind.annotation.JacksonXmlProperty;
 
-import com.google.common.base.Objects;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
 /**
@@ -20,7 +21,7 @@ public class Child extends Parent {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getName(), getId());
+        return Objects.hash(getName(), getId());
     }
 
     @Override
@@ -32,8 +33,8 @@ public class Child extends Parent {
             return false;
         }
         Child child = (Child) o;
-        return Objects.equal(getName(), child.getName()) &&
-                Objects.equal(getId(), child.getId());
+        return Objects.equals(getName(), child.getName()) &&
+                Objects.equals(getId(), child.getId());
     }
 
     public String getName() {

@@ -799,7 +799,8 @@ public class TypeUtils {
     }
 
     public boolean isBoolean(VariableElement variable) {
-        return variable.asType().getKind().equals(TypeKind.BOOLEAN);
+        return variable.asType().getKind().equals(TypeKind.BOOLEAN) ||
+                variable.asType().toString().equals(Boolean.class.getCanonicalName());
     }
 
     public boolean hasSetter(VariableElement variable) {

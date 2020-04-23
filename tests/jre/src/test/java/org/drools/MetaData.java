@@ -1,9 +1,9 @@
 package org.drools;
 
+import java.util.Objects;
+
 import javax.xml.bind.annotation.JacksonXmlProperty;
 import javax.xml.bind.annotation.XmlCData;
-
-import com.google.common.base.Objects;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -42,12 +42,12 @@ public class MetaData {
             return false;
         }
         MetaData metaData = (MetaData) o;
-        return Objects.equal(getName(), metaData.getName()) &&
-                Objects.equal(getMetaValue(), metaData.getMetaValue());
+        return Objects.equals(getName(), metaData.getName()) &&
+                Objects.equals(getMetaValue(), metaData.getMetaValue());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getName(), getMetaValue());
+        return Objects.hash(getName(), getMetaValue());
     }
 }

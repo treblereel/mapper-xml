@@ -20,15 +20,13 @@ public class Users {
     private Map<String, Person> activeUsers;
     @JacksonXmlProperty(localName = "all_users", namespace = "do")
     private List<Person> allUsers;
-    @JacksonXmlProperty(localName = "_types", namespace = "do")
-    private Map<TYPE, Person> types;
     private Map<Person, Address> addressMap;
 
     private transient Iterable<Address> address;
 
     @Override
     public int hashCode() {
-        return Objects.hash(activeUsers, types, address, allUsers);
+        return Objects.hash(activeUsers, address, allUsers);
     }
 
     @Override
@@ -41,7 +39,6 @@ public class Users {
         }
         Users users = (Users) o;
         return Objects.equals(activeUsers, users.activeUsers) &&
-                Objects.equals(types, users.types) &&
                 Objects.equals(addressMap, users.addressMap) &&
                 Objects.equals(allUsers, users.allUsers) &&
                 Objects.equals(address, users.address);
@@ -53,14 +50,6 @@ public class Users {
 
     public void setActiveUsers(Map<String, Person> activeUsers) {
         this.activeUsers = activeUsers;
-    }
-
-    public Map<TYPE, Person> getTypes() {
-        return types;
-    }
-
-    public void setTypes(Map<TYPE, Person> types) {
-        this.types = types;
     }
 
     public Iterable<Address> getAddress() {

@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.tests.beans.collection.ByteArray2d;
 import org.treblereel.gwt.jackson.tests.beans.collection.ByteArray2d_MapperImpl;
@@ -15,6 +16,7 @@ import static org.junit.Assert.assertTrue;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/29/20
  */
+@J2clTestInput(ByteArray2dXMLDeserializerTest.class)
 public class ByteArray2dXMLDeserializerTest {
 
     ByteArray2d_MapperImpl mapper = ByteArray2d_MapperImpl.INSTANCE;

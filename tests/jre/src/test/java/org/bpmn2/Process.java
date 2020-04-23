@@ -2,10 +2,9 @@ package org.bpmn2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.xml.bind.annotation.JacksonXmlProperty;
-
-import com.google.common.base.Objects;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -39,7 +38,7 @@ public class Process {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId(), getName(), isExecutable(), getPackageName(), getVersion(), isAdHoc(), getSubProcesses(), getDataObjects(), getDataObjectReferences());
+        return Objects.hash(getId(), getName(), isExecutable(), getPackageName(), getVersion(), isAdHoc(), getSubProcesses(), getDataObjects(), getDataObjectReferences());
     }
 
     @Override
@@ -53,13 +52,13 @@ public class Process {
         Process process = (Process) o;
         return isExecutable() == process.isExecutable() &&
                 isAdHoc() == process.isAdHoc() &&
-                Objects.equal(getId(), process.getId()) &&
-                Objects.equal(getName(), process.getName()) &&
-                Objects.equal(getPackageName(), process.getPackageName()) &&
-                Objects.equal(getVersion(), process.getVersion()) &&
-                Objects.equal(getSubProcesses(), process.getSubProcesses()) &&
-                Objects.equal(getDataObjects(), process.getDataObjects()) &&
-                Objects.equal(getDataObjectReferences(), process.getDataObjectReferences());
+                Objects.equals(getId(), process.getId()) &&
+                Objects.equals(getName(), process.getName()) &&
+                Objects.equals(getPackageName(), process.getPackageName()) &&
+                Objects.equals(getVersion(), process.getVersion()) &&
+                Objects.equals(getSubProcesses(), process.getSubProcesses()) &&
+                Objects.equals(getDataObjects(), process.getDataObjects()) &&
+                Objects.equals(getDataObjectReferences(), process.getDataObjectReferences());
     }
 
     @Override

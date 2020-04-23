@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.api.DefaultXMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
@@ -17,6 +18,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/30/20
  */
+@J2clTestInput(StringMapXMLSerializerTest.class)
 public class StringMapXMLSerializerTest {
 
     private final String xml = "<?xml version='1.0' encoding='UTF-8'?><StringMap><map><entry><String>key1</String><String>value1</String></entry><entry><String>key2</String><String>value2</String></entry><entry><String>key3</String><String>value3</String></entry></map><checkNewLine>one more line</checkNewLine></StringMap>";

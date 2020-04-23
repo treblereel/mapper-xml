@@ -2,12 +2,14 @@ package org.treblereel.gwt.jackson.tests.ser;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.tests.beans.BooleanBean;
 import org.treblereel.gwt.jackson.tests.beans.BooleanBean_MapperImpl;
 
 import static org.junit.Assert.assertEquals;
 
+@J2clTestInput(BooleanXMLSerializerTest.class)
 public class BooleanXMLSerializerTest {
 
     BooleanBean_MapperImpl mapper = BooleanBean_MapperImpl.INSTANCE;

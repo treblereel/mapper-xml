@@ -2,10 +2,9 @@ package org.bpmn.di;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.xml.bind.annotation.JacksonXmlProperty;
-
-import com.google.common.base.Objects;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -20,7 +19,7 @@ public class BPMNDiagram {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId(), getPlanes());
+        return Objects.hash(getId(), getPlanes());
     }
 
     @Override
@@ -33,8 +32,8 @@ public class BPMNDiagram {
         }
         BPMNDiagram diagram = (BPMNDiagram) o;
 
-        return Objects.equal(getId(), diagram.getId())
-                && Objects.equal(getPlanes(), diagram.getPlanes());
+        return Objects.equals(getId(), diagram.getId())
+                && Objects.equals(getPlanes(), diagram.getPlanes());
     }
 
     public String getId() {

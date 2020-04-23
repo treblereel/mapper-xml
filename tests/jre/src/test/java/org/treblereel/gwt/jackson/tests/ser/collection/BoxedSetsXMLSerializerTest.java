@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.tests.beans.collection.BoxedSets;
 import org.treblereel.gwt.jackson.tests.beans.collection.BoxedSets_MapperImpl;
@@ -16,6 +17,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/29/20
  */
+@J2clTestInput(BoxedSetsXMLSerializerTest.class)
 public class BoxedSetsXMLSerializerTest {
 
     BoxedSets_MapperImpl mapper = BoxedSets_MapperImpl.INSTANCE;

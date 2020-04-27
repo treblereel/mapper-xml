@@ -1,4 +1,4 @@
-package org.treblereel.gwt.jackson.tests.deser.date;
+package org.treblereel.gwt.jackson.tests.date;
 
 import java.sql.Timestamp;
 
@@ -14,8 +14,8 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/27/20
  */
-@J2clTestInput(SqlTimestampXMLDeserializerTest.class)
-public class SqlTimestampXMLDeserializerTest {
+@J2clTestInput(SqlTimestampTest.class)
+public class SqlTimestampTest {
 
     @Test
     public void testDeserializeValue() throws XMLStreamException {

@@ -1,4 +1,4 @@
-package org.treblereel.gwt.jackson.tests.ser.collection;
+package org.treblereel.gwt.jackson.tests.collections;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,8 +20,8 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/29/20
  */
-@J2clTestInput(BoxedListsXMLSerializerTest.class)
-public class BoxedListsXMLSerializerTest {
+@J2clTestInput(BoxedListsTest.class)
+public class BoxedListsTest {
 
     BoxedLists_MapperImpl mapper = BoxedLists_MapperImpl.INSTANCE;
 

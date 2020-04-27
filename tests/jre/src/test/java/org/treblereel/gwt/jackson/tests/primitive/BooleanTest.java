@@ -6,7 +6,8 @@ import javax.xml.stream.XMLStreamException;
 
 import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
-import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
+import org.treblereel.gwt.jackson.tests.beans.BooleanBean;
+import org.treblereel.gwt.jackson.tests.beans.BooleanBean_MapperImpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -22,7 +23,7 @@ public class BooleanTest {
     private static final String XML_TRUE = "<?xml version='1.0' encoding='UTF-8'?><BooleanBean><check>true</check></BooleanBean>";
     private static final String XML_FALSE = "<?xml version='1.0' encoding='UTF-8'?><BooleanBean><check>false</check></BooleanBean>";
 
-    private BooleanTest_BooleanBean_MapperImpl mapper = BooleanTest_BooleanBean_MapperImpl.INSTANCE;
+    private BooleanBean_MapperImpl mapper = BooleanBean_MapperImpl.INSTANCE;
 
     @Test
     public void testSerializeValue() throws XMLStreamException {
@@ -40,36 +41,13 @@ public class BooleanTest {
     public void testDeserializeValue() throws XMLStreamException {
         assertTrue(mapper.read(XML_TRUE).isCheck());
         assertFalse(mapper.read(XML_FALSE).isCheck());
+        BooleanBean test = new BooleanBean();
+        test.setCheck(true);
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><BooleanBean><check>true</check></BooleanBean>", mapper.write(test));
+        assertEquals(test, mapper.read(mapper.write(test)));
+        test.setCheck(false);
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><BooleanBean><check>false</check></BooleanBean>", mapper.write(test));
+        assertEquals(test, mapper.read(mapper.write(test)));
     }
 
-    @XMLMapper
-    public static class BooleanBean {
-
-        private boolean check;
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(isCheck());
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof BooleanBean)) {
-                return false;
-            }
-            BooleanBean that = (BooleanBean) o;
-            return isCheck() == that.isCheck();
-        }
-
-        public boolean isCheck() {
-            return check;
-        }
-
-        public void setCheck(boolean check) {
-            this.check = check;
-        }
-    }
 }

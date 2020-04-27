@@ -1,4 +1,4 @@
-package org.treblereel.gwt.jackson.tests.deser.date;
+package org.treblereel.gwt.jackson.tests.date;
 
 import java.sql.Date;
 
@@ -14,8 +14,8 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/27/20
  */
-@J2clTestInput(SqlDateXMLDeserializerTest.class)
-public class SqlDateXMLDeserializerTest {
+@J2clTestInput(SqlDateTest.class)
+public class SqlDateTest {
 
     @Test
     public void testDeserializeValue() throws XMLStreamException {

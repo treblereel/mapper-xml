@@ -1,4 +1,4 @@
-package org.treblereel.gwt.jackson.tests.deser.collection;
+package org.treblereel.gwt.jackson.tests.collections;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -19,13 +19,13 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/30/20
  */
-@J2clTestInput(UsersTest.class)
-public class UsersTest {
+@J2clTestInput(BeanMapTest.class)
+public class BeanMapTest {
 
     Users_MapperImpl mapper = Users_MapperImpl.INSTANCE;
 
     @Test
-    public void testDeserializeValue() throws XMLStreamException {
+    public void testStringPersonMap() throws XMLStreamException {
         Map<String, Person> map1 = new LinkedHashMap<>();
         Person p1 = new Person();
         p1.setFirstName("Person1");

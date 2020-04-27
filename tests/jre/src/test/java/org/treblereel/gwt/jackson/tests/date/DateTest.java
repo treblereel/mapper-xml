@@ -1,4 +1,4 @@
-package org.treblereel.gwt.jackson.tests.deser.date;
+package org.treblereel.gwt.jackson.tests.date;
 
 import java.util.Date;
 
@@ -15,8 +15,8 @@ import static org.junit.Assert.assertNull;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/27/20
  */
-@J2clTestInput(DateXMLDeserializerTest.class)
-public class DateXMLDeserializerTest {
+@J2clTestInput(DateTest.class)
+public class DateTest {
 
     @Test
     public void testDeserializeValue() throws XMLStreamException {

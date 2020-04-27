@@ -1,4 +1,4 @@
-package org.treblereel.gwt.jackson.tests.deser.collection;
+package org.treblereel.gwt.jackson.tests.collections;
 
 import java.util.Arrays;
 
@@ -15,8 +15,8 @@ import static org.junit.Assert.assertTrue;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/27/20
  */
-@J2clTestInput(CollectionXMLDeserializerTest.class)
-public class CollectionXMLDeserializerTest {
+@J2clTestInput(CollectionTest.class)
+public class CollectionTest {
 
     String[] strings = new String[]{"Hello", "\" \"", "World", "!"};
 

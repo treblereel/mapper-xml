@@ -1,4 +1,4 @@
-package org.treblereel.gwt.jackson.tests.ser.collection;
+package org.treblereel.gwt.jackson.tests.collections;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -13,8 +13,8 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/28/20
  */
-@J2clTestInput(BoxedArraysXMLSerializerTest.class)
-public class BoxedArraysXMLSerializerTest {
+@J2clTestInput(BoxedArraysTest.class)
+public class BoxedArraysTest {
 
     BoxedArrays_MapperImpl mapper = BoxedArrays_MapperImpl.INSTANCE;
 

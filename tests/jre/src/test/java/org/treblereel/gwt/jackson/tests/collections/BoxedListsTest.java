@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/29/20
  */
-@J2clTestInput(BoxedListsTest.class)
+//@J2clTestInput(BoxedListsTest.class)
 public class BoxedListsTest {
 
     BoxedLists_MapperImpl mapper = BoxedLists_MapperImpl.INSTANCE;

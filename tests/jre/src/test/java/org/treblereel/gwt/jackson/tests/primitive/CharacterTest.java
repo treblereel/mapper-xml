@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/26/20
  */
-@J2clTestInput(CharacterTest.class)
+//@J2clTestInput(CharacterTest.class)
 public class CharacterTest {
 
     CharacterBean_MapperImpl mapper = CharacterBean_MapperImpl.INSTANCE;

@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/29/20
  */
-@J2clTestInput(FloatArray2dTest.class)
+//@J2clTestInput(FloatArray2dTest.class)
 public class FloatArray2dTest {
 
     FloatArray2d test = new FloatArray2d();

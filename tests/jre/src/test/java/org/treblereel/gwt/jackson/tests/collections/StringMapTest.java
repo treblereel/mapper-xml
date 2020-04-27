@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/30/20
  */
-@J2clTestInput(StringMapTest.class)
+//@J2clTestInput(StringMapTest.class)
 public class StringMapTest {
 
     private final String xml = "<?xml version='1.0' encoding='UTF-8'?><StringMap><map><entry><String>key1</String><String>value1</String></entry><entry><String>key2</String><String>value2</String></entry><entry><String>key3</String><String>value3</String></entry></map><checkNewLine>one more line</checkNewLine></StringMap>";

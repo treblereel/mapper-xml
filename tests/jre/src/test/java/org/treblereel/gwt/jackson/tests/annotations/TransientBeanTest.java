@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNull;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/29/20
  */
-@J2clTestInput(TransientBeanTest.class)
+//@J2clTestInput(TransientBeanTest.class)
 public class TransientBeanTest {
 
     TransientBean_MapperImpl mapper = TransientBean_MapperImpl.INSTANCE;

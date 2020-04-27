@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/29/20
  */
-@J2clTestInput(ByteArray2dTest.class)
+//@J2clTestInput(ByteArray2dTest.class)
 public class ByteArray2dTest {
 
     ByteArray2d_MapperImpl mapper = ByteArray2d_MapperImpl.INSTANCE;

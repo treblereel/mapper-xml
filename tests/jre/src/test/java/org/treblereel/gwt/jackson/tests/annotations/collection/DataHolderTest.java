@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/6/20
  */
-@J2clTestInput(DataHolderTest.class)
+//@J2clTestInput(DataHolderTest.class)
 public class DataHolderTest {
 
     DataHolder_MapperImpl mapperEmployee = DataHolder_MapperImpl.INSTANCE;

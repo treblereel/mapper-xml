@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
@@ -13,7 +14,8 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/22/20
  */
-public class СharTest {
+//@J2clTestInput(СharTest.class)
+public class CharTest {
     private static final String XML_EMPTY = "<?xml version='1.0' encoding='UTF-8'?><CharType><value/></CharType>";
     private static final String XML_0 = "<?xml version='1.0' encoding='UTF-8'?><CharType><value></value></CharType>";
     private static final String XML_C = "<?xml version='1.0' encoding='UTF-8'?><CharType><value>c</value></CharType>";

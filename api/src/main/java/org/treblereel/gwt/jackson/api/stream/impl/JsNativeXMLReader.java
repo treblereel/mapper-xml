@@ -7,7 +7,9 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 
+import elemental2.dom.DomGlobal;
 import org.gwtproject.xml.client.Attr;
+import org.gwtproject.xml.client.CDATASection;
 import org.gwtproject.xml.client.Node;
 import org.gwtproject.xml.client.Text;
 import org.gwtproject.xml.client.XMLParser;
@@ -45,6 +47,10 @@ public class JsNativeXMLReader implements XMLReader {
 
     @Override
     public QName peekNodeName() {
+        if (current.node.getPrefix() != null && !current.node.getPrefix().isEmpty()) {
+            String nodeName = current.node.getNodeName().replace(current.node.getPrefix() + ":", "");
+            return new QName(current.node.getNamespaceURI(), nodeName, current.node.getPrefix());
+        }
         return new QName(current.node.getNamespaceURI(), current.node.getNodeName());
     }
 
@@ -53,6 +59,10 @@ public class JsNativeXMLReader implements XMLReader {
         if (current.type == XMLStreamConstants.START_ELEMENT) {
             next();
         }
+        if (current.type == XMLStreamConstants.END_ELEMENT) {
+            return null;
+        }
+
         return ((Text) current.node).getData();
     }
 
@@ -104,7 +114,10 @@ public class JsNativeXMLReader implements XMLReader {
 
     @Override
     public String nextValue() {
-        return null;
+        if (current.type == XMLStreamConstants.END_ELEMENT) {
+            return ((CDATASection) current.node).getData();
+        }
+        return nextString();
     }
 
     @Override
@@ -137,7 +150,6 @@ public class JsNativeXMLReader implements XMLReader {
 
     @Override
     public String getAttributeValue(int index) {
-        Attr attr = (Attr) current.node.getAttributes().item(index);
         return ((Attr) current.node.getAttributes().item(index)).getValue();
     }
 

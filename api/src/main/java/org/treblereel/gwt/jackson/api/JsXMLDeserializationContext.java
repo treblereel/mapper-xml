@@ -119,7 +119,6 @@ public class JsXMLDeserializationContext implements XMLDeserializationContext {
      */
     @Override
     public XMLReader newXMLReader(String input) {
-        DomGlobal.console.log("newXMLReader " + input);
         XMLReader reader = new JsNativeXMLReader(input);
         return reader;
     }

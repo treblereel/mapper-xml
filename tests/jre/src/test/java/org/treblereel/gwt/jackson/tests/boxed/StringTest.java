@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNull;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/26/20
  */
-@J2clTestInput(StringTest.class)
+//@J2clTestInput(StringTest.class)
 public class StringTest {
 
     @Test

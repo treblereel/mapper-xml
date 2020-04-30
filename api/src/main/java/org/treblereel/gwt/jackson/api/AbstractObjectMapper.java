@@ -118,9 +118,11 @@ public abstract class AbstractObjectMapper<T> implements ObjectMapper<T> {
             return writer.getOutput();
         } catch (XMLSerializationException e) {
             // already logged, we just throw it
-            throw e;
+            throw new Error(e);
         } catch (RuntimeException e) {
             throw ctx.traceError(value, e, writer);
+        } catch (Exception e) {
+            throw new Error(e);
         } finally {
             writer.close();
         }

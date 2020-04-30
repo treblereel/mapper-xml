@@ -76,15 +76,11 @@ public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSeri
             return;
         }
         if (ctx.isWrapCollections()) {
-            if (prefix != null) {
-                writer.beginObject(prefix, namespace, propertyName);
-            } else {
-                writer.beginObject(propertyName);
-            }
+            writer.beginObject(propertyName);
         }
 
         for (T value : values) {
-            serializer.setPropertyName(propertyName).serialize(writer, value, ctx, params);
+            serializer.setParent(this).setPropertyName(propertyName).serialize(writer, value, ctx, params);
         }
         if (ctx.isWrapCollections()) {
             writer.endObject();

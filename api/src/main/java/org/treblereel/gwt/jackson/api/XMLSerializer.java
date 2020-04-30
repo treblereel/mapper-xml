@@ -17,6 +17,7 @@
 package org.treblereel.gwt.jackson.api;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -37,13 +38,11 @@ public abstract class XMLSerializer<T> {
 
     protected boolean isAttribute = false;
 
-    protected List<Pair<String, String>> parentNs;
+    protected XMLSerializer parent;
 
     protected String namespace;
 
     protected String prefix;
-
-    protected String defaultNamespace;
 
     public XMLSerializer<T> setPropertyName(String propertyName) {
         this.propertyName = propertyName;
@@ -60,18 +59,13 @@ public abstract class XMLSerializer<T> {
         return this;
     }
 
-    public XMLSerializer<T> setNamespace(String namespace) {
-        this.namespace = namespace;
-        return this;
-    }
-
     public XMLSerializer<T> setPrefix(String prefix) {
         this.prefix = prefix;
         return this;
     }
 
-    public XMLSerializer<T> setParentNS(List<Pair<String, String>> parentNs) {
-        this.parentNs = parentNs;
+    public XMLSerializer setParent(XMLSerializer parent) {
+        this.parent = parent;
         return this;
     }
 
@@ -121,54 +115,6 @@ public abstract class XMLSerializer<T> {
         }
     }
 
-    protected void writeNamespace(XMLWriter writer) throws XMLStreamException {
-        if (!getXmlNs().isEmpty()) {
-            for (Pair<String, String> pair : getXmlNs()) {
-                if (pair.key == null) {
-                    this.defaultNamespace = pair.value;
-                    writer.writeDefaultNamespace(defaultNamespace);
-                } else {
-                    writer.writeNamespace(pair.key, pair.value);
-                }
-            }
-        }
-        if (prefix == null && namespace != null) {
-            writer.writeAttrNamespace(namespace);
-        }
-
-        writeSchemaLocation(writer);
-        writeTargetNamespace(writer);
-        writer.endNs();
-    }
-
-    private void writeSchemaLocation(XMLWriter writer) throws XMLStreamException {
-        if (getSchemaLocation() != null) {
-            writer.writeSchemaLocation("xsi:schemaLocation", getSchemaLocation());
-        }
-    }
-
-    private void writeTargetNamespace(XMLWriter writer) throws XMLStreamException {
-        if (getTargetNamespace() != null) {
-            writer.writeTargetNamespace(getTargetNamespace().value);
-        }
-    }
-
-    protected String getXmlRootElement() {
-        return null;
-    }
-
-    protected List<Pair<String, String>> getXmlNs() {
-        return null;
-    }
-
-    protected String getSchemaLocation() {
-        return null;
-    }
-
-    protected Pair<String, String> getTargetNamespace() {
-        return null;
-    }
-
     /**
      * Serialize the null value. This method allows children to override the default behaviour.
      * @param writer {@link XMLWriter} used to write the serialized XML
@@ -188,6 +134,112 @@ public abstract class XMLSerializer<T> {
      */
     protected abstract void doSerialize(XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters
             params) throws XMLStreamException;
+
+    protected void writeNamespace(XMLWriter writer, String prefix) throws XMLStreamException {
+        Optional<String> defaultNamespace = getDefaultNamespace();
+        if (prefix != null && defaultNamespace.isPresent()) {
+            writer.writeDefaultNamespace(defaultNamespace.get());
+        } else if (getNamespace() != null) {
+            writer.writeDefaultNamespace(getNamespace());
+        }
+
+        if (!getXmlNs().isEmpty()) {
+            for (Pair<String, String> pair : getXmlNs()) {
+                if (pair.key == null) {
+                } else {
+                    writer.writeNamespace(pair.key, pair.value);
+                }
+            }
+        }
+
+        writeSchemaLocation(writer);
+        writeTargetNamespace(writer);
+        writer.endNs();
+    }
+
+    protected List<Pair<String, String>> getXmlNs() {
+        return null;
+    }
+
+    private Optional<String> getDefaultNamespace() {
+        if (!getXmlNs().isEmpty()) {
+            return getXmlNs().stream()
+                    .filter(pair -> pair.key == null)
+                    .findFirst().map(pair -> pair.value);
+        }
+        return Optional.empty();
+    }
+
+    private void writeSchemaLocation(XMLWriter writer) throws XMLStreamException {
+        if (getSchemaLocation() != null) {
+            writer.writeSchemaLocation("xsi:schemaLocation", getSchemaLocation());
+        }
+    }
+
+    private void writeTargetNamespace(XMLWriter writer) throws XMLStreamException {
+        if (getTargetNamespace() != null) {
+            writer.writeTargetNamespace(getTargetNamespace().value);
+        }
+    }
+
+    protected String getSchemaLocation() {
+        return null;
+    }
+
+    protected Pair<String, String> getTargetNamespace() {
+        return null;
+    }
+
+    protected String getPrefix(String namespace) {
+        String prefix = null;
+        if (parent != null) {
+            prefix = parent.getPrefix(namespace);
+        }
+        if (prefix != null) {
+            return prefix;
+        }
+
+        if (namespace != null && getXmlNs() != null && !getXmlNs().isEmpty()) {
+            for (Pair<String, String> pair : getXmlNs()) {
+                if (pair.key != null && pair.value.equals(namespace)) {
+                    prefix = pair.key;
+                }
+            }
+        }
+        return prefix;
+    }
+
+    private boolean _lookupNamespace(String namespace) {
+        boolean result = false;
+        if (parent != null) {
+            result = parent._lookupNamespace(namespace);
+        }
+        if (result) {
+            return true;
+        } else {
+            return namespace.equals(getNamespace());
+        }
+    }
+
+    protected boolean lookupNamespace(String namespace) {
+        if (parent == null) {
+            return true;
+        }
+        return !parent._lookupNamespace(namespace);
+    }
+
+    protected String getNamespace() {
+        return null;
+    }
+
+    public XMLSerializer<T> setNamespace(String namespace) {
+        this.namespace = namespace;
+        return this;
+    }
+
+    protected String getXmlRootElement() {
+        return null;
+    }
 
     /**
      * <p>isEmpty.</p>

@@ -72,6 +72,11 @@ public class JsNativeXMLWriter implements XMLWriter {
     }
 
     @Override
+    public DefaultXMLWriter beginObject(String namespace, String name) throws XMLStreamException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public XMLWriter beginObject(String prefix, String namespace, String name) {
         DomGlobal.console.log("beginObject type 2 " + name + " " + prefix + " " + namespace);
         DomGlobal.console.log("root ? " + (root == null));
@@ -231,18 +236,6 @@ public class JsNativeXMLWriter implements XMLWriter {
     @Override
     public void writeTargetNamespace(String targetNamespace) {
         ((Element) stack.getFirst()).setAttribute("targetNamespace", targetNamespace);
-    }
-
-    @Override
-    public void writeAttrNamespace(String namespace) throws XMLStreamException {
-        ((Element) stack.getFirst()).setAttribute("xmlns", namespace);
-
-        //((Element) stack.getFirst()).setAttributeNodeNS(new Attr());
-    }
-
-    @Override
-    public void setPrefix(String prefix, String namespace) throws XMLStreamException {
-        ((Element) stack.getFirst()).prefix = prefix;
     }
 
     private void checkName(String name) {

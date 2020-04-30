@@ -60,6 +60,8 @@ public interface XMLWriter {
      */
     XMLWriter beginObject(String name) throws XMLStreamException;
 
+    XMLWriter beginObject(String namespace, String name) throws XMLStreamException;
+
     XMLWriter beginObject(String prefix, String namespace, String name) throws XMLStreamException;
 
 
@@ -164,7 +166,4 @@ public interface XMLWriter {
 
     void writeTargetNamespace(String targetNamespace) throws XMLStreamException;
 
-    void writeAttrNamespace(String namespace) throws XMLStreamException;
-
-    void setPrefix(String prefix, String namespace) throws XMLStreamException;
 }

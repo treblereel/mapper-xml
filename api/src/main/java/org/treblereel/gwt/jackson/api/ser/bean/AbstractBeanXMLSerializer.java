@@ -89,6 +89,14 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
      */
     public abstract Class getSerializedType();
 
+    protected abstract List<Pair<String, String>> getXmlNs();
+
+    protected abstract String getSchemaLocation();
+
+    protected abstract Pair<String, String> getTargetNamespace();
+
+    protected abstract String getXmlRootElement();
+
     /**
      * {@inheritDoc}
      */
@@ -124,14 +132,18 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
         if (value == null && !ctx.isSerializeNulls()) {
             return;
         }
+        String prefix = getPrefix(getNamespace());
+        boolean addNamespace = getNamespace() != null ? lookupNamespace(getNamespace()) : false;
 
-        if (prefix != null) {
-            writer.beginObject(prefix, namespace, typeName);
+        if (prefix != null && (addNamespace || getNamespace() != null)) {
+            writer.beginObject(prefix, getNamespace(), typeName);
+        } else if (addNamespace && getNamespace() != null && parent != null) {
+            writer.beginObject(getNamespace(), typeName);
         } else {
             writer.beginObject(typeName);
         }
 
-        writeNamespace(writer);
+        writeNamespace(writer, prefix);
         serializeAttribute(writer, value, ctx);
         serializeProperties(writer, value, ctx);
         writer.endObject();
@@ -147,7 +159,8 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
         }
     }
 
-    private void serializeAttribute(XMLWriter writer, T value, XMLSerializationContext ctx) throws XMLStreamException {
+    private void serializeAttribute(XMLWriter writer, T value, XMLSerializationContext ctx) throws
+            XMLStreamException {
         for (BeanPropertySerializer<T, ?> propertySerializer : serializers) {
             if (propertySerializer.isAttribute()) {
                 propertySerializer.serialize(writer, value, ctx);
@@ -155,24 +168,16 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
         }
     }
 
-    private void serializeProperties(XMLWriter writer, T value, XMLSerializationContext ctx) throws XMLStreamException {
+    private void serializeProperties(XMLWriter writer, T value, XMLSerializationContext ctx) throws
+            XMLStreamException {
 
         for (BeanPropertySerializer<T, ?> propertySerializer : serializers) {
             if (!propertySerializer.isAttribute()) {
                 if (propertySerializer.getValue(value, ctx) == null && !ctx.isSerializeNulls()) {
                     continue;
                 }
-                propertySerializer.serializePropertyName(writer, value, ctx); //TODO
-                propertySerializer.serialize(writer, value, ctx);
+                propertySerializer.setParent(this).serialize(writer, value, ctx);
             }
         }
     }
-
-    protected abstract String getXmlRootElement();
-
-    protected abstract List<Pair<String, String>> getXmlNs();
-
-    protected abstract String getSchemaLocation();
-
-    protected abstract Pair<String, String> getTargetNamespace();
 }

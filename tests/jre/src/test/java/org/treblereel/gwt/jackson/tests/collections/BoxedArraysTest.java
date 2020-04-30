@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/28/20
  */
-@J2clTestInput(BoxedArraysTest.class)
+//@J2clTestInput(BoxedArraysTest.class)
 public class BoxedArraysTest {
 
     BoxedArrays_MapperImpl mapper = BoxedArrays_MapperImpl.INSTANCE;

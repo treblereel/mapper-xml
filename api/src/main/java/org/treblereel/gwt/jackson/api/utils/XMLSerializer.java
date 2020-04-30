@@ -1,6 +1,5 @@
 package org.treblereel.gwt.jackson.api.utils;
 
-import elemental2.dom.Node;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
@@ -11,5 +10,5 @@ import jsinterop.annotations.JsType;
 @JsType(isNative = true, namespace = JsPackage.GLOBAL)
 public class XMLSerializer {
 
-    public native String serializeToString(Node node);
+    public native String serializeToString(Object node);
 }

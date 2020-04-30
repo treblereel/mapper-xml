@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -13,6 +14,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/1/20
  */
+@J2clTestInput(XmlRootElementTest.class)
 public class XmlRootElementTest {
 
     Employee_MapperImpl mapperEmployee = Employee_MapperImpl.INSTANCE;

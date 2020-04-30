@@ -8,6 +8,7 @@ import javax.xml.stream.XMLStreamException;
 import elemental2.dom.Document;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.Element;
+import elemental2.dom.Node;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 import org.treblereel.gwt.jackson.api.utils.XMLSerializer;
 
@@ -22,7 +23,7 @@ public class JsNativeXMLWriter implements XMLWriter {
     private boolean beginNs = true;
     private int objCounter = 0;
 
-    private Deque<Element> stack = new ArrayDeque<>();
+    private Deque<Node> stack = new ArrayDeque<>();
 
     private Document xml = DomGlobal.document.implementation.createDocument("", "", null);
     private Element root;
@@ -62,6 +63,8 @@ public class JsNativeXMLWriter implements XMLWriter {
             root = element;
             xml.appendChild(root);
         } else {
+            DomGlobal.console.log("beginObject 1 add to " + stack.getFirst().nodeType);
+            DomGlobal.console.log("beginObject 2 add to " + stack.getFirst().nodeName);
             stack.getFirst().appendChild(element);
         }
         stack.push(element);
@@ -110,12 +113,10 @@ public class JsNativeXMLWriter implements XMLWriter {
     public XMLWriter value(String value) {
         DomGlobal.console.log("value " + deferredName + " " + value + " to " + stack.peekFirst());
 
-      //  DomGlobal.console.log("                 " + stack.)
-
+        //  DomGlobal.console.log("                 " + stack.)
 
         Element element = xml.createElement(deferredName);
         element.textContent = value;
-
 
         stack.getFirst().appendChild(element);
         return this;
@@ -186,47 +187,62 @@ public class JsNativeXMLWriter implements XMLWriter {
 
     @Override
     public void writeDefaultNamespace(String namespace) throws XMLStreamException {
+/*        DomGlobal.console.log("writeDefaultNamespace " + namespace + " " + stack.getFirst());
+        Attr attr = new Attr();
+        attr.name = "xmlns";
+        attr.namespaceURI = namespace;
+        xml.*/
 
+        ((Element) stack.getFirst()).setAttribute("xmlns", namespace);
     }
 
     @Override
     public void writeNamespace(String prefix, String namespace) throws XMLStreamException {
-
+        DomGlobal.console.log("writeNamespace " + namespace + " " + stack.getFirst());
+        if (beginNs) {
+            ((Element) stack.getFirst()).setAttribute("xmlns:" + prefix, namespace);
+        }
     }
 
     @Override
     public void endNs() {
-
+        beginNs = false;
     }
 
     @Override
     public void writeCData(String value) throws XMLStreamException {
-
+        stack.push(xml.createCDATASection(value));
     }
 
     @Override
     public void writeAttribute(String propertyName, String value) throws XMLStreamException {
-        stack.getFirst().setAttribute(propertyName, value);
+        DomGlobal.console.log("writeAttribute " + propertyName + " " + value);
+        DomGlobal.console.log("writeAttribute to "+ ((Element) stack.getFirst()).toString());
+        ((Element) stack.getFirst()).setAttribute(propertyName, value);
     }
 
     @Override
-    public void writeSchemaLocation(String s, String schemaLocation) throws XMLStreamException {
-
+    public void writeSchemaLocation(String s, String schemaLocation) {
+        if (beginNs) {
+            ((Element) stack.getFirst()).setAttribute(s, schemaLocation);
+        }
     }
 
     @Override
-    public void writeTargetNamespace(String targetNamespace) throws XMLStreamException {
-
+    public void writeTargetNamespace(String targetNamespace) {
+        ((Element) stack.getFirst()).setAttribute("targetNamespace", targetNamespace);
     }
 
     @Override
     public void writeAttrNamespace(String namespace) throws XMLStreamException {
+        ((Element) stack.getFirst()).setAttribute("xmlns", namespace);
 
+        //((Element) stack.getFirst()).setAttributeNodeNS(new Attr());
     }
 
     @Override
     public void setPrefix(String prefix, String namespace) throws XMLStreamException {
-
+        ((Element) stack.getFirst()).prefix = prefix;
     }
 
     private void checkName(String name) {

@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNull;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/26/20
  */
-@J2clTestInput(UUIDTest.class)
+//@J2clTestInput(UUIDTest.class)
 public class UUIDTest {
 
     private static String uuid = "550e8400-e29b-41d4-a716-446655440000";

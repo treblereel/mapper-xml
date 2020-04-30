@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/6/20
  */
-@J2clTestInput(BPMNTest.class)
+//@J2clTestInput(BPMNTest.class)
 public class BPMNTest {
 
     Definitions_MapperImpl mapper = Definitions_MapperImpl.INSTANCE;
@@ -96,6 +96,8 @@ public class BPMNTest {
         shape.setBounds(bounds);
 
         String xml = mapper.write(tested);
+        //DomGlobal.console.log("XML " + xml);
+        //System.out.println("XML " + xml);
         Definitions encoded = mapper.read(xml);
         assertEquals(xml, mapper.write(encoded));
         assertEquals(tested, mapper.read(mapper.write(encoded)));

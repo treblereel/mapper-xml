@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/22/20
  */
-@J2clTestInput(BooleanBoxedTest.class)
+//@J2clTestInput(BooleanBoxedTest.class)
 public class BooleanBoxedTest {
 
     private static final String XML_EMPTY = "<?xml version='1.0' encoding='UTF-8'?><BooleanBean/>";

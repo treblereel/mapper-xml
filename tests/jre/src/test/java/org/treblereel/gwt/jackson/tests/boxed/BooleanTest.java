@@ -9,7 +9,7 @@ import org.treblereel.gwt.jackson.tests.beans.BooleanBean_MapperImpl;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@J2clTestInput(BooleanTest.class)
+//@J2clTestInput(BooleanTest.class)
 public class BooleanTest {
 
     @Test

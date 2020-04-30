@@ -18,6 +18,7 @@ package org.treblereel.gwt.jackson.api;
 
 import javax.xml.stream.XMLStreamException;
 
+import elemental2.dom.DomGlobal;
 import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.exception.XMLSerializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
@@ -49,7 +50,13 @@ public abstract class AbstractObjectMapper<T> implements ObjectMapper<T> {
      */
     @Override
     public T read(String in) throws XMLDeserializationException, XMLStreamException {
-        return read(in, DefaultXMLDeserializationContext.builder().build());
+        XMLDeserializationContext context;
+        if (DomGlobal.document == null) {
+            context = DefaultXMLDeserializationContext.builder().build();
+        } else {
+            context = JsXMLDeserializationContext.builder().build();
+        }
+        return read(in, context);
     }
 
     /**
@@ -92,7 +99,13 @@ public abstract class AbstractObjectMapper<T> implements ObjectMapper<T> {
      */
     @Override
     public String write(T value) throws XMLSerializationException, XMLStreamException {
-        return write(value, DefaultXMLSerializationContext.builder().build());
+        XMLSerializationContext xmlSerializationContext;
+        if (DomGlobal.document == null) {
+            xmlSerializationContext = DefaultXMLSerializationContext.builder().build();
+        } else {
+            xmlSerializationContext = JsXMLSerializationContext.builder().build();
+        }
+        return write(value, xmlSerializationContext);
     }
 
     /**

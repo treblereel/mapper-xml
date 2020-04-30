@@ -15,7 +15,7 @@ import static org.junit.Assert.assertNull;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/22/20
  */
-@J2clTestInput(ByteBoxedTest.class)
+//@J2clTestInput(ByteBoxedTest.class)
 public class ByteBoxedTest {
 
     private static final String XML_0 = "<?xml version='1.0' encoding='UTF-8'?><ByteType/>";

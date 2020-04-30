@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/22/20
  */
-@J2clTestInput(IntTest.class)
+//@J2clTestInput(IntTest.class)
 public class IntTest {
 
     private static final String XML_0 = "<?xml version='1.0' encoding='UTF-8'?><IntType><value>0</value></IntType>";

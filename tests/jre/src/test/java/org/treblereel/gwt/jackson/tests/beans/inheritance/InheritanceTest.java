@@ -2,6 +2,7 @@ package org.treblereel.gwt.jackson.tests.beans.inheritance;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -10,6 +11,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/8/20
  */
+//@J2clTestInput(InheritanceTest.class)
 public class InheritanceTest {
 
     Child_MapperImpl mapper = Child_MapperImpl.INSTANCE;

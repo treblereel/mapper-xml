@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/27/20
  */
-@J2clTestInput(SqlTimeTest.class)
+//@J2clTestInput(SqlTimeTest.class)
 public class SqlTimeTest {
 
     @Test

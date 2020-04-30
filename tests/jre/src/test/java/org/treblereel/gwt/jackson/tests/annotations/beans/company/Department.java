@@ -1,4 +1,4 @@
-package org.treblereel.gwt.jackson.tests.annotations.beans;
+package org.treblereel.gwt.jackson.tests.annotations.beans.company;
 
 import java.util.List;
 import java.util.Objects;

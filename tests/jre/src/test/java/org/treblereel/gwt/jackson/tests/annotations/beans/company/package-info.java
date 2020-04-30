@@ -22,15 +22,7 @@
         },
         location = "http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd http://www.omg.org/spec/DD/20100524/DC DC.xsd http://www.omg.org/spec/DD/20100524/DI DI.xsd"
 )
-//<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        // xmlns="http://www.omg.org/bpmn20" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"
-        // xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-        // xmlns:bpsim="http://www.bpsim.org/schemas/1.0"
-        // xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
-        // xmlns:drools="http://www.jboss.org/drools" id="_QB3JgFY5Eeq0CdSiRkduQA"
-        // xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd http://www.omg.org/spec/DD/20100524/DC DC.xsd http://www.omg.org/spec/DD/20100524/DI DI.xsd "
-        // exporter="jBPM Process Modeler" exporterVersion="2.0" targetNamespace="http://www.omg.org/bpmn20">
-        package org.treblereel.gwt.jackson.tests.annotations.beans;
+package org.treblereel.gwt.jackson.tests.annotations.beans.company;
 
 import javax.xml.bind.annotation.XmlNs;
 import javax.xml.bind.annotation.XmlNsForm;

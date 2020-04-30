@@ -1,19 +1,16 @@
-package org.treblereel.gwt.jackson.tests.annotations.beans;
+package org.treblereel.gwt.jackson.tests.annotations.beans.company;
 
 import java.util.List;
 import java.util.Objects;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
-
-import org.treblereel.gwt.jackson.api.annotation.TargetNamespace;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
+import org.treblereel.gwt.jackson.tests.annotations.beans.address.Address;
 
 /**
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/2/20
  */
 @XMLMapper
-@TargetNamespace(prefix = "bpmn2", namespace = "http://www.omg.org/bpmn20")
 public class Company {
 
     private Employee ceo;

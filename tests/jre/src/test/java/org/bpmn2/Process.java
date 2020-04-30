@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.xml.bind.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/6/20
  */
+@XmlRootElement(name = "process", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
 public class Process {
 
     @JacksonXmlProperty(isAttribute = true)

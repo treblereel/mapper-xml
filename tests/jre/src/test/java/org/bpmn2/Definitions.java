@@ -16,7 +16,7 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
  * Created by treblereel 4/6/20
  */
 @XMLMapper
-@XmlRootElement(name = "bpmn2:definitions")
+@XmlRootElement(name = "definitions", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
 @TargetNamespace(prefix = "bpmn2", namespace = "http://www.omg.org/bpmn20")
 public class Definitions {
 

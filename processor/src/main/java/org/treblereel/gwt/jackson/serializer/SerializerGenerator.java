@@ -27,7 +27,6 @@ import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.NullLiteralExpr;
 import com.github.javaparser.ast.expr.ObjectCreationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
-import com.github.javaparser.ast.expr.ThisExpr;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
@@ -83,6 +82,7 @@ public class SerializerGenerator extends AbstractGenerator {
         getXmlRootElement(type);
         getXmlNs(type);
         getSchemaLocation(type);
+        getDefaultNamespace(type);
         getTargetNamespace(type);
     }
 
@@ -124,6 +124,17 @@ public class SerializerGenerator extends AbstractGenerator {
                 new ReturnStmt(type.getSchemaLocation() != null ?
                                        new StringLiteralExpr(type.getSchemaLocation()) : new NullLiteralExpr()))
         );
+    }
+
+    private void getDefaultNamespace(BeanDefinition type) {
+        String namespace = type.getNamespace();
+        if (namespace != null) {
+            declaration.addMethod("getNamespace", Modifier.Keyword.PROTECTED)
+                    .addAnnotation(Override.class)
+                    .setType(String.class)
+                    .getBody().ifPresent(body -> body.addStatement(new ReturnStmt(
+                    new StringLiteralExpr(namespace))));
+        }
     }
 
     //TODO
@@ -212,7 +223,6 @@ public class SerializerGenerator extends AbstractGenerator {
                 .setName(BeanPropertySerializer.class.getSimpleName());
 
         beanProperty.setType(beanType);
-        beanProperty.addArgument(new ThisExpr());
         beanProperty.addArgument(new StringLiteralExpr(variableElement.getPropertyName()));
         if (variableElement.isCData()) {
             beanProperty.addArgument(new BooleanLiteralExpr(true));

@@ -95,12 +95,18 @@ public class BeanDefinition extends Definition {
 
     public List<Pair<String, String>> getXmlNs() {
         List<Pair<String, String>> result = new ArrayList<>();
+        if (xmlSchema != null && !xmlSchema.namespace().isEmpty()) {
+            result.add(new Pair<>(null, xmlSchema.namespace()));
+        } else if (xmlRootElement != null && !xmlRootElement.namespace().equals("##default")) {
+            result.add(new Pair<>(null, xmlRootElement.namespace()));
+        }
 
-        if (xmlRootElement != null && !xmlRootElement.namespace().equals("##default")) {
+
+/*        if (xmlRootElement != null && !xmlRootElement.namespace().equals("##default")) {
             result.add(new Pair<>(null, xmlRootElement.namespace()));
         } else if (xmlSchema != null && !xmlSchema.namespace().isEmpty()) {
             result.add(new Pair<>(null, xmlSchema.namespace()));
-        }
+        }*/
 
         if (xmlSchema != null && xmlSchema.xmlns().length > 0) {
             for (XmlNs xmln : xmlSchema.xmlns()) {
@@ -112,12 +118,12 @@ public class BeanDefinition extends Definition {
     }
 
     public String getNamespace() {
-        if (xmlSchema != null && !xmlSchema.namespace().isEmpty()) {
-            return xmlSchema.namespace();
-        }
-
         if (xmlRootElement != null && !xmlRootElement.namespace().equals("##default")) {
             return xmlRootElement.namespace();
+        }
+
+        if (xmlSchema != null && !xmlSchema.namespace().isEmpty()) {
+            return xmlSchema.namespace();
         }
 
         return null;

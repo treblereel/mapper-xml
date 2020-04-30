@@ -31,6 +31,8 @@ public class BPMNTest {
     @Test
     public void test() throws XMLStreamException {
 
+        String expected ="<?xml version='1.0' encoding='UTF-8'?><bpmn2:definitions xmlns=\"http://www.omg.org/bpmn20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:bpmn2=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:bpsim=\"http://www.bpsim.org/schemas/1.0\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:drools=\"http://www.jboss.org/drools\" xsi:schemaLocation=\"http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd http://www.omg.org/spec/DD/20100524/DC DC.xsd http://www.omg.org/spec/DD/20100524/DI DI.xsd\" targetNamespace=\"http://www.omg.org/bpmn20\" exporter=\"jBPM Process Modeler\" exporterVersion=\"2.0\"><itemDefinitions><bpmn2:itemDefinitions id=\"_DataObjectItem\" structureRef=\"String\"/></itemDefinitions><bpmn2:process id=\"twdo.twodosubprocess\" name=\"twodosubprocess\" isExecutable=\"true\" drools:packageName=\"com.myspace.twdo\" drools:version=\"1.0\" drools:adHoc=\"false\"><subProcesses><bpmn2:subProcesses id=\"_7503B170-81DB-47F5-BAF3-F67957B95DF7\" name=\"Event Sub-process\" triggeredByEvent=\"true\"><extensionElements><drools:extensionElements name=\"elementname\"><metaValue><![CDATA[Event Sub-process]]></metaValue></drools:extensionElements></extensionElements><dataObjectReference/></bpmn2:subProcesses></subProcesses><dataObjects><bpmn2:dataObjects id=\"DataObject\" name=\"DataObject\" itemSubjectRef=\"_DataObjectItem\"/></dataObjects><dataObjectReferences><bpmn2:dataObjectReferences id=\"_D7D714AE-A0C9-4A33-89C1-25300898967E\" dataObjectRef=\"DataObject\"/></dataObjectReferences></bpmn2:process><bpmndi:BPMNDiagram id=\"_QB3JgVY5Eeq0CdSiRkduQA\"><planes><bpmndi:planes id=\"_QB3JglY5Eeq0CdSiRkduQA\" bpmnElement=\"twdo.twodosubprocess\"><shapes><bpmndi:shapes id=\"shape__7503B170-81DB-47F5-BAF3-F67957B95DF7\" bpmnElement=\"_7503B170-81DB-47F5-BAF3-F67957B95DF7\" isExpanded=\"true\"><dc:bounds height=\"253.0\" width=\"653.0\" x=\"488.0\" y=\"210.0\"/></bpmndi:shapes></shapes></bpmndi:planes></planes></bpmndi:BPMNDiagram></bpmn2:definitions>";
+
         Definitions tested = new Definitions();
         tested.setExporter("jBPM Process Modeler");
         tested.setExporterVersion("2.0");
@@ -96,8 +98,7 @@ public class BPMNTest {
         shape.setBounds(bounds);
 
         String xml = mapper.write(tested);
-        //DomGlobal.console.log("XML " + xml);
-        //System.out.println("XML " + xml);
+        assertEquals(expected, xml);
         Definitions encoded = mapper.read(xml);
         assertEquals(xml, mapper.write(encoded));
         assertEquals(tested, mapper.read(mapper.write(encoded)));

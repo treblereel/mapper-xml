@@ -27,8 +27,6 @@ public class UserCdataTest {
         test.setId("FIRST");
         test.setTime(1111);
 
-        DomGlobal.console.log("testDeserializeMapperEmployee\n " + mapperEmployee.write(test));
-
         assertEquals("<?xml version='1.0' encoding='UTF-8'?><User xmlns=\"http://www.omg.org/bpmn20\" id=\"FIRST\" _uuid=\"bc8a6b10-f493-4aaf-bd1e-8c4710afa326\" time=\"1111\"><username><![CDATA[ANY]]></username></User>", mapperEmployee.write(test));
         assertEquals(test, mapperEmployee.read(mapperEmployee.write(test)));
     }

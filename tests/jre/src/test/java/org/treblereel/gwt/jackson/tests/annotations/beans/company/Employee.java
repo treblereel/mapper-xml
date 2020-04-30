@@ -1,4 +1,4 @@
-package org.treblereel.gwt.jackson.tests.annotations.beans;
+package org.treblereel.gwt.jackson.tests.annotations.beans.company;
 
 import java.util.Objects;
 
@@ -12,7 +12,7 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
  * Created by treblereel 4/1/20
  */
 @XMLMapper
-@XmlRootElement(name = "employee", namespace = "http://www.omg.org/bpmn20")
+@XmlRootElement(name = "employee")
 public class Employee {
 
     @JacksonXmlProperty(localName = "employee_name", isAttribute = true)

@@ -84,6 +84,7 @@ public class SerializerGenerator extends AbstractGenerator {
         getSchemaLocation(type);
         getDefaultNamespace(type);
         getTargetNamespace(type);
+        getXsiType(type);
     }
 
     private void getSerializedType(BeanDefinition type) {
@@ -96,11 +97,13 @@ public class SerializerGenerator extends AbstractGenerator {
     }
 
     private void getXmlRootElement(BeanDefinition type) {
-        declaration.addMethod("getXmlRootElement", Modifier.Keyword.PROTECTED)
-                .addAnnotation(Override.class)
-                .setType(String.class)
-                .getBody().ifPresent(body -> body.addStatement(new ReturnStmt(
-                new StringLiteralExpr(type.getXmlRootElement()))));
+        if (type.getXmlRootElement() != null) {
+            declaration.addMethod("getXmlRootElement", Modifier.Keyword.PROTECTED)
+                    .addAnnotation(Override.class)
+                    .setType(String.class)
+                    .getBody().ifPresent(body -> body.addStatement(new ReturnStmt(
+                    new StringLiteralExpr(type.getXmlRootElement()))));
+        }
     }
 
     private void getXmlNs(BeanDefinition beanDefinition) {
@@ -117,13 +120,14 @@ public class SerializerGenerator extends AbstractGenerator {
     }
 
     private void getSchemaLocation(BeanDefinition type) {
-        declaration.addMethod("getSchemaLocation", Modifier.Keyword.PUBLIC)
-                .addAnnotation(Override.class)
-                .setType(String.class)
-                .getBody().ifPresent(body -> body.addStatement(
-                new ReturnStmt(type.getSchemaLocation() != null ?
-                                       new StringLiteralExpr(type.getSchemaLocation()) : new NullLiteralExpr()))
-        );
+        if (type.getSchemaLocation() != null) {
+            declaration.addMethod("getSchemaLocation", Modifier.Keyword.PUBLIC)
+                    .addAnnotation(Override.class)
+                    .setType(String.class)
+                    .getBody().ifPresent(body -> body.addStatement(
+                    new ReturnStmt(new StringLiteralExpr(type.getSchemaLocation())))
+            );
+        }
     }
 
     private void getDefaultNamespace(BeanDefinition type) {
@@ -158,6 +162,17 @@ public class SerializerGenerator extends AbstractGenerator {
                 .setType(pair)
                 .getBody().ifPresent(body -> body.addStatement(
                 new ReturnStmt(result)));
+    }
+
+    private void getXsiType(BeanDefinition type) {
+        if (type.getXsiType() != null) {
+            declaration.addMethod("getXmlXsiType", Modifier.Keyword.PUBLIC)
+                    .addAnnotation(Override.class)
+                    .setType(String.class)
+                    .getBody().ifPresent(body -> body.addStatement(
+                    new ReturnStmt(new StringLiteralExpr(type.getXsiType())))
+            );
+        }
     }
 
     private void getXmlNsStatement(BeanDefinition beanDefinition, BlockStmt body) {

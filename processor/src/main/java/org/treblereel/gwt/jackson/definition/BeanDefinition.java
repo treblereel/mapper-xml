@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.google.auto.common.MoreElements;
 import org.treblereel.gwt.jackson.api.annotation.TargetNamespace;
+import org.treblereel.gwt.jackson.api.annotation.XMLXsiType;
 import org.treblereel.gwt.jackson.api.utils.Pair;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 
@@ -101,13 +102,6 @@ public class BeanDefinition extends Definition {
             result.add(new Pair<>(null, xmlRootElement.namespace()));
         }
 
-
-/*        if (xmlRootElement != null && !xmlRootElement.namespace().equals("##default")) {
-            result.add(new Pair<>(null, xmlRootElement.namespace()));
-        } else if (xmlSchema != null && !xmlSchema.namespace().isEmpty()) {
-            result.add(new Pair<>(null, xmlSchema.namespace()));
-        }*/
-
         if (xmlSchema != null && xmlSchema.xmlns().length > 0) {
             for (XmlNs xmln : xmlSchema.xmlns()) {
                 result.add(new Pair<>(xmln.prefix(), xmln.namespaceURI()));
@@ -132,6 +126,13 @@ public class BeanDefinition extends Definition {
     public String getSchemaLocation() {
         if (xmlSchema != null && !xmlSchema.location().equals("##generate")) {
             return xmlSchema.location();
+        }
+        return null;
+    }
+
+    public String getXsiType() {
+        if (element.getAnnotation(XMLXsiType.class) != null) {
+            return element.getAnnotation(XMLXsiType.class).value();
         }
         return null;
     }

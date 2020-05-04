@@ -241,6 +241,10 @@ public abstract class XMLSerializer<T> {
         return null;
     }
 
+    protected String getXmlXsiType() {
+        return null;
+    }
+
     /**
      * <p>isEmpty.</p>
      * @param value the value

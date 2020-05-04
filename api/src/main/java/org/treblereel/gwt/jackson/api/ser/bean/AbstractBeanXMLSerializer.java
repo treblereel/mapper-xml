@@ -16,6 +16,7 @@
 
 package org.treblereel.gwt.jackson.api.ser.bean;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -89,13 +90,21 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
      */
     public abstract Class getSerializedType();
 
-    protected abstract List<Pair<String, String>> getXmlNs();
+    protected List<Pair<String, String>> getXmlNs() {
+        return Collections.emptyList();
+    }
 
-    protected abstract String getSchemaLocation();
+    protected String getSchemaLocation() {
+        return null;
+    }
 
-    protected abstract Pair<String, String> getTargetNamespace();
+    protected Pair<String, String> getTargetNamespace() {
+        return null;
+    }
 
-    protected abstract String getXmlRootElement();
+    protected String getXmlRootElement() {
+        return null;
+    }
 
     /**
      * {@inheritDoc}
@@ -144,6 +153,7 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
         }
 
         writeNamespace(writer, prefix);
+        setXsiType(writer, ctx);
         serializeAttribute(writer, value, ctx);
         serializeProperties(writer, value, ctx);
         writer.endObject();
@@ -156,6 +166,12 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
             return getXmlRootElement();
         } else {
             return getSerializedType().getSimpleName();
+        }
+    }
+
+    private void setXsiType(XMLWriter writer, XMLSerializationContext ctx) throws XMLStreamException {
+        if (getXmlXsiType() != null) {
+            writer.writeAttribute("xsi:type", getXmlXsiType());
         }
     }
 

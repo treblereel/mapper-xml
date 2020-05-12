@@ -215,8 +215,8 @@ public class JsNativeXMLWriter implements XMLWriter {
     }
 
     @Override
-    public void writeCData(String value) throws XMLStreamException {
-        stack.push(xml.createCDATASection(value));
+    public void writeCData(String value) {
+        stack.getFirst().appendChild(xml.createCDATASection(value));
     }
 
     @Override

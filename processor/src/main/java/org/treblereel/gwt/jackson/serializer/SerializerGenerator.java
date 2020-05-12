@@ -188,7 +188,9 @@ public class SerializerGenerator extends AbstractGenerator {
             beanDefinition.getXmlNs().forEach(pair -> {
                 body.addStatement(new MethodCallExpr(new NameExpr("result"), "add")
                                           .addArgument(new ObjectCreationExpr().setType(
-                                                  new ClassOrInterfaceType().setName("Pair"))
+                                                  new ClassOrInterfaceType().setName("Pair")
+                                                          .setTypeArguments(new ClassOrInterfaceType().setName("String"),
+                                                                            new ClassOrInterfaceType().setName("String")))
                                                                .addArgument(pair.key != null ? new StringLiteralExpr(pair.key)
                                                                                     : new NullLiteralExpr())
                                                                .addArgument(new StringLiteralExpr(pair.value))));

@@ -19,9 +19,7 @@ import org.treblereel.gwt.jackson.api.utils.XMLSerializer;
 public class JsNativeXMLWriter implements XMLWriter {
 
     private String deferredName;
-    private boolean serializeNulls = true;
     private boolean beginNs = true;
-    private int objCounter = 0;
 
     private Deque<Node> stack = new ArrayDeque<>();
 
@@ -39,8 +37,7 @@ public class JsNativeXMLWriter implements XMLWriter {
     }
 
     @Override
-    public XMLWriter beginArray() throws XMLStreamException {
-        DomGlobal.console.log("beginArray " + deferredName + " " + stack.getFirst());
+    public XMLWriter beginArray() {
         Element array = xml.createElement(deferredName);
         stack.getFirst().appendChild(array);
         stack.push(array);
@@ -48,40 +45,30 @@ public class JsNativeXMLWriter implements XMLWriter {
     }
 
     @Override
-    public XMLWriter endArray() throws XMLStreamException {
-        DomGlobal.console.log("endArray " + deferredName + " " + stack.getFirst());
+    public XMLWriter endArray() {
         stack.pop();
         return this;
     }
 
     @Override
     public XMLWriter beginObject(String name) {
-        DomGlobal.console.log("beginObject type 1 " + name);
-        DomGlobal.console.log("root ? " + (root == null));
         Element element = xml.createElement(name);
         if (root == null) {
             root = element;
             xml.appendChild(root);
         } else {
-            DomGlobal.console.log("beginObject 1 add to " + stack.getFirst().nodeType);
-            DomGlobal.console.log("beginObject 2 add to " + stack.getFirst().nodeName);
             stack.getFirst().appendChild(element);
         }
         stack.push(element);
+
         return this;
     }
 
     @Override
-    public DefaultXMLWriter beginObject(String namespace, String name) throws XMLStreamException {
-        throw new UnsupportedOperationException();
-    }
+    public XMLWriter beginObject(String namespace, String name) throws XMLStreamException {
+        Element element = xml.createElement(name);
+        element.setAttribute("xmlns", namespace);
 
-    @Override
-    public XMLWriter beginObject(String prefix, String namespace, String name) {
-        DomGlobal.console.log("beginObject type 2 " + name + " " + prefix + " " + namespace);
-        DomGlobal.console.log("root ? " + (root == null));
-
-        Element element = xml.createElementNS(namespace, name);
         if (root == null) {
             root = element;
             xml.appendChild(root);
@@ -93,7 +80,20 @@ public class JsNativeXMLWriter implements XMLWriter {
     }
 
     @Override
-    public XMLWriter endObject() throws XMLStreamException {
+    public XMLWriter beginObject(String prefix, String namespace, String name) {
+        Element element = xml.createElement(prefix + ":" + name);
+        if (root == null) {
+            root = element;
+            xml.appendChild(root);
+        } else {
+            stack.getFirst().appendChild(element);
+        }
+        stack.push(element);
+        return this;
+    }
+
+    @Override
+    public XMLWriter endObject() {
         stack.pop();
         return this;
     }
@@ -116,10 +116,6 @@ public class JsNativeXMLWriter implements XMLWriter {
 
     @Override
     public XMLWriter value(String value) {
-        DomGlobal.console.log("value " + deferredName + " " + value + " to " + stack.peekFirst());
-
-        //  DomGlobal.console.log("                 " + stack.)
-
         Element element = xml.createElement(deferredName);
         element.textContent = value;
 
@@ -128,24 +124,24 @@ public class JsNativeXMLWriter implements XMLWriter {
     }
 
     @Override
-    public XMLWriter unescapeValue(String value) throws XMLStreamException {
+    public XMLWriter unescapeValue(String value) {
         return null;
     }
 
     @Override
-    public XMLWriter nullValue() throws XMLStreamException {
+    public XMLWriter nullValue() {
         stack.getFirst().appendChild(xml.createElement(deferredName));
         return this;
     }
 
     @Override
-    public XMLWriter value(boolean value) throws XMLStreamException {
+    public XMLWriter value(boolean value) {
         value(value ? "true" : "false");
         return this;
     }
 
     @Override
-    public XMLWriter value(double value) throws XMLStreamException {
+    public XMLWriter value(double value) {
         if (Double.isNaN(value) || Double.isInfinite(value)) {
             throw new IllegalArgumentException("Numeric values must be finite, but was " + value);
         }
@@ -154,13 +150,13 @@ public class JsNativeXMLWriter implements XMLWriter {
     }
 
     @Override
-    public XMLWriter value(long value) throws XMLStreamException {
+    public XMLWriter value(long value) {
         value(Long.toString(value));
         return this;
     }
 
     @Override
-    public XMLWriter value(Number value) throws XMLStreamException {
+    public XMLWriter value(Number value) {
         if (value == null) {
             nullValue();
             return this;
@@ -175,12 +171,12 @@ public class JsNativeXMLWriter implements XMLWriter {
     }
 
     @Override
-    public void flush() throws XMLStreamException {
+    public void flush() {
 
     }
 
     @Override
-    public void close() throws XMLStreamException {
+    public void close() {
 
     }
 
@@ -191,19 +187,14 @@ public class JsNativeXMLWriter implements XMLWriter {
     }
 
     @Override
-    public void writeDefaultNamespace(String namespace) throws XMLStreamException {
-/*        DomGlobal.console.log("writeDefaultNamespace " + namespace + " " + stack.getFirst());
-        Attr attr = new Attr();
-        attr.name = "xmlns";
-        attr.namespaceURI = namespace;
-        xml.*/
-
-        ((Element) stack.getFirst()).setAttribute("xmlns", namespace);
+    public void writeDefaultNamespace(String namespace) {
+        if (beginNs) {
+            ((Element) stack.getFirst()).setAttribute("xmlns", namespace);
+        }
     }
 
     @Override
-    public void writeNamespace(String prefix, String namespace) throws XMLStreamException {
-        DomGlobal.console.log("writeNamespace " + namespace + " " + stack.getFirst());
+    public void writeNamespace(String prefix, String namespace) {
         if (beginNs) {
             ((Element) stack.getFirst()).setAttribute("xmlns:" + prefix, namespace);
         }
@@ -220,10 +211,10 @@ public class JsNativeXMLWriter implements XMLWriter {
     }
 
     @Override
-    public void writeAttribute(String propertyName, String value) throws XMLStreamException {
-        DomGlobal.console.log("writeAttribute " + propertyName + " " + value);
-        DomGlobal.console.log("writeAttribute to "+ ((Element) stack.getFirst()).toString());
-        ((Element) stack.getFirst()).setAttribute(propertyName, value);
+    public void writeAttribute(String propertyName, String value) {
+        if (propertyName != null && value != null) {
+            ((Element) stack.getFirst()).setAttribute(propertyName, value);
+        }
     }
 
     @Override

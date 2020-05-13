@@ -15,7 +15,7 @@ import static org.junit.Assert.assertNull;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/22/20
  */
-//@J2clTestInput(LongBoxedTest.class)
+@J2clTestInput(LongBoxedTest.class)
 public class LongBoxedTest {
 
     private static final String XML = "<?xml version='1.0' encoding='UTF-8'?><LongType/>";

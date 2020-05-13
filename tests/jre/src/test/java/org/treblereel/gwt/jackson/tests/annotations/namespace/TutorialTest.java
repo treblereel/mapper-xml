@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.tests.annotations.namespace.ci.Tutorial;
 import org.treblereel.gwt.jackson.tests.annotations.namespace.ci.Tutorial_MapperImpl;
@@ -16,6 +17,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/28/20
  */
+@J2clTestInput(TutorialTest.class)
 public class TutorialTest {
     Tutorial_MapperImpl mapper = Tutorial_MapperImpl.INSTANCE;
 

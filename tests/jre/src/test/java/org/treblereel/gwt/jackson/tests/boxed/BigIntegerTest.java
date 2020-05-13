@@ -17,7 +17,7 @@ import static org.junit.Assert.assertNull;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/22/20
  */
-//@J2clTestInput(BigIntegerTest.class)
+@J2clTestInput(BigIntegerTest.class)
 public class BigIntegerTest {
     private static final String value = "1548784651132124566543513203245448715154542123114001571970";
 

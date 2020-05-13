@@ -19,34 +19,33 @@ package org.treblereel.gwt.jackson.api;
 import java.util.HashSet;
 import java.util.Set;
 
-import elemental2.core.JsNumber;
-import jsinterop.base.JsPropertyMap;
-import org.treblereel.gwt.jackson.api.ser.bean.TypeSerializationInfo;
+import org.treblereel.gwt.jackson.api.deser.bean.IdentityDeserializationInfo;
+import org.treblereel.gwt.jackson.api.deser.bean.TypeDeserializationInfo;
 
 /**
- * This class includes parameters defined through properties annotations like { XMLFormat}. They are specific to one
- * {@link XMLSerializer} and that's why they are not contained inside {@link XMLSerializationContext}.
+ * This class includes parameters defined through properties annotations like { XMLIgnoreProperties}. They are specific to one
+ * {@link XMLDeserializer} and that's why they are not contained inside {@link XMLDeserializationContext}.
  *
  * @author Nicolas Morel
  * @version $Id: $
  */
-public final class GwtJacksonXMLSerializerParameters implements XMLSerializerParameters {
+public final class GwtJacksonXMLDeserializerParameters implements XMLDeserializerParameters {
 
     /**
      * Constant <code>DEFAULT</code>
      */
-    public static final XMLSerializerParameters DEFAULT = new GwtJacksonXMLSerializerParameters();
+    public static final XMLDeserializerParameters DEFAULT = new GwtJacksonXMLDeserializerParameters();
 
     /**
      * Datatype-specific additional piece of configuration that may be used
      * to further refine formatting aspects. This may, for example, determine
      * low-level format String used for {@link java.util.Date} serialization;
-     * however, exact use is determined by specific {@link XMLSerializer}
+     * however, exact use is determined by specific {@link XMLDeserializer}
      */
     private String pattern;
 
     /**
-     * Locale to use for serialization (if needed).
+     * Locale to use for deserialization (if needed).
      */
     private String locale;
 
@@ -56,14 +55,25 @@ public final class GwtJacksonXMLSerializerParameters implements XMLSerializerPar
     private Set<String> ignoredProperties;
 
     /**
-     * Bean type informations
+     * Property that defines whether it is ok to just ignore any
+     * unrecognized properties during deserialization.
+     * If true, all properties that are unrecognized -- that is,
+     * there are no setters or creators that accept them -- are
+     * ignored without warnings (although handlers for unknown
+     * properties, if any, will still be called) without
+     * exception.
      */
-    private TypeSerializationInfo typeInfo;
+    private boolean ignoreUnknown = false;
 
     /**
-     * If true, all the properties of an object will be serialized inside the current object.
+     * Bean identity informations
      */
-    private boolean unwrapped = false;
+    private IdentityDeserializationInfo identityInfo;
+
+    /**
+     * Bean type informations
+     */
+    private TypeDeserializationInfo typeInfo;
 
     /**
      * {@inheritDoc}
@@ -81,7 +91,7 @@ public final class GwtJacksonXMLSerializerParameters implements XMLSerializerPar
      * <p>Setter for the field <code>pattern</code>.</p>
      */
     @Override
-    public XMLSerializerParameters setPattern(String pattern) {
+    public XMLDeserializerParameters setPattern(String pattern) {
         this.pattern = pattern;
         return this;
     }
@@ -102,19 +112,9 @@ public final class GwtJacksonXMLSerializerParameters implements XMLSerializerPar
      * <p>Setter for the field <code>locale</code>.</p>
      */
     @Override
-    public XMLSerializerParameters setLocale(String locale) {
+    public XMLDeserializerParameters setLocale(String locale) {
         this.locale = locale;
         return this;
-    }
-
-    @Override
-    public Object getTimezone() {
-        return null;
-    }
-
-    @Override
-    public XMLSerializerParameters setTimezone(Object timezone) {
-        return null;
     }
 
     /**
@@ -133,11 +133,53 @@ public final class GwtJacksonXMLSerializerParameters implements XMLSerializerPar
      * <p>addIgnoredProperty</p>
      */
     @Override
-    public XMLSerializerParameters addIgnoredProperty(String ignoredProperty) {
+    public XMLDeserializerParameters addIgnoredProperty(String ignoredProperty) {
         if (null == ignoredProperties) {
-            ignoredProperties = new HashSet<String>();
+            ignoredProperties = new HashSet<>();
         }
         ignoredProperties.add(ignoredProperty);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>isIgnoreUnknown</p>
+     */
+    @Override
+    public boolean isIgnoreUnknown() {
+        return ignoreUnknown;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Setter for the field <code>ignoreUnknown</code>.</p>
+     */
+    @Override
+    public XMLDeserializerParameters setIgnoreUnknown(boolean ignoreUnknown) {
+        this.ignoreUnknown = ignoreUnknown;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Getter for the field <code>identityInfo</code>.</p>
+     */
+    @Override
+    public IdentityDeserializationInfo getIdentityInfo() {
+        return identityInfo;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Setter for the field <code>identityInfo</code>.</p>
+     */
+    @Override
+    public XMLDeserializerParameters setIdentityInfo(IdentityDeserializationInfo identityInfo) {
+        this.identityInfo = identityInfo;
         return this;
     }
 
@@ -147,7 +189,7 @@ public final class GwtJacksonXMLSerializerParameters implements XMLSerializerPar
      * <p>Getter for the field <code>typeInfo</code>.</p>
      */
     @Override
-    public TypeSerializationInfo getTypeInfo() {
+    public TypeDeserializationInfo getTypeInfo() {
         return typeInfo;
     }
 
@@ -157,39 +199,8 @@ public final class GwtJacksonXMLSerializerParameters implements XMLSerializerPar
      * <p>Setter for the field <code>typeInfo</code>.</p>
      */
     @Override
-    public XMLSerializerParameters setTypeInfo(TypeSerializationInfo typeInfo) {
+    public XMLDeserializerParameters setTypeInfo(TypeDeserializationInfo typeInfo) {
         this.typeInfo = typeInfo;
         return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>isUnwrapped</p>
-     */
-    @Override
-    public boolean isUnwrapped() {
-        return unwrapped;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>Setter for the field <code>unwrapped</code>.</p>
-     */
-    @Override
-    public XMLSerializerParameters setUnwrapped(boolean unwrapped) {
-        this.unwrapped = unwrapped;
-        return this;
-    }
-
-    @Override
-    public String doubleValue(Double value) {
-        //TODO reuse options
-        JsPropertyMap options = JsPropertyMap.of();
-        options.set("useGrouping", false);
-        options.set("minimumFractionDigits", 1);
-
-        return new JsNumber(value).toLocaleString(JsNumber.ToLocaleStringLocalesUnionType.of("us"), options);
     }
 }

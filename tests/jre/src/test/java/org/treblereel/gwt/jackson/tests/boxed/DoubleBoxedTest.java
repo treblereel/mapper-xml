@@ -15,7 +15,7 @@ import static org.junit.Assert.assertNull;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/22/20
  */
-//@J2clTestInput(DoubleBoxedTest.class)
+@J2clTestInput(DoubleBoxedTest.class)
 public class DoubleBoxedTest {
 
     private static final String XML_EMPTY = "<?xml version='1.0' encoding='UTF-8'?><DoubleType/>";

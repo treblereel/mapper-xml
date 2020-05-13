@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/8/20
  */
-//@J2clTestInput(InheritanceTest.class)
+@J2clTestInput(InheritanceTest.class)
 public class InheritanceTest {
 
     Child_MapperImpl mapper = Child_MapperImpl.INSTANCE;

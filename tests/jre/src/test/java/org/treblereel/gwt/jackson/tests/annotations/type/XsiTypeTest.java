@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 import org.treblereel.gwt.jackson.api.annotation.XMLXsiType;
@@ -14,6 +15,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 5/4/20
  */
+@J2clTestInput(XsiTypeTest.class)
 public class XsiTypeTest {
 
     private static final String xml = "<?xml version='1.0' encoding='UTF-8'?><XsiType xmlns=\"http://www.omg.org/bpmn20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"validation\"><value>value</value><child xsi:type=\"validation\"/></XsiType>";

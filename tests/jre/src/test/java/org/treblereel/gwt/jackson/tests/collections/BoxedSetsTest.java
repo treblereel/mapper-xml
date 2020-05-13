@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/29/20
  */
-//@J2clTestInput(BoxedSetsTest.class)
+@J2clTestInput(BoxedSetsTest.class)
 public class BoxedSetsTest {
 
     BoxedSets_MapperImpl mapper = BoxedSets_MapperImpl.INSTANCE;

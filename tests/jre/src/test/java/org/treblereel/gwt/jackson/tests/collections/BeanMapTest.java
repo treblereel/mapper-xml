@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/30/20
  */
-//@J2clTestInput(BeanMapTest.class)
+@J2clTestInput(BeanMapTest.class)
 public class BeanMapTest {
 
     Users_MapperImpl mapper = Users_MapperImpl.INSTANCE;

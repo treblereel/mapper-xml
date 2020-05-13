@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/27/20
  */
-//@J2clTestInput(CollectionTest.class)
+@J2clTestInput(CollectionTest.class)
 public class CollectionTest {
 
     String[] strings = new String[]{"Hello", "\" \"", "World", "!"};

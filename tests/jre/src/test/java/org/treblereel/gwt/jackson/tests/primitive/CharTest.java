@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/22/20
  */
-//@J2clTestInput(СharTest.class)
+//@J2clTestInput(CharTest.class) failed in htmlunit, works in browser
 public class CharTest {
     private static final String XML_EMPTY = "<?xml version='1.0' encoding='UTF-8'?><CharType><value/></CharType>";
     private static final String XML_0 = "<?xml version='1.0' encoding='UTF-8'?><CharType><value></value></CharType>";

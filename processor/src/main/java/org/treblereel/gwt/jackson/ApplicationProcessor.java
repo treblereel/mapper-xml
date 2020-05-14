@@ -11,7 +11,6 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypeException;
 
@@ -31,7 +30,6 @@ import org.treblereel.gwt.jackson.processor.BeanProcessor;
 public class ApplicationProcessor extends AbstractProcessor {
 
     private final TreeLogger logger = new PrintWriterTreeLogger();
-    private GenerationContext context;
     private final Set<TypeElement> beans = new HashSet<>();
 
     @Override
@@ -43,7 +41,7 @@ public class ApplicationProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
         if (!annotations.isEmpty()) {
-            context = new GenerationContext(roundEnvironment, processingEnv);
+            GenerationContext context = new GenerationContext(roundEnvironment, processingEnv);
             roundEnvironment.getElementsAnnotatedWith(XMLMapper.class)
                     .stream()
                     .map(MoreElements::asType)

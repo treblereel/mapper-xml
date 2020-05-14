@@ -170,13 +170,13 @@ import static org.treblereel.gwt.jackson.api.ser.BaseNumberXMLSerializer.ShortXM
  */
 public final class TypeRegistry {
 
-    private static Map<String, ClassMapper> simpleTypes = new HashMap<>();
-    private static Map<String, ClassMapper> basicTypes = new HashMap<>();
-    private static Map<String, Class> collectionsDeserializers = new HashMap<>();
-    private static Map<String, Class> mapDeserializers = new HashMap<>();
-    private static Map<String, ClassMapper> customMappers = new HashMap<>();
-    private static Set<String> inActiveGenSerializers = new HashSet<>();
-    private static Set<String> inActiveGenDeserializers = new HashSet<>();
+    private Map<String, ClassMapper> simpleTypes = new HashMap<>();
+    private Map<String, ClassMapper> basicTypes = new HashMap<>();
+    private Map<String, Class> collectionsDeserializers = new HashMap<>();
+    private Map<String, Class> mapDeserializers = new HashMap<>();
+    private Map<String, ClassMapper> customMappers = new HashMap<>();
+    private Set<String> inActiveGenSerializers = new HashSet<>();
+    private Set<String> inActiveGenDeserializers = new HashSet<>();
     private final ClassMapperFactory MAPPER = new ClassMapperFactory();
     private final Types types;
     private final Elements elements;
@@ -981,6 +981,15 @@ public final class TypeRegistry {
         private ClassMapper register(Map<String, ClassMapper> registry) {
             registry.put(this.clazz, this);
             return this;
+        }
+
+        @Override
+        public String toString() {
+            return "ClassMapper{" +
+                    "clazz='" + clazz + '\'' +
+                    ", serializer=" + serializer != null ? serializer.toString() : "" +
+                    ", deserializer=" + deserializer != null ? deserializer.toString() : "" +
+                    '}';
         }
     }
 }

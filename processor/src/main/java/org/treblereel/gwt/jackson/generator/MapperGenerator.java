@@ -71,8 +71,12 @@ public class MapperGenerator extends AbstractGenerator {
     @Override
     protected void init(BeanDefinition type) {
         if (type.getElement().getKind().isClass()) {
-            serializerGenerator.generate(type);
-            deserializerGenerator.generate(type);
+            if (!context.getTypeRegistry().containsDeserializer(type.getQualifiedName())) {
+                serializerGenerator.generate(type);
+            }
+            if (!context.getTypeRegistry().containsSerializer(type.getQualifiedName())) {
+                deserializerGenerator.generate(type);
+            }
         }
         declaration.addFieldWithInitializer(new ClassOrInterfaceType().setName(getMapperName(type.getElement())), "INSTANCE",
                                             new ObjectCreationExpr().setType(new ClassOrInterfaceType().setName(getMapperName(type.getElement()))),
@@ -85,7 +89,7 @@ public class MapperGenerator extends AbstractGenerator {
                 .addStatement(new MethodCallExpr("super").addArgument(
                         new StringLiteralExpr(type.getXmlRootElement())));
 
-        addNewDeserializer(type);
+        addDeserializer(type);
         newSerializer(type);
     }
 
@@ -104,7 +108,7 @@ public class MapperGenerator extends AbstractGenerator {
                                                                                                                              .serializerName(getTypeName(type)))))));
     }
 
-    private void addNewDeserializer(BeanDefinition type) {
+    private void addDeserializer(BeanDefinition type) {
         ClassOrInterfaceType returnType = new ClassOrInterfaceType()
                 .setName(XMLDeserializer.class.getSimpleName())
                 .setTypeArguments(new ClassOrInterfaceType().setName(getTypeMapperName(type)));

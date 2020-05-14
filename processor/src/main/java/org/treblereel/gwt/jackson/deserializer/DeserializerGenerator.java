@@ -88,7 +88,7 @@ public class DeserializerGenerator extends AbstractGenerator {
                 .setType(Class.class)
                 .getBody().ifPresent(body -> body.addStatement(new ReturnStmt(
                 new FieldAccessExpr(
-                        new NameExpr(type.getSimpleName().toString()), "class"))));
+                        new NameExpr(type.getSimpleName()), "class"))));
 
         declaration.addMethod("getXmlRootElement", Modifier.Keyword.PROTECTED)
                 .addAnnotation(Override.class)
@@ -316,7 +316,7 @@ public class DeserializerGenerator extends AbstractGenerator {
             return new MethodCallExpr(
                     new NameExpr("bean"), typeUtils.getSetter(field.getProperty()).getSimpleName().toString()).addArgument("value");
         } else {
-            return new AssignExpr().setTarget(new FieldAccessEithubxpr(new NameExpr("bean"), field.getProperty().getSimpleName().toString()))
+            return new AssignExpr().setTarget(new FieldAccessExpr(new NameExpr("bean"), field.getProperty().getSimpleName().toString()))
                     .setValue(new NameExpr("value"));
         }
     }

@@ -9,8 +9,6 @@ import javax.tools.JavaFileObject;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.expr.SimpleName;
-import com.github.javaparser.ast.type.TypeParameter;
 import com.google.auto.common.MoreElements;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.context.GenerationContext;

@@ -97,7 +97,20 @@ public class BeanProcessor {
                 field.getModifiers().contains(Modifier.FINAL)) {
             return false;
         }
-        return typeUtils.hasGetter(field) && typeUtils.hasSetter(field);
+        if (!field.getModifiers().contains(Modifier.PRIVATE) ||
+                typeUtils.hasGetter(field) && typeUtils.hasSetter(field)) {
+            return true;
+        }
+
+        if (typeUtils.hasGetter(field)) {
+            throw new GenerationException(String.format("Unable to find suitable getter for [%s] in [%s]", field.getSimpleName(), field.getEnclosingElement()));
+        }
+
+        if (typeUtils.hasSetter(field)) {
+            throw new GenerationException(String.format("Unable to find suitable setter for [%s] in [%s]", field.getSimpleName(), field.getEnclosingElement()));
+        }
+
+        throw new GenerationException(String.format("Unable to process [%s] in [%s]", field.getSimpleName(), field.getEnclosingElement()));
     }
 
     private TypeElement checkBean(TypeElement type) {

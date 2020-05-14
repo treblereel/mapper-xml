@@ -11,7 +11,9 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
+import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
@@ -237,9 +239,7 @@ public class DeserializerGenerator extends AbstractGenerator {
         method.addParameter(fieldType, "value");
         method.addParameter(XMLDeserializationContext.class.getSimpleName(), "ctx");
 
-        method.getBody().ifPresent(body -> body.addAndGetStatement(
-                new MethodCallExpr(
-                        new NameExpr("bean"), typeUtils.getSetter(field.getProperty()).getSimpleName().toString()).addArgument("value")));
+        method.getBody().ifPresent(body -> body.addAndGetStatement(getFieldAccessor(field)));
         anonymousClassBody.add(method);
     }
 
@@ -309,6 +309,16 @@ public class DeserializerGenerator extends AbstractGenerator {
 
         method.getBody().ifPresent(body -> body.addAndGetStatement(new ReturnStmt().setExpression(instanceBuilder)));
         anonymousClassBody.add(method);
+    }
+
+    private Expression getFieldAccessor(PropertyDefinition field) {
+        if (typeUtils.hasSetter(field.getProperty())) {
+            return new MethodCallExpr(
+                    new NameExpr("bean"), typeUtils.getSetter(field.getProperty()).getSimpleName().toString()).addArgument("value");
+        } else {
+            return new AssignExpr().setTarget(new FieldAccessEithubxpr(new NameExpr("bean"), field.getProperty().getSimpleName().toString()))
+                    .setValue(new NameExpr("value"));
+        }
     }
 
     private void addParameter(MethodDeclaration method, String type, String name) {

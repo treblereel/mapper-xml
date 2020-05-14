@@ -109,11 +109,11 @@ public class BeanProcessor {
         List<ExecutableElement> constructors = ElementFilter.constructorsIn(type.getEnclosedElements());
         if (!constructors.isEmpty()) {
             long nonArgConstructorCount = constructors.stream()
-                    .filter(constr -> constr.getModifiers().contains(Modifier.PUBLIC))
+                    .filter(constr -> !constr.getModifiers().contains(Modifier.PRIVATE))
                     .filter(constr -> constr.getParameters().isEmpty()).count();
             if (nonArgConstructorCount != 1) {
                 throw new GenerationException(
-                        "A @XMLMapper bean [" + type + "] must contains public non-arg constructor");
+                        "A @XMLMapper bean [" + type + "] must have a non-private non-arg constructor");
             }
         }
         return type;

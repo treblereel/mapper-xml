@@ -303,10 +303,11 @@ public class SerializerGenerator extends AbstractGenerator {
         method.setModifiers(Modifier.Keyword.PROTECTED);
         method.addAnnotation(Override.class);
         method.setName("newSerializer");
+
         method.setType(new ClassOrInterfaceType().setName("XMLSerializer<?>"));
 
         method.getBody().ifPresent(body -> body.addAndGetStatement(
-                new ReturnStmt().setExpression(field.getFieldSerializer(cu))));
+                new ReturnStmt().setExpression(field.getFieldSerializer(cu, context))));
         anonymousClassBody.add(method);
     }
 
@@ -323,9 +324,7 @@ public class SerializerGenerator extends AbstractGenerator {
 
         method.setType(interfaceType);
         method.getBody().ifPresent(body -> body.addAndGetStatement(
-                new ReturnStmt(
-                        new MethodCallExpr(
-                                new NameExpr("bean"), typeUtils.getGetter(field.getProperty()).getSimpleName().toString()))));
+                new ReturnStmt(getFieldAccessor(field))));
         anonymousClassBody.add(method);
     }
 
@@ -385,6 +384,15 @@ public class SerializerGenerator extends AbstractGenerator {
             method.getBody().ifPresent(body -> body.addAndGetStatement(
                     new ReturnStmt().setExpression(new StringLiteralExpr(finalPrefix))));
             anonymousClassBody.add(method);
+        }
+    }
+
+    private Expression getFieldAccessor(PropertyDefinition field) {
+        if (typeUtils.hasGetter(field.getProperty())) {
+            return new MethodCallExpr(
+                    new NameExpr("bean"), typeUtils.getGetter(field.getProperty()).getSimpleName().toString());
+        } else {
+            return new FieldAccessExpr(new NameExpr("bean"), field.getProperty().getSimpleName().toString());
         }
     }
 }

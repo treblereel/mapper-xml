@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
  * @author Dmitrii Tikhomirov
  * Created by treblereel 3/26/20
  */
-//@J2clTestInput(EnumTest.class)
+@J2clTestInput(EnumTest.class)
 public class EnumTest {
     EnumBean_MapperImpl mapper = EnumBean_MapperImpl.INSTANCE;
 

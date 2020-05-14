@@ -790,7 +790,7 @@ public class TypeUtils {
                 .filter(elm -> elm.getParameters().isEmpty())
                 .filter(elm -> types.isSameType(elm.getReturnType(), variable.asType()))
                 .findFirst()
-                .orElseThrow(() -> new GenerationException(String.format("Unable to find suitable getter for [%s] in [%s]", variable.getSimpleName(), variable.getEnclosingElement())));
+                .orElse(null);
     }
 
     public String compileGetterMethodName(VariableElement variable) {
@@ -819,7 +819,7 @@ public class TypeUtils {
                 .filter(elm -> elm.getParameters().size() == 1)
                 .filter(elm -> types.isSameType(elm.getParameters().get(0).asType(), variable.asType()))
                 .findFirst()
-                .orElseThrow(() -> new GenerationException(String.format("Unable to find suitable setter [%s] in [%s]", method, variable.getEnclosingElement())));
+                .orElse(null);
     }
 
     private String compileSetterMethodName(VariableElement variable) {

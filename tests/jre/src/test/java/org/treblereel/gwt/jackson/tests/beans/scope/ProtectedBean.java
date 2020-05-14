@@ -11,7 +11,10 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 @XMLMapper
 public class ProtectedBean {
 
+    public String value2;
     protected String value;
+    protected String value3;
+    String value1;
 
     protected ProtectedBean() {
 
@@ -19,7 +22,7 @@ public class ProtectedBean {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getValue());
+        return Objects.hash(value2, getValue(), value3, value1);
     }
 
     @Override
@@ -31,7 +34,10 @@ public class ProtectedBean {
             return false;
         }
         ProtectedBean that = (ProtectedBean) o;
-        return Objects.equals(getValue(), that.getValue());
+        return Objects.equals(value2, that.value2) &&
+                Objects.equals(getValue(), that.getValue()) &&
+                Objects.equals(value3, that.value3) &&
+                Objects.equals(value1, that.value1);
     }
 
     protected String getValue() {

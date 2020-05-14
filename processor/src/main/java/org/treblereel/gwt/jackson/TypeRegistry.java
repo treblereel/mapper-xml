@@ -839,7 +839,7 @@ public final class TypeRegistry {
     }
 
     public TypeElement getSerializer(String typeName) {
-        if (basicTypes.containsKey(typeName) || simpleTypes.containsKey(typeName)) {
+        if (basicTypes.containsKey(typeName)  || simpleTypes.containsKey(typeName)) {
             return get(typeName).serializer;
         }
         throw new TypeSerializerNotFoundException(typeName);

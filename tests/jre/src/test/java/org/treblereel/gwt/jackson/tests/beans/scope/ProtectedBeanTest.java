@@ -20,6 +20,9 @@ public class ProtectedBeanTest {
     public void test() throws XMLStreamException {
         ProtectedBean test = new ProtectedBean();
         test.setValue("test");
+        test.value1 = "value1";
+        test.value2 = "value2";
+        test.value3 = "value3";
         assertEquals(test, mapper.read(mapper.write(test)));
     }
 

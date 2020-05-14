@@ -9,6 +9,8 @@ import javax.tools.JavaFileObject;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.expr.SimpleName;
+import com.github.javaparser.ast.type.TypeParameter;
 import com.google.auto.common.MoreElements;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.context.GenerationContext;
@@ -38,8 +40,8 @@ public abstract class AbstractGenerator {
         cu = new CompilationUnit();
         cu.setPackageDeclaration(context.getTypeUtils().getPackage(type.getBean()));
         declaration = cu.addClass(getMapperName(type.getElement()));
-
         configureClassType(type);
+        addTypeParam(type, declaration);
         getType(type);
         init(type);
         write(type.getElement());
@@ -76,5 +78,9 @@ public abstract class AbstractGenerator {
         } catch (FilerException e) {
             throw new GenerationException(e);
         }
+    }
+
+    protected void addTypeParam(BeanDefinition type, ClassOrInterfaceDeclaration declaration) {
+
     }
 }

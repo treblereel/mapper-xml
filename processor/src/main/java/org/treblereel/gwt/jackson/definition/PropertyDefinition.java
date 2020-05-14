@@ -1,6 +1,7 @@
 package org.treblereel.gwt.jackson.definition;
 
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -30,7 +31,8 @@ public class PropertyDefinition extends Definition {
     }
 
     public Expression getFieldDeserializer(CompilationUnit cu) {
-        FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(bean);
+        TypeMirror bean = maybeInterface(context);
+        FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(bean != null ? bean : getBean());
         Expression result = fieldDefinition.getFieldDeserializer(cu);
         if (isCData()) {
             result = new MethodCallExpr(result, "setCdata").addArgument(new BooleanLiteralExpr(true));
@@ -53,9 +55,31 @@ public class PropertyDefinition extends Definition {
                         || MoreTypes.asElement(type).getKind().equals(ElementKind.ENUM));
     }
 
-    public Expression getFieldSerializer(CompilationUnit cu) {
-        FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(bean);
+    public Expression getFieldSerializer(CompilationUnit cu, GenerationContext context) {
+        TypeMirror bean = maybeInterface(context);
+        FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(bean != null ? bean : getBean());
         return fieldDefinition.getFieldSerializer(getPropertyName(), cu);
+    }
+
+    private TypeMirror maybeInterface(GenerationContext context) {
+        if (!getBean().getKind().equals(TypeKind.ARRAY) &&
+                !getBean().getKind().isPrimitive() &&
+                MoreTypes.isType(getBean())) {
+            if (MoreTypes.asElement(getBean()).getKind().isInterface() ||
+                    (MoreTypes.asElement(getBean()).getKind().isClass() &&
+                            MoreTypes.asElement(getBean()).getModifiers().contains(Modifier.ABSTRACT))) {
+                return context.getBeans().stream().filter(v -> v.getElement().equals(MoreTypes.asTypeElement(getBean()))).findFirst().map(v -> v.getBean()).orElse(null);
+            }
+        }
+        return null;
+    }
+
+    public String getPropertyName() {
+        if (property.getAnnotation(JacksonXmlProperty.class) != null &&
+                !property.getAnnotation(JacksonXmlProperty.class).localName().isEmpty()) {
+            return property.getAnnotation(JacksonXmlProperty.class).localName();
+        }
+        return property.getSimpleName().toString();
     }
 
     public String getNamespace() {
@@ -77,13 +101,5 @@ public class PropertyDefinition extends Definition {
 
     public VariableElement getProperty() {
         return property;
-    }
-
-    public String getPropertyName() {
-        if (property.getAnnotation(JacksonXmlProperty.class) != null &&
-                !property.getAnnotation(JacksonXmlProperty.class).localName().isEmpty()) {
-            return property.getAnnotation(JacksonXmlProperty.class).localName();
-        }
-        return property.getSimpleName().toString();
     }
 }

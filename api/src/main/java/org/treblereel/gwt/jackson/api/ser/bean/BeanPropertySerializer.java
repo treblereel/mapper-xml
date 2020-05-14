@@ -74,7 +74,7 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
      */
     public void serialize(XMLWriter writer, T bean, XMLSerializationContext ctx) throws XMLStreamException {
         writer.unescapeName(propertyName);
-        getSerializer().setPropertyName(propertyName)
+        getSerializer((V) bean.getClass()).setPropertyName(propertyName)
                 .setCdata(cdata)
                 .setNamespace(getNamespace())
                 .setPrefix(getPrefix())
@@ -83,11 +83,11 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
                 .serialize(writer, getValue(bean, ctx), ctx, getParameters());
     }
 
-    protected String getPrefix() {
+    protected String getNamespace() {
         return null;
     }
 
-    protected String getNamespace() {
+    protected String getPrefix() {
         return null;
     }
 

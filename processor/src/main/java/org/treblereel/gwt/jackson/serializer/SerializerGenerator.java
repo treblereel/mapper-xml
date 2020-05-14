@@ -301,10 +301,11 @@ public class SerializerGenerator extends AbstractGenerator {
         method.setModifiers(Modifier.Keyword.PROTECTED);
         method.addAnnotation(Override.class);
         method.setName("newSerializer");
+
         method.setType(new ClassOrInterfaceType().setName("XMLSerializer<?>"));
 
         method.getBody().ifPresent(body -> body.addAndGetStatement(
-                new ReturnStmt().setExpression(field.getFieldSerializer(cu))));
+                new ReturnStmt().setExpression(field.getFieldSerializer(cu, context))));
         anonymousClassBody.add(method);
     }
 

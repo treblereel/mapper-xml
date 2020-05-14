@@ -5,6 +5,7 @@ import javax.lang.model.type.TypeMirror;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.ObjectCreationExpr;
+import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.context.GenerationContext;

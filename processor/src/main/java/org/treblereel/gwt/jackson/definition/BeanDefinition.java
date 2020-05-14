@@ -9,16 +9,21 @@ import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeMirror;
 import javax.xml.bind.annotation.XmlNs;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchema;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.google.auto.common.MoreElements;
+import com.google.auto.common.MoreTypes;
 import org.treblereel.gwt.jackson.api.annotation.TargetNamespace;
 import org.treblereel.gwt.jackson.api.annotation.XMLXsiType;
+import org.treblereel.gwt.jackson.api.annotation.XmlSubtypes;
 import org.treblereel.gwt.jackson.api.utils.Pair;
 import org.treblereel.gwt.jackson.context.GenerationContext;
+import org.treblereel.gwt.jackson.exception.GenerationException;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -149,6 +154,31 @@ public class BeanDefinition extends Definition {
         TargetNamespace targetNamespace = getElement().getAnnotation(TargetNamespace.class);
         if (targetNamespace != null) {
             return new Pair<>(targetNamespace.prefix(), targetNamespace.namespace());
+        }
+        return null;
+    }
+
+    @Override
+    public TypeMirror getBean() {
+        if (MoreTypes.asTypeElement(bean).getAnnotation(XmlSubtypes.class) != null) {
+            return asTypeElement(MoreTypes.asTypeElement(bean));
+        }
+        return bean;
+    }
+
+    private TypeMirror asTypeElement(TypeElement elm) {
+        if (elm.getAnnotation(XmlSubtypes.class).value().length > 1) {
+            throw new GenerationException("It's only possible to have only one child of " + elm + " via XmlSubtypes at this moment, it ll be fixed.");
+        }
+        XmlSubtypes.Type subtype = elm.getAnnotation(XmlSubtypes.class).value()[0];
+        return getXmlSubtypesType(subtype);
+    }
+
+    private TypeMirror getXmlSubtypesType(XmlSubtypes.Type subtype) {
+        try {
+            subtype.value();
+        } catch (MirroredTypeException e) {
+            return e.getTypeMirror();
         }
         return null;
     }

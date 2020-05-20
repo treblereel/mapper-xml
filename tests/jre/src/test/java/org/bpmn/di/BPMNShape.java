@@ -2,7 +2,7 @@ package org.bpmn.di;
 
 import java.util.Objects;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlAttribute;
 
 import org.bpmn.dc.Bounds;
 
@@ -12,13 +12,13 @@ import org.bpmn.dc.Bounds;
  */
 public class BPMNShape {
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String id;
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String bpmnElement;
 
-    @JacksonXmlProperty(isAttribute = true, localName = "isExpanded")
+    @XmlAttribute(name = "isExpanded")
     private boolean expanded;
 
     private Bounds bounds;

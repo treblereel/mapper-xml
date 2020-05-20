@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlElement;
 
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 import org.treblereel.gwt.jackson.tests.beans.Address;
@@ -18,7 +18,7 @@ import org.treblereel.gwt.jackson.tests.beans.Person;
 public class Users {
 
     private Map<String, Person> activeUsers;
-    @JacksonXmlProperty(localName = "all_users", namespace = "do")
+    @XmlElement(name = "all_users", namespace = "do")
     private List<Person> allUsers;
     private Map<Person, Address> addressMap;
 

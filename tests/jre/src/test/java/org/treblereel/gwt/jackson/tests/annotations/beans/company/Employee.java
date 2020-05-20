@@ -2,7 +2,8 @@ package org.treblereel.gwt.jackson.tests.annotations.beans.company;
 
 import java.util.Objects;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
@@ -15,7 +16,7 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 @XmlRootElement(name = "employee")
 public class Employee {
 
-    @JacksonXmlProperty(localName = "employee_name", isAttribute = true)
+    @XmlAttribute(name = "employee_name")
     private String name;
 
     public String getName() {

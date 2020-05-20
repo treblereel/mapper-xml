@@ -3,7 +3,7 @@ package org.treblereel.gwt.jackson.tests.annotations.cdata;
 import java.util.Objects;
 import java.util.UUID;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlCData;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -19,13 +19,37 @@ public class User {
 
     @XmlCData
     private String username;
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String id;
-    @JacksonXmlProperty(isAttribute = true, localName = "_uuid")
+    @XmlAttribute(name = "_uuid")
     private UUID uuid;
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private long time;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUsername(), getId(), getUuid(), getTime());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof User)) {
+            return false;
+        }
+        User user = (User) o;
+        return getTime() == user.getTime() &&
+                Objects.equals(getUsername(), user.getUsername()) &&
+                Objects.equals(getId(), user.getId()) &&
+                Objects.equals(getUuid(), user.getUuid());
+    }
+
+    public long getTime() {
+        return time;
+    }
 
     public String getUsername() {
         return username;
@@ -51,27 +75,8 @@ public class User {
         this.uuid = uuid;
     }
 
-    public long getTime() {
-        return time;
-    }
-
     public void setTime(long time) {
         this.time = time;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof User)) {
-            return false;
-        }
-        User user = (User) o;
-        return getTime() == user.getTime() &&
-                Objects.equals(getUsername(), user.getUsername()) &&
-                Objects.equals(getId(), user.getId()) &&
-                Objects.equals(getUuid(), user.getUuid());
     }
 
     @Override
@@ -82,10 +87,5 @@ public class User {
                 ", uuid=" + uuid +
                 ", time=" + time +
                 '}';
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getUsername(), getId(), getUuid(), getTime());
     }
 }

@@ -2,7 +2,7 @@ package org.drools;
 
 import java.util.Objects;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlCData;
 
 /**
@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlCData;
  */
 public class MetaData {
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String name;
 
     @XmlCData

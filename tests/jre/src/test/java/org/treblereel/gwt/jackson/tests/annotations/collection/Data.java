@@ -2,8 +2,6 @@ package org.treblereel.gwt.jackson.tests.annotations.collection;
 
 import java.util.Objects;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
-
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
 /**

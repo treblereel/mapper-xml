@@ -3,7 +3,8 @@ package org.treblereel.gwt.jackson.tests.annotations.beans.company;
 import java.util.List;
 import java.util.Objects;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
@@ -18,7 +19,7 @@ public class Department {
 
     private List<Employee> employeeList;
 
-    @JacksonXmlProperty(localName = "department_name", isAttribute = true)
+    @XmlAttribute(name = "department_name")
     private String name;
 
     public List<Employee> getEmployeeList() {

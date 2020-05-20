@@ -2,7 +2,7 @@ package org.treblereel.gwt.jackson.tests.beans.inheritance;
 
 import java.util.Objects;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlAttribute;
 
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
@@ -16,7 +16,7 @@ public class Child extends Parent {
     //Check override
     private String name;
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String type;
 
     @Override

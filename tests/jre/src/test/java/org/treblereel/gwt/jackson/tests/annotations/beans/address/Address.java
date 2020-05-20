@@ -2,7 +2,7 @@ package org.treblereel.gwt.jackson.tests.annotations.beans.address;
 
 import java.util.Objects;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlAttribute;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.JacksonXmlProperty;
  */
 public class Address {
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String street;
 
     public String getStreet() {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -14,22 +14,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "process", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
 public class Process {
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String id;
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String name;
 
-    @JacksonXmlProperty(isAttribute = true, localName = "isExecutable")
+    @XmlAttribute(name = "isExecutable")
     private boolean executable;
 
-    @JacksonXmlProperty(isAttribute = true, localName = "drools:packageName")
+    @XmlAttribute(name = "drools:packageName")
     private String packageName;
 
-    @JacksonXmlProperty(isAttribute = true, localName = "drools:version")
+    @XmlAttribute(name = "drools:version")
     private String version;
 
-    @JacksonXmlProperty(isAttribute = true, localName = "drools:adHoc")
+    @XmlAttribute(name = "drools:adHoc")
     private boolean adHoc;
 
     private List<SubProcess> subProcesses = new ArrayList<>();

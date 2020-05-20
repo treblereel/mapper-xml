@@ -4,8 +4,9 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlCData;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchema;
 
 import com.github.javaparser.ast.CompilationUnit;
@@ -16,6 +17,7 @@ import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
 import org.treblereel.gwt.jackson.api.annotation.XmlTypeAdapter;
 import org.treblereel.gwt.jackson.context.GenerationContext;
+import org.treblereel.gwt.jackson.exception.GenerationException;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -59,15 +61,6 @@ public class PropertyDefinition extends Definition {
                 property.getAnnotation(XmlCData.class).value();
     }
 
-    public boolean isAttribute() {
-        if(getBean().getKind().equals(TypeKind.DECLARED)
-                && MoreTypes.asElement(getBean()).getAnnotation(XmlTypeAdapter.class) != null) {
-            return MoreTypes.asElement(getBean()).getAnnotation(XmlTypeAdapter.class).isAttribute();
-        }
-        return property.getAnnotation(JacksonXmlProperty.class) != null &&
-                property.getAnnotation(JacksonXmlProperty.class).isAttribute();
-    }
-
     public Expression getFieldSerializer(CompilationUnit cu, GenerationContext context) {
         TypeMirror bean = maybeInterface(context);
         FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(bean != null ? bean : getBean());
@@ -75,18 +68,28 @@ public class PropertyDefinition extends Definition {
     }
 
     public String getPropertyName() {
-        if (property.getAnnotation(JacksonXmlProperty.class) != null &&
-                !property.getAnnotation(JacksonXmlProperty.class).localName().isEmpty()) {
-            return property.getAnnotation(JacksonXmlProperty.class).localName();
+        if (property.getAnnotation(XmlElement.class) != null &&
+                !property.getAnnotation(XmlElement.class).name().equals("##default")) {
+            return property.getAnnotation(XmlElement.class).name();
         }
+
+        if (property.getAnnotation(XmlAttribute.class) != null &&
+                !property.getAnnotation(XmlAttribute.class).name().equals("##default")) {
+            return property.getAnnotation(XmlAttribute.class).name();
+        }
+
         return property.getSimpleName().toString();
     }
 
     public String getNamespace() {
-        if (property.getAnnotation(JacksonXmlProperty.class) != null &&
-                !property.getAnnotation(JacksonXmlProperty.class).namespace().equals("")
-                && !isAttribute()) {
-            return property.getAnnotation(JacksonXmlProperty.class).namespace();
+        if (property.getAnnotation(XmlElement.class) != null &&
+                !property.getAnnotation(XmlElement.class).namespace().equals("##default")) {
+            return property.getAnnotation(XmlElement.class).namespace();
+        }
+
+        if (property.getAnnotation(XmlAttribute.class) != null &&
+                !property.getAnnotation(XmlAttribute.class).namespace().equals("##default")) {
+            return property.getAnnotation(XmlAttribute.class).namespace();
         }
 
         XmlSchema schema = null;
@@ -97,6 +100,21 @@ public class PropertyDefinition extends Definition {
             return schema.namespace();
         }
         return null;
+    }
+
+    public boolean isAttribute() {
+        if (getBean().getKind().equals(TypeKind.DECLARED)
+                && MoreTypes.asElement(getBean()).getAnnotation(XmlTypeAdapter.class) != null) {
+            return MoreTypes.asElement(getBean()).getAnnotation(XmlTypeAdapter.class).isAttribute();
+        }
+
+        if (property.getAnnotation(XmlElement.class) != null
+                && property.getAnnotation(XmlAttribute.class) != null) {
+            throw new GenerationException("The property [" + property.getSimpleName() + "] " +
+                                                  "at [" + property.getEnclosingElement() + "] annotated with @XmlElement and @XmlAttribute, it's only possible to use one of them.");
+        }
+
+        return property.getAnnotation(XmlAttribute.class) != null;
     }
 
     public VariableElement getProperty() {

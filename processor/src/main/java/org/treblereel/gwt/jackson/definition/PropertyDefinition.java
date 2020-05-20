@@ -1,6 +1,5 @@
 package org.treblereel.gwt.jackson.definition;
 
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
@@ -15,6 +14,7 @@ import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
+import org.treblereel.gwt.jackson.api.annotation.XmlTypeAdapter;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 
 /**
@@ -40,27 +40,6 @@ public class PropertyDefinition extends Definition {
         return result;
     }
 
-    public boolean isCData() {
-        return property.asType().toString().equals(String.class.getCanonicalName()) &&
-                property.getAnnotation(XmlCData.class) != null &&
-                property.getAnnotation(XmlCData.class).value();
-    }
-
-    public boolean isAttribute() {
-        TypeMirror type = context.getTypeUtils().removeOuterWildCards(property.asType());
-
-        return property.getAnnotation(JacksonXmlProperty.class) != null &&
-                property.getAnnotation(JacksonXmlProperty.class).isAttribute() &&
-                (context.getTypeUtils().isBasicType(type)
-                        || MoreTypes.asElement(type).getKind().equals(ElementKind.ENUM));
-    }
-
-    public Expression getFieldSerializer(CompilationUnit cu, GenerationContext context) {
-        TypeMirror bean = maybeInterface(context);
-        FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(bean != null ? bean : getBean());
-        return fieldDefinition.getFieldSerializer(getPropertyName(), cu);
-    }
-
     private TypeMirror maybeInterface(GenerationContext context) {
         if (!getBean().getKind().equals(TypeKind.ARRAY) &&
                 !getBean().getKind().isPrimitive() &&
@@ -74,6 +53,27 @@ public class PropertyDefinition extends Definition {
         return null;
     }
 
+    public boolean isCData() {
+        return property.asType().toString().equals(String.class.getCanonicalName()) &&
+                property.getAnnotation(XmlCData.class) != null &&
+                property.getAnnotation(XmlCData.class).value();
+    }
+
+    public boolean isAttribute() {
+        if(getBean().getKind().equals(TypeKind.DECLARED)
+                && MoreTypes.asElement(getBean()).getAnnotation(XmlTypeAdapter.class) != null) {
+            return MoreTypes.asElement(getBean()).getAnnotation(XmlTypeAdapter.class).isAttribute();
+        }
+        return property.getAnnotation(JacksonXmlProperty.class) != null &&
+                property.getAnnotation(JacksonXmlProperty.class).isAttribute();
+    }
+
+    public Expression getFieldSerializer(CompilationUnit cu, GenerationContext context) {
+        TypeMirror bean = maybeInterface(context);
+        FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(bean != null ? bean : getBean());
+        return fieldDefinition.getFieldSerializer(getPropertyName(), cu);
+    }
+
     public String getPropertyName() {
         if (property.getAnnotation(JacksonXmlProperty.class) != null &&
                 !property.getAnnotation(JacksonXmlProperty.class).localName().isEmpty()) {
@@ -85,7 +85,7 @@ public class PropertyDefinition extends Definition {
     public String getNamespace() {
         if (property.getAnnotation(JacksonXmlProperty.class) != null &&
                 !property.getAnnotation(JacksonXmlProperty.class).namespace().equals("")
-                && !property.getAnnotation(JacksonXmlProperty.class).isAttribute()) {
+                && !isAttribute()) {
             return property.getAnnotation(JacksonXmlProperty.class).namespace();
         }
 

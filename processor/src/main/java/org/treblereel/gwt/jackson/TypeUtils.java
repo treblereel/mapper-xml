@@ -54,7 +54,6 @@ import com.google.auto.common.MoreTypes;
 import org.apache.commons.lang3.StringUtils;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 import org.treblereel.gwt.jackson.context.GenerationContext;
-import org.treblereel.gwt.jackson.exception.GenerationException;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -641,15 +640,17 @@ public class TypeUtils {
     /**
      * Create serializer name for given packageName and beanType.
      * Package name for corresponding serializer is prepended to the result.
-     * @param packageName a {@link String} object.
      * @param beanType {@link TypeMirror} object
      * @return fully-qualified serializer class name
      */
-    public String canonicalSerializerName(String packageName, TypeMirror beanType) {
-        return packageName + "." + serializerName(beanType);
+    public String canonicalSerializerName(TypeMirror beanType) {
+        return getPackage(beanType) + "." + serializerName(beanType);
     }
 
     public String serializerName(TypeMirror mirror) {
+        if (typeRegistry.containsSerializer(mirror.toString())) {
+            return typeRegistry.getCustomSerializer(mirror).getSimpleName().toString();
+        }
         TypeElement type = MoreTypes.asTypeElement(mirror);
         return (type.getEnclosingElement().getKind().equals(ElementKind.PACKAGE) ? "" :
                 MoreElements.asType(type.getEnclosingElement()).getSimpleName().toString() + "_")
@@ -669,15 +670,17 @@ public class TypeUtils {
     /**
      * Returns deserializer name for given typeMirror. Package name for
      * corresponding deserializer is prepended to the result.
-     * @param packageName a {@link String} object.
      * @param beanType a {@link TypeMirror} object
      * @return fully qualified deserializer name
      */
-    public String canonicalDeserializerName(String packageName, TypeMirror beanType) {
-        return packageName + "." + deserializerName(beanType);
+    public String canonicalDeserializerName(TypeMirror beanType) {
+        return getPackage(beanType) + "." + deserializerName(beanType);
     }
 
     public String deserializerName(TypeMirror mirror) {
+        if (typeRegistry.containsDeserializer(mirror.toString())) {
+            return typeRegistry.getCustomDeserializer(mirror).getSimpleName().toString();
+        }
         TypeElement type = MoreTypes.asTypeElement(mirror);
         return (type.getEnclosingElement().getKind().equals(ElementKind.PACKAGE) ? "" :
                 MoreElements.asType(type.getEnclosingElement()).getSimpleName().toString() + "_")

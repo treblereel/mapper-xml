@@ -12,6 +12,7 @@ import javax.lang.model.type.TypeMirror;
 import com.google.auto.common.MoreTypes;
 import org.treblereel.gwt.jackson.TypeRegistry;
 import org.treblereel.gwt.jackson.TypeUtils;
+import org.treblereel.gwt.jackson.api.annotation.XmlTypeAdapter;
 import org.treblereel.gwt.jackson.definition.BeanDefinition;
 
 /**
@@ -32,6 +33,8 @@ public class GenerationContext {
         this.roundEnvironment = roundEnvironment;
         this.typeRegistry = new TypeRegistry(this);
         this.typeUtils = new TypeUtils(this);
+        new CustomHandlerProcessor(this).process(roundEnvironment
+                                                         .getElementsAnnotatedWith(XmlTypeAdapter.class));
     }
 
     public RoundEnvironment getRoundEnvironment() {

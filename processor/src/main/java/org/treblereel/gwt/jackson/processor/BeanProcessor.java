@@ -114,7 +114,7 @@ public class BeanProcessor {
     }
 
     private TypeElement checkBean(TypeElement type) {
-        if (!type.getModifiers().contains(Modifier.PUBLIC)) {
+        if (type.getModifiers().contains(Modifier.PRIVATE)) {
             throw new GenerationException(
                     "A @XMLMapper bean [" + type + "] must be public");
         }

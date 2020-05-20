@@ -14,7 +14,6 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface JacksonAnnotation
-{
+public @interface JacksonAnnotation {
     // for now, a pure tag annotation, no parameters
 }

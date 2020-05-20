@@ -18,7 +18,6 @@ package org.treblereel.gwt.jackson.api;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.treblereel.gwt.jackson.api.deser.array.ArrayXMLDeserializer;
 import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 
 /**

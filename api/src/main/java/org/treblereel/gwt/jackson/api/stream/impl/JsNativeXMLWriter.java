@@ -9,14 +9,18 @@ import elemental2.dom.Document;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.Element;
 import elemental2.dom.Node;
+import jsinterop.annotations.JsMethod;
+import jsinterop.annotations.JsPackage;
+import jsinterop.annotations.JsType;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
-import org.treblereel.gwt.jackson.api.utils.XMLSerializer;
 
 /**
  * @author Dmitrii Tikhomirov
  * Created by treblereel 4/18/20
  */
 public class JsNativeXMLWriter implements XMLWriter {
+
+    private static final String HEADER = "<?xml version='1.0' encoding='UTF-8'?>";
 
     private String deferredName;
     private boolean beginNs = true;
@@ -183,7 +187,7 @@ public class JsNativeXMLWriter implements XMLWriter {
     @Override
     public String getOutput() {
         String result = new XMLSerializer().serializeToString(xml);
-        return "<?xml version='1.0' encoding='UTF-8'?>" + result;
+        return HEADER + result;
     }
 
     @Override
@@ -234,4 +238,11 @@ public class JsNativeXMLWriter implements XMLWriter {
             throw new NullPointerException("name == null");
         }
     }
+
+    @JsType(isNative = true, namespace = JsPackage.GLOBAL)
+    public static class XMLSerializer {
+        @JsMethod
+        public native String serializeToString(Document xml);
+    }
+
 }

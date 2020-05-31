@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.treblereel.gwt.jackson.api.annotation.TargetNamespace;
@@ -20,23 +20,23 @@ import org.treblereel.gwt.jackson.bpmn.di.BPMNDiagram;
 @TargetNamespace(prefix = "bpmn2", namespace = "http://www.omg.org/bpmn20")
 public class Definitions {
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String id;
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String name;
 
     private List<ItemDefinition> itemDefinitions = new ArrayList<>();
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String exporter = "jBPM Process Modeler";
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String exporterVersion = "2.0";
 
     private Process process;
 
-    @JacksonXmlProperty(localName = "BPMNDiagram")
+    @XmlAttribute(name = "BPMNDiagram")
     private BPMNDiagram bpmnDiagram;
 
     @Override

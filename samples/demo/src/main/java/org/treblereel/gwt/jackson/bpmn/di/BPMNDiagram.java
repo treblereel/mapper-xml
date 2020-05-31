@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlAttribute;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.JacksonXmlProperty;
  */
 public class BPMNDiagram {
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String id;
 
     private List<BPMNPlane> planes = new ArrayList<>();

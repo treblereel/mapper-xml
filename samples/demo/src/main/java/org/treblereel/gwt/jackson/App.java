@@ -57,8 +57,7 @@ public class App implements EntryPoint {
                     generatedPOJO.removeChild(generatedPOJO.childNodes.item(i));
                 }
                 try {
-                    Definitions result = mapper.read(generatedXML.value.replaceAll("[\n\r]", "")
-                                                             .replaceAll(">\\s+<", "><"));
+                    Definitions result = mapper.read(generatedXML.value);
                     generatedPOJO.innerHTML = result.toString();
                 } catch (XMLStreamException e) {
                     DomGlobal.window.alert("XMLStreamException " + e.getMessage());

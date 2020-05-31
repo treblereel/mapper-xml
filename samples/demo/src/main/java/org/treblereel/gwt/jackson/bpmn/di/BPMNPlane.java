@@ -4,7 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlAttribute;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -12,10 +12,10 @@ import javax.xml.bind.annotation.JacksonXmlProperty;
  */
 public class BPMNPlane {
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String id;
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String bpmnElement;
 
     private Set<BPMNShape> shapes = new LinkedHashSet<>();

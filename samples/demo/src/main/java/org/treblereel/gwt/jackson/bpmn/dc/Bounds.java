@@ -2,7 +2,7 @@ package org.treblereel.gwt.jackson.bpmn.dc;
 
 import java.util.Objects;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlAttribute;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -10,16 +10,16 @@ import javax.xml.bind.annotation.JacksonXmlProperty;
  */
 public class Bounds {
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private double height;
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private double width;
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private double x;
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private double y;
 
     public double getHeight() {

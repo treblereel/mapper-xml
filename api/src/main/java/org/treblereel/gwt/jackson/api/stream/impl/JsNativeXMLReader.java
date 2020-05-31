@@ -27,7 +27,8 @@ public class JsNativeXMLReader implements XMLReader {
     NodeWrapper current;
 
     public JsNativeXMLReader(String input) {
-        doc = XMLParser.parse(input);
+        doc = XMLParser.parse(input.replaceAll("[\n\r]", "")
+                                      .replaceAll(">\\s+<", "><"));
         XMLParser.removeWhitespace(doc);
         List<NodeWrapper> nodes = new LinkedList<>();
         visit(doc, nodes);

@@ -2,7 +2,7 @@ package org.treblereel.gwt.jackson.bpmn2;
 
 import java.util.Objects;
 
-import javax.xml.bind.annotation.JacksonXmlProperty;
+import javax.xml.bind.annotation.XmlAttribute;
 
 /**
  * @author Dmitrii Tikhomirov
@@ -10,12 +10,12 @@ import javax.xml.bind.annotation.JacksonXmlProperty;
  */
 public class DataObject {
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String id;
 
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String name;
-    @JacksonXmlProperty(isAttribute = true)
+    @XmlAttribute
     private String itemSubjectRef;
 
     @Override

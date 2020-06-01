@@ -10,6 +10,7 @@
   </parent>
 
   <artifactId>processor</artifactId>
+  <name>Apt processor</name>
   <description>apt processor</description>
   <packaging>jar</packaging>
 

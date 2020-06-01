@@ -46,6 +46,8 @@
     </properties>
 
     <modules>
+        <module>common</module>
+        <module>backend</module>
         <module>api</module>
         <module>processor</module>
         <module>tests</module>
@@ -98,8 +100,6 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-
-
     </build>
 
     <!-- Specify that we will push snapshots and releases to sonatype's repos -->

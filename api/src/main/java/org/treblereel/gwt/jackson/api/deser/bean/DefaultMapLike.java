@@ -20,15 +20,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.treblereel.gwt.jackson.api.GwtIncompatible;
-
 /**
  * <p>DefaultMapLike class.</p>
  *
  * @author vegegoku
  * @version $Id: $Id
  */
-@GwtIncompatible
 public class DefaultMapLike<T> implements MapLike<T> {
 
     private Map<String, T> map = new HashMap<>();

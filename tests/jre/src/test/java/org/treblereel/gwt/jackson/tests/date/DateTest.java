@@ -1,13 +1,10 @@
 package org.treblereel.gwt.jackson.tests.date;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.xml.stream.XMLStreamException;
 
 import com.google.j2cl.junit.apt.J2clTestInput;
-import elemental2.core.JsDate;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.tests.beans.date.DateBean_MapperImpl;
 

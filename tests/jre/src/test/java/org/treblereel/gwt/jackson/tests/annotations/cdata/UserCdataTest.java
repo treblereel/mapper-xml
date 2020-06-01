@@ -5,7 +5,6 @@ import java.util.UUID;
 import javax.xml.stream.XMLStreamException;
 
 import com.google.j2cl.junit.apt.J2clTestInput;
-import elemental2.dom.DomGlobal;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

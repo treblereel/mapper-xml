@@ -42,6 +42,11 @@
     </dependency>
     <dependency>
       <groupId>org.treblereel.gwt.jackson</groupId>
+      <artifactId>jre-backend</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.treblereel.gwt.jackson</groupId>
       <artifactId>processor</artifactId>
       <version>${project.version}</version>
     </dependency>

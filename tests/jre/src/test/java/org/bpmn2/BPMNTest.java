@@ -6,7 +6,6 @@ import java.util.List;
 import javax.xml.stream.XMLStreamException;
 
 import com.google.j2cl.junit.apt.J2clTestInput;
-import elemental2.dom.DomGlobal;
 import org.bpmn.dc.Bounds;
 import org.bpmn.di.BPMNDiagram;
 import org.bpmn.di.BPMNPlane;

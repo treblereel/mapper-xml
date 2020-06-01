@@ -7,6 +7,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>processor</artifactId>
+  <name>Apt processor</name>
   <description>apt processor</description>
   <developers>
     <developer>

@@ -17,7 +17,6 @@ import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.TypeParameter;
 import com.google.auto.common.MoreElements;
-import org.treblereel.gwt.jackson.api.AbstractObjectMapper;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.context.GenerationContext;
@@ -45,7 +44,7 @@ public class MapperGenerator extends AbstractGenerator {
 
     @Override
     protected void configureClassType(BeanDefinition type) {
-        cu.addImport(AbstractObjectMapper.class);
+        cu.addImport("org.treblereel.gwt.jackson.api.AbstractObjectMapper");
         cu.addImport(XMLDeserializer.class);
         cu.addImport(XMLSerializer.class);
 
@@ -59,7 +58,7 @@ public class MapperGenerator extends AbstractGenerator {
     private void setExtendedType(BeanDefinition type) {
         declaration.getExtendedTypes()
                 .add(new ClassOrInterfaceType()
-                             .setName(AbstractObjectMapper.class.getSimpleName())
+                             .setName("org.treblereel.gwt.jackson.api.AbstractObjectMapper")
                              .setTypeArguments(new ClassOrInterfaceType()
                                                        .setName(getTypeMapperName(type))));
     }

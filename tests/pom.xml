@@ -35,6 +35,7 @@
   </organization>
   <modules>
     <module>jre</module>
+    <module>jre/pom-j2cl.xml</module>
   </modules>
 
 </project>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='App'>
+  <inherits name='com.google.gwt.user.User'/>
+
+  <inherits name='org.treblereel.gwt.jackson.Gwt'/>
+  <inherits name="org.treblereel.gwt.jackson.Jackson"/>
+
+  <entry-point class='org.treblereel.gwt.jackson.client.App'/>
+  <source path='client'/>
+  <source path='shared'/>
+</module>

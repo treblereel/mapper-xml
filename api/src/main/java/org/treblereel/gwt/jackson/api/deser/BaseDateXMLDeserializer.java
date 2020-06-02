@@ -188,7 +188,7 @@ public abstract class BaseDateXMLDeserializer<D extends Date> extends XMLDeseria
 
         @Override
         protected Timestamp deserializeString(String date, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-            return new Timestamp(JacksonContextProvider.get().dateFormat().parse(ctx.isUseBrowserTimezone(), params.getPattern(), null, date).getTime());
+            return new Timestamp(params.dateFormat().parse(ctx.isUseBrowserTimezone(), params.getPattern(), null, date).getTime());
         }
     }
 }

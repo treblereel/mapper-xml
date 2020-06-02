@@ -41,11 +41,14 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <javaparser.core.version>3.13.1</javaparser.core.version>
         <junit.version>4.11</junit.version>
+        <com.fasterxml.woodstox.version>6.2.1</com.fasterxml.woodstox.version>
         <auto.common.version>0.10</auto.common.version>
         <auto.service.version>1.0-rc6</auto.service.version>
     </properties>
 
     <modules>
+        <module>common</module>
+        <module>backend</module>
         <module>api</module>
         <module>processor</module>
         <module>tests</module>
@@ -98,8 +101,6 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-
-
     </build>
 
     <!-- Specify that we will push snapshots and releases to sonatype's repos -->

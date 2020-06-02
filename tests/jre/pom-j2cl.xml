@@ -3,18 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-<!--  <parent>
-    <groupId>org.treblereel.gwt.jackson</groupId>
-    <artifactId>tests</artifactId>
-    <version>0.1-SNAPSHOT</version>
-    <relativePath>..</relativePath>
-  </parent>-->
-
   <groupId>org.treblereel.gwt.jackson</groupId>
   <artifactId>j2cl-tests</artifactId>
-  <description>j2cl tests</description>
   <version>0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
+
+  <description>Test cases for the J2CL</description>
 
   <developers>
     <developer>
@@ -61,6 +55,11 @@
     <!-- test dependencies -->
     <dependency>
       <groupId>org.treblereel.gwt.jackson</groupId>
+      <artifactId>gwt-backend</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.treblereel.gwt.jackson</groupId>
       <artifactId>api</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -102,6 +101,7 @@
         <artifactId>j2cl-maven-plugin</artifactId>
         <version>${maven.j2cl.plugin}</version>
         <configuration>
+          <webdriver>chrome</webdriver>
           <compilationLevel>ADVANCED</compilationLevel>
           <testJsZip>com.vertispan.j2cl:closure-test:zip:jszip:0.7-20200424.004055-5</testJsZip>
           <!--                <compilationLevel>BUNDLE</compilationLevel>-->

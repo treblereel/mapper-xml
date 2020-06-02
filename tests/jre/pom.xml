@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>jre-tests</artifactId>
-  <description>jre tests</description>
+  <description>Test cases for the JRE</description>
   <packaging>jar</packaging>
 
   <developers>

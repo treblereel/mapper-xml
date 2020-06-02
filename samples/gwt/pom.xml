@@ -94,7 +94,6 @@
         </executions>
         <configuration>
           <runTarget>App.html</runTarget>
-          <runTarget>App.html</runTarget>
           <modules>
             <module>org.treblereel.gwt.jackson.App</module>
           </modules>

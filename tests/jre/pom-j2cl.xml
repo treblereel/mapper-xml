@@ -40,7 +40,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
 
     <maven.compiler.plugin>3.8.1</maven.compiler.plugin>
-    <maven.j2cl.plugin>0.13-SNAPSHOT</maven.j2cl.plugin>
+    <maven.j2cl.plugin>0.14-SNAPSHOT</maven.j2cl.plugin>
     <maven.licence.plugin>3.0</maven.licence.plugin>
     <maven.surfire.plugin>3.0.0-M1</maven.surfire.plugin>
 
@@ -55,12 +55,12 @@
     <!-- test dependencies -->
     <dependency>
       <groupId>org.treblereel.gwt.jackson</groupId>
-      <artifactId>gwt-backend</artifactId>
+      <artifactId>api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.treblereel.gwt.jackson</groupId>
-      <artifactId>api</artifactId>
+      <artifactId>gwt-backend</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -101,10 +101,7 @@
         <artifactId>j2cl-maven-plugin</artifactId>
         <version>${maven.j2cl.plugin}</version>
         <configuration>
-          <webdriver>chrome</webdriver>
           <compilationLevel>ADVANCED</compilationLevel>
-          <testJsZip>com.vertispan.j2cl:closure-test:zip:jszip:0.7-20200424.004055-5</testJsZip>
-          <!--                <compilationLevel>BUNDLE</compilationLevel>-->
         </configuration>
         <executions>
           <execution>

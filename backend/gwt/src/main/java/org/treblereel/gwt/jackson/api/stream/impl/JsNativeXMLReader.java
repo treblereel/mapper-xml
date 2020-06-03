@@ -1,5 +1,6 @@
 package org.treblereel.gwt.jackson.api.stream.impl;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,11 +8,13 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 
-import org.gwtproject.xml.client.Attr;
-import org.gwtproject.xml.client.CDATASection;
-import org.gwtproject.xml.client.Node;
-import org.gwtproject.xml.client.Text;
-import org.gwtproject.xml.client.XMLParser;
+import elemental2.dom.Attr;
+import elemental2.dom.CDATASection;
+import elemental2.dom.Document;
+import elemental2.dom.Node;
+import elemental2.dom.Text;
+import jsinterop.annotations.JsPackage;
+import jsinterop.annotations.JsType;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
@@ -20,14 +23,14 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public class JsNativeXMLReader implements XMLReader {
 
-    org.gwtproject.xml.client.Document doc;
+    Document doc;
 
     Iterator<NodeWrapper> iterator;
     NodeWrapper current;
 
     public JsNativeXMLReader(String input) {
-        doc = XMLParser.parse(input);
-        XMLParser.removeWhitespace(doc);
+        doc = new DOMParser().parseFromString(input, "text/xml");
+        removeWhitespace(doc, null);
         List<NodeWrapper> nodes = new LinkedList<>();
         visit(doc, nodes);
         iterator = nodes.iterator();
@@ -46,11 +49,11 @@ public class JsNativeXMLReader implements XMLReader {
 
     @Override
     public QName peekNodeName() {
-        if (current.node.getPrefix() != null && !current.node.getPrefix().isEmpty()) {
-            String nodeName = current.node.getNodeName().replace(current.node.getPrefix() + ":", "");
-            return new QName(current.node.getNamespaceURI(), nodeName, current.node.getPrefix());
+        if (current.node.prefix != null && !current.node.prefix.isEmpty()) {
+            String nodeName = current.node.nodeName.replace(current.node.prefix + ":", "");
+            return new QName(current.node.namespaceURI, nodeName, current.node.prefix);
         }
-        return new QName(current.node.getNamespaceURI(), current.node.getNodeName());
+        return new QName(current.node.namespaceURI, current.node.nodeName);
     }
 
     @Override
@@ -62,7 +65,7 @@ public class JsNativeXMLReader implements XMLReader {
             return null;
         }
 
-        return ((Text) current.node).getData();
+        return ((Text) current.node).data;
     }
 
     @Override
@@ -114,7 +117,7 @@ public class JsNativeXMLReader implements XMLReader {
     @Override
     public String nextValue() {
         if (current.type == XMLStreamConstants.END_ELEMENT) {
-            return ((CDATASection) current.node).getData();
+            return ((CDATASection) current.node).data;
         }
         return nextString();
     }
@@ -133,23 +136,23 @@ public class JsNativeXMLReader implements XMLReader {
 
     @Override
     public String getInput() {
-        return doc.getDocumentElement().toString();
+        return doc.documentElement.toString();
     }
 
     @Override
     public int getAttributeCount() {
-        return current.node.getAttributes().getLength();
+        return current.node.attributes.getLength();
     }
 
     @Override
     public QName getAttributeName(int index) {
-        Attr attr = (Attr) current.node.getAttributes().item(index);
-        return new QName(attr.getNamespaceURI(), attr.getName());
+        Attr attr = (Attr) current.node.attributes.item(index);
+        return new QName(attr.namespaceURI, attr.name);
     }
 
     @Override
     public String getAttributeValue(int index) {
-        return ((Attr) current.node.getAttributes().item(index)).getValue();
+        return ((Attr) current.node.attributes.item(index)).value;
     }
 
     @Override
@@ -158,13 +161,13 @@ public class JsNativeXMLReader implements XMLReader {
     }
 
     public void visit(Node node, List<NodeWrapper> nodes) {
-        nodes.add(new NodeWrapper(node, toNodeType(node.getNodeType())));
+        nodes.add(new NodeWrapper(node, toNodeType(node.nodeType)));
         if (node.hasChildNodes()) {
-            for (int i = 0; i < node.getChildNodes().getLength(); i++) {
-                visit(node.getChildNodes().item(i), nodes);
+            for (int i = 0; i < node.childNodes.getLength(); i++) {
+                visit(node.childNodes.item(i), nodes);
             }
         }
-        if (node.getNodeType() == 1) {
+        if (node.nodeType == 1) {
             nodes.add(new NodeWrapper(node, XMLStreamConstants.END_ELEMENT));
         }
     }
@@ -192,6 +195,32 @@ public class JsNativeXMLReader implements XMLReader {
         throw new UnsupportedOperationException("type" + nativeType);
     }
 
+    public void removeWhitespace(Node n, Node parent) {
+        // This n is removed from the parent if n is a whitespace node
+        if (parent != null
+                && n instanceof Text
+                && (!(n instanceof CDATASection))) {
+            Text t = (Text) n;
+            if (t.data.matches("[ \t\n]*")) {
+                parent.removeChild(t);
+            }
+        }
+        if (n.hasChildNodes()) {
+            int length = n.childNodes.getLength();
+            List<Node> toBeProcessed = new ArrayList<>();
+            // We collect all the nodes to iterate as the child nodes will change
+            // upon removal
+            for (int i = 0; i < length; i++) {
+                toBeProcessed.add(n.childNodes.item(i));
+            }
+            // This changes the child nodes, but the iterator of nodes never changes
+            // meaning that this is safe
+            for (Node childNode : toBeProcessed) {
+                removeWhitespace(childNode, n);
+            }
+        }
+    }
+
     private static class NodeWrapper {
 
         int type;
@@ -209,5 +238,11 @@ public class JsNativeXMLReader implements XMLReader {
                     ", node=" + node +
                     '}';
         }
+    }
+
+    @JsType(isNative = true, name = "DOMParser", namespace = JsPackage.GLOBAL)
+    private static class DOMParser {
+
+        public native Document parseFromString(String contents, String mimeType);
     }
 }

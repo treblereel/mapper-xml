@@ -1,11 +1,14 @@
 package org.treblereel.gwt.jackson.definition;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -15,6 +18,7 @@ import javax.xml.bind.annotation.XmlNs;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchema;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
@@ -33,14 +37,16 @@ public class BeanDefinition extends Definition {
 
     private final TypeElement element;
     private final XmlRootElement xmlRootElement;
+    private final XmlType xmlType;
     private final XmlSchema xmlSchema;
-    private Set<PropertyDefinition> properties;
+    private Set<PropertyDefinition> fields = new LinkedHashSet<>();
 
     public BeanDefinition(TypeElement element, GenerationContext context) {
         super(element.asType(), context);
         this.element = element;
 
         xmlRootElement = getElement().getAnnotation(XmlRootElement.class);
+        xmlType = getElement().getAnnotation(XmlType.class);
         xmlSchema = MoreElements.getPackage(element).getAnnotation(XmlSchema.class);
 
         loadProperties();
@@ -51,21 +57,32 @@ public class BeanDefinition extends Definition {
     }
 
     private void loadProperties() {
-        properties = context.getTypeUtils().getAllFieldsIn(element)
+        Stream<PropertyDefinition> stream = context.getTypeUtils().getAllFieldsIn(element)
                 .stream()
                 .filter(field -> !field.getModifiers().contains(Modifier.STATIC))
                 .filter(field -> !field.getModifiers().contains(Modifier.FINAL))
                 .filter(field -> !field.getModifiers().contains(Modifier.TRANSIENT))
                 .filter(field -> field.getAnnotation(XmlTransient.class) == null)
-                .map(field -> new PropertyDefinition(field, context))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+                .map(field -> new PropertyDefinition(field, context));
+
+        if (xmlType == null || xmlType.propOrder() == null) {
+            stream.forEach(elm -> fields.add(elm));
+        } else {
+            Set<String> propOrder = new LinkedHashSet<>(Arrays.asList(xmlType.propOrder()));
+            Map<String, PropertyDefinition> temp = stream.collect(Collectors.toMap(x -> x.getPropertyName(), x -> x));
+            for (String s : propOrder) {
+                if (temp.containsKey(s)) {
+                    fields.add(temp.get(s));
+                } else {
+                    throw new GenerationException("Property " + s + " appears in @XmlType.propOrder, but no such property exists." + getElement());
+                }
+            }
+            temp.entrySet().stream().filter(v -> !propOrder.contains(v.getKey())).forEach(v -> fields.add(v.getValue()));
+        }
     }
 
     public Set<PropertyDefinition> getFields() {
-        if (properties == null) {
-            getFields();
-        }
-        return properties;
+        return fields;
     }
 
     @Override

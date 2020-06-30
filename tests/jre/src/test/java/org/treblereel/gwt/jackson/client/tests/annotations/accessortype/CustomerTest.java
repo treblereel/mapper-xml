@@ -1,4 +1,4 @@
-package org.treblereel.gwt.jackson.client.tests.annotations.type;
+package org.treblereel.gwt.jackson.client.tests.annotations.accessortype;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -16,7 +16,7 @@ public class CustomerTest {
 
     Customer_MapperImpl mapper = Customer_MapperImpl.INSTANCE;
 
-    private static final String xml = "<?xml version='1.0' encoding='UTF-8'?><Customer xmlns=\"http://www.omg.org/bpmn20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><id>1112</id><firstName>setFirstName</firstName><lastName>setLastName</lastName><notInPropOrder>setNotInPropOrder</notInPropOrder></Customer>";
+    private static final String xml = "<?xml version='1.0' encoding='UTF-8'?><Customer id=\"1112\"><firstName><![CDATA[setFirstName]]></firstName><lastName>setLastName</lastName></Customer>";
 
     @Test
     public void testSerializeValue() throws XMLStreamException {

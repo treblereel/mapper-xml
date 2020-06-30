@@ -7,13 +7,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlCData;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlNs;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchema;
@@ -39,7 +46,11 @@ public class BeanDefinition extends Definition {
     private final XmlRootElement xmlRootElement;
     private final XmlType xmlType;
     private final XmlSchema xmlSchema;
+    private final XmlAccessorType xmlAccessorType;
     private Set<PropertyDefinition> fields = new LinkedHashSet<>();
+    private Class[] allowedPropertyAnnotations = new Class[]{
+            XmlAttribute.class, XmlCData.class, XmlElement.class
+    };
 
     public BeanDefinition(TypeElement element, GenerationContext context) {
         super(element.asType(), context);
@@ -47,22 +58,49 @@ public class BeanDefinition extends Definition {
 
         xmlRootElement = getElement().getAnnotation(XmlRootElement.class);
         xmlType = getElement().getAnnotation(XmlType.class);
+        xmlAccessorType = getElement().getAnnotation(XmlAccessorType.class);
         xmlSchema = MoreElements.getPackage(element).getAnnotation(XmlSchema.class);
 
-        loadProperties();
+        /**
+         * Since we can't use reflection we ll process all this cases as default
+         */
+        if (xmlAccessorType == null ||
+                xmlAccessorType.value().equals(XmlAccessType.FIELD) ||
+                xmlAccessorType.value().equals(XmlAccessType.PROPERTY) ||
+                xmlAccessorType.value().equals(XmlAccessType.PUBLIC_MEMBER)) {
+            loadProperties(false);
+        } else {
+            loadProperties(true);
+        }
     }
 
     public TypeElement getElement() {
         return element;
     }
 
-    private void loadProperties() {
+    private void loadProperties(boolean annotated) {
+        Predicate<VariableElement> isAnnotated = new Predicate<VariableElement>() {
+            @Override
+            public boolean test(VariableElement field) {
+                if (annotated) {
+                    for (Class anno : allowedPropertyAnnotations) {
+                        if (field.getAnnotation(anno) != null) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                return true;
+            }
+        };
+
         Stream<PropertyDefinition> stream = context.getTypeUtils().getAllFieldsIn(element)
                 .stream()
                 .filter(field -> !field.getModifiers().contains(Modifier.STATIC))
                 .filter(field -> !field.getModifiers().contains(Modifier.FINAL))
                 .filter(field -> !field.getModifiers().contains(Modifier.TRANSIENT))
                 .filter(field -> field.getAnnotation(XmlTransient.class) == null)
+                .filter(isAnnotated)
                 .map(field -> new PropertyDefinition(field, context));
 
         if (xmlType == null || xmlType.propOrder() == null) {

@@ -134,8 +134,17 @@ public class BeanDefinition extends Definition {
     }
 
     public String getNamespace() {
+        if (xmlType != null && !xmlType.namespace().equals("##default") &&
+                xmlRootElement != null && !xmlRootElement.namespace().equals("##default")) {
+            throw new GenerationException("Apply one namespace dicloration at a time. @XmlType and @XmlRootElement contain namespace declaration at " + getElement());
+        }
+
         if (xmlRootElement != null && !xmlRootElement.namespace().equals("##default")) {
             return xmlRootElement.namespace();
+        }
+
+        if (xmlType != null && !xmlType.namespace().equals("##default")) {
+            return xmlType.namespace();
         }
 
         if (xmlSchema != null && !xmlSchema.namespace().isEmpty()) {

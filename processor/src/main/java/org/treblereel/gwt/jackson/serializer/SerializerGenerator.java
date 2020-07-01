@@ -36,6 +36,7 @@ import com.github.javaparser.ast.type.Type;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
+import org.treblereel.gwt.jackson.api.ser.XmlElementWrapperSerializer;
 import org.treblereel.gwt.jackson.api.ser.bean.AbstractBeanXMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.bean.BeanPropertySerializer;
 import org.treblereel.gwt.jackson.api.utils.Pair;
@@ -307,8 +308,20 @@ public class SerializerGenerator extends AbstractGenerator {
         method.setType(new ClassOrInterfaceType().setName("XMLSerializer<?>"));
 
         method.getBody().ifPresent(body -> body.addAndGetStatement(
-                new ReturnStmt().setExpression(field.getFieldSerializer(cu, context))));
+                new ReturnStmt().setExpression(createFieldSerializerExpr(field))));
         anonymousClassBody.add(method);
+    }
+
+    private Expression createFieldSerializerExpr(PropertyDefinition field) {
+        Expression expr = field.getFieldSerializer(cu, context);
+        if(field.isWrapped()) {
+            ClassOrInterfaceType wrapper = new ClassOrInterfaceType()
+                    .setName(XmlElementWrapperSerializer.class.getCanonicalName());
+            ObjectCreationExpr beanProperty = new ObjectCreationExpr();
+            beanProperty.setType(wrapper);
+            expr = beanProperty.addArgument(expr).addArgument(new StringLiteralExpr(field.getWrapped()));
+        }
+        return expr;
     }
 
     private void getValue(NodeList<BodyDeclaration<?>> anonymousClassBody, BeanDefinition bean, PropertyDefinition field) {

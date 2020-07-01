@@ -119,6 +119,13 @@ public class BeanProcessor {
                     "A @XMLMapper bean [" + type + "] must be public");
         }
 
+        if (type.getEnclosingElement().getKind().isClass()) {
+            if (!type.getModifiers().contains(Modifier.STATIC)) {
+                throw new GenerationException(
+                        "A @XMLMapper bean [" + type + "] must be static");
+            }
+        }
+
         List<ExecutableElement> constructors = ElementFilter.constructorsIn(type.getEnclosedElements());
         if (!constructors.isEmpty()) {
             long nonArgConstructorCount = constructors.stream()

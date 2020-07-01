@@ -30,6 +30,7 @@ import org.treblereel.gwt.jackson.api.JacksonContextProvider;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
+import org.treblereel.gwt.jackson.api.deser.XmlElementWrapperDeserializer;
 import org.treblereel.gwt.jackson.api.deser.bean.AbstractBeanXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.bean.BeanPropertyDeserializer;
 import org.treblereel.gwt.jackson.api.deser.bean.HasDeserializerAndParameters;
@@ -176,7 +177,7 @@ public class DeserializerGenerator extends AbstractGenerator {
                 typeArg);
 
         body.addStatement(new MethodCallExpr(new NameExpr("map"), "put")
-                                  .addArgument(new StringLiteralExpr(field.getPropertyName()))
+                                  .addArgument(new StringLiteralExpr(field.isWrapped() ? field.getWrapped() : field.getPropertyName()))
                                   .addArgument(new ObjectCreationExpr()
                                                        .setType(beanPropertyDeserializer)
                                                        .setAnonymousClassBody(anonymousClassBody)
@@ -223,9 +224,8 @@ public class DeserializerGenerator extends AbstractGenerator {
         method.addAnnotation(Override.class);
         method.setName("newDeserializer");
         method.setType(new ClassOrInterfaceType().setName("XMLDeserializer<?>"));
-
         method.getBody().ifPresent(body -> body.addAndGetStatement(
-                new ReturnStmt().setExpression(field.getFieldDeserializer(cu))));
+                new ReturnStmt().setExpression(createFieldDeserializerExpr(field))));
         anonymousClassBody.add(method);
     }
 
@@ -309,6 +309,19 @@ public class DeserializerGenerator extends AbstractGenerator {
 
         method.getBody().ifPresent(body -> body.addAndGetStatement(new ReturnStmt().setExpression(instanceBuilder)));
         anonymousClassBody.add(method);
+    }
+
+    private Expression createFieldDeserializerExpr(PropertyDefinition field) {
+        Expression expr = field.getFieldDeserializer(cu);
+        if (field.isWrapped()) {
+            ClassOrInterfaceType wrapper = new ClassOrInterfaceType()
+                    .setName(XmlElementWrapperDeserializer.class.getCanonicalName());
+            ObjectCreationExpr beanProperty = new ObjectCreationExpr();
+            beanProperty.setType(wrapper);
+            expr = beanProperty.addArgument(expr)
+                    .addArgument(new StringLiteralExpr(field.getPropertyName()));
+        }
+        return expr;
     }
 
     private Expression getFieldAccessor(PropertyDefinition field) {

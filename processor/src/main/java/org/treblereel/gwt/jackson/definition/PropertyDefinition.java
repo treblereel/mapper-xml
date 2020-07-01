@@ -7,6 +7,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlCData;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlSchema;
 
 import com.github.javaparser.ast.CompilationUnit;
@@ -115,6 +116,16 @@ public class PropertyDefinition extends Definition {
         }
 
         return property.getAnnotation(XmlAttribute.class) != null;
+    }
+
+    public boolean isWrapped() {
+        return property.getAnnotation(XmlElementWrapper.class) != null;
+    }
+
+    public String getWrapped() {
+        return !property.getAnnotation(XmlElementWrapper.class).name().equals("##default")
+                ? property.getAnnotation(XmlElementWrapper.class).name() :
+                property.getSimpleName().toString();
     }
 
     public VariableElement getProperty() {

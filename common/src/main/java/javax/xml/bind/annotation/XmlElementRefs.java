@@ -41,36 +41,33 @@
 package javax.xml.bind.annotation;
 
 import java.lang.annotation.Retention;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
+ * Marks a property that refers to classes with {@link XmlElement}
+ * or JAXBElement.
+ *
  * <p>
- * Associates a namespace prefix with a XML namespace URI.
+ * Compared to an element property (property with {@link XmlElement}
+ * annotation), a reference property has a different substitution semantics.
+ * When a sub-class is assigned to a property, an element property produces
+ * the same tag name with @xsi:type, whereas a reference property produces
+ * a different tag name (the tag name that's on the the sub-class.)
  *
- * <p><b>Usage</b></p>
- * <p>{@code @XmlNs} annotation is intended for use from other
- * program annotations.
+ * <p> This annotation can be used with the following annotations:
+ * {@link XmlJavaTypeAdapter}, {@link XmlElementWrapper}.
  *
- * <p>See "Package Specification" in javax.xml.bind.package javadoc for
- * additional common information.</p>
+ * @author <ul><li>Kohsuke Kawaguchi, Sun Microsystems, Inc.</li><li>Sekhar Vajjhala, Sun Microsystems, Inc.</li></ul>
  *
- * <p><b>Example:</b>See {@code XmlSchema} annotation type for an example.
- * @author Sekhar Vajjhala, Sun Microsystems, Inc.
+ * @see XmlElementWrapper
+ * @see XmlElementRef
  * @since 1.6, JAXB 2.0
  */
-
-@Retention(RUNTIME) @Target({})
-public @interface XmlNs {
-    /**
-     * Namespace prefix
-     */
-    String prefix();
-
-    /**
-     * Namespace URI
-     */
-    String namespaceURI();
+@Retention(RUNTIME)
+@Target({FIELD,METHOD})
+public @interface XmlElementRefs {
+    XmlElementRef[] value();
 }
-
-

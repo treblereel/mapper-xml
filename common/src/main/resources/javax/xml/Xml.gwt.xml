@@ -5,4 +5,5 @@
   <source path="bind" />
   <source path="namespace" />
   <source path="stream" />
+  <source path=".." />
 </module>

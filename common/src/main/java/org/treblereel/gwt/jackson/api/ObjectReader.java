@@ -19,6 +19,7 @@ package org.treblereel.gwt.jackson.api;
 import javax.xml.stream.XMLStreamException;
 
 import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
+import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
  * Reads a XML input and return an object
@@ -67,5 +68,5 @@ public interface ObjectReader<T> {
      *
      * @return a {@link XMLDeserializer} object.
      */
-    XMLDeserializer<T> getDeserializer();
+    XMLDeserializer<T> getDeserializer(XMLReader reader);
 }

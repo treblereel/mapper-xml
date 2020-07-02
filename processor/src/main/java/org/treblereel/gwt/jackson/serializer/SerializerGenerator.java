@@ -1,7 +1,6 @@
 package org.treblereel.gwt.jackson.serializer;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +13,7 @@ import javax.lang.model.type.TypeMirror;
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.BodyDeclaration;
+import com.github.javaparser.ast.body.ConstructorDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.ArrayAccessExpr;
@@ -52,6 +52,8 @@ import org.treblereel.gwt.jackson.logger.TreeLogger;
  */
 public class SerializerGenerator extends AbstractGenerator {
 
+    private ConstructorDeclaration constructor;
+
     public SerializerGenerator(GenerationContext context, TreeLogger logger) {
         super(context, logger.branch(TreeLogger.INFO, "Serializers generation started"));
     }
@@ -75,6 +77,7 @@ public class SerializerGenerator extends AbstractGenerator {
         declaration.getExtendedTypes().add(new ClassOrInterfaceType()
                                                    .setName(AbstractBeanXMLSerializer.class.getSimpleName())
                                                    .setTypeArguments(new ClassOrInterfaceType().setName(type.getSimpleName())));
+        constructor = declaration.addConstructor(Modifier.Keyword.PUBLIC);
     }
 
     @Override
@@ -108,16 +111,30 @@ public class SerializerGenerator extends AbstractGenerator {
     }
 
     private void getXmlNs(BeanDefinition beanDefinition) {
-        declaration.addMethod("getXmlNs", Modifier.Keyword.PROTECTED)
-                .addAnnotation(Override.class)
-                .setType(new ClassOrInterfaceType().setName(List.class.getSimpleName())
-                                 .setTypeArguments(new ClassOrInterfaceType().setName(Pair.class.getSimpleName()).setTypeArguments(
-                                         new ClassOrInterfaceType().setName(
-                                                 String.class.getSimpleName()),
-                                         new ClassOrInterfaceType().setName(
-                                                 String.class.getSimpleName()))))
-                .getBody()
-                .ifPresent(body -> getXmlNsStatement(beanDefinition, body));
+        if (!beanDefinition.getXmlNs().isEmpty()) {
+            beanDefinition.getXmlNs().forEach(pair ->{
+                constructor.getBody().addStatement(new MethodCallExpr(new NameExpr("namespaces"),"put")
+                                                           .addArgument(pair.key != null ? new StringLiteralExpr(pair.key) : new StringLiteralExpr(""))
+                                                           .addArgument(new StringLiteralExpr(pair.value)));
+            });
+
+/*
+
+            constructor.getBody().addStatement(new MethodCallExpr(new NameExpr("namespaces"),"put")
+                                                       .addArgument(new StringLiteralExpr()))
+
+
+            declaration.addMethod("getXmlNs", Modifier.Keyword.PROTECTED)
+                    .addAnnotation(Override.class)
+                    .setType(new ClassOrInterfaceType().setName(List.class.getSimpleName())
+                                     .setTypeArguments(new ClassOrInterfaceType().setName(Pair.class.getSimpleName()).setTypeArguments(
+                                             new ClassOrInterfaceType().setName(
+                                                     String.class.getSimpleName()),
+                                             new ClassOrInterfaceType().setName(
+                                                     String.class.getSimpleName()))))
+                    .getBody()
+                    .ifPresent(body -> getXmlNsStatement(beanDefinition, body));*/
+        }
     }
 
     private void getSchemaLocation(BeanDefinition type) {
@@ -167,38 +184,31 @@ public class SerializerGenerator extends AbstractGenerator {
 
     private void getXsiType(BeanDefinition type) {
         if (type.getXsiType() != null) {
-            declaration.addMethod("getXmlXsiType", Modifier.Keyword.PUBLIC)
-                    .addAnnotation(Override.class)
-                    .setType(String.class)
-                    .getBody().ifPresent(body -> body.addStatement(
-                    new ReturnStmt(new StringLiteralExpr(type.getXsiType())))
-            );
+            for (String s : type.getXsiType()) {
+                constructor.getBody().addStatement(new MethodCallExpr(new NameExpr("xsiType"), "add").addArgument(new StringLiteralExpr(s)));
+            }
+            //constructor.getBody().addStatement(new MethodCallExpr(new NameExpr("xsiType"), "add").addArgument(new StringLiteralExpr(s)));
         }
     }
 
     private void getXmlNsStatement(BeanDefinition beanDefinition, BlockStmt body) {
-        if (beanDefinition.getXmlNs().isEmpty()) {
-            cu.addImport(Collections.class);
-            body.addStatement(new ReturnStmt(new MethodCallExpr(new NameExpr("Collections"), "emptyList")));
-        } else {
-            cu.addImport(ArrayList.class);
-            body.addAndGetStatement(new AssignExpr().setTarget(new VariableDeclarationExpr(
-                    new ClassOrInterfaceType()
-                            .setName("List<Pair<String, String>>"),
-                    "result")).setValue(new NameExpr("new ArrayList<>()")));
-            beanDefinition.getXmlNs().forEach(pair -> {
-                body.addStatement(new MethodCallExpr(new NameExpr("result"), "add")
-                                          .addArgument(new ObjectCreationExpr().setType(
-                                                  new ClassOrInterfaceType().setName("Pair")
-                                                          .setTypeArguments(new ClassOrInterfaceType().setName("String"),
-                                                                            new ClassOrInterfaceType().setName("String")))
-                                                               .addArgument(pair.key != null ? new StringLiteralExpr(pair.key)
-                                                                                    : new NullLiteralExpr())
-                                                               .addArgument(new StringLiteralExpr(pair.value))));
-            });
+        cu.addImport(ArrayList.class);
+        body.addAndGetStatement(new AssignExpr().setTarget(new VariableDeclarationExpr(
+                new ClassOrInterfaceType()
+                        .setName("List<Pair<String, String>>"),
+                "result")).setValue(new NameExpr("new ArrayList<>()")));
+        beanDefinition.getXmlNs().forEach(pair -> {
+            body.addStatement(new MethodCallExpr(new NameExpr("result"), "add")
+                                      .addArgument(new ObjectCreationExpr().setType(
+                                              new ClassOrInterfaceType().setName("Pair")
+                                                      .setTypeArguments(new ClassOrInterfaceType().setName("String"),
+                                                                        new ClassOrInterfaceType().setName("String")))
+                                                           .addArgument(pair.key != null ? new StringLiteralExpr(pair.key)
+                                                                                : new NullLiteralExpr())
+                                                           .addArgument(new StringLiteralExpr(pair.value))));
+        });
 
-            body.addAndGetStatement(new ReturnStmt(new NameExpr().setName("result")));
-        }
+        body.addAndGetStatement(new ReturnStmt(new NameExpr().setName("result")));
     }
 
     @Override
@@ -304,24 +314,13 @@ public class SerializerGenerator extends AbstractGenerator {
         method.setModifiers(Modifier.Keyword.PROTECTED);
         method.addAnnotation(Override.class);
         method.setName("newSerializer");
+        method.addParameter(Class.class.getSimpleName(), "value");
 
         method.setType(new ClassOrInterfaceType().setName("XMLSerializer<?>"));
 
         method.getBody().ifPresent(body -> body.addAndGetStatement(
                 new ReturnStmt().setExpression(createFieldSerializerExpr(field))));
         anonymousClassBody.add(method);
-    }
-
-    private Expression createFieldSerializerExpr(PropertyDefinition field) {
-        Expression expr = field.getFieldSerializer(cu, context);
-        if(field.isWrapped()) {
-            ClassOrInterfaceType wrapper = new ClassOrInterfaceType()
-                    .setName(XmlElementWrapperSerializer.class.getCanonicalName());
-            ObjectCreationExpr beanProperty = new ObjectCreationExpr();
-            beanProperty.setType(wrapper);
-            expr = beanProperty.addArgument(expr).addArgument(new StringLiteralExpr(field.getWrapped()));
-        }
-        return expr;
     }
 
     private void getValue(NodeList<BodyDeclaration<?>> anonymousClassBody, BeanDefinition bean, PropertyDefinition field) {
@@ -398,6 +397,18 @@ public class SerializerGenerator extends AbstractGenerator {
                     new ReturnStmt().setExpression(new StringLiteralExpr(finalPrefix))));
             anonymousClassBody.add(method);
         }
+    }
+
+    private Expression createFieldSerializerExpr(PropertyDefinition field) {
+        Expression expr = field.getFieldSerializer(cu, context);
+        if (field.isWrapped()) {
+            ClassOrInterfaceType wrapper = new ClassOrInterfaceType()
+                    .setName(XmlElementWrapperSerializer.class.getCanonicalName());
+            ObjectCreationExpr beanProperty = new ObjectCreationExpr();
+            beanProperty.setType(wrapper);
+            expr = beanProperty.addArgument(expr).addArgument(new StringLiteralExpr(field.getWrapped()));
+        }
+        return expr;
     }
 
     private Expression getFieldAccessor(PropertyDefinition field) {

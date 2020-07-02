@@ -19,6 +19,7 @@ import com.github.javaparser.ast.type.TypeParameter;
 import com.google.auto.common.MoreElements;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
+import org.treblereel.gwt.jackson.api.stream.XMLReader;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 import org.treblereel.gwt.jackson.definition.BeanDefinition;
 import org.treblereel.gwt.jackson.deserializer.DeserializerGenerator;
@@ -114,6 +115,7 @@ public class MapperGenerator extends AbstractGenerator {
         declaration.addMethod("newDeserializer", Modifier.Keyword.PROTECTED)
                 .addAnnotation(Override.class)
                 .setType(returnType)
+                .addParameter(XMLReader.class.getCanonicalName(), "reader")
                 .getBody().ifPresent(body -> body.addStatement(new ReturnStmt(addObjectCreationExpr(type,
                                                                                                     returnType,
                                                                                                     new ObjectCreationExpr()

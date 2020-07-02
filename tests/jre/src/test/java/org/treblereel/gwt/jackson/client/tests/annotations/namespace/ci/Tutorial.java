@@ -13,7 +13,7 @@ import org.treblereel.gwt.jackson.client.tests.annotations.namespace.cl.Name;
  * Created by treblereel 4/28/20
  */
 @XMLMapper
-@XmlRootElement(name = "_tutorial", namespace = "http://www.ci")
+@XmlRootElement(name = "_tutorial", namespace = "http://ns")
 public class Tutorial {
 
     private int id;

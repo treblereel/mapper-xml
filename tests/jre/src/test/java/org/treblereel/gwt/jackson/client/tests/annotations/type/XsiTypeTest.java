@@ -7,7 +7,7 @@ import javax.xml.stream.XMLStreamException;
 import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
-import org.treblereel.gwt.jackson.api.annotation.XMLXsiType;
+import org.treblereel.gwt.jackson.api.annotation.XmlXsiType;
 
 import static org.junit.Assert.assertEquals;
 
@@ -32,7 +32,7 @@ public class XsiTypeTest {
         assertEquals(xsiType, mapper.read(mapper.write(xsiType)));
     }
 
-    @XMLXsiType("validation")
+    @XmlXsiType("validation")
     @XMLMapper
     public static class XsiType {
 
@@ -75,7 +75,7 @@ public class XsiTypeTest {
         }
     }
 
-    @XMLXsiType("validation")
+    @XmlXsiType("validation")
     public static class XsiTypeChild {
 
         private String value;

@@ -16,7 +16,10 @@
 
 package org.treblereel.gwt.jackson.api;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.xml.stream.XMLStreamException;
@@ -43,6 +46,10 @@ public abstract class XMLSerializer<T> {
     protected String namespace;
 
     protected String prefix;
+
+    protected List<String> xsiType = new ArrayList<>();
+
+    protected Map<String, String> namespaces = new LinkedHashMap<>();
 
     public XMLSerializer<T> setPropertyName(String propertyName) {
         this.propertyName = propertyName;
@@ -143,11 +150,10 @@ public abstract class XMLSerializer<T> {
             writer.writeDefaultNamespace(getNamespace());
         }
 
-        if (!getXmlNs().isEmpty()) {
-            for (Pair<String, String> pair : getXmlNs()) {
-                if (pair.key == null) {
-                } else {
-                    writer.writeNamespace(pair.key, pair.value);
+        if (!namespaces.isEmpty()) {
+            for (Map.Entry<String, String> entry : namespaces.entrySet()) {
+                if (!entry.getKey().equals("") && lookupNamespace(entry.getKey(),entry.getValue())) {
+                    writer.writeNamespace(entry.getKey(), entry.getValue());
                 }
             }
         }
@@ -157,17 +163,18 @@ public abstract class XMLSerializer<T> {
         writer.endNs();
     }
 
-    protected List<Pair<String, String>> getXmlNs() {
-        return null;
-    }
-
     private Optional<String> getDefaultNamespace() {
-        if (!getXmlNs().isEmpty()) {
-            return getXmlNs().stream()
-                    .filter(pair -> pair.key == null)
-                    .findFirst().map(pair -> pair.value);
+        if (!namespaces.isEmpty()) {
+            return namespaces.entrySet()
+                    .stream()
+                    .filter(entry -> entry.getKey().equals(""))
+                    .findFirst().map(pair -> pair.getValue());
         }
         return Optional.empty();
+    }
+
+    protected String getNamespace() {
+        return null;
     }
 
     private void writeSchemaLocation(XMLWriter writer) throws XMLStreamException {
@@ -190,6 +197,16 @@ public abstract class XMLSerializer<T> {
         return null;
     }
 
+    public XMLSerializer<T> setNamespace(String namespace) {
+        this.namespace = namespace;
+        return this;
+    }
+
+    public XMLSerializer<T> addNamespace(String prefix, String namespace) {
+        namespaces.put(prefix, namespace);
+        return this;
+    }
+
     protected String getPrefix(String namespace) {
         String prefix = null;
         if (parent != null) {
@@ -199,10 +216,10 @@ public abstract class XMLSerializer<T> {
             return prefix;
         }
 
-        if (namespace != null && getXmlNs() != null && !getXmlNs().isEmpty()) {
-            for (Pair<String, String> pair : getXmlNs()) {
-                if (pair.key != null && pair.value.equals(namespace)) {
-                    prefix = pair.key;
+        if (namespace != null && !namespaces.isEmpty()) {
+            for (Map.Entry<String, String> entry : namespaces.entrySet()) {
+                if (!entry.getKey().equals("") && entry.getValue().equals(namespace)) {
+                    prefix = entry.getKey();
                 }
             }
         }
@@ -228,21 +245,36 @@ public abstract class XMLSerializer<T> {
         return !parent._lookupNamespace(namespace);
     }
 
-    protected String getNamespace() {
-        return null;
+    protected boolean lookupNamespace(String prefix, String namespace) {
+        if (parent == null) {
+            return true;
+        }
+        return !parent._lookupNamespace(prefix, namespace);
     }
 
-    public XMLSerializer<T> setNamespace(String namespace) {
-        this.namespace = namespace;
-        return this;
+    private boolean _lookupNamespace(String prefix,String namespace) {
+        boolean result = false;
+        if (parent != null) {
+            result = parent._lookupNamespace(prefix, namespace);
+        }
+        if (result) {
+            return true;
+        } else {
+            return namespaces.containsKey(prefix) && namespaces.get(prefix).equals(namespace);
+        }
     }
 
     protected String getXmlRootElement() {
         return null;
     }
 
-    protected String getXmlXsiType() {
-        return null;
+    protected List<String> getXmlXsiType() {
+        return xsiType;
+    }
+
+    public XMLSerializer<T> addXsiType(String type) {
+        xsiType.add(type);
+        return this;
     }
 
     /**

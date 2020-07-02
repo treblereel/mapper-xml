@@ -40,7 +40,7 @@ public abstract class HasDeserializerAndParameters<V, S extends XMLDeserializer<
      * @return a V object.
      */
     public V deserialize(XMLReader reader, XMLDeserializationContext ctx) throws XMLStreamException {
-        return getDeserializer().deserialize(reader, ctx, getParameters());
+        return getDeserializer(reader).deserialize(reader, ctx, getParameters());
     }
 
     /**
@@ -63,6 +63,6 @@ public abstract class HasDeserializerAndParameters<V, S extends XMLDeserializer<
     }
 
     public V deserialize(String value, XMLDeserializationContext ctx) {
-        return getDeserializer().deserialize(value, ctx, getParameters());
+        return getDeserializer(null).deserialize(value, ctx, getParameters());
     }
 }

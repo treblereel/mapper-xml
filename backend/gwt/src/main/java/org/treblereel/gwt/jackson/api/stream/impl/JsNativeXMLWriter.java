@@ -199,9 +199,7 @@ public class JsNativeXMLWriter implements XMLWriter {
 
     @Override
     public void writeNamespace(String prefix, String namespace) {
-        if (beginNs) {
-            ((Element) stack.getFirst()).setAttribute("xmlns:" + prefix, namespace);
-        }
+        ((Element) stack.getFirst()).setAttribute("xmlns:" + prefix, namespace);
     }
 
     @Override

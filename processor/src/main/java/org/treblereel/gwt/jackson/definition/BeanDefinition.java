@@ -15,6 +15,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeMirror;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -24,13 +25,14 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlNs;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchema;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
 import org.treblereel.gwt.jackson.api.annotation.TargetNamespace;
-import org.treblereel.gwt.jackson.api.annotation.XMLXsiType;
+import org.treblereel.gwt.jackson.api.annotation.XmlXsiType;
 import org.treblereel.gwt.jackson.api.annotation.XmlSubtypes;
 import org.treblereel.gwt.jackson.api.utils.Pair;
 import org.treblereel.gwt.jackson.context.GenerationContext;
@@ -47,6 +49,7 @@ public class BeanDefinition extends Definition {
     private final XmlType xmlType;
     private final XmlSchema xmlSchema;
     private final XmlAccessorType xmlAccessorType;
+    private final XmlSeeAlso xmlSeeAlso;
     private Set<PropertyDefinition> fields = new LinkedHashSet<>();
     private Class[] allowedPropertyAnnotations = new Class[]{
             XmlAttribute.class, XmlCData.class, XmlElement.class
@@ -60,6 +63,7 @@ public class BeanDefinition extends Definition {
         xmlType = getElement().getAnnotation(XmlType.class);
         xmlAccessorType = getElement().getAnnotation(XmlAccessorType.class);
         xmlSchema = MoreElements.getPackage(element).getAnnotation(XmlSchema.class);
+        xmlSeeAlso = getElement().getAnnotation(XmlSeeAlso.class);
 
         /**
          * Since we can't use reflection we ll process all this cases as default
@@ -199,9 +203,9 @@ public class BeanDefinition extends Definition {
         return null;
     }
 
-    public String getXsiType() {
-        if (element.getAnnotation(XMLXsiType.class) != null) {
-            return element.getAnnotation(XMLXsiType.class).value();
+    public String[] getXsiType() {
+        if (element.getAnnotation(XmlXsiType.class) != null) {
+            return element.getAnnotation(XmlXsiType.class).value();
         }
         return null;
     }
@@ -243,6 +247,21 @@ public class BeanDefinition extends Definition {
             subtype.value();
         } catch (MirroredTypeException e) {
             return e.getTypeMirror();
+        }
+        return null;
+    }
+
+    public TypeElement[] getXmlSeeAlso() {
+        if (xmlSeeAlso != null) {
+            try {
+                xmlSeeAlso.value();
+            } catch (MirroredTypesException e) {
+                TypeElement[] result = new TypeElement[e.getTypeMirrors().size()];
+                for (int i = 0; i < e.getTypeMirrors().size(); i++) {
+                    result[i] = MoreTypes.asTypeElement(e.getTypeMirrors().get(i));
+                }
+                return result;
+            }
         }
         return null;
     }

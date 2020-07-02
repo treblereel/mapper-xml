@@ -59,7 +59,7 @@ public abstract class AbstractObjectMapper<T> implements ObjectMapper<T> {
         XMLReader reader = ctx.newXMLReader(in);
 
         try {
-            return getDeserializer().deserialize(reader, ctx);
+            return getDeserializer(reader).deserialize(reader, ctx);
         } catch (XMLDeserializationException e) {
             // already logged, we just throw it
             throw e;
@@ -74,9 +74,9 @@ public abstract class AbstractObjectMapper<T> implements ObjectMapper<T> {
      * <p>Getter for the field <code>deserializer</code>.</p>
      */
     @Override
-    public XMLDeserializer<T> getDeserializer() {
+    public XMLDeserializer<T> getDeserializer(XMLReader reader) {
         if (null == deserializer) {
-            deserializer = newDeserializer();
+            deserializer = newDeserializer(reader);
         }
         return deserializer;
     }
@@ -85,7 +85,7 @@ public abstract class AbstractObjectMapper<T> implements ObjectMapper<T> {
      * Instantiates a new deserializer
      * @return a new deserializer
      */
-    protected abstract XMLDeserializer<T> newDeserializer();
+    protected abstract XMLDeserializer<T> newDeserializer(XMLReader reader);
 
     /**
      * {@inheritDoc}

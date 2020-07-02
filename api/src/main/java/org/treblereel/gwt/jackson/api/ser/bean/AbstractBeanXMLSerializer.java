@@ -170,8 +170,8 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
     }
 
     private void setXsiType(XMLWriter writer, XMLSerializationContext ctx) throws XMLStreamException {
-        if (getXmlXsiType() != null) {
-            writer.writeAttribute("xsi:type", getXmlXsiType());
+        for (String s : getXmlXsiType()) {
+            writer.writeAttribute("xsi:type", s);
         }
     }
 

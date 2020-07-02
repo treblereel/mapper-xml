@@ -12,7 +12,6 @@ import javax.xml.stream.XMLStreamException;
 import com.google.j2cl.junit.apt.J2clTestInput;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
-import org.treblereel.gwt.jackson.client.tests.beans.TransientBean;
 
 import static org.junit.Assert.assertEquals;
 
@@ -38,8 +37,6 @@ public class WrapperTest {
         children.add(new Child("CCCC"));
         test.setStuff(children);
         test.setStuff2(children);
-
-        System.out.println(mapper.write(test));
 
         assertEquals(XML, mapper.write(test));
         assertEquals(test, mapper.read(mapper.write(test)));

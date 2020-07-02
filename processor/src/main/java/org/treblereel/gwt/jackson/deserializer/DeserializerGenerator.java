@@ -17,6 +17,7 @@ import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
+import com.github.javaparser.ast.expr.NullLiteralExpr;
 import com.github.javaparser.ast.expr.ObjectCreationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
@@ -72,6 +73,7 @@ public class DeserializerGenerator extends AbstractGenerator {
         cu.addImport(Map.class);
         cu.addImport(MapLike.class);
         cu.addImport(InstanceBuilder.class);
+        cu.addImport(XMLReader.class);
         cu.addImport(XMLReader.class);
         cu.addImport(type.getQualifiedName());
 
@@ -223,6 +225,7 @@ public class DeserializerGenerator extends AbstractGenerator {
         method.setModifiers(Modifier.Keyword.PROTECTED);
         method.addAnnotation(Override.class);
         method.setName("newDeserializer");
+        method.addParameter(XMLReader.class.getCanonicalName(),"reader");
         method.setType(new ClassOrInterfaceType().setName("XMLDeserializer<?>"));
         method.getBody().ifPresent(body -> body.addAndGetStatement(
                 new ReturnStmt().setExpression(createFieldDeserializerExpr(field))));
@@ -307,7 +310,12 @@ public class DeserializerGenerator extends AbstractGenerator {
                 .setName(type.getSimpleName());
         instanceBuilder.setType(instanceBuilderType);
 
-        method.getBody().ifPresent(body -> body.addAndGetStatement(new ReturnStmt().setExpression(instanceBuilder)));
+        if (type.getXmlSeeAlso() != null) {
+            method.getBody().ifPresent(body -> body.addAndGetStatement(new ReturnStmt().setExpression(new NullLiteralExpr())));
+        } else {
+            method.getBody().ifPresent(body -> body.addAndGetStatement(new ReturnStmt().setExpression(instanceBuilder)));
+        }
+
         anonymousClassBody.add(method);
     }
 

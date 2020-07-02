@@ -12,9 +12,15 @@
     <artifactId>common</artifactId>
     <packaging>jar</packaging>
 
-    <name>commin</name>
+    <name>common</name>
     <description></description>
     <url>https://github.com/treblereel</url>
+
+    <properties>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -22,6 +28,14 @@
             <artifactId>elemental2-core</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.4.0-b180830.0359</version>
+        </dependency>
+
+
     </dependencies>
 
     <developers>
@@ -59,6 +73,14 @@
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>

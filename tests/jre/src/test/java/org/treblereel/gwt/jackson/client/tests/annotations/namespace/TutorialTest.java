@@ -21,6 +21,8 @@ import static org.junit.Assert.assertEquals;
 public class TutorialTest {
     Tutorial_MapperImpl mapper = Tutorial_MapperImpl.INSTANCE;
 
+    private static final String XML = "<?xml version='1.0' encoding='UTF-8'?><_tutorial xmlns=\"http://ns\" xmlns:ci=\"http://www.ci\" xmlns:cl=\"http://www.cl\"><id>0</id><names><cl:names><name>NAME</name></cl:names></names></_tutorial>";
+
     @Test
     public void test() throws XMLStreamException {
         Tutorial tutorial = new Tutorial();
@@ -30,8 +32,7 @@ public class TutorialTest {
         names.add(name1);
 
         String xml = mapper.write(tutorial);
-
-        assertEquals("<?xml version='1.0' encoding='UTF-8'?><ci:_tutorial xmlns=\"http://www.omg.org/bpmn20\" xmlns:ci=\"http://www.ci\" xmlns:cl=\"http://www.cl\"><id>0</id><names><cl:names><name>NAME</name></cl:names></names></ci:_tutorial>", xml);
+        assertEquals(XML, xml);
         assertEquals(tutorial, mapper.read(xml));
     }
 

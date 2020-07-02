@@ -33,9 +33,9 @@ public abstract class HasSerializer<V, S extends XMLSerializer<V>> {
      *
      * @return a S object.
      */
-    protected S getSerializer(V bean) {
+    protected S getSerializer(Class value) {
         if (null == serializer) {
-            serializer = (S) newSerializer();
+            serializer = (S) newSerializer(value);
         }
         return serializer;
     }
@@ -45,5 +45,5 @@ public abstract class HasSerializer<V, S extends XMLSerializer<V>> {
      *
      * @return a {@link XMLSerializer} object.
      */
-    protected abstract XMLSerializer<?> newSerializer();
+    protected abstract XMLSerializer<?> newSerializer(Class value);
 }

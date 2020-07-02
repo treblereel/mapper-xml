@@ -17,6 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.bean;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
+import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
  * Lazy initialize a {@link XMLDeserializer}
@@ -33,9 +34,9 @@ public abstract class HasDeserializer<V, S extends XMLDeserializer<V>> {
      *
      * @return a S object.
      */
-    public S getDeserializer() {
+    public S getDeserializer(XMLReader reader) {
         if (null == deserializer) {
-            deserializer = (S) newDeserializer();
+            deserializer = (S) newDeserializer(reader);
         }
         return deserializer;
     }
@@ -45,5 +46,5 @@ public abstract class HasDeserializer<V, S extends XMLDeserializer<V>> {
      *
      * @return a {@link XMLDeserializer} object.
      */
-    protected abstract XMLDeserializer<?> newDeserializer();
+    protected abstract XMLDeserializer<?> newDeserializer(XMLReader reader);
 }

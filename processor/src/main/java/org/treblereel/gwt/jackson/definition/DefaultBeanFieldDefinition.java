@@ -14,7 +14,6 @@ import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
-import com.github.javaparser.ast.expr.NullLiteralExpr;
 import com.github.javaparser.ast.expr.ObjectCreationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.stmt.IfStmt;
@@ -39,6 +38,43 @@ public class DefaultBeanFieldDefinition extends FieldDefinition {
 
     @Override
     public Expression getFieldDeserializer(CompilationUnit cu) {
+        if (context.getBeanDefinition(getBean()).getXmlSeeAlso() != null) {
+            cu.addImport(Function.class);
+            NodeList<BodyDeclaration<?>> anonymousClassBody = new NodeList<>();
+
+            NodeList<Type> typeArguments = new NodeList<>();
+            typeArguments.add(new ClassOrInterfaceType().setName("String"));
+            typeArguments.add(new ClassOrInterfaceType().setName("XMLDeserializer<?>"));
+
+            ClassOrInterfaceType iface = new ClassOrInterfaceType().setName("Function");
+            iface.setTypeArguments(typeArguments);
+
+            ObjectCreationExpr func = new ObjectCreationExpr().setType(iface);
+            func.setAnonymousClassBody(anonymousClassBody);
+
+            MethodDeclaration method = new MethodDeclaration();
+            method.setModifiers(Modifier.Keyword.PUBLIC);
+            method.addAnnotation(Override.class);
+            method.setName("apply");
+            method.setType(new ClassOrInterfaceType().setName("XMLDeserializer<?>"));
+            method.addParameter("String", "value");
+
+            for (TypeElement typeElement : context.getBeanDefinition(getBean()).getXmlSeeAlso()) {
+                method.getBody().ifPresent(body -> body.addAndGetStatement(
+                        new IfStmt().setCondition(new MethodCallExpr(new StringLiteralExpr(context.getBeanDefinition(typeElement.asType()).getXmlRootElement()), "equals")
+                                                          .addArgument(new NameExpr("value"))))
+                        .setThenStmt(new ReturnStmt(
+                                new ObjectCreationExpr().setType(
+                                        new ClassOrInterfaceType().setName(typeUtils.canonicalDeserializerName(typeElement.asType()))))));
+            }
+            anonymousClassBody.add(method);
+            method.getBody().ifPresent(body -> body.addAndGetStatement(
+                    new ReturnStmt(new ObjectCreationExpr().setType(new ClassOrInterfaceType()
+                                                                            .setName(typeUtils.canonicalDeserializerName(getBean()))))));
+
+            return new MethodCallExpr(func, "apply").addArgument(new MethodCallExpr("getXsiType").addArgument("reader"));
+        }
+
         return new ObjectCreationExpr().setType(new ClassOrInterfaceType()
                                                         .setName(typeUtils.canonicalDeserializerName(bean)));
     }
@@ -75,7 +111,7 @@ public class DefaultBeanFieldDefinition extends FieldDefinition {
                                 new MethodCallExpr(new MethodCallExpr(
                                         new ObjectCreationExpr().setType(
                                                 new ClassOrInterfaceType().setName(typeUtils.canonicalSerializerName(typeElement.asType()))), "addXsiType")
-                                        .addArgument(new StringLiteralExpr(context.getBeanDefinition(typeElement.asType()).getXmlRootElement())),
+                                                           .addArgument(new StringLiteralExpr(context.getBeanDefinition(typeElement.asType()).getXmlRootElement())),
                                                    "addNamespace")
                                         .addArgument(new StringLiteralExpr("xsi"))
                                         .addArgument(new StringLiteralExpr("http://www.w3.org/2001/XMLSchema-instance")))));

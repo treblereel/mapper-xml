@@ -56,7 +56,7 @@ public class DefaultBeanFieldDefinition extends FieldDefinition {
             method.setModifiers(Modifier.Keyword.PUBLIC);
             method.addAnnotation(Override.class);
             method.setName("apply");
-            method.setType(new ClassOrInterfaceType().setName("XMLDeserializer<?>"));
+            method.setType(new ClassOrInterfaceType().setName("XMLDeserializer"));
             method.addParameter("String", "value");
 
             for (TypeElement typeElement : context.getBeanDefinition(getBean()).getXmlSeeAlso()) {

@@ -37,10 +37,9 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
         AbstractBeanXMLDeserializer<T>> {
 
     protected final InstanceBuilder<T> instanceBuilder;
-
-    private MapLike<BeanPropertyDeserializer<T, ?>> deserializers;
-
     private final IdentityDeserializationInfo defaultIdentityInfo;
+    private final QName xsiType = new QName("http://www.w3.org/2001/XMLSchema-instance", "type");
+    private MapLike<BeanPropertyDeserializer<T, ?>> deserializers;
 
     /**
      * <p>Constructor for AbstractBeanXMLDeserializer.</p>
@@ -56,16 +55,6 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
      */
     protected InstanceBuilder<T> initInstanceBuilder() {
         return null;
-    }
-
-    /**
-     * Initialize the {@link MapLike} containing the property deserializers. Returns an empty map if there are no properties to
-     * deserialize.
-     * @return a {@link MapLike} object.
-     */
-    protected MapLike<BeanPropertyDeserializer<T, ?>> initDeserializers() {
-        //Change by Ahmad Bawaneh, replace JSNI types with IsInterop types
-        return JacksonContextProvider.get().mapLikeFactory().make();
     }
 
     /**
@@ -85,6 +74,16 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
         // Processing the parameters. We fallback to default if parameter is not present.
         final IdentityDeserializationInfo identityInfo = null == params.getIdentityInfo() ? defaultIdentityInfo : params.getIdentityInfo();
         return deserializeWrapped(reader, ctx, params, identityInfo, null, null);
+    }
+
+    /**
+     * Initialize the {@link MapLike} containing the property deserializers. Returns an empty map if there are no properties to
+     * deserialize.
+     * @return a {@link MapLike} object.
+     */
+    protected MapLike<BeanPropertyDeserializer<T, ?>> initDeserializers() {
+        //Change by Ahmad Bawaneh, replace JSNI types with IsInterop types
+        return JacksonContextProvider.get().mapLikeFactory().make();
     }
 
     private String getPropertyName(QName property) {
@@ -120,6 +119,17 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
      * @return a {@link Class} object.
      */
     public abstract Class getDeserializedType();
+
+    protected String getXsiType(XMLReader reader) {
+        if (reader != null) {
+            for (int i = 0; i < reader.getAttributeCount(); i++) {
+                if (reader.getAttributeName(i).equals(xsiType)) {
+                    return reader.getAttributeValue(i);
+                }
+            }
+        }
+        return null;
+    }
 
     /**
      * {@inheritDoc}

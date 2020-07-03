@@ -26,6 +26,7 @@ import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
+import com.google.auto.common.MoreTypes;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.api.JacksonContextProvider;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
@@ -225,7 +226,7 @@ public class DeserializerGenerator extends AbstractGenerator {
         method.setModifiers(Modifier.Keyword.PROTECTED);
         method.addAnnotation(Override.class);
         method.setName("newDeserializer");
-        method.addParameter(XMLReader.class.getCanonicalName(),"reader");
+        method.addParameter(XMLReader.class.getCanonicalName(), "reader");
         method.setType(new ClassOrInterfaceType().setName("XMLDeserializer<?>"));
         method.getBody().ifPresent(body -> body.addAndGetStatement(
                 new ReturnStmt().setExpression(createFieldDeserializerExpr(field))));
@@ -310,7 +311,9 @@ public class DeserializerGenerator extends AbstractGenerator {
                 .setName(type.getSimpleName());
         instanceBuilder.setType(instanceBuilderType);
 
-        if (type.getXmlSeeAlso() != null) {
+        if (type.getXmlSeeAlso() != null && MoreTypes.asTypeElement(type.getBean())
+                .getModifiers()
+                .contains(javax.lang.model.element.Modifier.ABSTRACT)) {
             method.getBody().ifPresent(body -> body.addAndGetStatement(new ReturnStmt().setExpression(new NullLiteralExpr())));
         } else {
             method.getBody().ifPresent(body -> body.addAndGetStatement(new ReturnStmt().setExpression(instanceBuilder)));

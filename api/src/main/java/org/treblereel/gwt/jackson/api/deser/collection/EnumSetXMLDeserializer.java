@@ -20,6 +20,7 @@ import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.EnumXMLDeserializer;
 
 import java.util.EnumSet;
+import java.util.function.Function;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.EnumSet}.
@@ -36,7 +37,7 @@ public class EnumSetXMLDeserializer<E extends Enum<E>> extends BaseSetXMLDeseria
      * @param deserializer {@link EnumXMLDeserializer} used to deserialize the enums inside the {@link java.util.EnumSet}.
      * @return a new instance of {@link EnumSetXMLDeserializer}
      */
-    public static <E extends Enum<E>> EnumSetXMLDeserializer<E> newInstance(EnumXMLDeserializer<E> deserializer) {
+    public static <E extends Enum<E>> EnumSetXMLDeserializer<E> newInstance(Function<String, XMLDeserializer<E>> deserializer) {
         return new EnumSetXMLDeserializer<>(deserializer);
     }
 
@@ -45,9 +46,9 @@ public class EnumSetXMLDeserializer<E extends Enum<E>> extends BaseSetXMLDeseria
     /**
      * @param deserializer {@link EnumXMLDeserializer} used to deserialize the enums inside the {@link EnumSet}.
      */
-    private EnumSetXMLDeserializer(EnumXMLDeserializer<E> deserializer) {
+    private EnumSetXMLDeserializer(Function<String, XMLDeserializer<E>> deserializer) {
         super(deserializer);
-        this.enumClass = deserializer.getEnumClass();
+        this.enumClass = ((EnumXMLDeserializer<E>)deserializer.apply(null)).getEnumClass();
     }
 
     /** {@inheritDoc} */

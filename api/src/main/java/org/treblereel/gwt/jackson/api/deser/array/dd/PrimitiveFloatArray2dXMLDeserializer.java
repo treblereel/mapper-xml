@@ -51,7 +51,7 @@ public class PrimitiveFloatArray2dXMLDeserializer extends AbstractArray2dXMLDese
     /** {@inheritDoc} */
     @Override
     public float[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<List<Float>> list = deserializeIntoList(reader, ctx, BaseNumberXMLDeserializer.FloatXMLDeserializer.getInstance(), params);
+        List<List<Float>> list = deserializeIntoList(reader, ctx, s -> BaseNumberXMLDeserializer.FloatXMLDeserializer.getInstance(), params);
 
         if (list.isEmpty()) {
             return new float[0][0];

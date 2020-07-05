@@ -20,6 +20,7 @@ import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.function.Function;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.AbstractList}. The deserialization process returns an {@link java.util.ArrayList}.
@@ -37,14 +38,14 @@ public class AbstractListXMLDeserializer<T> extends BaseListXMLDeserializer<Abst
      * @param <T>          Type of the elements inside the {@link java.util.AbstractList}
      * @return a new instance of {@link AbstractListXMLDeserializer}
      */
-    public static <T> AbstractListXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
+    public static <T> AbstractListXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
         return new AbstractListXMLDeserializer<>(deserializer);
     }
 
     /**
      * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link AbstractList}.
      */
-    private AbstractListXMLDeserializer(XMLDeserializer<T> deserializer) {
+    private AbstractListXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 

@@ -74,8 +74,7 @@ public abstract class FieldDefinition extends Definition {
         Expression expression = propertyDefinitionFactory.getFieldDefinition(type)
                 .getFieldDeserializer(null, cu);
 
-        method.getBody().ifPresent(body -> body.addAndGetStatement(
-                new ReturnStmt(expression)));
+        method.getBody().ifPresent(body -> body.addAndGetStatement(new ReturnStmt(expression)));
         return func;
     }
 

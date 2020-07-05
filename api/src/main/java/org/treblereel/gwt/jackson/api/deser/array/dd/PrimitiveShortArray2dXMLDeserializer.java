@@ -51,7 +51,7 @@ public class PrimitiveShortArray2dXMLDeserializer extends AbstractArray2dXMLDese
     /** {@inheritDoc} */
     @Override
     public short[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<List<Short>> list = deserializeIntoList(reader, ctx, BaseNumberXMLDeserializer.ShortXMLDeserializer.getInstance(), params);
+        List<List<Short>> list = deserializeIntoList(reader, ctx, s -> BaseNumberXMLDeserializer.ShortXMLDeserializer.getInstance(), params);
 
         if (list.isEmpty()) {
             return new short[0][0];

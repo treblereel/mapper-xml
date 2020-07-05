@@ -56,7 +56,7 @@ public class PrimitiveByteArray2dXMLDeserializer extends AbstractArray2dXMLDeser
 
         byte[][] result;
 
-        List<String> strings = doDeserializeInnerIntoList(reader, ctx, StringXMLDeserializer.getInstance(), params);
+        List<String> strings = doDeserializeInnerIntoList(reader, ctx, s -> StringXMLDeserializer.getInstance(), params);
 
         if (strings.isEmpty()) {
             result = new byte[0][0];

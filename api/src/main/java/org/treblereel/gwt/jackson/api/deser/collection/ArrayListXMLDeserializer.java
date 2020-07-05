@@ -19,6 +19,7 @@ package org.treblereel.gwt.jackson.api.deser.collection;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 import java.util.ArrayList;
+import java.util.function.Function;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.ArrayList}.
@@ -36,14 +37,14 @@ public class ArrayListXMLDeserializer<T> extends BaseListXMLDeserializer<ArrayLi
      * @param <T>          Type of the elements inside the {@link java.util.ArrayList}
      * @return a new instance of {@link ArrayListXMLDeserializer}
      */
-    public static <T> ArrayListXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
+    public static <T> ArrayListXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
         return new ArrayListXMLDeserializer<>(deserializer);
     }
 
     /**
      * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link ArrayList}.
      */
-    private ArrayListXMLDeserializer(XMLDeserializer<T> deserializer) {
+    private ArrayListXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 

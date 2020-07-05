@@ -20,6 +20,7 @@ import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Function;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.Collection}. The deserialization process returns an {@link java.util.ArrayList}.
@@ -37,14 +38,14 @@ public class CollectionXMLDeserializer<T> extends BaseCollectionXMLDeserializer<
      * @param <T>          Type of the elements inside the {@link java.util.Collection}
      * @return a new instance of {@link CollectionXMLDeserializer}
      */
-    public static <T> CollectionXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
+    public static <T> CollectionXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
         return new CollectionXMLDeserializer<>(deserializer);
     }
 
     /**
      * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link Collection}.
      */
-    private CollectionXMLDeserializer(XMLDeserializer<T> deserializer) {
+    private CollectionXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 

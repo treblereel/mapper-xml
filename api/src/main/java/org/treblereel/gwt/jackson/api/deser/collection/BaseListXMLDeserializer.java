@@ -19,6 +19,7 @@ package org.treblereel.gwt.jackson.api.deser.collection;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Base {@link XMLDeserializer} implementation for {@link java.util.List}.
@@ -35,7 +36,7 @@ public abstract class BaseListXMLDeserializer<L extends List<T>, T> extends Base
      *
      * @param deserializer {@link XMLDeserializer} used to map the objects inside the {@link java.util.List}.
      */
-    public BaseListXMLDeserializer(XMLDeserializer<T> deserializer) {
+    public BaseListXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 }

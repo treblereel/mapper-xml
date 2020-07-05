@@ -21,8 +21,7 @@ import static org.junit.Assert.assertEquals;
 @J2clTestInput(StringMapTest.class)
 public class StringMapTest {
 
-    private final String xml = "<?xml version='1.0' encoding='UTF-8'?><StringMap><map><entry><String>key1</String><String>value1</String></entry><entry><String>key2</String><String>value2</String></entry><entry><String>key3</String><String>value3</String></entry></map><checkNewLine>one more line</checkNewLine></StringMap>";
-    private final String xmlKeyAndValueCanonical = "<?xml version='1.0' encoding='UTF-8'?><StringMap><map><entry><java.lang.String>key1</java.lang.String><java.lang.String>value1</java.lang.String></entry><entry><java.lang.String>key2</java.lang.String><java.lang.String>value2</java.lang.String></entry><entry><java.lang.String>key3</java.lang.String><java.lang.String>value3</java.lang.String></entry></map><checkNewLine>one more line</checkNewLine></StringMap>";
+    private final String xml = "<?xml version='1.0' encoding='UTF-8'?><StringMap><map><entry><key>key1</key><value>value1</value></entry><entry><key>key2</key><value>value2</value></entry><entry><key>key3</key><value>value3</value></entry></map><checkNewLine>one more line</checkNewLine></StringMap>";
     StringMap_MapperImpl mapper = StringMap_MapperImpl.INSTANCE;
 
     @Test
@@ -37,14 +36,8 @@ public class StringMapTest {
         test.setCheckNewLine("one more line");
 
         String result = mapper.write(test);
-        assertEquals(xml, result);
-        assertEquals(test, mapper.read(mapper.write(test)));
 
-        XMLSerializationContext context = DefaultXMLSerializationContext.builder()
-                .mapKeyAndValueCanonical(true)
-                .build();
-        String resultWithKeyAndValueCanonical = mapper.write(test, context);
-        assertEquals(xmlKeyAndValueCanonical, resultWithKeyAndValueCanonical);
+        assertEquals(xml, result);
         assertEquals(test, mapper.read(mapper.write(test)));
     }
 }

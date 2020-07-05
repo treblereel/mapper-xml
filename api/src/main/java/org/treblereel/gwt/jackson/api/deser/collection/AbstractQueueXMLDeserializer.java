@@ -20,6 +20,7 @@ import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 import java.util.AbstractQueue;
 import java.util.PriorityQueue;
+import java.util.function.Function;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.AbstractQueue}. The deserialization process returns a {@link java.util.PriorityQueue}.
@@ -37,14 +38,14 @@ public final class AbstractQueueXMLDeserializer<T> extends BaseQueueXMLDeseriali
      * @param <T>          Type of the elements inside the {@link java.util.AbstractQueue}
      * @return a new instance of {@link AbstractQueueXMLDeserializer}
      */
-    public static <T> AbstractQueueXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
+    public static <T> AbstractQueueXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
         return new AbstractQueueXMLDeserializer<>(deserializer);
     }
 
     /**
      * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link AbstractQueue}.
      */
-    private AbstractQueueXMLDeserializer(XMLDeserializer<T> deserializer) {
+    private AbstractQueueXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 

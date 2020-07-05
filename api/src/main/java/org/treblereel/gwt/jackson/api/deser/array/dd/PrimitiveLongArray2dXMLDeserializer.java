@@ -51,7 +51,7 @@ public class PrimitiveLongArray2dXMLDeserializer extends AbstractArray2dXMLDeser
     /** {@inheritDoc} */
     @Override
     public long[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<List<Long>> list = deserializeIntoList(reader, ctx, BaseNumberXMLDeserializer.LongXMLDeserializer.getInstance(), params);
+        List<List<Long>> list = deserializeIntoList(reader, ctx, s -> BaseNumberXMLDeserializer.LongXMLDeserializer.getInstance(), params);
 
         if (list.isEmpty()) {
             return new long[0][0];

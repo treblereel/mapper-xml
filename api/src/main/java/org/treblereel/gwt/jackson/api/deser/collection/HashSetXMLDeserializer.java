@@ -19,6 +19,7 @@ package org.treblereel.gwt.jackson.api.deser.collection;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 import java.util.HashSet;
+import java.util.function.Function;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.HashSet}.
@@ -36,14 +37,14 @@ public class HashSetXMLDeserializer<T> extends BaseSetXMLDeserializer<HashSet<T>
      * @param <T>          Type of the elements inside the {@link java.util.HashSet}
      * @return a new instance of {@link HashSetXMLDeserializer}
      */
-    public static <T> HashSetXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
+    public static <T> HashSetXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
         return new HashSetXMLDeserializer<>(deserializer);
     }
 
     /**
      * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link HashSet}.
      */
-    private HashSetXMLDeserializer(XMLDeserializer<T> deserializer) {
+    private HashSetXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 

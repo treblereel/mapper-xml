@@ -56,8 +56,7 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
 
                 return new MethodCallExpr(
                         new NameExpr(Array2dXMLDeserializer.class.getSimpleName()), "newInstance")
-                        .addArgument(propertyDefinitionFactory.getFieldDefinition(array2d.getComponentType())
-                                             .getFieldDeserializer(propertyName, cu))
+                        .addArgument(generateXMLDeserializerFactory(array2d.getComponentType(), array2d.getComponentType().toString(), cu))
                         .addArgument(new CastExpr().setType(typeOf).setExpression(
                                 new NameExpr("(first, second) -> new " + arrayType + "[first][second]")));
             }
@@ -69,8 +68,7 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
 
         return new MethodCallExpr(
                 new NameExpr(ArrayXMLDeserializer.class.getSimpleName()), "newInstance")
-                .addArgument(propertyDefinitionFactory.getFieldDefinition(array.getComponentType())
-                                     .getFieldDeserializer(propertyName, cu))
+                .addArgument(generateXMLDeserializerFactory(array.getComponentType(), array.getComponentType().toString(), cu))
                 .addArgument(new CastExpr().setType(typeOf).setExpression(
                         new NameExpr(arrayType + "[]::new")));
     }

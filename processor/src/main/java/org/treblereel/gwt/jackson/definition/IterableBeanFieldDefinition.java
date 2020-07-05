@@ -32,8 +32,7 @@ public class IterableBeanFieldDefinition extends FieldDefinition {
                 new NameExpr(serializer.getSimpleName().toString()), "newInstance");
         MoreTypes.asDeclared(bean)
                 .getTypeArguments()
-                .forEach(param -> method.addArgument(propertyDefinitionFactory.getFieldDefinition(param)
-                                                             .getFieldDeserializer(propertyName, cu)));
+                .forEach(param -> method.addArgument(generateXMLDeserializerFactory(param, param.toString(), cu)));
         return method;
     }
 

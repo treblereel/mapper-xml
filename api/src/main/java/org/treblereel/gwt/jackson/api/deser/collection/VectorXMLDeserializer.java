@@ -19,6 +19,7 @@ package org.treblereel.gwt.jackson.api.deser.collection;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 import java.util.Vector;
+import java.util.function.Function;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.Vector}.
@@ -36,14 +37,14 @@ public class VectorXMLDeserializer<T> extends BaseListXMLDeserializer<Vector<T>,
      * @param <T>          Type of the elements inside the {@link java.util.Vector}
      * @return a new instance of {@link VectorXMLDeserializer}
      */
-    public static <T> VectorXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
+    public static <T> VectorXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
         return new VectorXMLDeserializer<>(deserializer);
     }
 
     /**
      * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link Vector}.
      */
-    private VectorXMLDeserializer(XMLDeserializer<T> deserializer) {
+    private VectorXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 

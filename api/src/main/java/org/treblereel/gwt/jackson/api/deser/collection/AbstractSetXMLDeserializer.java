@@ -20,6 +20,7 @@ import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 import java.util.AbstractSet;
 import java.util.LinkedHashSet;
+import java.util.function.Function;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.Set}. The deserialization process returns a {@link java.util.LinkedHashSet}.
@@ -37,14 +38,14 @@ public final class AbstractSetXMLDeserializer<T> extends BaseSetXMLDeserializer<
      * @param <T>          Type of the elements inside the {@link java.util.AbstractSet}
      * @return a new instance of {@link AbstractSetXMLDeserializer}
      */
-    public static <T> AbstractSetXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
+    public static <T> AbstractSetXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
         return new AbstractSetXMLDeserializer<>(deserializer);
     }
 
     /**
      * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link AbstractSet}.
      */
-    private AbstractSetXMLDeserializer(XMLDeserializer<T> deserializer) {
+    private AbstractSetXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 

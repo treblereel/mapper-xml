@@ -19,6 +19,7 @@ package org.treblereel.gwt.jackson.api.deser.collection;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 import java.util.Queue;
+import java.util.function.Function;
 
 /**
  * Base {@link XMLDeserializer} implementation for {@link java.util.Queue}.
@@ -35,7 +36,7 @@ public abstract class BaseQueueXMLDeserializer<Q extends Queue<T>, T> extends Ba
      *
      * @param deserializer {@link XMLDeserializer} used to map the objects inside the {@link java.util.Queue}.
      */
-    public BaseQueueXMLDeserializer(XMLDeserializer<T> deserializer) {
+    public BaseQueueXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 

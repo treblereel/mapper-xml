@@ -51,7 +51,7 @@ public class PrimitiveCharacterArray2dXMLDeserializer extends AbstractArray2dXML
      */
     @Override
     public char[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<List<Character>> list = deserializeIntoList(reader, ctx, CharacterXMLDeserializer.getInstance(), params);
+        List<List<Character>> list = deserializeIntoList(reader, ctx, s -> CharacterXMLDeserializer.getInstance(), params);
 
         if (list.isEmpty()) {
             return new char[0][0];

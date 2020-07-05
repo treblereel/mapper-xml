@@ -48,22 +48,19 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
     private final boolean writeEmptyXMLArrays;
     private final boolean wrapCollections;
     private final boolean orderMapEntriesByKeys;
-    private final boolean mapKeyAndValueCanonical;
     private final boolean wrapExceptions;
     private final XMLOutputFactory xmlOutputFactory;
 
     private DefaultXMLSerializationContext(boolean serializeNulls, boolean writeDatesAsTimestamps,
                                            boolean writeDateKeysAsTimestamps, boolean writeNullMapValues,
                                            boolean writeEmptyXMLArrays, boolean orderMapEntriesByKeys,
-                                           boolean mapKeyAndValueCanonical, boolean wrapExceptions,
-                                           boolean wrapCollections) {
+                                           boolean wrapExceptions, boolean wrapCollections) {
         this.serializeNulls = serializeNulls;
         this.writeDatesAsTimestamps = writeDatesAsTimestamps;
         this.writeDateKeysAsTimestamps = writeDateKeysAsTimestamps;
         this.writeNullMapValues = writeNullMapValues;
         this.writeEmptyXMLArrays = writeEmptyXMLArrays;
         this.orderMapEntriesByKeys = orderMapEntriesByKeys;
-        this.mapKeyAndValueCanonical = mapKeyAndValueCanonical;
         this.wrapExceptions = wrapExceptions;
         this.wrapCollections = wrapCollections;
         this.xmlOutputFactory = new WstxOutputFactory();
@@ -141,11 +138,6 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
     @Override
     public boolean isOrderMapEntriesByKeys() {
         return orderMapEntriesByKeys;
-    }
-
-    @Override
-    public boolean isMapKeyAndValueCanonical() {
-        return mapKeyAndValueCanonical;
     }
 
     @Override
@@ -269,8 +261,6 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
 
         protected boolean orderMapEntriesByKeys = false;
 
-        protected boolean mapKeyAndValueCanonical = false;
-
         protected boolean wrapExceptions = true;
 
         protected boolean wrapCollections = true;
@@ -289,11 +279,6 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
          */
         public Builder useEqualityForObjectId(boolean useEqualityForObjectId) {
             this.useEqualityForObjectId = useEqualityForObjectId;
-            return this;
-        }
-
-        public Builder mapKeyAndValueCanonical(boolean mapKeyAndValueCanonical) {
-            this.mapKeyAndValueCanonical = mapKeyAndValueCanonical;
             return this;
         }
 
@@ -413,7 +398,7 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
         public final XMLSerializationContext build() {
             return new DefaultXMLSerializationContext(serializeNulls, writeDatesAsTimestamps,
                                                       writeDateKeysAsTimestamps, writeNullMapValues,
-                                                      writeEmptyXMLArrays, orderMapEntriesByKeys, mapKeyAndValueCanonical,
+                                                      writeEmptyXMLArrays, orderMapEntriesByKeys,
                                                       wrapExceptions, wrapCollections);
         }
     }

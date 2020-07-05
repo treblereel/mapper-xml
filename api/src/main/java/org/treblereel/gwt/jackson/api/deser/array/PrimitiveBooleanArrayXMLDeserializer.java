@@ -17,6 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.array;
 
 import java.util.List;
+import java.util.function.Function;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -51,7 +52,7 @@ public class PrimitiveBooleanArrayXMLDeserializer extends AbstractArrayXMLDeseri
     /** {@inheritDoc} */
     @Override
     public boolean[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<Boolean> list = deserializeIntoList(reader, ctx, BooleanXMLDeserializer.getInstance(), params);
+        List<Boolean> list = deserializeIntoList(reader, ctx, s -> BooleanXMLDeserializer.getInstance(), params);
 
         boolean[] result = new boolean[list.size()];
         int i = 0;

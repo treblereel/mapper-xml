@@ -51,7 +51,7 @@ public class PrimitiveIntegerArrayXMLDeserializer extends AbstractArrayXMLDeseri
     /** {@inheritDoc} */
     @Override
     public int[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<Integer> list = deserializeIntoList(reader, ctx, BaseNumberXMLDeserializer.IntegerXMLDeserializer.getInstance(), params);
+        List<Integer> list = deserializeIntoList(reader, ctx, s -> BaseNumberXMLDeserializer.IntegerXMLDeserializer.getInstance(), params);
 
         int[] result = new int[list.size()];
         int i = 0;

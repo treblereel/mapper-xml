@@ -19,6 +19,7 @@ package org.treblereel.gwt.jackson.api.deser.collection;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 import java.util.SortedSet;
+import java.util.function.Function;
 
 /**
  * Base {@link XMLDeserializer} implementation for {@link java.util.SortedSet}.
@@ -35,7 +36,7 @@ public abstract class BaseSortedSetXMLDeserializer<S extends SortedSet<T>, T> ex
      *
      * @param deserializer {@link XMLDeserializer} used to map the objects inside the {@link java.util.SortedSet}.
      */
-    public BaseSortedSetXMLDeserializer(XMLDeserializer<T> deserializer) {
+    public BaseSortedSetXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 

@@ -35,7 +35,7 @@ public class PropertyDefinition extends Definition {
 
     public Expression getFieldDeserializer(CompilationUnit cu) {
         TypeMirror bean = maybeInterface(context);
-        FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(bean != null ? bean : getBean());
+        FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(getBean());
         Expression result = fieldDefinition.getFieldDeserializer(cu);
         if (isCData()) {
             result = new MethodCallExpr(result, "setCdata").addArgument(new BooleanLiteralExpr(true));
@@ -63,7 +63,6 @@ public class PropertyDefinition extends Definition {
     }
 
     public Expression getFieldSerializer(CompilationUnit cu, GenerationContext context) {
-        TypeMirror bean = maybeInterface(context);
         FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(bean != null ? bean : getBean());
         return fieldDefinition.getFieldSerializer(getPropertyName(), cu);
     }

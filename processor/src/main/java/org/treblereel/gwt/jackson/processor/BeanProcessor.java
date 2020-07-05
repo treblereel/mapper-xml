@@ -47,7 +47,8 @@ public class BeanProcessor {
     public void process() {
         annotatedBeans.forEach(this::processBean);
         beans.forEach(context::addBeanDefinition);
-        context.getBeans().forEach(mapperGenerator::generate);
+        context.getBeans().stream().filter(elm -> context.getTypeRegistry().get(elm.getElement().toString()) == null)
+                .forEach(mapperGenerator::generate);
     }
 
     private void processBean(TypeElement bean) {

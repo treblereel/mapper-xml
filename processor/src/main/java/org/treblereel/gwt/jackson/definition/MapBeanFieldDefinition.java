@@ -1,5 +1,7 @@
 package org.treblereel.gwt.jackson.definition;
 
+import java.util.function.Function;
+
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
@@ -19,14 +21,16 @@ import org.treblereel.gwt.jackson.exception.GenerationException;
  * Created by treblereel 4/1/20
  */
 public class MapBeanFieldDefinition extends FieldDefinition {
+    private DeclaredType declaredType;
+
 
     protected MapBeanFieldDefinition(TypeMirror property, GenerationContext context) {
         super(property, context);
+        declaredType = MoreTypes.asDeclared(property);
     }
 
     @Override
     public Expression getFieldDeserializer(CompilationUnit cu) {
-        DeclaredType declaredType = MoreTypes.asDeclared(bean);
         if (declaredType.getTypeArguments().size() != 2) {
             throw new GenerationException(declaredType.toString() + " must have type args [" + bean + "]");
         }
@@ -40,16 +44,14 @@ public class MapBeanFieldDefinition extends FieldDefinition {
 
     @Override
     public Expression getFieldSerializer(String fieldName, CompilationUnit cu) {
-        DeclaredType declaredType = MoreTypes.asDeclared(getBean());
+        cu.addImport(Function.class);
         if (declaredType.getTypeArguments().size() != 2) {
             throw new GenerationException(declaredType.toString() + " must have type args [" + fieldName + "]");
         }
         return new MethodCallExpr(
                 new NameExpr(MapXMLSerializer.class.getCanonicalName()), "newInstance")
-                .addArgument(propertyDefinitionFactory.getFieldDefinition(declaredType.getTypeArguments().get(0))
-                                     .getFieldSerializer(null, cu))
-                .addArgument(propertyDefinitionFactory.getFieldDefinition(declaredType.getTypeArguments().get(1))
-                                     .getFieldSerializer(null, cu))
+                .addArgument(generateXMLSerializerFactory(declaredType.getTypeArguments().get(0), "?", cu))
+                .addArgument(generateXMLSerializerFactory(declaredType.getTypeArguments().get(1), "?", cu))
                 .addArgument(new StringLiteralExpr(fieldName));
     }
 

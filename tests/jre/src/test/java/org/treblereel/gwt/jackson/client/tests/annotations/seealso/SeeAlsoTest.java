@@ -26,8 +26,9 @@ public class SeeAlsoTest {
     private final String XML_FOO = "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoHolder><first xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"First\"><test1>first</test1><test>Test1</test></first><second xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Second\"><test2>second</test2><test>Test1</test></second></SeeAlsoHolder>";
     private final String XML_ANIMAL = "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoAnimalHolder><first xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></first><second xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></second><animal><name>Animal</name></animal></SeeAlsoAnimalHolder>";
     private final String XML_XSI = "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoAnimalXsiTypeHolder xmlns=\"http://www.omg.org/bpmn20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><first xsi:type=\"Cat\"><nickname>Cat</nickname></first><second xsi:type=\"Dog\"><nickname>Dog</nickname></second><animal><name>Animal</name></animal></SeeAlsoAnimalXsiTypeHolder>";
+    private final String XML_COLLECTION_XSI = "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoAnimalCollection><animals><Cat xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></Cat><Dog xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></Dog><Animal><name>Animal</name></Animal></animals><list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></list><list><name>Animal</name></list></list><map><entry><Dog xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></Dog><Dog xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></Dog></entry><entry><Cat xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></Cat><Cat xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></Cat></entry><entry><Animal><name>Animal</name></Animal><Animal><name>Animal</name></Animal></entry></map></SeeAlsoAnimalCollection>";
 
-    //@Test
+    @Test
     public void testFoo() throws XMLStreamException {
         final SeeAlsoTest_SeeAlsoHolder_MapperImpl mapper = SeeAlsoTest_SeeAlsoHolder_MapperImpl.INSTANCE;
 
@@ -44,11 +45,13 @@ public class SeeAlsoTest {
         holder.second = second;
 
         String result = mapper.write(holder);
+
+        System.out.println("XML " + result);
         assertEquals(XML_FOO, result);
         assertEquals(holder, mapper.read(mapper.write(holder)));
     }
 
-    //@Test
+    @Test
     public void testAnimal() throws XMLStreamException {
         final SeeAlsoTest_SeeAlsoAnimalHolder_MapperImpl mapper = SeeAlsoTest_SeeAlsoAnimalHolder_MapperImpl.INSTANCE;
         final Animal_MapperImpl mapperAnimal = Animal_MapperImpl.INSTANCE;
@@ -109,11 +112,11 @@ public class SeeAlsoTest {
 
         System.out.println("XML \n " + result);
 
-        assertEquals(XML_XSI, result);
+        assertEquals(XML_COLLECTION_XSI, result);
         assertEquals(collection, mapper.read(mapper.write(collection)));
     }
 
-    //@Test
+    @Test
     public void testSeeAlsoAnimalXsiTypeHolder() throws XMLStreamException {
         final SeeAlsoAnimalXsiTypeHolder_MapperImpl mapper = SeeAlsoAnimalXsiTypeHolder_MapperImpl.INSTANCE;
 

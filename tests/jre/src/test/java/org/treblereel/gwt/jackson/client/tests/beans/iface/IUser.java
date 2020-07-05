@@ -10,7 +10,7 @@ import org.treblereel.gwt.jackson.api.annotation.XmlSubtypes;
 @XmlSubtypes({
         @XmlSubtypes.Type(User.class)
 })
-@XMLMapper
+//@XMLMapper
 public interface IUser {
 
     String getUser();

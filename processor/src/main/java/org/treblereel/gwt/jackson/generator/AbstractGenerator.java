@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 
 import javax.annotation.processing.FilerException;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.JavaFileObject;
 
 import com.github.javaparser.ast.CompilationUnit;
@@ -49,6 +50,10 @@ public abstract class AbstractGenerator {
 
     protected abstract void configureClassType(BeanDefinition type);
 
+    protected void addTypeParam(BeanDefinition type, ClassOrInterfaceDeclaration declaration) {
+
+    }
+
     protected void getType(BeanDefinition type) {
 
     }
@@ -57,13 +62,15 @@ public abstract class AbstractGenerator {
 
     protected void write(TypeElement type) {
         logger.branch(TreeLogger.INFO, "Writing " + getMapperName(type));
-
-        try {
-            build(MoreElements.getPackage(type) + "." + getMapperName(type), cu.toString());
-        } catch (javax.annotation.processing.FilerException e1) {
-            logger.log(TreeLogger.ERROR, e1.getMessage());
-        } catch (IOException e1) {
-            throw new GenerationException(e1);
+        TypeMirror property = context.getTypeUtils().removeOuterWildCards(type.asType());
+        if (!context.getTypeRegistry().containsDeserializer(property)) {
+            try {
+                build(MoreElements.getPackage(type) + "." + getMapperName(type), cu.toString());
+            } catch (javax.annotation.processing.FilerException e1) {
+                logger.log(TreeLogger.ERROR, e1.getMessage());
+            } catch (IOException e1) {
+                throw new GenerationException(e1);
+            }
         }
     }
 
@@ -76,9 +83,5 @@ public abstract class AbstractGenerator {
         } catch (FilerException e) {
             throw new GenerationException(e);
         }
-    }
-
-    protected void addTypeParam(BeanDefinition type, ClassOrInterfaceDeclaration declaration) {
-
     }
 }

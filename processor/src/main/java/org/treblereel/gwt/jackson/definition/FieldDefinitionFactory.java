@@ -25,19 +25,19 @@ public class FieldDefinitionFactory {
         this.typeUtils = context.getTypeUtils();
     }
 
-    FieldDefinition getFieldDefinition(TypeMirror property) {
-        property = context.getTypeUtils().removeOuterWildCards(property);
+    FieldDefinition getFieldDefinition(TypeMirror type) {
+        TypeMirror property = context.getTypeUtils().removeOuterWildCards(type);
         FieldDefinition result;
         if (holder.containsKey(property)) {
             result = holder.get(property);
         } else if (typeUtils.isSimpleType(property)) {
             result = new BasicTypeFieldDefinition(property, context);
         } else if (context.getTypeUtils().isIterable(property)) {
-            result = new IterableBeanFieldDefinition(property, context);
+            return new IterableBeanFieldDefinition(type, context);
         } else if (context.getTypeUtils().isMap(property)) {
-            result = new MapBeanFieldDefinition(property, context);
+            return new MapBeanFieldDefinition(type, context);
         } else if (TypeUtils.isArray(property)) {
-            result = new ArrayBeanFieldDefinition(property, context);
+            return new ArrayBeanFieldDefinition(type, context);
         } else if (MoreTypes.asElement(property).getKind().equals(ElementKind.ENUM)) {
             result = new EnumBeanFieldDefinition(property, context);
         } else {

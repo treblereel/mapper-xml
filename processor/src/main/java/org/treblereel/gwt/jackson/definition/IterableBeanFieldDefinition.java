@@ -45,8 +45,7 @@ public class IterableBeanFieldDefinition extends FieldDefinition {
         MethodCallExpr method = new MethodCallExpr(
                 new NameExpr(serializer.getQualifiedName().toString()), "newInstance");
         for (TypeMirror param : MoreTypes.asDeclared(getBean()).getTypeArguments()) {
-            method.addArgument(propertyDefinitionFactory.getFieldDefinition(param)
-                                       .getFieldSerializer(null, cu));
+            method.addArgument(generateXMLSerializerFactory(param, "?", cu));
         }
         method.addArgument(new StringLiteralExpr(fieldName));
         return method;

@@ -10,7 +10,7 @@ import org.treblereel.gwt.jackson.api.annotation.XmlSubtypes;
 @XmlSubtypes(
         @XmlSubtypes.Type(Address.class)
 )
-@XMLMapper
+//@XMLMapper
 public interface IAddress {
 
     String getAddress();

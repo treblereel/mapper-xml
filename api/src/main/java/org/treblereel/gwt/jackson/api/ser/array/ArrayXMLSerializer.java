@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.ser.array;
 
+import java.util.function.Function;
+
 import javax.xml.stream.XMLStreamException;
 
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
@@ -31,7 +33,7 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public class ArrayXMLSerializer<T> extends XMLSerializer<T[]> {
 
-    private final XMLSerializer<T> serializer;
+    private final Function<Class,XMLSerializer<T>> serializer;
     protected final String propertyName;
 
 
@@ -39,7 +41,7 @@ public class ArrayXMLSerializer<T> extends XMLSerializer<T[]> {
      * <p>Constructor for ArrayXMLSerializer.</p>
      * @param serializer {@link XMLSerializer} used to serialize the objects inside the array.
      */
-    protected ArrayXMLSerializer(XMLSerializer<T> serializer, String propertyName) {
+    protected ArrayXMLSerializer(Function<Class,XMLSerializer<T>> serializer, String propertyName) {
         if (null == serializer) {
             throw new IllegalArgumentException("serializer cannot be null");
         }
@@ -56,7 +58,7 @@ public class ArrayXMLSerializer<T> extends XMLSerializer<T[]> {
      * @param <T> Type of the elements inside the array
      * @return a new instance of {@link ArrayXMLSerializer}
      */
-    public static <T> ArrayXMLSerializer<T> getInstance(XMLSerializer<T> serializer, String propertyName) {
+    public static <T> ArrayXMLSerializer<T> getInstance(Function<Class,XMLSerializer<T>> serializer, String propertyName) {
         return new ArrayXMLSerializer<>(serializer, propertyName);
     }
 
@@ -80,7 +82,7 @@ public class ArrayXMLSerializer<T> extends XMLSerializer<T[]> {
 
         writer.beginObject(propertyName);
         for (T value : values) {
-            serializer.serialize(writer, value, ctx, params);
+            serializer.apply(value.getClass()).serialize(writer, value, ctx, params);
         }
         writer.endObject();
     }

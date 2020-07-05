@@ -1,5 +1,7 @@
 package org.treblereel.gwt.jackson.definition;
 
+import java.util.function.Function;
+
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeKind;
@@ -77,24 +79,22 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
     public Expression getFieldSerializer(String fieldName, CompilationUnit cu) {
         cu.addImport(ArrayXMLSerializer.class);
         cu.addImport(Array2dXMLSerializer.class);
+        cu.addImport(Function.class);
 
         ArrayType array = (ArrayType) getBean();
         String serializer;
-        Expression expression;
+        TypeMirror type;
         if (array.getComponentType().getKind().equals(TypeKind.ARRAY)) {
             serializer = Array2dXMLSerializer.class.getSimpleName();
             ArrayType array2d = (ArrayType) array.getComponentType();
-
-            expression = propertyDefinitionFactory.getFieldDefinition(array2d.getComponentType())
-                    .getFieldSerializer(null, cu);
+            type = array2d.getComponentType();
         } else {
             serializer = ArrayXMLSerializer.class.getSimpleName();
-            expression = propertyDefinitionFactory.getFieldDefinition((array.getComponentType()))
-                    .getFieldSerializer(null, cu);
+            type = array.getComponentType();
         }
         return new MethodCallExpr(
                 new NameExpr(serializer), "getInstance")
-                .addArgument(expression)
+                .addArgument(generateXMLSerializerFactory(type, type.toString(), cu))
                 .addArgument(new StringLiteralExpr(fieldName));
     }
 

@@ -18,6 +18,7 @@ package org.treblereel.gwt.jackson.api.deser.map;
 
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.function.Function;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
@@ -41,8 +42,8 @@ public final class SortedMapXMLDeserializer<K, V> extends BaseMapXMLDeserializer
      * @param <V>               Type of the values inside the {@link java.util.SortedMap}
      * @return a new instance of {@link SortedMapXMLDeserializer}
      */
-    public static <K, V> SortedMapXMLDeserializer<K, V> newInstance(XMLDeserializer<K> keyDeserializer,
-                                                                     XMLDeserializer<V> valueDeserializer) {
+    public static <K, V> SortedMapXMLDeserializer<K, V> newInstance(Function<String, XMLDeserializer<K>> keyDeserializer,
+                                                                    Function<String, XMLDeserializer<V>> valueDeserializer) {
         return new SortedMapXMLDeserializer<>(keyDeserializer, valueDeserializer);
     }
 
@@ -50,7 +51,7 @@ public final class SortedMapXMLDeserializer<K, V> extends BaseMapXMLDeserializer
      * @param keyDeserializer   {@link XMLDeserializer} used to deserialize the keys.
      * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
      */
-    private SortedMapXMLDeserializer(XMLDeserializer<K> keyDeserializer, XMLDeserializer<V> valueDeserializer) {
+    private SortedMapXMLDeserializer(Function<String, XMLDeserializer<K>> keyDeserializer, Function<String, XMLDeserializer<V>> valueDeserializer) {
         super(keyDeserializer, valueDeserializer);
     }
 

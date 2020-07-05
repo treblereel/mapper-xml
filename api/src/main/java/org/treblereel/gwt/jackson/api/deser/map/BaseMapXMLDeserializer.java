@@ -17,6 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.map;
 
 import java.util.Map;
+import java.util.function.Function;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -38,19 +39,19 @@ public abstract class BaseMapXMLDeserializer<M extends Map<K, V>, K, V> extends 
     /**
      * {@link XMLDeserializer} used to deserialize the keys.
      */
-    protected final XMLDeserializer<K> keyDeserializer;
+    protected final Function<String, XMLDeserializer<K>> keyDeserializer;
 
     /**
      * {@link XMLDeserializer} used to deserialize the values.
      */
-    protected final XMLDeserializer<V> valueDeserializer;
+    protected final Function<String, XMLDeserializer<V>> valueDeserializer;
 
     /**
      * <p>Constructor for BaseMapXMLDeserializer.</p>
      * @param keyDeserializer {@link XMLDeserializer} used to deserialize the keys.
      * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
      */
-    protected BaseMapXMLDeserializer(XMLDeserializer<K> keyDeserializer, XMLDeserializer<V> valueDeserializer) {
+    protected BaseMapXMLDeserializer(Function<String, XMLDeserializer<K>> keyDeserializer, Function<String, XMLDeserializer<V>> valueDeserializer) {
         if (null == keyDeserializer) {
             throw new IllegalArgumentException("keyDeserializer cannot be null");
         }

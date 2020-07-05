@@ -38,8 +38,8 @@ public class DefaultBeanFieldDefinition extends FieldDefinition {
     }
 
     @Override
-    public Expression getFieldDeserializer(CompilationUnit cu) {
-        if (context.getBeanDefinition(getBean()).getXmlSeeAlso() != null) {
+    public Expression getFieldDeserializer(String propertyName, CompilationUnit cu) {
+        if (context.getBeanDefinition(getBean()).getXmlSeeAlso() != null && propertyName != null) {
             cu.addImport(Function.class);
             NodeList<BodyDeclaration<?>> anonymousClassBody = new NodeList<>();
 

@@ -18,6 +18,7 @@ package org.treblereel.gwt.jackson.api.deser.map;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
@@ -41,8 +42,8 @@ public final class MapXMLDeserializer<K, V> extends BaseMapXMLDeserializer<Map<K
      * @param <V>               Type of the values inside the {@link java.util.Map}
      * @return a new instance of {@link MapXMLDeserializer}
      */
-    public static <K, V> MapXMLDeserializer<K, V> newInstance(XMLDeserializer<K> keyDeserializer,
-                                                               XMLDeserializer<V> valueDeserializer) {
+    public static <K, V> MapXMLDeserializer<K, V> newInstance(Function<String, XMLDeserializer<K>> keyDeserializer,
+                                                              Function<String, XMLDeserializer<V>> valueDeserializer) {
         return new MapXMLDeserializer<>(keyDeserializer, valueDeserializer);
     }
 
@@ -50,7 +51,7 @@ public final class MapXMLDeserializer<K, V> extends BaseMapXMLDeserializer<Map<K
      * @param keyDeserializer   {@link XMLDeserializer} used to deserialize the keys.
      * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
      */
-    private MapXMLDeserializer(XMLDeserializer<K> keyDeserializer, XMLDeserializer<V> valueDeserializer) {
+    private MapXMLDeserializer(Function<String, XMLDeserializer<K>> keyDeserializer, Function<String, XMLDeserializer<V>> valueDeserializer) {
         super(keyDeserializer, valueDeserializer);
     }
 

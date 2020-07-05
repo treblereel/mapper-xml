@@ -24,7 +24,7 @@ public class EnumBeanFieldDefinition extends FieldDefinition {
     }
 
     @Override
-    public Expression getFieldDeserializer(CompilationUnit cu) {
+    public Expression getFieldDeserializer(String propertyName, CompilationUnit cu) {
         cu.addImport(EnumXMLDeserializer.class);
         cu.addImport(MoreTypes.asTypeElement(bean).getQualifiedName().toString());
 

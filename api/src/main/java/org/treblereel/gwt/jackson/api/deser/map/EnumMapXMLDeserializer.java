@@ -20,6 +20,7 @@ import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.EnumXMLDeserializer;
 
 import java.util.EnumMap;
+import java.util.function.Function;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.EnumMap}.
@@ -40,8 +41,8 @@ public final class EnumMapXMLDeserializer<E extends Enum<E>, V> extends BaseMapX
      * @param <V>               Type of the values inside the {@link java.util.EnumMap}
      * @return a new instance of {@link EnumMapXMLDeserializer}
      */
-    public static <E extends Enum<E>, V> EnumMapXMLDeserializer<E, V> newInstance(EnumXMLDeserializer<E> keyDeserializer,
-                                                                                   XMLDeserializer<V> valueDeserializer) {
+    public static <E extends Enum<E>, V> EnumMapXMLDeserializer<E, V> newInstance(Function<String, XMLDeserializer<E>> keyDeserializer,
+                                                                                  Function<String, XMLDeserializer<V>> valueDeserializer) {
         return new EnumMapXMLDeserializer<>(keyDeserializer, valueDeserializer);
     }
 
@@ -54,9 +55,9 @@ public final class EnumMapXMLDeserializer<E extends Enum<E>, V> extends BaseMapX
      * @param keyDeserializer   {@link XMLDeserializer} used to deserialize the enum keys.
      * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
      */
-    private EnumMapXMLDeserializer(EnumXMLDeserializer<E> keyDeserializer, XMLDeserializer<V> valueDeserializer) {
+    private EnumMapXMLDeserializer(Function<String, XMLDeserializer<E>> keyDeserializer, Function<String, XMLDeserializer<V>> valueDeserializer) {
         super(keyDeserializer, valueDeserializer);
-        this.enumClass = keyDeserializer.getEnumClass();
+        this.enumClass = ((EnumXMLDeserializer<E>)keyDeserializer.apply(null)).getEnumClass();
     }
 
     /** {@inheritDoc} */

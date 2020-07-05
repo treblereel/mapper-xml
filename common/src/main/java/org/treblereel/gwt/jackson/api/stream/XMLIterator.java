@@ -2,6 +2,7 @@ package org.treblereel.gwt.jackson.api.stream;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Function;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -20,7 +21,7 @@ public interface XMLIterator {
 
     <T> Collection<T> iterateOverCollection(XMLReader reader, Collection<T> collection, Scanner<T> scanner, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException;
 
-    <K, V> Map<K, V> doDeserializeMap(XMLReader reader, Map<K, V> collection, XMLDeserializer<K> keyDeserializer, XMLDeserializer<V> valueDeserializer, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException;
+    <K, V> Map<K, V> doDeserializeMap(XMLReader reader, Map<K, V> collection, Function<String, XMLDeserializer<K>> keyDeserializer, Function<String, XMLDeserializer<V>> valueDeserializer, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException;
 
     @FunctionalInterface
     interface Scanner<T> {

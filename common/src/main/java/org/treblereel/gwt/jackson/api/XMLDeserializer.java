@@ -16,6 +16,7 @@
 
 package org.treblereel.gwt.jackson.api;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 
 import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
@@ -27,6 +28,8 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  * @version $Id: $
  */
 public abstract class XMLDeserializer<T> {
+
+    private final QName xsiType = new QName("http://www.w3.org/2001/XMLSchema-instance", "type");
 
     public T deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
             XMLDeserializationException {
@@ -65,4 +68,15 @@ public abstract class XMLDeserializer<T> {
      * @return the deserialized object
      */
     protected abstract T doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException;
+
+    protected String getXsiType(XMLReader reader) {
+        if (reader != null) {
+            for (int i = 0; i < reader.getAttributeCount(); i++) {
+                if (reader.getAttributeName(i).equals(xsiType)) {
+                    return reader.getAttributeValue(i);
+                }
+            }
+        }
+        return null;
+    }
 }

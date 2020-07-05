@@ -37,7 +37,47 @@ public abstract class FieldDefinition extends Definition {
         super(property, context);
     }
 
-    public abstract Expression getFieldDeserializer(CompilationUnit cu);
+    public abstract Expression getFieldDeserializer(String fieldName, CompilationUnit cu);
+
+    protected Expression generateXMLDeserializerFactory(TypeMirror type, String typeArg, CompilationUnit cu) {
+        TypeUtils typeUtils = context.getTypeUtils();
+
+        cu.addImport(Function.class);
+        NodeList<BodyDeclaration<?>> anonymousClassBody = new NodeList<>();
+
+        NodeList<Type> typeArguments = new NodeList<>();
+        typeArguments.add(new ClassOrInterfaceType().setName("String"));
+        typeArguments.add(new ClassOrInterfaceType().setName("XMLDeserializer").setTypeArguments(new TypeParameter().setName(typeArg)));
+
+        ClassOrInterfaceType iface = new ClassOrInterfaceType().setName("Function");
+        iface.setTypeArguments(typeArguments);
+
+        ObjectCreationExpr func = new ObjectCreationExpr().setType(iface);
+        func.setAnonymousClassBody(anonymousClassBody);
+
+        MethodDeclaration method = new MethodDeclaration();
+        method.setModifiers(Modifier.Keyword.PUBLIC);
+        method.addAnnotation(Override.class);
+        method.setName("apply");
+        method.setType(new ClassOrInterfaceType().setName("XMLDeserializer"));
+        method.addParameter("String", "value");
+
+        for (TypeElement typeElement : getXmlSeeAlso(type)) {
+            method.getBody().ifPresent(body -> body.addAndGetStatement(
+                    new IfStmt().setCondition(new MethodCallExpr(new StringLiteralExpr(context.getBeanDefinition(typeElement.asType()).getXmlRootElement()), "equals")
+                                                      .addArgument(new NameExpr("value"))))
+                    .setThenStmt(new ReturnStmt(
+                            new ObjectCreationExpr().setType(
+                                    new ClassOrInterfaceType().setName(typeUtils.canonicalDeserializerName(typeElement.asType()))))));
+        }
+        anonymousClassBody.add(method);
+        Expression expression = propertyDefinitionFactory.getFieldDefinition(type)
+                .getFieldDeserializer(null, cu);
+
+        method.getBody().ifPresent(body -> body.addAndGetStatement(
+                new ReturnStmt(expression)));
+        return func;
+    }
 
     protected Expression generateXMLSerializerFactory(TypeMirror type, String typeArg, CompilationUnit cu) {
         cu.addImport(Function.class);
@@ -64,7 +104,7 @@ public abstract class FieldDefinition extends Definition {
         method.setType(new ClassOrInterfaceType().setName("XMLSerializer"));
         method.addParameter("Class", "value");
 
-        addXmlSeeAlso(type, typeUtils, method);
+        addXMLSerializerSeeAlso(type, typeUtils, method);
         anonymousClassBody.add(method);
         method.getBody().ifPresent(body -> body.addAndGetStatement(
                 new ReturnStmt(expression)));
@@ -72,7 +112,9 @@ public abstract class FieldDefinition extends Definition {
         return func;
     }
 
-    private void addXmlSeeAlso(TypeMirror type, TypeUtils typeUtils, MethodDeclaration method) {
+    public abstract Expression getFieldSerializer(String fieldName, CompilationUnit cu);
+
+    private void addXMLSerializerSeeAlso(TypeMirror type, TypeUtils typeUtils, MethodDeclaration method) {
         if (MoreTypes.asTypeElement(type).getAnnotation(XmlSeeAlso.class) != null) {
 
             for (TypeElement typeElement : getXmlSeeAlso(type)) {
@@ -91,8 +133,6 @@ public abstract class FieldDefinition extends Definition {
             }
         }
     }
-
-    public abstract Expression getFieldSerializer(String fieldName, CompilationUnit cu);
 
     private TypeElement[] getXmlSeeAlso(TypeMirror type) {
         XmlSeeAlso xmlSeeAlso = MoreTypes.asTypeElement(type).getAnnotation(XmlSeeAlso.class);

@@ -21,8 +21,8 @@ import org.treblereel.gwt.jackson.exception.GenerationException;
  * Created by treblereel 4/1/20
  */
 public class MapBeanFieldDefinition extends FieldDefinition {
-    private DeclaredType declaredType;
 
+    private DeclaredType declaredType;
 
     protected MapBeanFieldDefinition(TypeMirror property, GenerationContext context) {
         super(property, context);
@@ -30,16 +30,14 @@ public class MapBeanFieldDefinition extends FieldDefinition {
     }
 
     @Override
-    public Expression getFieldDeserializer(CompilationUnit cu) {
+    public Expression getFieldDeserializer(String propertyName, CompilationUnit cu) {
         if (declaredType.getTypeArguments().size() != 2) {
             throw new GenerationException(declaredType.toString() + " must have type args [" + bean + "]");
         }
         return new MethodCallExpr(
                 new NameExpr(MapXMLDeserializer.class.getCanonicalName()), "newInstance")
-                .addArgument(propertyDefinitionFactory.getFieldDefinition(declaredType.getTypeArguments().get(0))
-                                     .getFieldDeserializer(cu))
-                .addArgument(propertyDefinitionFactory.getFieldDefinition(declaredType.getTypeArguments().get(1))
-                                     .getFieldDeserializer(cu));
+                .addArgument(generateXMLDeserializerFactory(declaredType.getTypeArguments().get(0), declaredType.getTypeArguments().get(0).toString(), cu))
+                .addArgument(generateXMLDeserializerFactory(declaredType.getTypeArguments().get(1), declaredType.getTypeArguments().get(1).toString(), cu));
     }
 
     @Override

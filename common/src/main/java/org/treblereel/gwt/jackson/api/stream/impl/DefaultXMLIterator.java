@@ -3,6 +3,7 @@ package org.treblereel.gwt.jackson.api.stream.impl;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
@@ -19,6 +20,8 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  * Created by treblereel 4/19/20
  */
 public class DefaultXMLIterator implements XMLIterator {
+
+    private final QName xsiType = new QName("http://www.w3.org/2001/XMLSchema-instance", "type");
 
     @Override
     public <T> T iterateOverBean(XMLReader reader, PropertyNameScanner<T> scanner, T instance, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
@@ -72,18 +75,20 @@ public class DefaultXMLIterator implements XMLIterator {
     }
 
     @Override
-    public <K, V> Map<K, V> doDeserializeMap(XMLReader reader, Map<K, V> collection, XMLDeserializer<K> keyDeserializer, XMLDeserializer<V> valueDeserializer, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+    public <K, V> Map<K, V> doDeserializeMap(XMLReader reader, Map<K, V> collection,
+                                             Function<String, XMLDeserializer<K>> keyDeserializer, Function<String, XMLDeserializer<V>> valueDeserializer,
+                                             XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         doDeserializeMap(reader, collection, (reader1, ctx1, instance, counter1) -> {
             reader1.next();
             QName keyName = reader1.peekNodeName();
-            K key = keyDeserializer.deserialize(reader1, ctx1, params);
+            K key = keyDeserializer.apply(getXsiType(reader1)).deserialize(reader1, ctx1, params);
             reader1.next();
 
             if (reader1.peekNodeName().equals(keyName)) {
                 reader1.next();
             }
 
-            V value = valueDeserializer.deserialize(reader1, ctx1, params);
+            V value = valueDeserializer.apply(getXsiType(reader1)).deserialize(reader1, ctx1, params);
             //value isn't an object, in a primitive type
             if (reader1.peek() == XMLStreamConstants.CHARACTERS) {
                 reader1.next();
@@ -131,5 +136,16 @@ public class DefaultXMLIterator implements XMLIterator {
     private interface MapScanner<K, V> {
 
         void accept(XMLReader reader, XMLDeserializationContext ctx, Map<K, V> instance, AtomicInteger counter) throws XMLStreamException;
+    }
+
+    protected String getXsiType(XMLReader reader) {
+        if (reader != null) {
+            for (int i = 0; i < reader.getAttributeCount(); i++) {
+                if (reader.getAttributeName(i).equals(xsiType)) {
+                    return reader.getAttributeValue(i);
+                }
+            }
+        }
+        return null;
     }
 }

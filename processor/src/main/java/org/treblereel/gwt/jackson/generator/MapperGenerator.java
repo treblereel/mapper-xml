@@ -71,10 +71,10 @@ public class MapperGenerator extends AbstractGenerator {
     @Override
     protected void init(BeanDefinition type) {
         if (type.getElement().getKind().isClass()) {
-            if (!context.getTypeRegistry().containsDeserializer(type.getQualifiedName())) {
+            if (!context.getTypeRegistry().containsSerializer(type.getQualifiedName())) {
                 serializerGenerator.generate(type);
             }
-            if (!context.getTypeRegistry().containsSerializer(type.getQualifiedName())) {
+            if (!context.getTypeRegistry().containsDeserializer(type.getQualifiedName())) {
                 deserializerGenerator.generate(type);
             }
         }

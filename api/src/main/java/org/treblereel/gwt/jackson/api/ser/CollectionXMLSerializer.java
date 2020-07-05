@@ -17,6 +17,7 @@
 package org.treblereel.gwt.jackson.api.ser;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -33,14 +34,14 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSerializer<C> {
 
-    protected final XMLSerializer<T> serializer;
+    private final Function<Class,XMLSerializer<T>> serializer;
     protected final String propertyName;
 
     /**
      * <p>Constructor for CollectionXMLSerializer.</p>
      * @param serializer {@link XMLSerializer} used to serialize the objects inside the {@link Collection}.
      */
-    protected CollectionXMLSerializer(XMLSerializer<T> serializer, String propertyName) {
+    protected CollectionXMLSerializer(Function<Class,XMLSerializer<T>> serializer, String propertyName) {
         if (null == serializer) {
             throw new IllegalArgumentException("serializer cannot be null");
         }
@@ -57,7 +58,7 @@ public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSeri
      * @param <C> Type of the {@link Collection}
      * @return a new instance of {@link CollectionXMLSerializer}
      */
-    public static <C extends Collection<?>> CollectionXMLSerializer<C, ?> newInstance(XMLSerializer<?> serializer, String propertyName) {
+    public static <C extends Collection<?>> CollectionXMLSerializer<C, ?> newInstance(Function<Class,XMLSerializer<?>> serializer, String propertyName) {
         return new CollectionXMLSerializer(serializer, propertyName);
     }
 
@@ -80,7 +81,7 @@ public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSeri
         }
 
         for (T value : values) {
-            serializer.setParent(this).setPropertyName(propertyName).serialize(writer, value, ctx, params);
+            serializer.apply(value.getClass()).setParent(this).setPropertyName(propertyName).serialize(writer, value, ctx, params);
         }
         if (ctx.isWrapCollections()) {
             writer.endObject();

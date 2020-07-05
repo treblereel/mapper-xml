@@ -19,6 +19,7 @@ package org.treblereel.gwt.jackson.api.ser.map;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.function.Function;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -37,8 +38,8 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public class MapXMLSerializer<M extends Map<K, V>, K, V> extends XMLSerializer<M> {
 
-    protected final XMLSerializer<K> keySerializer;
-    protected final XMLSerializer<V> valueSerializer;
+    private final Function<Class,XMLSerializer<K>> keySerializer;
+    private final Function<Class,XMLSerializer<V>> valueSerializer;
     protected final String propertyName;
 
     /**
@@ -46,7 +47,7 @@ public class MapXMLSerializer<M extends Map<K, V>, K, V> extends XMLSerializer<M
      * @param keySerializer {@link XMLSerializer} used to serialize the keys.
      * @param valueSerializer {@link XMLSerializer} used to serialize the values.
      */
-    protected MapXMLSerializer(XMLSerializer<K> keySerializer, XMLSerializer<V> valueSerializer, String propertyName) {
+    protected MapXMLSerializer(Function<Class,XMLSerializer<K>> keySerializer, Function<Class,XMLSerializer<V>> valueSerializer, String propertyName) {
         if (null == keySerializer) {
             throw new IllegalArgumentException("keySerializer cannot be null");
         }
@@ -68,7 +69,7 @@ public class MapXMLSerializer<M extends Map<K, V>, K, V> extends XMLSerializer<M
      * @param <M> Type of the {@link Map}
      * @return a new instance of {@link MapXMLSerializer}
      */
-    public static <M extends Map<?, ?>> MapXMLSerializer<M, ?, ?> newInstance(XMLSerializer<?> keySerializer, XMLSerializer<?>
+    public static <M extends Map<?, ?>> MapXMLSerializer<M, ?, ?> newInstance(Function<Class,XMLSerializer<?>> keySerializer, Function<Class,XMLSerializer<?>>
             valueSerializer, String propertyName) {
         return new MapXMLSerializer(keySerializer, valueSerializer, propertyName);
     }
@@ -108,11 +109,11 @@ public class MapXMLSerializer<M extends Map<K, V>, K, V> extends XMLSerializer<M
                 String keyName = getNodeName(entry.getKey().getClass(), ctx);
                 String valueName = getNodeName(entry.getValue().getClass(), ctx);
                 writer.unescapeName(keyName);
-                keySerializer.setPropertyName(keyName)
+                keySerializer.apply(entry.getKey().getClass()).setPropertyName(keyName)
                         .serialize(writer, entry.getKey(), ctx, params, true);
 
                 writer.unescapeName(valueName);
-                valueSerializer.setPropertyName(valueName)
+                valueSerializer.apply(entry.getValue().getClass()).setPropertyName(valueName)
                         .serialize(writer, entry.getValue(), ctx, params, true);
 
                 writer.endObject();

@@ -17,6 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.map;
 
 import java.util.TreeMap;
+import java.util.function.Function;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
@@ -40,8 +41,8 @@ public final class TreeMapXMLDeserializer<K, V> extends BaseMapXMLDeserializer<T
      * @param <V>               Type of the values inside the {@link java.util.TreeMap}
      * @return a new instance of {@link TreeMapXMLDeserializer}
      */
-    public static <K, V> TreeMapXMLDeserializer<K, V> newInstance(XMLDeserializer<K> keyDeserializer,
-                                                                   XMLDeserializer<V> valueDeserializer) {
+    public static <K, V> TreeMapXMLDeserializer<K, V> newInstance(Function<String, XMLDeserializer<K>> keyDeserializer,
+                                                                  Function<String, XMLDeserializer<V>> valueDeserializer) {
         return new TreeMapXMLDeserializer<>(keyDeserializer, valueDeserializer);
     }
 
@@ -49,7 +50,7 @@ public final class TreeMapXMLDeserializer<K, V> extends BaseMapXMLDeserializer<T
      * @param keyDeserializer   {@link XMLDeserializer} used to deserialize the keys.
      * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
      */
-    private TreeMapXMLDeserializer(XMLDeserializer<K> keyDeserializer, XMLDeserializer<V> valueDeserializer) {
+    private TreeMapXMLDeserializer(Function<String, XMLDeserializer<K>> keyDeserializer, Function<String, XMLDeserializer<V>> valueDeserializer) {
         super(keyDeserializer, valueDeserializer);
     }
 

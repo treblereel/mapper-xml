@@ -1,8 +1,8 @@
 package org.treblereel.gwt.jackson.context;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
@@ -25,7 +25,7 @@ public class GenerationContext {
     private final ProcessingEnvironment processingEnv;
     private final TypeRegistry typeRegistry;
     private final TypeUtils typeUtils;
-    private final Map<TypeMirror, BeanDefinition> beans = new HashMap<>();
+    private final Map<TypeMirror, BeanDefinition> beans = new ConcurrentHashMap<>();
 
     public GenerationContext(RoundEnvironment roundEnvironment,
                              ProcessingEnvironment processingEnv) {

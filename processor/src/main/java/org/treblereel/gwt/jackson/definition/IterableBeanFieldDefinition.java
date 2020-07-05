@@ -22,7 +22,7 @@ public class IterableBeanFieldDefinition extends FieldDefinition {
     }
 
     @Override
-    public Expression getFieldDeserializer(CompilationUnit cu) {
+    public Expression getFieldDeserializer(String propertyName, CompilationUnit cu) {
         TypeElement serializer = context.getTypeRegistry()
                 .getDeserializer(context.getProcessingEnv().getTypeUtils().erasure(bean));
 
@@ -33,7 +33,7 @@ public class IterableBeanFieldDefinition extends FieldDefinition {
         MoreTypes.asDeclared(bean)
                 .getTypeArguments()
                 .forEach(param -> method.addArgument(propertyDefinitionFactory.getFieldDefinition(param)
-                                                             .getFieldDeserializer(cu)));
+                                                             .getFieldDeserializer(propertyName, cu)));
         return method;
     }
 
@@ -45,8 +45,7 @@ public class IterableBeanFieldDefinition extends FieldDefinition {
         MethodCallExpr method = new MethodCallExpr(
                 new NameExpr(serializer.getQualifiedName().toString()), "newInstance");
         for (TypeMirror param : MoreTypes.asDeclared(getBean()).getTypeArguments()) {
-            method.addArgument(propertyDefinitionFactory.getFieldDefinition(param)
-                                       .getFieldSerializer(null, cu));
+            method.addArgument(generateXMLSerializerFactory(param, "?", cu));
         }
         method.addArgument(new StringLiteralExpr(fieldName));
         return method;

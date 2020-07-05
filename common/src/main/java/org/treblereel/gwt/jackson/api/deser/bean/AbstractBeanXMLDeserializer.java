@@ -38,7 +38,6 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
 
     protected final InstanceBuilder<T> instanceBuilder;
     private final IdentityDeserializationInfo defaultIdentityInfo;
-    private final QName xsiType = new QName("http://www.w3.org/2001/XMLSchema-instance", "type");
     private MapLike<BeanPropertyDeserializer<T, ?>> deserializers;
 
     /**
@@ -119,17 +118,6 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T> 
      * @return a {@link Class} object.
      */
     public abstract Class getDeserializedType();
-
-    protected String getXsiType(XMLReader reader) {
-        if (reader != null) {
-            for (int i = 0; i < reader.getAttributeCount(); i++) {
-                if (reader.getAttributeName(i).equals(xsiType)) {
-                    return reader.getAttributeValue(i);
-                }
-            }
-        }
-        return null;
-    }
 
     /**
      * {@inheritDoc}

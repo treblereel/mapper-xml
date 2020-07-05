@@ -21,7 +21,7 @@ public class BasicTypeFieldDefinition extends FieldDefinition {
     }
 
     @Override
-    public Expression getFieldDeserializer(CompilationUnit cu) {
+    public Expression getFieldDeserializer(String propertyName,CompilationUnit cu) {
         return new MethodCallExpr(
                 new NameExpr(context.getTypeRegistry()
                                      .getDeserializer(bean).toString()), "getInstance");

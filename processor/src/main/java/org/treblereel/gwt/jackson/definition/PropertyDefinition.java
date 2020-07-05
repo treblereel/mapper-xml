@@ -34,26 +34,12 @@ public class PropertyDefinition extends Definition {
     }
 
     public Expression getFieldDeserializer(CompilationUnit cu) {
-        TypeMirror bean = maybeInterface(context);
-        FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(bean != null ? bean : getBean());
-        Expression result = fieldDefinition.getFieldDeserializer(cu);
+        FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(getBean());
+        Expression result = fieldDefinition.getFieldDeserializer(getPropertyName(), cu);
         if (isCData()) {
             result = new MethodCallExpr(result, "setCdata").addArgument(new BooleanLiteralExpr(true));
         }
         return result;
-    }
-
-    private TypeMirror maybeInterface(GenerationContext context) {
-        if (!getBean().getKind().equals(TypeKind.ARRAY) &&
-                !getBean().getKind().isPrimitive() &&
-                MoreTypes.isType(getBean())) {
-            if (MoreTypes.asElement(getBean()).getKind().isInterface() ||
-                    (MoreTypes.asElement(getBean()).getKind().isClass() &&
-                            MoreTypes.asElement(getBean()).getModifiers().contains(Modifier.ABSTRACT))) {
-                return context.getBeans().stream().filter(v -> v.getElement().equals(MoreTypes.asTypeElement(getBean()))).findFirst().map(v -> v.getBean()).orElse(null);
-            }
-        }
-        return null;
     }
 
     public boolean isCData() {
@@ -63,7 +49,6 @@ public class PropertyDefinition extends Definition {
     }
 
     public Expression getFieldSerializer(CompilationUnit cu, GenerationContext context) {
-        TypeMirror bean = maybeInterface(context);
         FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(bean != null ? bean : getBean());
         return fieldDefinition.getFieldSerializer(getPropertyName(), cu);
     }

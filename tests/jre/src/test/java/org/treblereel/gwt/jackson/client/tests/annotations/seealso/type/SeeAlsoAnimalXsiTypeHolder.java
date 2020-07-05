@@ -46,10 +46,10 @@ public class SeeAlsoAnimalXsiTypeHolder {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SeeAlsoTest.SeeAlsoAnimalHolder)) {
+        if (!(o instanceof SeeAlsoAnimalXsiTypeHolder)) {
             return false;
         }
-        SeeAlsoTest.SeeAlsoAnimalHolder that = (SeeAlsoTest.SeeAlsoAnimalHolder) o;
+        SeeAlsoAnimalXsiTypeHolder that = (SeeAlsoAnimalXsiTypeHolder) o;
         return Objects.equals(getFirst(), that.getFirst()) &&
                 Objects.equals(getSecond(), that.getSecond()) &&
                 Objects.equals(getAnimal(), that.getAnimal());

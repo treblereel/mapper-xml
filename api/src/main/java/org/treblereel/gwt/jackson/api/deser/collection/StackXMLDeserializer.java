@@ -19,6 +19,7 @@ package org.treblereel.gwt.jackson.api.deser.collection;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 import java.util.Stack;
+import java.util.function.Function;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.Stack}.
@@ -36,14 +37,14 @@ public class StackXMLDeserializer<T> extends BaseListXMLDeserializer<Stack<T>, T
      * @param <T>          Type of the elements inside the {@link java.util.Stack}
      * @return a new instance of {@link StackXMLDeserializer}
      */
-    public static <T> StackXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
+    public static <T> StackXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
         return new StackXMLDeserializer<>(deserializer);
     }
 
     /**
      * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link Stack}.
      */
-    private StackXMLDeserializer(XMLDeserializer<T> deserializer) {
+    private StackXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 

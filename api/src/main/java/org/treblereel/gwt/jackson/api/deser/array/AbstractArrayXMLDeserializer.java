@@ -19,6 +19,7 @@ package org.treblereel.gwt.jackson.api.deser.array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -69,11 +70,11 @@ public abstract class AbstractArrayXMLDeserializer<T> extends XMLDeserializer<T>
      * @param <C> type of the element inside the array
      * @return a list containing all the elements of the array
      */
-    protected <C> List<C> deserializeIntoList(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializer<C> deserializer,
+    protected <C> List<C> deserializeIntoList(XMLReader reader, XMLDeserializationContext ctx, Function<String, XMLDeserializer<C>> deserializer,
                                               XMLDeserializerParameters params) throws XMLStreamException {
         List<C> list = new ArrayList<>();
         return (List<C>) ctx.iterator().iterateOverCollection(reader, (Collection<T>) list, (reader1, ctx1, instance) -> {
-            C bean = deserializer.deserialize(reader1, ctx1, params);
+            C bean = deserializer.apply(getXsiType(reader1)).deserialize(reader1, ctx1, params);
             list.add(bean);
             return null;
         }, ctx, params);

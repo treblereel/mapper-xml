@@ -19,6 +19,7 @@ package org.treblereel.gwt.jackson.api.deser.array.dd;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -43,7 +44,7 @@ public abstract class AbstractArray2dXMLDeserializer<T> extends XMLDeserializer<
      * @param <C> type of the element inside the array
      * @return a list containing all the elements of the array
      */
-    protected <C> List<List<C>> deserializeIntoList(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializer<C> deserializer,
+    protected <C> List<List<C>> deserializeIntoList(XMLReader reader, XMLDeserializationContext ctx, Function<String, XMLDeserializer<C>> deserializer,
                                                     XMLDeserializerParameters params) throws XMLStreamException {
         return doDeserializeIntoList(reader, ctx, deserializer, params);
     }
@@ -58,7 +59,7 @@ public abstract class AbstractArray2dXMLDeserializer<T> extends XMLDeserializer<
      * @return a {@link java.util.List} object.
      */
     protected <C> List<List<C>> doDeserializeIntoList(XMLReader reader, XMLDeserializationContext ctx,
-                                                      XMLDeserializer<C> deserializer, XMLDeserializerParameters params) throws XMLStreamException {
+                                                      Function<String, XMLDeserializer<C>> deserializer, XMLDeserializerParameters params) throws XMLStreamException {
         List<List<C>> list = new ArrayList<>();
         // we keep the size of the first inner list to initialize the next lists with the correct size
         ctx.iterator().iterateOverCollection(reader, (Collection<T>) list, (reader1, ctx1, instance) -> {
@@ -70,10 +71,10 @@ public abstract class AbstractArray2dXMLDeserializer<T> extends XMLDeserializer<
     }
 
     protected <C> List<C> doDeserializeInnerIntoList(XMLReader reader, XMLDeserializationContext ctx,
-                                                     XMLDeserializer<C> deserializer, XMLDeserializerParameters params) throws XMLStreamException {
+                                                     Function<String, XMLDeserializer<C>> deserializer, XMLDeserializerParameters params) throws XMLStreamException {
         List<C> innerList = new ArrayList<>();
         ctx.iterator().iterateOverCollection(reader, (Collection<T>) innerList, (reader1, ctx1, instance) -> {
-            C val = deserializer.deserialize(reader1, ctx1, params);
+            C val = deserializer.apply(getXsiType(reader1)).deserialize(reader1, ctx1, params);
             innerList.add(val);
             return null;
         }, ctx, params);

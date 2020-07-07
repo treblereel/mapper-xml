@@ -17,6 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.collection;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -41,7 +42,7 @@ public abstract class BaseCollectionXMLDeserializer<C extends Collection<T>, T> 
      * <p>Constructor for BaseCollectionXMLDeserializer.</p>
      * @param deserializer {@link XMLDeserializer} used to map the objects inside the {@link java.util.Collection}.
      */
-    public BaseCollectionXMLDeserializer(XMLDeserializer<T> deserializer) {
+    public BaseCollectionXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 
@@ -52,7 +53,7 @@ public abstract class BaseCollectionXMLDeserializer<C extends Collection<T>, T> 
     public C doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
 
         XMLIterator.Scanner scanner = (XMLIterator.Scanner<C>) (reader1, ctx1, instance) -> {
-            T element = deserializer.deserialize(reader1, ctx1, params);
+            T element = deserializer.apply(getXsiType(reader1)).deserialize(reader1, ctx1, params);
             if (element != null) {
                 instance.add(element);
             }

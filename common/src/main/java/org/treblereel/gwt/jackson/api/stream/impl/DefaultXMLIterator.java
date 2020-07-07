@@ -79,19 +79,26 @@ public class DefaultXMLIterator implements XMLIterator {
                                              Function<String, XMLDeserializer<K>> keyDeserializer, Function<String, XMLDeserializer<V>> valueDeserializer,
                                              XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         doDeserializeMap(reader, collection, (reader1, ctx1, instance, counter1) -> {
-            reader1.next();
-            QName keyName = reader1.peekNodeName();
-            K key = keyDeserializer.apply(getXsiType(reader1)).deserialize(reader1, ctx1, params);
-            reader1.next();
-
-            if (reader1.peekNodeName().equals(keyName)) {
+            K key = null;
+            V value = null;
+            if (reader1.peekNodeName().getLocalPart().equals("entry")) {
                 reader1.next();
             }
+            if (reader1.peekNodeName().getLocalPart().equals("key")) {
+                key = keyDeserializer.apply(getXsiType(reader1)).deserialize(reader1, ctx1, params);
+                if (reader1.peek() == XMLStreamConstants.CHARACTERS) {
+                    reader1.next();
+                }
 
-            V value = valueDeserializer.apply(getXsiType(reader1)).deserialize(reader1, ctx1, params);
-            //value isn't an object, in a primitive type
-            if (reader1.peek() == XMLStreamConstants.CHARACTERS) {
-                reader1.next();
+                if(reader1.peek() == XMLStreamConstants.END_ELEMENT) {
+                    reader1.next();
+                }
+            }
+            if (reader1.peekNodeName().getLocalPart().equals("value")) {
+                value = valueDeserializer.apply(getXsiType(reader1)).deserialize(reader1, ctx1, params);
+                if (reader1.peek() == XMLStreamConstants.CHARACTERS) {
+                    reader1.next();
+                }
             }
             collection.put(key, value);
         }, ctx, params);

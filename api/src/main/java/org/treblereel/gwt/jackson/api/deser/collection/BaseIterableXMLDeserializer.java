@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.deser.collection;
 
+import java.util.function.Function;
+
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 /**
@@ -27,13 +29,13 @@ import org.treblereel.gwt.jackson.api.XMLDeserializer;
  */
 public abstract class BaseIterableXMLDeserializer<I extends Iterable<T>, T> extends XMLDeserializer<I> {
 
-    protected final XMLDeserializer<T> deserializer;
+    protected final Function<String, XMLDeserializer<T>> deserializer;
 
     /**
      * <p>Constructor for BaseIterableXMLDeserializer.</p>
      * @param deserializer {@link XMLDeserializer} used to map the objects inside the {@link java.lang.Iterable}.
      */
-    public BaseIterableXMLDeserializer(XMLDeserializer<T> deserializer) {
+    public BaseIterableXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         if (null == deserializer) {
             throw new IllegalArgumentException("deserializer can't be null");
         }

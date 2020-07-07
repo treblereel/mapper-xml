@@ -4,7 +4,6 @@ import java.util.function.Function;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
-import javax.xml.bind.annotation.XmlSeeAlso;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Modifier;
@@ -20,7 +19,6 @@ import com.github.javaparser.ast.stmt.IfStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
-import com.google.auto.common.MoreTypes;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 
@@ -60,13 +58,16 @@ public class DefaultBeanFieldDefinition extends FieldDefinition {
             method.setType(new ClassOrInterfaceType().setName("XMLDeserializer"));
             method.addParameter("String", "value");
 
-            for (TypeElement typeElement : context.getBeanDefinition(getBean()).getXmlSeeAlso()) {
-                method.getBody().ifPresent(body -> body.addAndGetStatement(
-                        new IfStmt().setCondition(new MethodCallExpr(new StringLiteralExpr(context.getBeanDefinition(typeElement.asType()).getXmlRootElement()), "equals")
-                                                          .addArgument(new NameExpr("value"))))
-                        .setThenStmt(new ReturnStmt(
-                                new ObjectCreationExpr().setType(
-                                        new ClassOrInterfaceType().setName(typeUtils.canonicalDeserializerName(typeElement.asType()))))));
+            if (context.getBeanDefinition(getBean()).getXmlSeeAlso() != null && propertyName != null) {
+
+                for (TypeElement typeElement : context.getBeanDefinition(getBean()).getXmlSeeAlso()) {
+                    method.getBody().ifPresent(body -> body.addAndGetStatement(
+                            new IfStmt().setCondition(new MethodCallExpr(new StringLiteralExpr(context.getBeanDefinition(typeElement.asType()).getXmlRootElement()), "equals")
+                                                              .addArgument(new NameExpr("value"))))
+                            .setThenStmt(new ReturnStmt(
+                                    new ObjectCreationExpr().setType(
+                                            new ClassOrInterfaceType().setName(typeUtils.canonicalDeserializerName(typeElement.asType()))))));
+                }
             }
             anonymousClassBody.add(method);
             method.getBody().ifPresent(body -> body.addAndGetStatement(
@@ -74,6 +75,7 @@ public class DefaultBeanFieldDefinition extends FieldDefinition {
                                                                             .setName(typeUtils.canonicalDeserializerName(getBean()))))));
 
             return new MethodCallExpr(func, "apply").addArgument(new MethodCallExpr("getXsiType").addArgument("reader"));
+            //return func;
         }
 
         return new ObjectCreationExpr().setType(new ClassOrInterfaceType()

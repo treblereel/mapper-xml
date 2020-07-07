@@ -52,7 +52,7 @@ public class StringArrayXMLDeserializer extends AbstractArrayXMLDeserializer<Str
      */
     @Override
     public String[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<String> list = deserializeIntoList(reader, ctx, StringXMLDeserializer.getInstance(), params);
+        List<String> list = deserializeIntoList(reader, ctx, s -> StringXMLDeserializer.getInstance(), params);
         return list.toArray(new String[list.size()]);
     }
 

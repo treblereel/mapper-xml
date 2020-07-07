@@ -16,6 +16,8 @@
 
 package org.treblereel.gwt.jackson.api.deser.collection;
 
+import java.util.function.Function;
+
 import javax.xml.stream.XMLStreamException;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
@@ -34,7 +36,7 @@ public class IterableXMLDeserializer<T> extends BaseIterableXMLDeserializer<Iter
     /**
      * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link Iterable}.
      */
-    private IterableXMLDeserializer(XMLDeserializer<T> deserializer) {
+    private IterableXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 
@@ -44,7 +46,7 @@ public class IterableXMLDeserializer<T> extends BaseIterableXMLDeserializer<Iter
      * @param <T> Type of the elements inside the {@link java.lang.Iterable}
      * @return a new instance of {@link IterableXMLDeserializer}
      */
-    public static <T> IterableXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
+    public static <T> IterableXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
         return new IterableXMLDeserializer<>(deserializer);
     }
 

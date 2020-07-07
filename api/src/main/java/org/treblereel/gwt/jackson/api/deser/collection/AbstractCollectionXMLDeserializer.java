@@ -18,6 +18,7 @@ package org.treblereel.gwt.jackson.api.deser.collection;
 
 import java.util.AbstractCollection;
 import java.util.ArrayList;
+import java.util.function.Function;
 
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
@@ -37,14 +38,14 @@ public class AbstractCollectionXMLDeserializer<T> extends BaseCollectionXMLDeser
      * @param <T>          Type of the elements inside the {@link java.util.AbstractCollection}
      * @return a new instance of {@link AbstractCollectionXMLDeserializer}
      */
-    public static <T> AbstractCollectionXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
+    public static <T> AbstractCollectionXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
         return new AbstractCollectionXMLDeserializer<>(deserializer);
     }
 
     /**
      * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link AbstractCollection}.
      */
-    private AbstractCollectionXMLDeserializer(XMLDeserializer<T> deserializer) {
+    private AbstractCollectionXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 

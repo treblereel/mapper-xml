@@ -19,6 +19,7 @@ package org.treblereel.gwt.jackson.api.deser.collection;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 import java.util.LinkedList;
+import java.util.function.Function;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.LinkedList}.
@@ -36,14 +37,14 @@ public class LinkedListXMLDeserializer<T> extends BaseListXMLDeserializer<Linked
      * @param <T>          Type of the elements inside the {@link java.util.LinkedList}
      * @return a new instance of {@link LinkedListXMLDeserializer}
      */
-    public static <T> LinkedListXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
+    public static <T> LinkedListXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
         return new LinkedListXMLDeserializer<>(deserializer);
     }
 
     /**
      * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link LinkedList}.
      */
-    private LinkedListXMLDeserializer(XMLDeserializer<T> deserializer) {
+    private LinkedListXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 

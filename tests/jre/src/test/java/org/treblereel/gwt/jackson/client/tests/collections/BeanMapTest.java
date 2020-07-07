@@ -51,7 +51,6 @@ public class BeanMapTest {
         test.setAddressMap(personAddressMap);
 
         String xml = mapper.write(test);
-
         Users parsed = mapper.read(xml);
         assertEquals(test, parsed);
         assertEquals(mapper.write(test), mapper.write(mapper.read(mapper.write(mapper.read(mapper.write(test))))));

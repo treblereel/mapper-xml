@@ -17,6 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.array.dd;
 
 import java.util.List;
+import java.util.function.Function;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -46,11 +47,11 @@ public class Array2dXMLDeserializer<T> extends AbstractArray2dXMLDeserializer<T[
      * @param <T>          Type of the elements inside the {@link java.util.AbstractCollection}
      * @return a new instance of {@link Array2dXMLDeserializer}
      */
-    public static <T> Array2dXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer, Array2dCreator<T> arrayCreator) {
+    public static <T> Array2dXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer, Array2dCreator<T> arrayCreator) {
         return new Array2dXMLDeserializer<>(deserializer, arrayCreator);
     }
 
-    private final XMLDeserializer<T> deserializer;
+    private final Function<String, XMLDeserializer<T>> deserializer;
 
     private final Array2dCreator<T> array2dCreator;
 
@@ -60,7 +61,7 @@ public class Array2dXMLDeserializer<T> extends AbstractArray2dXMLDeserializer<T[
      * @param deserializer   {@link XMLDeserializer} used to deserialize the objects inside the array.
      * @param array2dCreator {@link Array2dXMLDeserializer.Array2dCreator} used to create a new array
      */
-    protected Array2dXMLDeserializer(XMLDeserializer<T> deserializer, Array2dCreator<T> array2dCreator) {
+    protected Array2dXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer, Array2dCreator<T> array2dCreator) {
         if (null == deserializer) {
             throw new IllegalArgumentException("deserializer cannot be null");
         }

@@ -20,6 +20,7 @@ import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.function.Function;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.Queue}. The deserialization process returns a {@link java.util.LinkedList}.
@@ -37,14 +38,14 @@ public final class QueueXMLDeserializer<T> extends BaseQueueXMLDeserializer<Queu
      * @param <T>          Type of the elements inside the {@link java.util.Queue}
      * @return a new instance of {@link QueueXMLDeserializer}
      */
-    public static <T> QueueXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
+    public static <T> QueueXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
         return new QueueXMLDeserializer<>(deserializer);
     }
 
     /**
      * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link Queue}.
      */
-    private QueueXMLDeserializer(XMLDeserializer<T> deserializer) {
+    private QueueXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 

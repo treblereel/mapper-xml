@@ -51,7 +51,7 @@ public class PrimitiveBooleanArray2dXMLDeserializer extends AbstractArray2dXMLDe
     /** {@inheritDoc} */
     @Override
     public boolean[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<List<Boolean>> list = deserializeIntoList(reader, ctx, BooleanXMLDeserializer.getInstance(), params);
+        List<List<Boolean>> list = deserializeIntoList(reader, ctx, s -> BooleanXMLDeserializer.getInstance(), params);
 
         if (list.isEmpty()) {
             return new boolean[0][0];

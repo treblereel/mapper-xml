@@ -20,6 +20,7 @@ import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 import java.util.AbstractSequentialList;
 import java.util.LinkedList;
+import java.util.function.Function;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.AbstractSequentialList}. The deserialization process returns a {@link
@@ -38,14 +39,14 @@ public class AbstractSequentialListXMLDeserializer<T> extends BaseListXMLDeseria
      * @param <T>          Type of the elements inside the {@link java.util.AbstractSequentialList}
      * @return a new instance of {@link AbstractSequentialListXMLDeserializer}
      */
-    public static <T> AbstractSequentialListXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
+    public static <T> AbstractSequentialListXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
         return new AbstractSequentialListXMLDeserializer<>(deserializer);
     }
 
     /**
      * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link AbstractSequentialList}.
      */
-    private AbstractSequentialListXMLDeserializer(XMLDeserializer<T> deserializer) {
+    private AbstractSequentialListXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 

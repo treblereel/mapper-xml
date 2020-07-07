@@ -51,7 +51,7 @@ public class PrimitiveDoubleArrayXMLDeserializer extends AbstractArrayXMLDeseria
     /** {@inheritDoc} */
     @Override
     public double[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<Double> list = deserializeIntoList(reader, ctx, BaseNumberXMLDeserializer.DoubleXMLDeserializer.getInstance(), params);
+        List<Double> list = deserializeIntoList(reader, ctx, s -> BaseNumberXMLDeserializer.DoubleXMLDeserializer.getInstance(), params);
 
         double[] result = new double[list.size()];
         int i = 0;

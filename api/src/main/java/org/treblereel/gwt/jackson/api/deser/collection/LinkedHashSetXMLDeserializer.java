@@ -19,6 +19,7 @@ package org.treblereel.gwt.jackson.api.deser.collection;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 import java.util.LinkedHashSet;
+import java.util.function.Function;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.LinkedHashSet}.
@@ -36,14 +37,14 @@ public class LinkedHashSetXMLDeserializer<T> extends BaseSetXMLDeserializer<Link
      * @param <T>          Type of the elements inside the {@link java.util.LinkedHashSet}
      * @return a new instance of {@link LinkedHashSetXMLDeserializer}
      */
-    public static <T> LinkedHashSetXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
+    public static <T> LinkedHashSetXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
         return new LinkedHashSetXMLDeserializer<>(deserializer);
     }
 
     /**
      * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link LinkedHashSet}.
      */
-    private LinkedHashSetXMLDeserializer(XMLDeserializer<T> deserializer) {
+    private LinkedHashSetXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 

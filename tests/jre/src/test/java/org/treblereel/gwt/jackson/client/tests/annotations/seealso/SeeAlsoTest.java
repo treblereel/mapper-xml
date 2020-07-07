@@ -1,5 +1,6 @@
 package org.treblereel.gwt.jackson.client.tests.annotations.seealso;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,8 +27,7 @@ public class SeeAlsoTest {
     private final String XML_FOO = "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoHolder><first xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"First\"><test1>first</test1><test>Test1</test></first><second xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Second\"><test2>second</test2><test>Test1</test></second></SeeAlsoHolder>";
     private final String XML_ANIMAL = "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoAnimalHolder><first xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></first><second xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></second><animal><name>Animal</name></animal></SeeAlsoAnimalHolder>";
     private final String XML_XSI = "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoAnimalXsiTypeHolder xmlns=\"http://www.omg.org/bpmn20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><first xsi:type=\"Cat\"><nickname>Cat</nickname></first><second xsi:type=\"Dog\"><nickname>Dog</nickname></second><animal><name>Animal</name></animal></SeeAlsoAnimalXsiTypeHolder>";
-    private final String XML_COLLECTION_XSI = "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoAnimalCollection><animals><Cat xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></Cat><Dog xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></Dog><Animal><name>Animal</name></Animal></animals><list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></list><list><name>Animal</name></list></list><map><entry><Dog xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></Dog><Dog xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></Dog></entry><entry><Cat xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></Cat><Cat xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></Cat></entry><entry><Animal><name>Animal</name></Animal><Animal><name>Animal</name></Animal></entry></map></SeeAlsoAnimalCollection>";
-
+    private final String XML_COLLECTION_XSI = "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoAnimalCollection><animals><Cat xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></Cat><Dog xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></Dog><Animal><name>Animal</name></Animal></animals><list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></list><list><name>Animal</name></list></list><map><entry><key xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></key><value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></value></entry><entry><key xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></key><value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></value></entry><entry><key><name>Animal</name></key><value><name>Animal</name></value></entry></map></SeeAlsoAnimalCollection>";
     @Test
     public void testFoo() throws XMLStreamException {
         final SeeAlsoTest_SeeAlsoHolder_MapperImpl mapper = SeeAlsoTest_SeeAlsoHolder_MapperImpl.INSTANCE;
@@ -45,8 +45,6 @@ public class SeeAlsoTest {
         holder.second = second;
 
         String result = mapper.write(holder);
-
-        System.out.println("XML " + result);
         assertEquals(XML_FOO, result);
         assertEquals(holder, mapper.read(mapper.write(holder)));
     }
@@ -109,9 +107,6 @@ public class SeeAlsoTest {
         collection.setAnimals(animals);
 
         String result = mapper.write(collection);
-
-        System.out.println("XML \n " + result);
-
         assertEquals(XML_COLLECTION_XSI, result);
         assertEquals(collection, mapper.read(mapper.write(collection)));
     }
@@ -261,6 +256,27 @@ public class SeeAlsoTest {
 
         public void setMap(Map<Animal, Animal> map) {
             this.map = map;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof SeeAlsoAnimalCollection)) {
+                return false;
+            }
+            SeeAlsoAnimalCollection that = (SeeAlsoAnimalCollection) o;
+            return Arrays.equals(getAnimals(), that.getAnimals()) &&
+                    Objects.equals(getList(), that.getList()) &&
+                    Objects.equals(getMap(), that.getMap());
+        }
+
+        @Override
+        public int hashCode() {
+            int result = Objects.hash(getList(), getMap());
+            result = 31 * result + Arrays.hashCode(getAnimals());
+            return result;
         }
     }
 }

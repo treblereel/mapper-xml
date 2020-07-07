@@ -17,6 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.array;
 
 import java.util.List;
+import java.util.function.Function;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -32,7 +33,7 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public class ArrayXMLDeserializer<T> extends AbstractArrayXMLDeserializer<T[]> {
 
-    private final XMLDeserializer<T> deserializer;
+    private final Function<String, XMLDeserializer<T>> deserializer;
     private final ArrayCreator<T> arrayCreator;
 
     /**
@@ -40,7 +41,7 @@ public class ArrayXMLDeserializer<T> extends AbstractArrayXMLDeserializer<T[]> {
      * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the array.
      * @param arrayCreator {@link ArrayXMLDeserializer.ArrayCreator} used to create a new array
      */
-    protected ArrayXMLDeserializer(XMLDeserializer<T> deserializer, ArrayCreator<T> arrayCreator) {
+    protected ArrayXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer, ArrayCreator<T> arrayCreator) {
         if (null == deserializer) {
             throw new IllegalArgumentException("deserializer cannot be null");
         }
@@ -58,7 +59,7 @@ public class ArrayXMLDeserializer<T> extends AbstractArrayXMLDeserializer<T[]> {
      * @param <T> Type of the elements inside the {@link java.util.AbstractCollection}
      * @return a new instance of {@link ArrayXMLDeserializer}
      */
-    public static <T> ArrayXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer, ArrayCreator<T> arrayCreator) {
+    public static <T> ArrayXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer, ArrayCreator<T> arrayCreator) {
         return new ArrayXMLDeserializer<>(deserializer, arrayCreator);
     }
 
@@ -80,7 +81,7 @@ public class ArrayXMLDeserializer<T> extends AbstractArrayXMLDeserializer<T[]> {
     @Override
     protected T[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         T[] result = arrayCreator.create(1);
-        result[0] = deserializer.deserialize(reader, ctx, params);
+        result[0] = deserializer.apply(getXsiType(reader)).deserialize(reader, ctx, params);
         return result;
     }
 

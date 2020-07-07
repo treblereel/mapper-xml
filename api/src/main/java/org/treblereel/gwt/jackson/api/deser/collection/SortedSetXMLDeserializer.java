@@ -20,6 +20,7 @@ import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.Function;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.SortedSet}. The deserialization process returns a {@link java.util.TreeSet}.
@@ -37,14 +38,14 @@ public final class SortedSetXMLDeserializer<T> extends BaseSortedSetXMLDeseriali
      * @param <T>          Type of the elements inside the {@link java.util.SortedSet}
      * @return a new instance of {@link SortedSetXMLDeserializer}
      */
-    public static <T> SortedSetXMLDeserializer<T> newInstance(XMLDeserializer<T> deserializer) {
+    public static <T> SortedSetXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
         return new SortedSetXMLDeserializer<>(deserializer);
     }
 
     /**
      * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link SortedSet}.
      */
-    private SortedSetXMLDeserializer(XMLDeserializer<T> deserializer) {
+    private SortedSetXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
         super(deserializer);
     }
 

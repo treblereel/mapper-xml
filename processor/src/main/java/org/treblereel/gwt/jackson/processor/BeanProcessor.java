@@ -48,6 +48,8 @@ public class BeanProcessor {
         annotatedBeans.forEach(this::processBean);
         beans.forEach(context::addBeanDefinition);
         context.getBeans().stream().filter(elm -> context.getTypeRegistry().get(elm.getElement().toString()) == null)
+                .filter(elm -> !MoreTypes.asTypeElement(elm.getBean())
+                        .getModifiers().contains(javax.lang.model.element.Modifier.ABSTRACT))
                 .forEach(mapperGenerator::generate);
     }
 
@@ -103,12 +105,14 @@ public class BeanProcessor {
             return true;
         }
 
-        if (typeUtils.hasGetter(field)) {
-            throw new GenerationException(String.format("Unable to find suitable getter for [%s] in [%s]", field.getSimpleName(), field.getEnclosingElement()));
+        if (!typeUtils.hasGetter(field)) {
+            throw new GenerationException(String.format("Unable to find suitable getter for [%s] in [%s].",
+                                                        field.getSimpleName(), field.getEnclosingElement()));
         }
 
-        if (typeUtils.hasSetter(field)) {
-            throw new GenerationException(String.format("Unable to find suitable setter for [%s] in [%s]", field.getSimpleName(), field.getEnclosingElement()));
+        if (!typeUtils.hasSetter(field)) {
+            throw new GenerationException(String.format("Unable to find suitable setter for [%s] in [%s]",
+                                                        field.getSimpleName(), field.getEnclosingElement()));
         }
 
         throw new GenerationException(String.format("Unable to process [%s] in [%s]", field.getSimpleName(), field.getEnclosingElement()));

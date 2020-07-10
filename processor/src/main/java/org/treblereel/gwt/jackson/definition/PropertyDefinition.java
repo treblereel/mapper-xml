@@ -1,19 +1,19 @@
 package org.treblereel.gwt.jackson.definition;
 
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlCData;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlSchema;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.expr.NameExpr;
 import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
 import org.treblereel.gwt.jackson.api.annotation.XmlTypeAdapter;
@@ -35,7 +35,7 @@ public class PropertyDefinition extends Definition {
 
     public Expression getFieldDeserializer(CompilationUnit cu) {
         FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(getBean());
-        Expression result = fieldDefinition.getFieldDeserializer(getPropertyName(), cu);
+        Expression result = fieldDefinition.getFieldDeserializer(this, cu);
         if (isCData()) {
             result = new MethodCallExpr(result, "setCdata").addArgument(new BooleanLiteralExpr(true));
         }
@@ -50,7 +50,7 @@ public class PropertyDefinition extends Definition {
 
     public Expression getFieldSerializer(CompilationUnit cu, GenerationContext context) {
         FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(bean != null ? bean : getBean());
-        return fieldDefinition.getFieldSerializer(getPropertyName(), cu);
+        return fieldDefinition.getFieldSerializer(this, cu);
     }
 
     public String getPropertyName() {
@@ -115,5 +115,12 @@ public class PropertyDefinition extends Definition {
 
     public VariableElement getProperty() {
         return property;
+    }
+
+    @Override
+    public String toString() {
+        return "PropertyDefinition{" +
+                "property=" + property +
+                '}';
     }
 }

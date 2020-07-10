@@ -1,20 +1,62 @@
 package org.treblereel.gwt.jackson.client.tests.beans.iface;
 
+import java.util.List;
 import java.util.Objects;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlElementRefs;
+import javax.xml.bind.annotation.XmlElements;
+
+import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
 /**
  * @author Dmitrii Tikhomirov
  * Created by treblereel 5/13/20
  */
-//@XMLMapper
+@XMLMapper
 public class User implements IUser {
 
     private String user;
+    @XmlElements({
+            @XmlElement(name = "_Address1", type = Address.class),
+            @XmlElement(name = "_Address2", type = Address2.class),
+            @XmlElement(name = "_Address3", type = Address3.class)
+    })
     private IAddress iAddress;
+
+    @XmlElements({
+            @XmlElement(name = "_Address1", type = Address.class),
+            @XmlElement(name = "_Address2", type = Address2.class),
+            @XmlElement(name = "_Address3", type = Address3.class)
+    })
+    private List<IAddress> iAddressList;
+
+    @XmlElementRefs({
+            @XmlElementRef(name = "_Address1", type = Address.class),
+            @XmlElementRef(name = "_Address2", type = Address2.class),
+            @XmlElementRef(name = "_Address3", type = Address3.class)
+    })
+    private List<IAddress> iAddressListRef;
+
+    @XmlElementRefs({
+            @XmlElementRef(name = "_Address1", type = Address.class),
+            @XmlElementRef(name = "_Address2", type = Address2.class),
+            @XmlElementRef(name = "_Address3", type = Address3.class)
+    })
+    private IAddress iAddressRef;
+
+    public IAddress getIAddressRef() {
+        return iAddressRef;
+    }
+
+    public void setIAddressRef(IAddress iAddressRef) {
+        this.iAddressRef = iAddressRef;
+    }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUser(), iAddress);
+        return Objects.hash(getUser(), iAddress, iAddressRef);
     }
 
     @Override
@@ -27,7 +69,8 @@ public class User implements IUser {
         }
         User user1 = (User) o;
         return Objects.equals(getUser(), user1.getUser()) &&
-                Objects.equals(iAddress, user1.iAddress);
+                Objects.equals(iAddress, user1.iAddress) &&
+                Objects.equals(iAddressRef, user1.iAddressRef);
     }
 
     @Override
@@ -48,5 +91,21 @@ public class User implements IUser {
     @Override
     public void setIAddress(IAddress address) {
         this.iAddress = address;
+    }
+
+    public List<IAddress> getIAddressList() {
+        return iAddressList;
+    }
+
+    public void setIAddressList(List<IAddress> iAddressList) {
+        this.iAddressList = iAddressList;
+    }
+
+    public List<IAddress> getIAddressListRef() {
+        return iAddressListRef;
+    }
+
+    public void setIAddressListRef(List<IAddress> iAddressListRef) {
+        this.iAddressListRef = iAddressListRef;
     }
 }

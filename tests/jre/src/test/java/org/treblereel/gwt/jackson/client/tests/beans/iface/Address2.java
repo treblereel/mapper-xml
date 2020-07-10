@@ -6,10 +6,10 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
 /**
  * @author Dmitrii Tikhomirov
- * Created by treblereel 5/13/20
+ * Created by treblereel 7/8/20
  */
 @XMLMapper
-public class Address implements IAddress {
+public class Address2 implements IAddress {
 
     private String address;
 
@@ -28,10 +28,10 @@ public class Address implements IAddress {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Address)) {
+        if (!(o instanceof Address2)) {
             return false;
         }
-        Address address1 = (Address) o;
+        Address2 address1 = (Address2) o;
         return Objects.equals(getAddress(), address1.getAddress());
     }
 

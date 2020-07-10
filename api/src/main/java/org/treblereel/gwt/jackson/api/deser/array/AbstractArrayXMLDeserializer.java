@@ -74,7 +74,7 @@ public abstract class AbstractArrayXMLDeserializer<T> extends XMLDeserializer<T>
                                               XMLDeserializerParameters params) throws XMLStreamException {
         List<C> list = new ArrayList<>();
         return (List<C>) ctx.iterator().iterateOverCollection(reader, (Collection<T>) list, (reader1, ctx1, instance) -> {
-            C bean = deserializer.apply(getXsiType(reader1)).deserialize(reader1, ctx1, params);
+            C bean = deserializer.apply(inheritanceChooser.get().apply(reader1)).deserialize(reader1, ctx1, params);
             list.add(bean);
             return null;
         }, ctx, params);

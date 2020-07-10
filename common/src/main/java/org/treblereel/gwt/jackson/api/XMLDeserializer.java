@@ -16,6 +16,9 @@
 
 package org.treblereel.gwt.jackson.api;
 
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 
@@ -30,6 +33,16 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 public abstract class XMLDeserializer<T> {
 
     private final QName xsiType = new QName("http://www.w3.org/2001/XMLSchema-instance", "type");
+    protected Function<XMLReader, String> xsiTypeChooser = this::getXsiType;
+    protected Function<XMLReader, String> xsiTagChooser = this::getTag;
+    private Inheritance type = Inheritance.NONE;
+    protected Supplier<Function<XMLReader, String>> inheritanceChooser = () -> {
+        if (type.equals(Inheritance.TAG)) {
+            return xsiTagChooser;
+        } else {
+            return xsiTypeChooser;
+        }
+    };
 
     public T deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
             XMLDeserializationException {
@@ -69,7 +82,7 @@ public abstract class XMLDeserializer<T> {
      */
     protected abstract T doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException;
 
-    protected String getXsiType(XMLReader reader) {
+    private String getXsiType(XMLReader reader) {
         if (reader != null) {
             for (int i = 0; i < reader.getAttributeCount(); i++) {
                 if (reader.getAttributeName(i).equals(xsiType)) {
@@ -78,5 +91,18 @@ public abstract class XMLDeserializer<T> {
             }
         }
         return null;
+    }
+
+    private String getTag(XMLReader reader) {
+        try {
+            return reader.peekNodeName().getLocalPart();
+        } catch (XMLStreamException e) {
+            return null;
+        }
+    }
+
+    public XMLDeserializer<T> setInheritanceType(Inheritance type) {
+        this.type = type;
+        return this;
     }
 }

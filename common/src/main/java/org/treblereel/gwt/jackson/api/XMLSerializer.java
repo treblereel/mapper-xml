@@ -21,7 +21,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -50,10 +49,14 @@ public abstract class XMLSerializer<T> {
 
     protected List<String> xsiType = new ArrayList<>();
 
+    protected Inheritance inheritanceType = Inheritance.NONE;
+
     protected Map<String, String> namespaces = new LinkedHashMap<>();
 
     public XMLSerializer<T> setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
+        if (!inheritanceType.equals(Inheritance.TAG)) {
+            this.propertyName = propertyName;
+        }
         return this;
     }
 
@@ -153,7 +156,7 @@ public abstract class XMLSerializer<T> {
 
         if (!namespaces.isEmpty()) {
             for (Map.Entry<String, String> entry : namespaces.entrySet()) {
-                if (!entry.getKey().equals("") && lookupNamespace(entry.getKey(),entry.getValue())) {
+                if (!entry.getKey().equals("") && lookupNamespace(entry.getKey(), entry.getValue())) {
                     writer.writeNamespace(entry.getKey(), entry.getValue());
                 }
             }
@@ -178,6 +181,11 @@ public abstract class XMLSerializer<T> {
         return null;
     }
 
+    public XMLSerializer<T> setNamespace(String namespace) {
+        this.namespace = namespace;
+        return this;
+    }
+
     private void writeSchemaLocation(XMLWriter writer) throws XMLStreamException {
         if (getSchemaLocation() != null) {
             writer.writeSchemaLocation("xsi:schemaLocation", getSchemaLocation());
@@ -196,11 +204,6 @@ public abstract class XMLSerializer<T> {
 
     protected Pair<String, String> getTargetNamespace() {
         return null;
-    }
-
-    public XMLSerializer<T> setNamespace(String namespace) {
-        this.namespace = namespace;
-        return this;
     }
 
     public XMLSerializer<T> addNamespace(String prefix, String namespace) {
@@ -253,7 +256,7 @@ public abstract class XMLSerializer<T> {
         return !parent._lookupNamespace(prefix, namespace);
     }
 
-    private boolean _lookupNamespace(String prefix,String namespace) {
+    private boolean _lookupNamespace(String prefix, String namespace) {
         boolean result = false;
         if (parent != null) {
             result = parent._lookupNamespace(prefix, namespace);
@@ -269,12 +272,13 @@ public abstract class XMLSerializer<T> {
         return null;
     }
 
-    protected List<String> getXmlXsiType() {
-        return xsiType;
-    }
-
-    public XMLSerializer<T> addXsiType(String type) {
-        xsiType.add(type);
+    public XMLSerializer<T> setType(String value, Inheritance type) {
+        if (Inheritance.XSI.equals(type)) {
+            xsiType.add(value);
+        } else if (Inheritance.TAG.equals(type)) {
+            propertyName = value;
+        }
+        inheritanceType = type;
         return this;
     }
 

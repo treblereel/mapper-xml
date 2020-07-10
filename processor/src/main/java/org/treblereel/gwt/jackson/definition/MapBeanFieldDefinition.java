@@ -30,27 +30,27 @@ public class MapBeanFieldDefinition extends FieldDefinition {
     }
 
     @Override
-    public Expression getFieldDeserializer(String propertyName, CompilationUnit cu) {
+    public Expression getFieldDeserializer(PropertyDefinition field, CompilationUnit cu) {
         if (declaredType.getTypeArguments().size() != 2) {
             throw new GenerationException(declaredType.toString() + " must have type args [" + bean + "]");
         }
         return new MethodCallExpr(
                 new NameExpr(MapXMLDeserializer.class.getCanonicalName()), "newInstance")
-                .addArgument(generateXMLDeserializerFactory(declaredType.getTypeArguments().get(0), declaredType.getTypeArguments().get(0).toString(), cu))
-                .addArgument(generateXMLDeserializerFactory(declaredType.getTypeArguments().get(1), declaredType.getTypeArguments().get(1).toString(), cu));
+                .addArgument(generateXMLDeserializerFactory(field, declaredType.getTypeArguments().get(0), declaredType.getTypeArguments().get(0).toString(), cu))
+                .addArgument(generateXMLDeserializerFactory(field, declaredType.getTypeArguments().get(1), declaredType.getTypeArguments().get(1).toString(), cu));
     }
 
     @Override
-    public Expression getFieldSerializer(String fieldName, CompilationUnit cu) {
+    public Expression getFieldSerializer(PropertyDefinition field, CompilationUnit cu) {
         cu.addImport(Function.class);
         if (declaredType.getTypeArguments().size() != 2) {
-            throw new GenerationException(declaredType.toString() + " must have type args [" + fieldName + "]");
+            throw new GenerationException(declaredType.toString() + " must have type args [" + field.getPropertyName() + "]");
         }
         return new MethodCallExpr(
                 new NameExpr(MapXMLSerializer.class.getCanonicalName()), "newInstance")
-                .addArgument(generateXMLSerializerFactory(declaredType.getTypeArguments().get(0), "?", cu))
-                .addArgument(generateXMLSerializerFactory(declaredType.getTypeArguments().get(1), "?", cu))
-                .addArgument(new StringLiteralExpr(fieldName));
+                .addArgument(generateXMLSerializerFactory(field, declaredType.getTypeArguments().get(0), "?", cu))
+                .addArgument(generateXMLSerializerFactory(field, declaredType.getTypeArguments().get(1), "?", cu))
+                .addArgument(new StringLiteralExpr(field.getPropertyName()));
     }
 
     @Override

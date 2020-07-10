@@ -53,7 +53,7 @@ public abstract class BaseCollectionXMLDeserializer<C extends Collection<T>, T> 
     public C doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
 
         XMLIterator.Scanner scanner = (XMLIterator.Scanner<C>) (reader1, ctx1, instance) -> {
-            T element = deserializer.apply(getXsiType(reader1)).deserialize(reader1, ctx1, params);
+            T element = deserializer.apply(inheritanceChooser.get().apply(reader1)).deserialize(reader1, ctx1, params);
             if (element != null) {
                 instance.add(element);
             }

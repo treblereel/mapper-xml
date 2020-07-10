@@ -21,14 +21,14 @@ public class BasicTypeFieldDefinition extends FieldDefinition {
     }
 
     @Override
-    public Expression getFieldDeserializer(String propertyName,CompilationUnit cu) {
+    public Expression getFieldDeserializer(PropertyDefinition field, CompilationUnit cu) {
         return new MethodCallExpr(
                 new NameExpr(context.getTypeRegistry()
                                      .getDeserializer(bean).toString()), "getInstance");
     }
 
     @Override
-    public Expression getFieldSerializer(String fieldName, CompilationUnit cu) {
+    public Expression getFieldSerializer(PropertyDefinition field, CompilationUnit cu) {
         MethodCallExpr method = new MethodCallExpr(
                 new NameExpr(context.getTypeRegistry()
                                      .getSerializer(context.getProcessingEnv()
@@ -36,7 +36,7 @@ public class BasicTypeFieldDefinition extends FieldDefinition {
                                                             .erasure(getBean()))
                                      .toString()), "getInstance");
         if (getBean().getKind().equals(TypeKind.ARRAY)) {
-            method.addArgument(new StringLiteralExpr(fieldName));
+            method.addArgument(new StringLiteralExpr(field.getPropertyName()));
         }
         return method;
     }

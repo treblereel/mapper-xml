@@ -1,25 +1,21 @@
 package org.treblereel.gwt.jackson.definition;
 
+import java.util.Map;
 import java.util.function.Function;
 
-import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
+import javax.xml.bind.annotation.XmlElementRefs;
+import javax.xml.bind.annotation.XmlElements;
 
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.Modifier;
-import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.body.BodyDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.ObjectCreationExpr;
-import com.github.javaparser.ast.expr.StringLiteralExpr;
-import com.github.javaparser.ast.stmt.IfStmt;
-import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
-import com.github.javaparser.ast.type.Type;
 import org.treblereel.gwt.jackson.TypeUtils;
+import org.treblereel.gwt.jackson.api.Inheritance;
+import org.treblereel.gwt.jackson.api.utils.Pair;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 
 /**
@@ -36,8 +32,22 @@ public class DefaultBeanFieldDefinition extends FieldDefinition {
     }
 
     @Override
-    public Expression getFieldDeserializer(String propertyName, CompilationUnit cu) {
-        if (context.getBeanDefinition(getBean()).getXmlSeeAlso() != null && propertyName != null) {
+    public Expression getFieldDeserializer(PropertyDefinition field, CompilationUnit cu) {
+        if (field != null && (context.getBeanDefinition(getBean()).getXmlSeeAlso() != null
+                || field.getProperty().getAnnotation(XmlElements.class) != null
+                || field.getProperty().getAnnotation(XmlElementRefs.class) != null)) {
+            Pair<Class, Map<String, TypeMirror>> pair = maybePolymorphicType(field, bean);
+            String inheritance = pair.key.equals(XmlElementRefs.class) ? "xsiTagChooser" : "xsiTypeChooser";
+
+            return new MethodCallExpr(generateXMLDeserializerFactory(field, bean, bean.toString(), cu, pair), "apply")
+                    .addArgument(new MethodCallExpr(new NameExpr(inheritance), "apply").addArgument("reader"));
+        }
+        return new ObjectCreationExpr().setType(new ClassOrInterfaceType()
+                                                        .setName(typeUtils.canonicalDeserializerName(getBean())));
+
+
+/*
+        if (context.getBeanDefinition(getBean()).getXmlSeeAlso() != null && field != null && field.getPropertyName() != null) {
             cu.addImport(Function.class);
             NodeList<BodyDeclaration<?>> anonymousClassBody = new NodeList<>();
 
@@ -58,7 +68,7 @@ public class DefaultBeanFieldDefinition extends FieldDefinition {
             method.setType(new ClassOrInterfaceType().setName("XMLDeserializer"));
             method.addParameter("String", "value");
 
-            if (context.getBeanDefinition(getBean()).getXmlSeeAlso() != null && propertyName != null) {
+            if (context.getBeanDefinition(field.getBean()).getXmlSeeAlso() != null && field != null && field.getPropertyName() != null) {
 
                 for (TypeElement typeElement : context.getBeanDefinition(getBean()).getXmlSeeAlso()) {
                     method.getBody().ifPresent(body -> body.addAndGetStatement(
@@ -74,21 +84,38 @@ public class DefaultBeanFieldDefinition extends FieldDefinition {
                     new ReturnStmt(new ObjectCreationExpr().setType(new ClassOrInterfaceType()
                                                                             .setName(typeUtils.canonicalDeserializerName(getBean()))))));
 
-            return new MethodCallExpr(func, "apply").addArgument(new MethodCallExpr("getXsiType").addArgument("reader"));
-            //return func;
+            return new MethodCallExpr(func, "apply").addArgument(new MethodCallExpr(new NameExpr("typeChooser"), "apply").addArgument("reader"));
+
+
+
+
+
+
+
+
+
         }
 
         return new ObjectCreationExpr().setType(new ClassOrInterfaceType()
-                                                        .setName(typeUtils.canonicalDeserializerName(bean)));
+                                                        .setName(typeUtils.canonicalDeserializerName(bean)));*/
     }
 
     @Override
-    public Expression getFieldSerializer(String fieldName, CompilationUnit cu) {
-        if (context.getBeanDefinition(getBean()).getXmlSeeAlso() != null && fieldName != null) {
-            return new MethodCallExpr(generateXMLSerializerFactory(bean, bean.toString(), cu), "apply").addArgument("value");
+    public Expression getFieldSerializer(PropertyDefinition field, CompilationUnit cu) {
+        if (isPolymorphic(field)) {
+            cu.addImport(Inheritance.class);
+            cu.addImport(Function.class);
+
+            return new MethodCallExpr(generateXMLSerializerFactory(field, bean, bean.toString(), cu), "apply").addArgument("value");
         }
         return new ObjectCreationExpr().setType(new ClassOrInterfaceType()
                                                         .setName(typeUtils.canonicalSerializerName(getBean())));
+    }
+
+    private boolean isPolymorphic(PropertyDefinition field) {
+        return field != null && (context.getBeanDefinition(getBean()).getXmlSeeAlso() != null
+                || field.getProperty().getAnnotation(XmlElements.class) != null
+                || field.getProperty().getAnnotation(XmlElementRefs.class) != null);
     }
 
     @Override

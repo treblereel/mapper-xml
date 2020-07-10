@@ -23,6 +23,7 @@ import java.util.logging.Level;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.treblereel.gwt.jackson.api.Inheritance;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -170,7 +171,7 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T> impl
     }
 
     private void setXsiType(XMLWriter writer, XMLSerializationContext ctx) throws XMLStreamException {
-        for (String s : getXmlXsiType()) {
+        for (String s : xsiType) {
             writer.writeAttribute("xsi:type", s);
         }
     }

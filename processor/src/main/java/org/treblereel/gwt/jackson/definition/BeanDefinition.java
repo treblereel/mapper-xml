@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeMirror;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -33,7 +32,6 @@ import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
 import org.treblereel.gwt.jackson.api.annotation.TargetNamespace;
 import org.treblereel.gwt.jackson.api.annotation.XmlXsiType;
-import org.treblereel.gwt.jackson.api.annotation.XmlSubtypes;
 import org.treblereel.gwt.jackson.api.utils.Pair;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 import org.treblereel.gwt.jackson.exception.GenerationException;
@@ -228,27 +226,7 @@ public class BeanDefinition extends Definition {
 
     @Override
     public TypeMirror getBean() {
-        if (MoreTypes.asTypeElement(bean).getAnnotation(XmlSubtypes.class) != null) {
-            return asTypeElement(MoreTypes.asTypeElement(bean));
-        }
         return bean;
-    }
-
-    private TypeMirror asTypeElement(TypeElement elm) {
-        if (elm.getAnnotation(XmlSubtypes.class).value().length > 1) {
-            throw new GenerationException("It's only possible to have only one child of " + elm + " via XmlSubtypes at this moment, it ll be fixed.");
-        }
-        XmlSubtypes.Type subtype = elm.getAnnotation(XmlSubtypes.class).value()[0];
-        return getXmlSubtypesType(subtype);
-    }
-
-    private TypeMirror getXmlSubtypesType(XmlSubtypes.Type subtype) {
-        try {
-            subtype.value();
-        } catch (MirroredTypeException e) {
-            return e.getTypeMirror();
-        }
-        return null;
     }
 
     public TypeElement[] getXmlSeeAlso() {

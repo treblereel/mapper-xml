@@ -31,7 +31,7 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
     }
 
     @Override
-    public Expression getFieldDeserializer(String propertyName, CompilationUnit cu) {
+    public Expression getFieldDeserializer(PropertyDefinition field, CompilationUnit cu) {
         cu.addImport(ArrayXMLDeserializer.ArrayCreator.class);
         cu.addImport(ArrayXMLDeserializer.class);
 
@@ -56,7 +56,7 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
 
                 return new MethodCallExpr(
                         new NameExpr(Array2dXMLDeserializer.class.getSimpleName()), "newInstance")
-                        .addArgument(generateXMLDeserializerFactory(array2d.getComponentType(), array2d.getComponentType().toString(), cu))
+                        .addArgument(generateXMLDeserializerFactory(field, array2d.getComponentType(), array2d.getComponentType().toString(), cu))
                         .addArgument(new CastExpr().setType(typeOf).setExpression(
                                 new NameExpr("(first, second) -> new " + arrayType + "[first][second]")));
             }
@@ -68,13 +68,13 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
 
         return new MethodCallExpr(
                 new NameExpr(ArrayXMLDeserializer.class.getSimpleName()), "newInstance")
-                .addArgument(generateXMLDeserializerFactory(array.getComponentType(), array.getComponentType().toString(), cu))
+                .addArgument(generateXMLDeserializerFactory(field, array.getComponentType(), array.getComponentType().toString(), cu))
                 .addArgument(new CastExpr().setType(typeOf).setExpression(
                         new NameExpr(arrayType + "[]::new")));
     }
 
     @Override
-    public Expression getFieldSerializer(String fieldName, CompilationUnit cu) {
+    public Expression getFieldSerializer(PropertyDefinition field, CompilationUnit cu) {
         cu.addImport(ArrayXMLSerializer.class);
         cu.addImport(Array2dXMLSerializer.class);
         cu.addImport(Function.class);
@@ -92,8 +92,8 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
         }
         return new MethodCallExpr(
                 new NameExpr(serializer), "getInstance")
-                .addArgument(generateXMLSerializerFactory(type, type.toString(), cu))
-                .addArgument(new StringLiteralExpr(fieldName));
+                .addArgument(generateXMLSerializerFactory(field, type, type.toString(), cu))
+                .addArgument(new StringLiteralExpr(field.getPropertyName()));
     }
 
     @Override

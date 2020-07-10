@@ -16,6 +16,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.MirroredTypesException;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
@@ -23,7 +25,6 @@ import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
 import com.google.auto.service.AutoService;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
-import org.treblereel.gwt.jackson.api.annotation.XmlSubtypes;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 import org.treblereel.gwt.jackson.exception.GenerationException;
 import org.treblereel.gwt.jackson.logger.PrintWriterTreeLogger;
@@ -52,6 +53,7 @@ public class ApplicationProcessor extends AbstractProcessor {
 
             processXmlSeeAlso(roundEnvironment.getElementsAnnotatedWith(XmlSeeAlso.class)
                                       .stream());
+            processXmlElements(roundEnvironment);
             new BeanProcessor(context, logger, beans).process();
         }
         return false;
@@ -67,15 +69,34 @@ public class ApplicationProcessor extends AbstractProcessor {
         stream.forEach(elm -> processXmlSeeAlso(elm));
     }
 
-    private TypeElement asTypeElement(TypeElement elm) {
-        if (elm.getAnnotation(XmlSubtypes.class) != null) {
-            if (elm.getAnnotation(XmlSubtypes.class).value().length > 1) {
-                throw new GenerationException("It's only possible to have only one child of " + elm + " via XmlSubtypes at this moment, it ll be fixed.");
+    private void processXmlElements(RoundEnvironment roundEnvironment) {
+        Set<Element> elms = (Set<Element>) roundEnvironment.getElementsAnnotatedWith(XmlElements.class);
+        for (Element elm : elms) {
+            XmlElement[] elements = elm.getAnnotation(XmlElements.class).value();
+
+            for (XmlElement element : elements) {
+                try {
+                    elm.getAnnotation(XmlElements.class).value();
+                } catch (MirroredTypeException e) {
+                    beans.add(MoreTypes.asTypeElement(e.getTypeMirror()));
+                }
             }
-            XmlSubtypes.Type subtype = elm.getAnnotation(XmlSubtypes.class).value()[0];
-            beans.add(elm);
-            return getXmlSubtypesType(subtype);
+
+/*            try {
+                elm.getAnnotation(XmlElements.class).value();
+            } catch (MirroredTypesException e) {
+                e.getTypeMirrors().forEach(type -> {
+                    if (MoreTypes.asTypeElement(type).getAnnotation(XmlElement.class) == null) {
+                        throw new GenerationException(type + " must be annotated with @XmlRootElement because it's declared in @XmlSeeAlso at " + elm);
+                    } else {
+                        beans.add(MoreTypes.asTypeElement(type));
+                    }
+                });
+            }*/
         }
+    }
+
+    private TypeElement asTypeElement(TypeElement elm) {
         return elm;
     }
 
@@ -84,22 +105,13 @@ public class ApplicationProcessor extends AbstractProcessor {
             elm.getAnnotation(XmlSeeAlso.class).value();
         } catch (MirroredTypesException e) {
             e.getTypeMirrors().forEach(type -> {
-                if(MoreTypes.asTypeElement(type).getAnnotation(XmlRootElement.class) == null) {
+                if (MoreTypes.asTypeElement(type).getAnnotation(XmlRootElement.class) == null) {
                     throw new GenerationException(type + " must be annotated with @XmlRootElement because it's declared in @XmlSeeAlso at " + elm);
                 } else {
                     beans.add(MoreTypes.asTypeElement(type));
                 }
             });
         }
-    }
-
-    private TypeElement getXmlSubtypesType(XmlSubtypes.Type subtype) {
-        try {
-            subtype.value();
-        } catch (MirroredTypeException e) {
-            return MoreTypes.asTypeElement(e.getTypeMirror());
-        }
-        return null;
     }
 
     private List<Class<?>> supportedAnnotations() {

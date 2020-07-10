@@ -81,7 +81,7 @@ public class ArrayXMLDeserializer<T> extends AbstractArrayXMLDeserializer<T[]> {
     @Override
     protected T[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
         T[] result = arrayCreator.create(1);
-        result[0] = deserializer.apply(getXsiType(reader)).deserialize(reader, ctx, params);
+        result[0] = deserializer.apply(inheritanceChooser.get().apply(reader)).deserialize(reader, ctx, params);
         return result;
     }
 

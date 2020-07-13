@@ -18,9 +18,7 @@ package org.treblereel.gwt.jackson.api.ser;
 
 import java.util.Collection;
 import java.util.function.Function;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -28,71 +26,80 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for {@link Collection}.
+ *
  * @param <T> Type of the elements inside the {@link Collection}
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSerializer<C> {
 
-    private final Function<Class,XMLSerializer<T>> serializer;
-    protected final String propertyName;
+  private final Function<Class, XMLSerializer<T>> serializer;
+  protected final String propertyName;
 
-    /**
-     * <p>Constructor for CollectionXMLSerializer.</p>
-     * @param serializer {@link XMLSerializer} used to serialize the objects inside the {@link Collection}.
-     */
-    protected CollectionXMLSerializer(Function<Class,XMLSerializer<T>> serializer, String propertyName) {
-        if (null == serializer) {
-            throw new IllegalArgumentException("serializer cannot be null");
-        }
-        if (null == propertyName) {
-            throw new IllegalArgumentException("propertyName cannot be null");
-        }
-        this.serializer = serializer;
-        this.propertyName = propertyName;
+  /**
+   * Constructor for CollectionXMLSerializer.
+   *
+   * @param serializer {@link XMLSerializer} used to serialize the objects inside the {@link
+   *     Collection}.
+   */
+  protected CollectionXMLSerializer(
+      Function<Class, XMLSerializer<T>> serializer, String propertyName) {
+    if (null == serializer) {
+      throw new IllegalArgumentException("serializer cannot be null");
+    }
+    if (null == propertyName) {
+      throw new IllegalArgumentException("propertyName cannot be null");
+    }
+    this.serializer = serializer;
+    this.propertyName = propertyName;
+  }
+
+  /**
+   * newInstance
+   *
+   * @param serializer {@link XMLSerializer} used to serialize the objects inside the {@link
+   *     Collection}.
+   * @param <C> Type of the {@link Collection}
+   * @return a new instance of {@link CollectionXMLSerializer}
+   */
+  public static <C extends Collection<?>> CollectionXMLSerializer<C, ?> newInstance(
+      Function<Class, XMLSerializer<?>> serializer, String propertyName) {
+    return new CollectionXMLSerializer(serializer, propertyName);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void doSerialize(
+      XMLWriter writer, C values, XMLSerializationContext ctx, XMLSerializerParameters params)
+      throws XMLStreamException {
+    if (values.isEmpty()) {
+      if (ctx.isWriteEmptyXMLArrays()) {
+        writer.beginArray();
+        writer.endArray();
+      } else {
+        writer.nullValue();
+      }
+      return;
+    }
+    if (ctx.isWrapCollections()) {
+      writer.beginObject(propertyName);
     }
 
-    /**
-     * <p>newInstance</p>
-     * @param serializer {@link XMLSerializer} used to serialize the objects inside the {@link Collection}.
-     * @param <C> Type of the {@link Collection}
-     * @return a new instance of {@link CollectionXMLSerializer}
-     */
-    public static <C extends Collection<?>> CollectionXMLSerializer<C, ?> newInstance(Function<Class,XMLSerializer<?>> serializer, String propertyName) {
-        return new CollectionXMLSerializer(serializer, propertyName);
+    for (T value : values) {
+      serializer
+          .apply(value.getClass())
+          .setParent(this)
+          .setPropertyName(propertyName)
+          .serialize(writer, value, ctx, params);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void doSerialize(XMLWriter writer, C values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        if (values.isEmpty()) {
-            if (ctx.isWriteEmptyXMLArrays()) {
-                writer.beginArray();
-                writer.endArray();
-            } else {
-                writer.nullValue();
-            }
-            return;
-        }
-        if (ctx.isWrapCollections()) {
-            writer.beginObject(propertyName);
-        }
-
-        for (T value : values) {
-            serializer.apply(value.getClass()).setParent(this).setPropertyName(propertyName).serialize(writer, value, ctx, params);
-        }
-        if (ctx.isWrapCollections()) {
-            writer.endObject();
-        }
+    if (ctx.isWrapCollections()) {
+      writer.endObject();
     }
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean isEmpty(C value) {
-        return null == value || value.isEmpty();
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected boolean isEmpty(C value) {
+    return null == value || value.isEmpty();
+  }
 }

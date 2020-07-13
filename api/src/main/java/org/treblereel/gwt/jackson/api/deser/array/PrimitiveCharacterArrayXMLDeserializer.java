@@ -17,9 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.array;
 
 import java.util.List;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -34,39 +32,44 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public class PrimitiveCharacterArrayXMLDeserializer extends AbstractArrayXMLDeserializer<char[]> {
 
-    private static final PrimitiveCharacterArrayXMLDeserializer INSTANCE = new PrimitiveCharacterArrayXMLDeserializer();
+  private static final PrimitiveCharacterArrayXMLDeserializer INSTANCE =
+      new PrimitiveCharacterArrayXMLDeserializer();
 
-    /**
-     * <p>getInstance</p>
-     *
-     * @return an instance of {@link PrimitiveCharacterArrayXMLDeserializer}
-     */
-    public static PrimitiveCharacterArrayXMLDeserializer getInstance() {
-        return INSTANCE;
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link PrimitiveCharacterArrayXMLDeserializer}
+   */
+  public static PrimitiveCharacterArrayXMLDeserializer getInstance() {
+    return INSTANCE;
+  }
+
+  private PrimitiveCharacterArrayXMLDeserializer() {}
+
+  /** {@inheritDoc} */
+  @Override
+  public char[] doDeserializeArray(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    List<Character> list =
+        deserializeIntoList(reader, ctx, s -> CharacterXMLDeserializer.getInstance(), params);
+
+    char[] result = new char[list.size()];
+    int i = 0;
+    for (Character value : list) {
+      if (null != value) {
+        result[i] = value;
+      }
+      i++;
     }
+    return result;
+  }
 
-    private PrimitiveCharacterArrayXMLDeserializer() {
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public char[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<Character> list = deserializeIntoList(reader, ctx, s -> CharacterXMLDeserializer.getInstance(), params);
-
-        char[] result = new char[list.size()];
-        int i = 0;
-        for (Character value : list) {
-            if (null != value) {
-                result[i] = value;
-            }
-            i++;
-        }
-        return result;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected char[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        return new char[]{CharacterXMLDeserializer.getInstance().deserialize(reader, ctx, params)};
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected char[] doDeserializeSingleArray(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    return new char[] {CharacterXMLDeserializer.getInstance().deserialize(reader, ctx, params)};
+  }
 }

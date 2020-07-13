@@ -18,9 +18,7 @@ package org.treblereel.gwt.jackson.api.deser.collection;
 
 import java.util.Collection;
 import java.util.function.Function;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -29,51 +27,70 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
  * Base {@link XMLDeserializer} implementation for {@link java.util.Collection}.
+ *
  * @param <C> {@link java.util.Collection} type
  * @param <T> Type of the elements inside the {@link java.util.Collection}
  * @author Nicolas Morel
  * @version $Id: $
  */
-public abstract class BaseCollectionXMLDeserializer<C extends Collection<T>, T> extends BaseIterableXMLDeserializer<C, T> {
+public abstract class BaseCollectionXMLDeserializer<C extends Collection<T>, T>
+    extends BaseIterableXMLDeserializer<C, T> {
 
-    C collection = newCollection();
+  C collection = newCollection();
 
-    /**
-     * <p>Constructor for BaseCollectionXMLDeserializer.</p>
-     * @param deserializer {@link XMLDeserializer} used to map the objects inside the {@link java.util.Collection}.
-     */
-    public BaseCollectionXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
-        super(deserializer);
-    }
+  /**
+   * Constructor for BaseCollectionXMLDeserializer.
+   *
+   * @param deserializer {@link XMLDeserializer} used to map the objects inside the {@link
+   *     java.util.Collection}.
+   */
+  public BaseCollectionXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
+    super(deserializer);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public C doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+  /** {@inheritDoc} */
+  @Override
+  public C doDeserialize(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
 
-        XMLIterator.Scanner scanner = (XMLIterator.Scanner<C>) (reader1, ctx1, instance) -> {
-            T element = deserializer.apply(inheritanceChooser.get().apply(reader1)).deserialize(reader1, ctx1, params);
-            if (element != null) {
+    XMLIterator.Scanner scanner =
+        (XMLIterator.Scanner<C>)
+            (reader1, ctx1, instance) -> {
+              T element =
+                  deserializer
+                      .apply(inheritanceChooser.get().apply(reader1))
+                      .deserialize(reader1, ctx1, params);
+              if (element != null) {
                 instance.add(element);
-            }
-            return null;
-        };
-        return (C) ctx.iterator().iterateOverCollection(reader, ctx.isWrapCollections() ? ((Collection<C>) newCollection()) : (Collection<C>) collection,
-                                           scanner, ctx, params);
-    }
+              }
+              return null;
+            };
+    return (C)
+        ctx.iterator()
+            .iterateOverCollection(
+                reader,
+                ctx.isWrapCollections()
+                    ? ((Collection<C>) newCollection())
+                    : (Collection<C>) collection,
+                scanner,
+                ctx,
+                params);
+  }
 
-    /**
-     * Instantiates a new collection for deserialization process.
-     * @return the new collection
-     */
-    protected abstract C newCollection();
+  /**
+   * Instantiates a new collection for deserialization process.
+   *
+   * @return the new collection
+   */
+  protected abstract C newCollection();
 
-    /**
-     * <p>isNullValueAllowed</p>
-     * @return true if the collection accepts null value
-     */
-    protected boolean isNullValueAllowed() {
-        return true;
-    }
+  /**
+   * isNullValueAllowed
+   *
+   * @return true if the collection accepts null value
+   */
+  protected boolean isNullValueAllowed() {
+    return true;
+  }
 }

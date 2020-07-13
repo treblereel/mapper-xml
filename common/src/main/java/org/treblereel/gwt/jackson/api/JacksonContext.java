@@ -1,98 +1,117 @@
+/*
+ * Copyright © 2020 Treblereel
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.treblereel.gwt.jackson.api;
 
 import java.util.Date;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.deser.bean.MapLike;
 import org.treblereel.gwt.jackson.api.stream.Stack;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
- * <p>JacksonContext interface.</p>
+ * JacksonContext interface.
+ *
  * @author vegegoku
  * @version $Id: $Id
  */
 public interface JacksonContext {
 
-    /**
-     * <p>dateFormat.</p>
-     * @return a {@link DateFormat} object.
-     */
-    DateFormat dateFormat();
+  /**
+   * dateFormat.
+   *
+   * @return a {@link DateFormat} object.
+   */
+  DateFormat dateFormat();
 
-    /**
-     * <p>mapLikeFactory.</p>
-     * @return a {@link MapLikeFactory} object.
-     */
-    MapLikeFactory mapLikeFactory();
+  /**
+   * mapLikeFactory.
+   *
+   * @return a {@link MapLikeFactory} object.
+   */
+  MapLikeFactory mapLikeFactory();
 
-    /**
-     * <p>defaultSerializerParameters.</p>
-     * @return a {@link XMLSerializerParameters} object.
-     */
-    XMLSerializerParameters defaultSerializerParameters();
+  /**
+   * defaultSerializerParameters.
+   *
+   * @return a {@link XMLSerializerParameters} object.
+   */
+  XMLSerializerParameters defaultSerializerParameters();
 
-    /**
-     * <p>newSerializerParameters</p>
-     * @return a new instance of {@link XMLSerializerParameters} object
-     */
-    XMLSerializerParameters newSerializerParameters();
+  /**
+   * newSerializerParameters
+   *
+   * @return a new instance of {@link XMLSerializerParameters} object
+   */
+  XMLSerializerParameters newSerializerParameters();
 
-    /**
-     * <p>defaultDeserializerParameters.</p>
-     * @return a {@link XMLDeserializerParameters} object.
-     */
-    XMLDeserializerParameters defaultDeserializerParameters();
+  /**
+   * defaultDeserializerParameters.
+   *
+   * @return a {@link XMLDeserializerParameters} object.
+   */
+  XMLDeserializerParameters defaultDeserializerParameters();
 
-    /**
-     * <p>newDeserializerParameters</p>
-     * @return a new instance of {@link XMLDeserializerParameters} object
-     */
-    XMLDeserializerParameters newDeserializerParameters();
+  /**
+   * newDeserializerParameters
+   *
+   * @return a new instance of {@link XMLDeserializerParameters} object
+   */
+  XMLDeserializerParameters newDeserializerParameters();
 
-    interface DateFormat {
+  interface DateFormat {
 
-        String format(Date date);
+    String format(Date date);
 
-        String format(XMLSerializerParameters params, Date date);
+    String format(XMLSerializerParameters params, Date date);
 
-        Date parse(boolean useBrowserTimezone, String pattern, Boolean hasTz, String date);
+    Date parse(boolean useBrowserTimezone, String pattern, Boolean hasTz, String date);
+  }
 
-    }
+  interface IntegerStackFactory {
 
-    interface IntegerStackFactory {
+    Stack<Integer> make();
+  }
 
-        Stack<Integer> make();
-    }
+  interface ValueStringifier {
 
-    interface ValueStringifier {
+    String stringify(String value);
+  }
 
-        String stringify(String value);
-    }
+  interface MapLikeFactory {
 
-    interface MapLikeFactory {
+    <T> MapLike<T> make();
+  }
 
-        <T> MapLike<T> make();
-    }
+  interface StringArrayReader {
 
-    interface StringArrayReader {
+    String[] readArray(XMLReader reader) throws XMLStreamException;
+  }
 
-        String[] readArray(XMLReader reader) throws XMLStreamException;
-    }
+  interface ShortArrayReader {
 
-    interface ShortArrayReader {
+    short[] readArray(XMLReader reader) throws XMLStreamException;
+  }
 
-        short[] readArray(XMLReader reader) throws XMLStreamException;
-    }
+  interface IntegerArrayReader {
 
-    interface IntegerArrayReader {
+    int[] readArray(XMLReader reader) throws XMLStreamException;
+  }
 
-        int[] readArray(XMLReader reader) throws XMLStreamException;
-    }
+  interface DoubleArrayReader {
 
-    interface DoubleArrayReader {
-
-        double[] readArray(XMLReader reader) throws XMLStreamException;
-    }
+    double[] readArray(XMLReader reader) throws XMLStreamException;
+  }
 }

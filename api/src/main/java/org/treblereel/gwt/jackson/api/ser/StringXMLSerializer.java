@@ -17,7 +17,6 @@
 package org.treblereel.gwt.jackson.api.ser;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -25,47 +24,46 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for {@link String}.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class StringXMLSerializer extends XMLSerializer<String> {
 
-    private static final StringXMLSerializer INSTANCE = new StringXMLSerializer();
+  private static final StringXMLSerializer INSTANCE = new StringXMLSerializer();
 
-    private StringXMLSerializer() {
-    }
+  private StringXMLSerializer() {}
 
-    /**
-     * <p>getInstance</p>
-     * @return an instance of {@link StringXMLSerializer}
-     */
-    public static StringXMLSerializer getInstance() {
-        return INSTANCE;
-    }
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link StringXMLSerializer}
+   */
+  public static StringXMLSerializer getInstance() {
+    return INSTANCE;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean isEmpty(String value) {
-        return null == value || value.length() == 0;
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected boolean isEmpty(String value) {
+    return null == value || value.length() == 0;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void doSerialize(XMLWriter writer, String value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        if (cdata) {
-            writer.beginObject(propertyName);
-            writer.writeCData(value);
-            writer.endObject();
-            cdata = false;
-        } else if (isAttribute) {
-            writer.writeAttribute(propertyName, value);
-            isAttribute = false;
-        } else {
-            writer.value(value);
-        }
+  /** {@inheritDoc} */
+  @Override
+  public void doSerialize(
+      XMLWriter writer, String value, XMLSerializationContext ctx, XMLSerializerParameters params)
+      throws XMLStreamException {
+    if (cdata) {
+      writer.beginObject(propertyName);
+      writer.writeCData(value);
+      writer.endObject();
+      cdata = false;
+    } else if (isAttribute) {
+      writer.writeAttribute(propertyName, value);
+      isAttribute = false;
+    } else {
+      writer.value(value);
     }
+  }
 }

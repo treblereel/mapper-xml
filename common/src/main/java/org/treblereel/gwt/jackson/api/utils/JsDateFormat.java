@@ -16,33 +16,30 @@
 
 package org.treblereel.gwt.jackson.api.utils;
 
-
 import java.util.Date;
-
 import org.treblereel.gwt.jackson.api.JacksonContext;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
 
 /**
- * <p>JsDateFormat class.</p>
+ * JsDateFormat class.
  *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public final class JsDateFormat implements JacksonContext.DateFormat {
 
-    @Override
-    public String format(Date date) {
-        return null;
-    }
+  @Override
+  public String format(Date date) {
+    return null;
+  }
 
-    @Override
-    public String format(XMLSerializerParameters params, Date date) {
-        return null;
-    }
+  @Override
+  public String format(XMLSerializerParameters params, Date date) {
+    return null;
+  }
 
-    @Override
-    public Date parse(boolean useBrowserTimezone, String pattern, Boolean hasTz, String date) {
-        return null;
-    }
+  @Override
+  public Date parse(boolean useBrowserTimezone, String pattern, Boolean hasTz, String date) {
+    return null;
+  }
 }
-

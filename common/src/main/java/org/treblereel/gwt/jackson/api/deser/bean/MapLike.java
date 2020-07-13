@@ -18,28 +18,28 @@ package org.treblereel.gwt.jackson.api.deser.bean;
 import java.util.Set;
 
 /**
- * <p>MapLike interface.</p>
+ * MapLike interface.
  *
  * @author vegegoku
  * @version $Id: $Id
  */
 public interface MapLike<T> {
 
-    /**
-     * <p>get.</p>
-     *
-     * @param key a {@link String} object.
-     * @return a T object.
-     */
-    T get(String key);
+  /**
+   * get.
+   *
+   * @param key a {@link String} object.
+   * @return a T object.
+   */
+  T get(String key);
 
-    /**
-     * <p>put.</p>
-     *
-     * @param key a {@link String} object.
-     * @param value a T object.
-     */
-    void put(String key, T value);
+  /**
+   * put.
+   *
+   * @param key a {@link String} object.
+   * @param value a T object.
+   */
+  void put(String key, T value);
 
-    Set<String> keys();
+  Set<String> keys();
 }

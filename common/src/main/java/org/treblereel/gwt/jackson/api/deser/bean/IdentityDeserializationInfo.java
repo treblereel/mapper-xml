@@ -18,20 +18,23 @@ package org.treblereel.gwt.jackson.api.deser.bean;
 
 /**
  * Contains identity informations for deserialization process.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public interface IdentityDeserializationInfo {
 
-    /**
-     * <p>getPropertyName</p>
-     * @return name of the identifier property
-     */
-    String getPropertyName();
+  /**
+   * getPropertyName
+   *
+   * @return name of the identifier property
+   */
+  String getPropertyName();
 
-    /**
-     * <p>isProperty</p>
-     * @return true if the identifier is also a property of the bean
-     */
-    boolean isProperty();
+  /**
+   * isProperty
+   *
+   * @return true if the identifier is also a property of the bean
+   */
+  boolean isProperty();
 }

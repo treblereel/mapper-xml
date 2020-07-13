@@ -17,7 +17,6 @@
 package org.treblereel.gwt.jackson.api.ser;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -31,35 +30,38 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public class VoidXMLSerializer extends XMLSerializer<Void> {
 
-    private static final VoidXMLSerializer INSTANCE = new VoidXMLSerializer();
+  private static final VoidXMLSerializer INSTANCE = new VoidXMLSerializer();
 
-    /**
-     * <p>getInstance</p>
-     *
-     * @return an instance of {@link VoidXMLSerializer}
-     */
-    public static VoidXMLSerializer getInstance() {
-        return INSTANCE;
-    }
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link VoidXMLSerializer}
+   */
+  public static VoidXMLSerializer getInstance() {
+    return INSTANCE;
+  }
 
-    private VoidXMLSerializer() {
-    }
+  private VoidXMLSerializer() {}
 
-    /** {@inheritDoc} */
-    @Override
-    protected void serializeNullValue(XMLWriter writer, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        if (writer.getSerializeNulls()) {
-            writer.setSerializeNulls(false);
-            writer.nullValue();
-            writer.setSerializeNulls(true);
-        } else {
-            writer.nullValue();
-        }
+  /** {@inheritDoc} */
+  @Override
+  protected void serializeNullValue(
+      XMLWriter writer, XMLSerializationContext ctx, XMLSerializerParameters params)
+      throws XMLStreamException {
+    if (writer.getSerializeNulls()) {
+      writer.setSerializeNulls(false);
+      writer.nullValue();
+      writer.setSerializeNulls(true);
+    } else {
+      writer.nullValue();
     }
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public void doSerialize(XMLWriter writer, Void value, XMLSerializationContext ctx, XMLSerializerParameters params) {
-        // we should never be here, the null value is already handled and it's the only possible value for Void
-    }
+  /** {@inheritDoc} */
+  @Override
+  public void doSerialize(
+      XMLWriter writer, Void value, XMLSerializationContext ctx, XMLSerializerParameters params) {
+    // we should never be here, the null value is already handled and it's the only possible value
+    // for Void
+  }
 }

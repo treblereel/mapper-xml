@@ -18,9 +18,7 @@ package org.treblereel.gwt.jackson.api.deser.array.dd;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -30,55 +28,58 @@ import org.treblereel.gwt.jackson.api.utils.Base64Utils;
 
 /**
  * Default {@link XMLDeserializer} implementation for 2D array of byte.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class PrimitiveByteArray2dXMLDeserializer extends AbstractArray2dXMLDeserializer<byte[][]> {
 
-    private static final PrimitiveByteArray2dXMLDeserializer INSTANCE = new PrimitiveByteArray2dXMLDeserializer();
+  private static final PrimitiveByteArray2dXMLDeserializer INSTANCE =
+      new PrimitiveByteArray2dXMLDeserializer();
 
-    private PrimitiveByteArray2dXMLDeserializer() {
-    }
+  private PrimitiveByteArray2dXMLDeserializer() {}
 
-    /**
-     * <p>getInstance</p>
-     * @return an instance of {@link PrimitiveByteArray2dXMLDeserializer}
-     */
-    public static PrimitiveByteArray2dXMLDeserializer getInstance() {
-        return INSTANCE;
-    }
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link PrimitiveByteArray2dXMLDeserializer}
+   */
+  public static PrimitiveByteArray2dXMLDeserializer getInstance() {
+    return INSTANCE;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public byte[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
+  /** {@inheritDoc} */
+  @Override
+  public byte[][] doDeserialize(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
 
-        byte[][] result;
+    byte[][] result;
 
-        List<String> strings = doDeserializeInnerIntoList(reader, ctx, s -> StringXMLDeserializer.getInstance(), params);
+    List<String> strings =
+        doDeserializeInnerIntoList(reader, ctx, s -> StringXMLDeserializer.getInstance(), params);
 
-        if (strings.isEmpty()) {
-            result = new byte[0][0];
-        } else {
-            List<byte[]> list = new ArrayList<>();
+    if (strings.isEmpty()) {
+      result = new byte[0][0];
+    } else {
+      List<byte[]> list = new ArrayList<>();
 
-            int size = 0;
-            for (String string : strings) {
-                byte[] decoded = Base64Utils.fromBase64(string);
-                size = Math.max(size, decoded.length);
-                list.add(decoded);
-            }
+      int size = 0;
+      for (String string : strings) {
+        byte[] decoded = Base64Utils.fromBase64(string);
+        size = Math.max(size, decoded.length);
+        list.add(decoded);
+      }
 
-            result = new byte[list.size()][size];
-            int i = 0;
-            for (byte[] value : list) {
-                if (null != value) {
-                    result[i] = value;
-                }
-                i++;
-            }
+      result = new byte[list.size()][size];
+      int i = 0;
+      for (byte[] value : list) {
+        if (null != value) {
+          result[i] = value;
         }
-        return result;
+        i++;
+      }
     }
+    return result;
+  }
 }

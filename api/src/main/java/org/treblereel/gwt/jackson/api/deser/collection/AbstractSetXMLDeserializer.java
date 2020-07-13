@@ -16,14 +16,14 @@
 
 package org.treblereel.gwt.jackson.api.deser.collection;
 
-import org.treblereel.gwt.jackson.api.XMLDeserializer;
-
 import java.util.AbstractSet;
 import java.util.LinkedHashSet;
 import java.util.function.Function;
+import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 /**
- * Default {@link XMLDeserializer} implementation for {@link java.util.Set}. The deserialization process returns a {@link java.util.LinkedHashSet}.
+ * Default {@link XMLDeserializer} implementation for {@link java.util.Set}. The deserialization
+ * process returns a {@link java.util.LinkedHashSet}.
  *
  * @param <T> Type of the elements inside the {@link java.util.AbstractSet}
  * @author Nicolas Morel
@@ -31,27 +31,30 @@ import java.util.function.Function;
  */
 public final class AbstractSetXMLDeserializer<T> extends BaseSetXMLDeserializer<AbstractSet<T>, T> {
 
-    /**
-     * <p>newInstance</p>
-     *
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link java.util.AbstractSet}.
-     * @param <T>          Type of the elements inside the {@link java.util.AbstractSet}
-     * @return a new instance of {@link AbstractSetXMLDeserializer}
-     */
-    public static <T> AbstractSetXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
-        return new AbstractSetXMLDeserializer<>(deserializer);
-    }
+  /**
+   * newInstance
+   *
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     java.util.AbstractSet}.
+   * @param <T> Type of the elements inside the {@link java.util.AbstractSet}
+   * @return a new instance of {@link AbstractSetXMLDeserializer}
+   */
+  public static <T> AbstractSetXMLDeserializer<T> newInstance(
+      Function<String, XMLDeserializer<T>> deserializer) {
+    return new AbstractSetXMLDeserializer<>(deserializer);
+  }
 
-    /**
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link AbstractSet}.
-     */
-    private AbstractSetXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
-        super(deserializer);
-    }
+  /**
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     AbstractSet}.
+   */
+  private AbstractSetXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
+    super(deserializer);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected AbstractSet<T> newCollection() {
-        return new LinkedHashSet<>();
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected AbstractSet<T> newCollection() {
+    return new LinkedHashSet<>();
+  }
 }

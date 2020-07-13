@@ -17,12 +17,13 @@
 package org.treblereel.gwt.jackson.api;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.exception.XMLSerializationException;
 
 /**
  * Writes an object to XML.
- * <p>Example : </p>
+ *
+ * <p>Example :
+ *
  * <pre>
  * public class Person {
  *     public String firstName, lastName;
@@ -39,32 +40,37 @@ import org.treblereel.gwt.jackson.api.exception.XMLSerializationException;
  *
  * json ==&gt; {"firstName":"Nicolas","lastName":"Morel"} //TODO
  * </pre>
+ *
  * @param <T> Type of the object to write
  * @author Nicolas Morel
  * @version $Id: $
  */
 public interface ObjectWriter<T> {
 
-    /**
-     * Writes an object to XML.
-     * @param value Object to write
-     * @return the XML output
-     * @throws XMLSerializationException if an exception occurs while writing the output
-     */
-    String write(T value) throws XMLSerializationException, XMLStreamException;
+  /**
+   * Writes an object to XML.
+   *
+   * @param value Object to write
+   * @return the XML output
+   * @throws XMLSerializationException if an exception occurs while writing the output
+   */
+  String write(T value) throws XMLSerializationException, XMLStreamException;
 
-    /**
-     * Writes an object to XML.
-     * @param value Object to write
-     * @param ctx Context for the full writing process
-     * @return a {@link String} object.
-     * @throws XMLSerializationException if an exception occurs while writing the output
-     */
-    String write(T value, XMLSerializationContext ctx) throws XMLSerializationException, XMLStreamException;
+  /**
+   * Writes an object to XML.
+   *
+   * @param value Object to write
+   * @param ctx Context for the full writing process
+   * @return a {@link String} object.
+   * @throws XMLSerializationException if an exception occurs while writing the output
+   */
+  String write(T value, XMLSerializationContext ctx)
+      throws XMLSerializationException, XMLStreamException;
 
-    /**
-     * <p>getSerializer.</p>
-     * @return a {@link XMLSerializer} object.
-     */
-    XMLSerializer<T> getSerializer();
+  /**
+   * getSerializer.
+   *
+   * @return a {@link XMLSerializer} object.
+   */
+  XMLSerializer<T> getSerializer();
 }

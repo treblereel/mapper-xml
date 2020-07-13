@@ -1,9 +1,24 @@
+/*
+ * Copyright © 2020 Treblereel
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.treblereel.gwt.jackson.processor;
 
+import com.google.auto.common.MoreTypes;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
@@ -15,132 +30,139 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.xml.bind.annotation.XmlTransient;
-
-import com.google.auto.common.MoreTypes;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 import org.treblereel.gwt.jackson.exception.GenerationException;
 import org.treblereel.gwt.jackson.generator.MapperGenerator;
 import org.treblereel.gwt.jackson.logger.TreeLogger;
 
-/**
- * @author Dmitrii Tikhomirov
- * Created by treblereel 3/11/20
- */
+/** @author Dmitrii Tikhomirov Created by treblereel 3/11/20 */
 public class BeanProcessor {
 
-    private final GenerationContext context;
-    private final TreeLogger logger;
-    private final Set<TypeElement> annotatedBeans;
-    private final Set<TypeElement> beans = new HashSet<>();
-    private final TypeUtils typeUtils;
-    private final MapperGenerator mapperGenerator;
+  private final GenerationContext context;
+  private final TreeLogger logger;
+  private final Set<TypeElement> annotatedBeans;
+  private final Set<TypeElement> beans = new HashSet<>();
+  private final TypeUtils typeUtils;
+  private final MapperGenerator mapperGenerator;
 
-    public BeanProcessor(GenerationContext context, TreeLogger logger, Set<TypeElement> annotatedBeans) {
-        this.context = context;
-        this.logger = logger;
-        this.annotatedBeans = annotatedBeans;
-        this.typeUtils = context.getTypeUtils();
-        this.mapperGenerator = new MapperGenerator(context, logger);
+  public BeanProcessor(
+      GenerationContext context, TreeLogger logger, Set<TypeElement> annotatedBeans) {
+    this.context = context;
+    this.logger = logger;
+    this.annotatedBeans = annotatedBeans;
+    this.typeUtils = context.getTypeUtils();
+    this.mapperGenerator = new MapperGenerator(context, logger);
+  }
+
+  public void process() {
+    annotatedBeans.forEach(this::processBean);
+    beans.forEach(context::addBeanDefinition);
+    context.getBeans().stream()
+        .filter(elm -> context.getTypeRegistry().get(elm.getElement().toString()) == null)
+        .filter(
+            elm ->
+                !MoreTypes.asTypeElement(elm.getBean())
+                    .getModifiers()
+                    .contains(javax.lang.model.element.Modifier.ABSTRACT))
+        .forEach(mapperGenerator::generate);
+  }
+
+  private void processBean(TypeElement bean) {
+    if (!beans.contains(bean)) {
+      beans.add(checkBean(bean));
+      context.getTypeUtils().getAllFieldsIn(bean).forEach(this::processField);
+    }
+  }
+
+  private void processField(VariableElement field) {
+    checkField(field);
+    checkTypeAndAdd(field.asType());
+  }
+
+  private void checkTypeAndAdd(TypeMirror type) {
+    if (context
+            .getTypeRegistry()
+            .get(context.getProcessingEnv().getTypeUtils().erasure(type).toString())
+        == null) {
+      if (type.getKind().equals(TypeKind.ARRAY)) {
+        ArrayType arrayType = (ArrayType) type;
+
+        if (!context.getTypeUtils().isSimpleType(arrayType.getComponentType())) {
+          processBean(typeUtils.toTypeElement(arrayType.getComponentType()));
+        }
+      } else if (MoreTypes.isType(type)) {
+        if (!MoreTypes.asElement(type).getKind().equals(ElementKind.ENUM)) {
+          processBean(typeUtils.toTypeElement(type));
+        }
+      }
     }
 
-    public void process() {
-        annotatedBeans.forEach(this::processBean);
-        beans.forEach(context::addBeanDefinition);
-        context.getBeans().stream().filter(elm -> context.getTypeRegistry().get(elm.getElement().toString()) == null)
-                .filter(elm -> !MoreTypes.asTypeElement(elm.getBean())
-                        .getModifiers().contains(javax.lang.model.element.Modifier.ABSTRACT))
-                .forEach(mapperGenerator::generate);
+    if (context.getTypeUtils().isCollection(type)) {
+      DeclaredType collection = (DeclaredType) type;
+      collection.getTypeArguments().forEach(this::checkTypeAndAdd);
     }
 
-    private void processBean(TypeElement bean) {
-        if (!beans.contains(bean)) {
-            beans.add(checkBean(bean));
-            context.getTypeUtils().getAllFieldsIn(bean)
-                    .forEach(this::processField);
-        }
+    if (context.getTypeUtils().isMap(type)) {
+      DeclaredType collection = (DeclaredType) type;
+      collection.getTypeArguments().forEach(this::checkTypeAndAdd);
+    }
+  }
+
+  private boolean checkField(VariableElement field) {
+    if (field.getModifiers().contains(Modifier.STATIC)
+        || field.getModifiers().contains(Modifier.TRANSIENT)
+        || field.getAnnotation(XmlTransient.class) != null
+        || field.getModifiers().contains(Modifier.FINAL)) {
+      return false;
+    }
+    if (!field.getModifiers().contains(Modifier.PRIVATE)
+        || typeUtils.hasGetter(field) && typeUtils.hasSetter(field)) {
+      return true;
     }
 
-    private void processField(VariableElement field) {
-        checkField(field);
-        checkTypeAndAdd(field.asType());
+    if (!typeUtils.hasGetter(field)) {
+      throw new GenerationException(
+          String.format(
+              "Unable to find suitable getter for [%s] in [%s].",
+              field.getSimpleName(), field.getEnclosingElement()));
     }
 
-    private void checkTypeAndAdd(TypeMirror type) {
-        if (context.getTypeRegistry().get(context.getProcessingEnv()
-                                                  .getTypeUtils().erasure(type).toString()) == null) {
-            if (type.getKind().equals(TypeKind.ARRAY)) {
-                ArrayType arrayType = (ArrayType) type;
-
-                if (!context.getTypeUtils().isSimpleType(arrayType.getComponentType())) {
-                    processBean(typeUtils.toTypeElement(arrayType.getComponentType()));
-                }
-            } else if (MoreTypes.isType(type)) {
-                if (!MoreTypes.asElement(type).getKind().equals(ElementKind.ENUM)) {
-                    processBean(typeUtils.toTypeElement(type));
-                }
-            }
-        }
-
-        if (context.getTypeUtils().isCollection(type)) {
-            DeclaredType collection = (DeclaredType) type;
-            collection.getTypeArguments().forEach(this::checkTypeAndAdd);
-        }
-
-        if (context.getTypeUtils().isMap(type)) {
-            DeclaredType collection = (DeclaredType) type;
-            collection.getTypeArguments().forEach(this::checkTypeAndAdd);
-        }
+    if (!typeUtils.hasSetter(field)) {
+      throw new GenerationException(
+          String.format(
+              "Unable to find suitable setter for [%s] in [%s]",
+              field.getSimpleName(), field.getEnclosingElement()));
     }
 
-    private boolean checkField(VariableElement field) {
-        if (field.getModifiers().contains(Modifier.STATIC) ||
-                field.getModifiers().contains(Modifier.TRANSIENT) ||
-                field.getAnnotation(XmlTransient.class) != null ||
-                field.getModifiers().contains(Modifier.FINAL)) {
-            return false;
-        }
-        if (!field.getModifiers().contains(Modifier.PRIVATE) ||
-                typeUtils.hasGetter(field) && typeUtils.hasSetter(field)) {
-            return true;
-        }
+    throw new GenerationException(
+        String.format(
+            "Unable to process [%s] in [%s]", field.getSimpleName(), field.getEnclosingElement()));
+  }
 
-        if (!typeUtils.hasGetter(field)) {
-            throw new GenerationException(String.format("Unable to find suitable getter for [%s] in [%s].",
-                                                        field.getSimpleName(), field.getEnclosingElement()));
-        }
-
-        if (!typeUtils.hasSetter(field)) {
-            throw new GenerationException(String.format("Unable to find suitable setter for [%s] in [%s]",
-                                                        field.getSimpleName(), field.getEnclosingElement()));
-        }
-
-        throw new GenerationException(String.format("Unable to process [%s] in [%s]", field.getSimpleName(), field.getEnclosingElement()));
+  private TypeElement checkBean(TypeElement type) {
+    if (type.getModifiers().contains(Modifier.PRIVATE)) {
+      throw new GenerationException("A @XMLMapper bean [" + type + "] must be public");
     }
 
-    private TypeElement checkBean(TypeElement type) {
-        if (type.getModifiers().contains(Modifier.PRIVATE)) {
-            throw new GenerationException(
-                    "A @XMLMapper bean [" + type + "] must be public");
-        }
-
-        if (type.getEnclosingElement().getKind().isClass()) {
-            if (!type.getModifiers().contains(Modifier.STATIC)) {
-                throw new GenerationException(
-                        "A @XMLMapper bean [" + type + "] must be static");
-            }
-        }
-
-        List<ExecutableElement> constructors = ElementFilter.constructorsIn(type.getEnclosedElements());
-        if (!constructors.isEmpty()) {
-            long nonArgConstructorCount = constructors.stream()
-                    .filter(constr -> !constr.getModifiers().contains(Modifier.PRIVATE))
-                    .filter(constr -> constr.getParameters().isEmpty()).count();
-            if (nonArgConstructorCount != 1) {
-                throw new GenerationException(
-                        "A @XMLMapper bean [" + type + "] must have a non-private non-arg constructor");
-            }
-        }
-        return type;
+    if (type.getEnclosingElement().getKind().isClass()) {
+      if (!type.getModifiers().contains(Modifier.STATIC)) {
+        throw new GenerationException("A @XMLMapper bean [" + type + "] must be static");
+      }
     }
+
+    List<ExecutableElement> constructors = ElementFilter.constructorsIn(type.getEnclosedElements());
+    if (!constructors.isEmpty()) {
+      long nonArgConstructorCount =
+          constructors.stream()
+              .filter(constr -> !constr.getModifiers().contains(Modifier.PRIVATE))
+              .filter(constr -> constr.getParameters().isEmpty())
+              .count();
+      if (nonArgConstructorCount != 1) {
+        throw new GenerationException(
+            "A @XMLMapper bean [" + type + "] must have a non-private non-arg constructor");
+      }
+    }
+    return type;
+  }
 }

@@ -17,9 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.bean;
 
 import java.util.Map;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -32,46 +30,54 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 interface InternalDeserializer<T, S extends XMLDeserializer<T>> {
 
-    /**
-     * <p>getDeserializer</p>
-     *
-     * @return a S object.
-     */
-    S getDeserializer();
+  /**
+   * getDeserializer
+   *
+   * @return a S object.
+   */
+  S getDeserializer();
 
-    /**
-     * <p>deserializeInline</p>
-     *
-     * @param reader             a {@link XMLReader} object.
-     * @param ctx                a {@link XMLDeserializationContext} object.
-     * @param params             a {@link XMLDeserializerParameters} object.
-     * @param identityInfo       a {@link IdentityDeserializationInfo} object.
-     * @param typeInfo           a {@link TypeDeserializationInfo} object.
-     * @param typeInformation    a {@link String} object.
-     * @param typeInformation    a {@link String} object.
-     * @param bufferedProperties a {@link Map} object.
-     * @return a T object.
-     */
-    T deserializeInline(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params,
-                        IdentityDeserializationInfo identityInfo, TypeDeserializationInfo typeInfo,
-                        String typeInformation, Map<String,
-            String> bufferedProperties) throws XMLStreamException;
+  /**
+   * deserializeInline
+   *
+   * @param reader a {@link XMLReader} object.
+   * @param ctx a {@link XMLDeserializationContext} object.
+   * @param params a {@link XMLDeserializerParameters} object.
+   * @param identityInfo a {@link IdentityDeserializationInfo} object.
+   * @param typeInfo a {@link TypeDeserializationInfo} object.
+   * @param typeInformation a {@link String} object.
+   * @param typeInformation a {@link String} object.
+   * @param bufferedProperties a {@link Map} object.
+   * @return a T object.
+   */
+  T deserializeInline(
+      XMLReader reader,
+      XMLDeserializationContext ctx,
+      XMLDeserializerParameters params,
+      IdentityDeserializationInfo identityInfo,
+      TypeDeserializationInfo typeInfo,
+      String typeInformation,
+      Map<String, String> bufferedProperties)
+      throws XMLStreamException;
 
-    /**
-     * <p>deserializeWrapped</p>
-     *
-     * @param reader          a {@link XMLReader} object.
-     * @param ctx             a {@link XMLDeserializationContext} object.
-     * @param params          a {@link XMLDeserializerParameters} object.
-     * @param identityInfo    a {@link IdentityDeserializationInfo} object.
-     * @param typeInfo        a {@link TypeDeserializationInfo} object.
-     * @param typeInformation a {@link String} object.
-     * @param typeInformation a {@link String} object.
-     * @return a T object.
-     */
-    T deserializeWrapped(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params,
-                         IdentityDeserializationInfo identityInfo, TypeDeserializationInfo typeInfo,
-                         String typeInformation) throws XMLStreamException;
-
+  /**
+   * deserializeWrapped
+   *
+   * @param reader a {@link XMLReader} object.
+   * @param ctx a {@link XMLDeserializationContext} object.
+   * @param params a {@link XMLDeserializerParameters} object.
+   * @param identityInfo a {@link IdentityDeserializationInfo} object.
+   * @param typeInfo a {@link TypeDeserializationInfo} object.
+   * @param typeInformation a {@link String} object.
+   * @param typeInformation a {@link String} object.
+   * @return a T object.
+   */
+  T deserializeWrapped(
+      XMLReader reader,
+      XMLDeserializationContext ctx,
+      XMLDeserializerParameters params,
+      IdentityDeserializationInfo identityInfo,
+      TypeDeserializationInfo typeInfo,
+      String typeInformation)
+      throws XMLStreamException;
 }
-

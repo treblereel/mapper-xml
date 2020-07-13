@@ -17,7 +17,6 @@
 package org.treblereel.gwt.jackson.api.deser;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -26,38 +25,40 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.lang.Boolean}.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class BooleanXMLDeserializer extends XMLDeserializer<Boolean> {
 
-    private static final BooleanXMLDeserializer INSTANCE = new BooleanXMLDeserializer();
+  private static final BooleanXMLDeserializer INSTANCE = new BooleanXMLDeserializer();
 
-    private BooleanXMLDeserializer() {
-    }
+  private BooleanXMLDeserializer() {}
 
-    /**
-     * <p>getInstance</p>
-     * @return an instance of {@link BooleanXMLDeserializer}
-     */
-    public static BooleanXMLDeserializer getInstance() {
-        return INSTANCE;
-    }
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link BooleanXMLDeserializer}
+   */
+  public static BooleanXMLDeserializer getInstance() {
+    return INSTANCE;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Boolean doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        return reader.nextBoolean();
-    }
+  /** {@inheritDoc} */
+  @Override
+  public Boolean doDeserialize(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    return reader.nextBoolean();
+  }
 
-    @Override
-    public Boolean deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
-            XMLDeserializationException {
-        if (value.isEmpty()) {
-            return null;
-        }
-        return Boolean.valueOf(value);
+  @Override
+  public Boolean deserialize(
+      String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLDeserializationException {
+    if (value.isEmpty()) {
+      return null;
     }
+    return Boolean.valueOf(value);
+  }
 }

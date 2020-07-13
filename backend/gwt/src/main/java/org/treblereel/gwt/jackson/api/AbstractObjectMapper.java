@@ -17,121 +17,118 @@
 package org.treblereel.gwt.jackson.api;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.exception.XMLSerializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
- * Base implementation of {@link ObjectMapper}. It delegates the serialization/deserialization to a serializer/deserializer.
+ * Base implementation of {@link ObjectMapper}. It delegates the serialization/deserialization to a
+ * serializer/deserializer.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public abstract class AbstractObjectMapper<T> implements ObjectMapper<T> {
 
-    private final String rootName;
+  private final String rootName;
 
-    private XMLDeserializer<T> deserializer;
+  private XMLDeserializer<T> deserializer;
 
-    private XMLSerializer<T> serializer;
+  private XMLSerializer<T> serializer;
 
-    /**
-     * <p>Constructor for AbstractObjectMapper.</p>
-     * @param rootName a {@link String} object.
-     */
-    protected AbstractObjectMapper(String rootName) {
-        this.rootName = rootName;
+  /**
+   * Constructor for AbstractObjectMapper.
+   *
+   * @param rootName a {@link String} object.
+   */
+  protected AbstractObjectMapper(String rootName) {
+    this.rootName = rootName;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public T read(String in) throws XMLDeserializationException, XMLStreamException {
+    return read(in, DefaultXMLDeserializationContext.builder().build());
+  }
+
+  /** {@inheritDoc} */
+  public T read(String in, XMLDeserializationContext ctx)
+      throws XMLDeserializationException, XMLStreamException {
+    XMLReader reader = ctx.newXMLReader(in);
+
+    try {
+      return getDeserializer(reader).deserialize(reader, ctx);
+    } catch (XMLDeserializationException e) {
+      // already logged, we just throw it
+      throw e;
+    } catch (RuntimeException e) {
+      throw ctx.traceError(e, reader);
     }
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public T read(String in) throws XMLDeserializationException, XMLStreamException {
-        return read(in, DefaultXMLDeserializationContext.builder().build());
+  /**
+   * {@inheritDoc}
+   *
+   * <p>Getter for the field <code>deserializer</code>.
+   */
+  @Override
+  public XMLDeserializer<T> getDeserializer(XMLReader reader) {
+    if (null == deserializer) {
+      deserializer = newDeserializer(reader);
     }
+    return deserializer;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public T read(String in, XMLDeserializationContext ctx) throws XMLDeserializationException, XMLStreamException {
-        XMLReader reader = ctx.newXMLReader(in);
+  /**
+   * Instantiates a new deserializer
+   *
+   * @return a new deserializer
+   */
+  protected abstract XMLDeserializer<T> newDeserializer(XMLReader reader);
 
-        try {
-            return getDeserializer(reader).deserialize(reader, ctx);
-        } catch (XMLDeserializationException e) {
-            // already logged, we just throw it
-            throw e;
-        } catch (RuntimeException e) {
-            throw ctx.traceError(e, reader);
-        }
+  /** {@inheritDoc} */
+  @Override
+  public String write(T value) throws XMLSerializationException, XMLStreamException {
+    return write(value, DefaultXMLSerializationContext.builder().build());
+  }
+
+  /** {@inheritDoc} */
+  public String write(T value, XMLSerializationContext ctx)
+      throws XMLSerializationException, XMLStreamException {
+    XMLWriter writer = ctx.newXMLWriter();
+    try {
+      getSerializer().serialize(writer, value, ctx);
+      return writer.getOutput();
+    } catch (XMLSerializationException e) {
+      // already logged, we just throw it
+      throw new Error(e);
+    } catch (RuntimeException e) {
+      throw ctx.traceError(value, e, writer);
+    } catch (Exception e) {
+      throw new Error(e);
+    } finally {
+      writer.close();
     }
+  }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>Getter for the field <code>deserializer</code>.</p>
-     */
-    @Override
-    public XMLDeserializer<T> getDeserializer(XMLReader reader) {
-        if (null == deserializer) {
-            deserializer = newDeserializer(reader);
-        }
-        return deserializer;
+  /**
+   * {@inheritDoc}
+   *
+   * <p>Getter for the field <code>serializer</code>.
+   */
+  @Override
+  public XMLSerializer<T> getSerializer() {
+    if (null == serializer) {
+      serializer = (XMLSerializer<T>) newSerializer();
     }
+    return serializer;
+  }
 
-    /**
-     * Instantiates a new deserializer
-     * @return a new deserializer
-     */
-    protected abstract XMLDeserializer<T> newDeserializer(XMLReader reader);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String write(T value) throws XMLSerializationException, XMLStreamException {
-        return write(value, DefaultXMLSerializationContext.builder().build());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String write(T value, XMLSerializationContext ctx) throws XMLSerializationException, XMLStreamException {
-        XMLWriter writer = ctx.newXMLWriter();
-        try {
-            getSerializer().serialize(writer, value, ctx);
-            return writer.getOutput();
-        } catch (XMLSerializationException e) {
-            // already logged, we just throw it
-            throw new Error(e);
-        } catch (RuntimeException e) {
-            throw ctx.traceError(value, e, writer);
-        } catch (Exception e) {
-            throw new Error(e);
-        } finally {
-            writer.close();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * <p>Getter for the field <code>serializer</code>.</p>
-     */
-    @Override
-    public XMLSerializer<T> getSerializer() {
-        if (null == serializer) {
-            serializer = (XMLSerializer<T>) newSerializer();
-        }
-        return serializer;
-    }
-
-    /**
-     * Instantiates a new serializer
-     * @return a new serializer
-     */
-    protected abstract XMLSerializer<?> newSerializer();
-
+  /**
+   * Instantiates a new serializer
+   *
+   * @return a new serializer
+   */
+  protected abstract XMLSerializer<?> newSerializer();
 }

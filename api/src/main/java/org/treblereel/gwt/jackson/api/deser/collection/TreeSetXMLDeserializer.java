@@ -16,10 +16,9 @@
 
 package org.treblereel.gwt.jackson.api.deser.collection;
 
-import org.treblereel.gwt.jackson.api.XMLDeserializer;
-
 import java.util.TreeSet;
 import java.util.function.Function;
+import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.TreeSet}.
@@ -30,27 +29,30 @@ import java.util.function.Function;
  */
 public class TreeSetXMLDeserializer<T> extends BaseSortedSetXMLDeserializer<TreeSet<T>, T> {
 
-    /**
-     * <p>newInstance</p>
-     *
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link java.util.TreeSet}.
-     * @param <T>          Type of the elements inside the {@link java.util.TreeSet}
-     * @return a new instance of {@link TreeSetXMLDeserializer}
-     */
-    public static <T> TreeSetXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
-        return new TreeSetXMLDeserializer<>(deserializer);
-    }
+  /**
+   * newInstance
+   *
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     java.util.TreeSet}.
+   * @param <T> Type of the elements inside the {@link java.util.TreeSet}
+   * @return a new instance of {@link TreeSetXMLDeserializer}
+   */
+  public static <T> TreeSetXMLDeserializer<T> newInstance(
+      Function<String, XMLDeserializer<T>> deserializer) {
+    return new TreeSetXMLDeserializer<>(deserializer);
+  }
 
-    /**
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link TreeSet}.
-     */
-    private TreeSetXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
-        super(deserializer);
-    }
+  /**
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     TreeSet}.
+   */
+  private TreeSetXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
+    super(deserializer);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected TreeSet<T> newCollection() {
-        return new TreeSet<>();
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected TreeSet<T> newCollection() {
+    return new TreeSet<>();
+  }
 }

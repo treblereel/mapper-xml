@@ -17,7 +17,6 @@
 package org.treblereel.gwt.jackson.api.ser.array;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -26,43 +25,45 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for array of boolean.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class PrimitiveBooleanArrayXMLSerializer extends BasicArrayXMLSerializer<boolean[]> {
 
-    private static final PrimitiveBooleanArrayXMLSerializer INSTANCE = new PrimitiveBooleanArrayXMLSerializer();
-    private BooleanXMLSerializer serializer = BooleanXMLSerializer.getInstance();
+  private static final PrimitiveBooleanArrayXMLSerializer INSTANCE =
+      new PrimitiveBooleanArrayXMLSerializer();
+  private BooleanXMLSerializer serializer = BooleanXMLSerializer.getInstance();
 
-    private PrimitiveBooleanArrayXMLSerializer() {
+  private PrimitiveBooleanArrayXMLSerializer() {}
+
+  public static BasicArrayXMLSerializer getInstance(String propertyName) {
+    return INSTANCE.setPropertyName(propertyName);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  protected boolean isEmpty(boolean[] value) {
+    return null == value || value.length == 0;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void doSerialize(
+      XMLWriter writer,
+      boolean[] values,
+      XMLSerializationContext ctx,
+      XMLSerializerParameters params)
+      throws XMLStreamException {
+    if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
+      writer.nullValue();
+      return;
     }
 
-    public static BasicArrayXMLSerializer getInstance(String propertyName) {
-        return INSTANCE.setPropertyName(propertyName);
+    writer.beginObject(propertyName);
+    for (boolean value : values) {
+      serializer.doSerialize(writer, value, ctx, params);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean isEmpty(boolean[] value) {
-        return null == value || value.length == 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void doSerialize(XMLWriter writer, boolean[] values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
-            writer.nullValue();
-            return;
-        }
-
-        writer.beginObject(propertyName);
-        for (boolean value : values) {
-            serializer.doSerialize(writer, value, ctx, params);
-        }
-        writer.endObject();
-    }
+    writer.endObject();
+  }
 }

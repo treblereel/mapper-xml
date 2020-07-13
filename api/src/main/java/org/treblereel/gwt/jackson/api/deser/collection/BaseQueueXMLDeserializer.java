@@ -16,10 +16,9 @@
 
 package org.treblereel.gwt.jackson.api.deser.collection;
 
-import org.treblereel.gwt.jackson.api.XMLDeserializer;
-
 import java.util.Queue;
 import java.util.function.Function;
+import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 /**
  * Base {@link XMLDeserializer} implementation for {@link java.util.Queue}.
@@ -29,20 +28,22 @@ import java.util.function.Function;
  * @author Nicolas Morel
  * @version $Id: $
  */
-public abstract class BaseQueueXMLDeserializer<Q extends Queue<T>, T> extends BaseCollectionXMLDeserializer<Q, T> {
+public abstract class BaseQueueXMLDeserializer<Q extends Queue<T>, T>
+    extends BaseCollectionXMLDeserializer<Q, T> {
 
-    /**
-     * <p>Constructor for BaseQueueXMLDeserializer.</p>
-     *
-     * @param deserializer {@link XMLDeserializer} used to map the objects inside the {@link java.util.Queue}.
-     */
-    public BaseQueueXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
-        super(deserializer);
-    }
+  /**
+   * Constructor for BaseQueueXMLDeserializer.
+   *
+   * @param deserializer {@link XMLDeserializer} used to map the objects inside the {@link
+   *     java.util.Queue}.
+   */
+  public BaseQueueXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
+    super(deserializer);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected boolean isNullValueAllowed() {
-        return false;
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected boolean isNullValueAllowed() {
+    return false;
+  }
 }

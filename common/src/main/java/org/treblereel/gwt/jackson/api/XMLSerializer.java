@@ -21,273 +21,289 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.exception.XMLSerializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 import org.treblereel.gwt.jackson.api.utils.Pair;
 
 /**
- * Base class for all the serializer. It handles null values and exceptions. The rest is delegated to implementations.
+ * Base class for all the serializer. It handles null values and exceptions. The rest is delegated
+ * to implementations.
+ *
  * @author Nicolas Morel
  * @version $Id: $Id
  */
 public abstract class XMLSerializer<T> {
 
-    protected String propertyName;
+  protected String propertyName;
 
-    protected boolean cdata = false;
+  protected boolean cdata = false;
 
-    protected boolean isAttribute = false;
+  protected boolean isAttribute = false;
 
-    protected XMLSerializer parent;
+  protected XMLSerializer parent;
 
-    protected String namespace;
+  protected String namespace;
 
-    protected String prefix;
+  protected String prefix;
 
-    protected List<String> xsiType = new ArrayList<>();
+  protected List<String> xsiType = new ArrayList<>();
 
-    protected Inheritance inheritanceType = Inheritance.NONE;
+  protected Inheritance inheritanceType = Inheritance.NONE;
 
-    protected Map<String, String> namespaces = new LinkedHashMap<>();
+  protected Map<String, String> namespaces = new LinkedHashMap<>();
 
-    public XMLSerializer<T> setPropertyName(String propertyName) {
-        if (!inheritanceType.equals(Inheritance.TAG)) {
-            this.propertyName = propertyName;
-        }
-        return this;
+  public XMLSerializer<T> setPropertyName(String propertyName) {
+    if (!inheritanceType.equals(Inheritance.TAG)) {
+      this.propertyName = propertyName;
     }
+    return this;
+  }
 
-    public XMLSerializer<T> setCdata(boolean cdata) {
-        this.cdata = cdata;
-        return this;
-    }
+  public XMLSerializer<T> setCdata(boolean cdata) {
+    this.cdata = cdata;
+    return this;
+  }
 
-    public XMLSerializer<T> isAttribute(boolean isAttribute) {
-        this.isAttribute = isAttribute;
-        return this;
-    }
+  public XMLSerializer<T> isAttribute(boolean isAttribute) {
+    this.isAttribute = isAttribute;
+    return this;
+  }
 
-    public XMLSerializer<T> setPrefix(String prefix) {
-        this.prefix = prefix;
-        return this;
-    }
+  public XMLSerializer<T> setPrefix(String prefix) {
+    this.prefix = prefix;
+    return this;
+  }
 
-    public XMLSerializer setParent(XMLSerializer parent) {
-        this.parent = parent;
-        return this;
-    }
+  public XMLSerializer setParent(XMLSerializer parent) {
+    this.parent = parent;
+    return this;
+  }
 
-    /**
-     * Serializes an object into XML output.
-     * @param writer {@link XMLWriter} used to write the serialized XML
-     * @param value Object to serialize
-     * @param ctx Context for the full serialization process
-     * @throws XMLSerializationException if an error occurs during the serialization
-     */
-    public void serialize(XMLWriter writer, T value, XMLSerializationContext ctx) throws XMLSerializationException, XMLStreamException {
-        serialize(writer, value, ctx, ctx.defaultParameters());
-    }
+  /**
+   * Serializes an object into XML output.
+   *
+   * @param writer {@link XMLWriter} used to write the serialized XML
+   * @param value Object to serialize
+   * @param ctx Context for the full serialization process
+   * @throws XMLSerializationException if an error occurs during the serialization
+   */
+  public void serialize(XMLWriter writer, T value, XMLSerializationContext ctx)
+      throws XMLSerializationException, XMLStreamException {
+    serialize(writer, value, ctx, ctx.defaultParameters());
+  }
 
-    /**
-     * Serializes an object into XML output.
-     * @param writer {@link XMLWriter} used to write the serialized XML
-     * @param value Object to serialize
-     * @param ctx Context for the full serialization process
-     * @param params Parameters for this serialization
-     * @throws XMLSerializationException if an error occurs during the serialization
-     */
-    public void serialize(XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters params) throws
-            XMLSerializationException, XMLStreamException {
-        serialize(writer, value, ctx, params, false);
-    }
+  /**
+   * Serializes an object into XML output.
+   *
+   * @param writer {@link XMLWriter} used to write the serialized XML
+   * @param value Object to serialize
+   * @param ctx Context for the full serialization process
+   * @param params Parameters for this serialization
+   * @throws XMLSerializationException if an error occurs during the serialization
+   */
+  public void serialize(
+      XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters params)
+      throws XMLSerializationException, XMLStreamException {
+    serialize(writer, value, ctx, params, false);
+  }
 
-    /**
-     * Serializes an object into XML output.
-     * @param writer {@link XMLWriter} used to write the serialized XML
-     * @param value Object to serialize
-     * @param ctx Context for the full serialization process
-     * @param params Parameters for this serialization
-     * @param isMapValue indicate if you're serializing a Map value
-     * @throws XMLSerializationException if an error occurs during the serialization
-     */
-    public void serialize(XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters params, boolean isMapValue) throws
-            XMLSerializationException, XMLStreamException {
-        if (null == value && !isAttribute) {
-            if (ctx.isSerializeNulls() || (isMapValue && ctx.isWriteNullMapValues())) {
-                serializeNullValue(writer, ctx, params);
-            } else {
-                writer.nullValue();
-            }
-        } else {
-            doSerialize(writer, value, ctx, params);
-        }
-    }
-
-    /**
-     * Serialize the null value. This method allows children to override the default behaviour.
-     * @param writer {@link XMLWriter} used to write the serialized XML
-     * @param ctx Context for the full serialization process
-     * @param params Parameters for this serialization
-     */
-    protected void serializeNullValue(XMLWriter writer, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
+  /**
+   * Serializes an object into XML output.
+   *
+   * @param writer {@link XMLWriter} used to write the serialized XML
+   * @param value Object to serialize
+   * @param ctx Context for the full serialization process
+   * @param params Parameters for this serialization
+   * @param isMapValue indicate if you're serializing a Map value
+   * @throws XMLSerializationException if an error occurs during the serialization
+   */
+  public void serialize(
+      XMLWriter writer,
+      T value,
+      XMLSerializationContext ctx,
+      XMLSerializerParameters params,
+      boolean isMapValue)
+      throws XMLSerializationException, XMLStreamException {
+    if (null == value && !isAttribute) {
+      if (ctx.isSerializeNulls() || (isMapValue && ctx.isWriteNullMapValues())) {
+        serializeNullValue(writer, ctx, params);
+      } else {
         writer.nullValue();
+      }
+    } else {
+      doSerialize(writer, value, ctx, params);
+    }
+  }
+
+  /**
+   * Serialize the null value. This method allows children to override the default behaviour.
+   *
+   * @param writer {@link XMLWriter} used to write the serialized XML
+   * @param ctx Context for the full serialization process
+   * @param params Parameters for this serialization
+   */
+  protected void serializeNullValue(
+      XMLWriter writer, XMLSerializationContext ctx, XMLSerializerParameters params)
+      throws XMLStreamException {
+    writer.nullValue();
+  }
+
+  /**
+   * Serializes a non-null object into XML output.
+   *
+   * @param writer {@link XMLWriter} used to write the serialized XML
+   * @param value Object to serialize
+   * @param ctx Context for the full serialization process
+   * @param params Parameters for this serialization
+   */
+  protected abstract void doSerialize(
+      XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters params)
+      throws XMLStreamException;
+
+  protected void writeNamespace(XMLWriter writer, String prefix) throws XMLStreamException {
+    Optional<String> defaultNamespace = getDefaultNamespace();
+    if (prefix != null && defaultNamespace.isPresent()) {
+      writer.writeDefaultNamespace(defaultNamespace.get());
+    } else if (getNamespace() != null) {
+      writer.writeDefaultNamespace(getNamespace());
     }
 
-    /**
-     * Serializes a non-null object into XML output.
-     * @param writer {@link XMLWriter} used to write the serialized XML
-     * @param value Object to serialize
-     * @param ctx Context for the full serialization process
-     * @param params Parameters for this serialization
-     */
-    protected abstract void doSerialize(XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters
-            params) throws XMLStreamException;
-
-    protected void writeNamespace(XMLWriter writer, String prefix) throws XMLStreamException {
-        Optional<String> defaultNamespace = getDefaultNamespace();
-        if (prefix != null && defaultNamespace.isPresent()) {
-            writer.writeDefaultNamespace(defaultNamespace.get());
-        } else if (getNamespace() != null) {
-            writer.writeDefaultNamespace(getNamespace());
+    if (!namespaces.isEmpty()) {
+      for (Map.Entry<String, String> entry : namespaces.entrySet()) {
+        if (!entry.getKey().equals("") && lookupNamespace(entry.getKey(), entry.getValue())) {
+          writer.writeNamespace(entry.getKey(), entry.getValue());
         }
+      }
+    }
 
-        if (!namespaces.isEmpty()) {
-            for (Map.Entry<String, String> entry : namespaces.entrySet()) {
-                if (!entry.getKey().equals("") && lookupNamespace(entry.getKey(), entry.getValue())) {
-                    writer.writeNamespace(entry.getKey(), entry.getValue());
-                }
-            }
+    writeSchemaLocation(writer);
+    writeTargetNamespace(writer);
+    writer.endNs();
+  }
+
+  private Optional<String> getDefaultNamespace() {
+    if (!namespaces.isEmpty()) {
+      return namespaces.entrySet().stream()
+          .filter(entry -> entry.getKey().equals(""))
+          .findFirst()
+          .map(pair -> pair.getValue());
+    }
+    return Optional.empty();
+  }
+
+  protected String getNamespace() {
+    return null;
+  }
+
+  public XMLSerializer<T> setNamespace(String namespace) {
+    this.namespace = namespace;
+    return this;
+  }
+
+  private void writeSchemaLocation(XMLWriter writer) throws XMLStreamException {
+    if (getSchemaLocation() != null) {
+      writer.writeSchemaLocation("xsi:schemaLocation", getSchemaLocation());
+    }
+  }
+
+  private void writeTargetNamespace(XMLWriter writer) throws XMLStreamException {
+    if (getTargetNamespace() != null) {
+      writer.writeTargetNamespace(getTargetNamespace().value);
+    }
+  }
+
+  protected String getSchemaLocation() {
+    return null;
+  }
+
+  protected Pair<String, String> getTargetNamespace() {
+    return null;
+  }
+
+  public XMLSerializer<T> addNamespace(String prefix, String namespace) {
+    namespaces.put(prefix, namespace);
+    return this;
+  }
+
+  protected String getPrefix(String namespace) {
+    String prefix = null;
+    if (parent != null) {
+      prefix = parent.getPrefix(namespace);
+    }
+    if (prefix != null) {
+      return prefix;
+    }
+
+    if (namespace != null && !namespaces.isEmpty()) {
+      for (Map.Entry<String, String> entry : namespaces.entrySet()) {
+        if (!entry.getKey().equals("") && entry.getValue().equals(namespace)) {
+          prefix = entry.getKey();
         }
-
-        writeSchemaLocation(writer);
-        writeTargetNamespace(writer);
-        writer.endNs();
+      }
     }
+    return prefix;
+  }
 
-    private Optional<String> getDefaultNamespace() {
-        if (!namespaces.isEmpty()) {
-            return namespaces.entrySet()
-                    .stream()
-                    .filter(entry -> entry.getKey().equals(""))
-                    .findFirst().map(pair -> pair.getValue());
-        }
-        return Optional.empty();
+  private boolean _lookupNamespace(String namespace) {
+    boolean result = false;
+    if (parent != null) {
+      result = parent._lookupNamespace(namespace);
     }
-
-    protected String getNamespace() {
-        return null;
+    if (result) {
+      return true;
+    } else {
+      return namespace.equals(getNamespace());
     }
+  }
 
-    public XMLSerializer<T> setNamespace(String namespace) {
-        this.namespace = namespace;
-        return this;
+  protected boolean lookupNamespace(String namespace) {
+    if (parent == null) {
+      return true;
     }
+    return !parent._lookupNamespace(namespace);
+  }
 
-    private void writeSchemaLocation(XMLWriter writer) throws XMLStreamException {
-        if (getSchemaLocation() != null) {
-            writer.writeSchemaLocation("xsi:schemaLocation", getSchemaLocation());
-        }
+  protected boolean lookupNamespace(String prefix, String namespace) {
+    if (parent == null) {
+      return true;
     }
+    return !parent._lookupNamespace(prefix, namespace);
+  }
 
-    private void writeTargetNamespace(XMLWriter writer) throws XMLStreamException {
-        if (getTargetNamespace() != null) {
-            writer.writeTargetNamespace(getTargetNamespace().value);
-        }
+  private boolean _lookupNamespace(String prefix, String namespace) {
+    boolean result = false;
+    if (parent != null) {
+      result = parent._lookupNamespace(prefix, namespace);
     }
-
-    protected String getSchemaLocation() {
-        return null;
+    if (result) {
+      return true;
+    } else {
+      return namespaces.containsKey(prefix) && namespaces.get(prefix).equals(namespace);
     }
+  }
 
-    protected Pair<String, String> getTargetNamespace() {
-        return null;
+  protected String getXmlRootElement() {
+    return null;
+  }
+
+  public XMLSerializer<T> setType(String value, Inheritance type) {
+    if (Inheritance.XSI.equals(type)) {
+      xsiType.add(value);
+    } else if (Inheritance.TAG.equals(type)) {
+      propertyName = value;
     }
+    inheritanceType = type;
+    return this;
+  }
 
-    public XMLSerializer<T> addNamespace(String prefix, String namespace) {
-        namespaces.put(prefix, namespace);
-        return this;
-    }
-
-    protected String getPrefix(String namespace) {
-        String prefix = null;
-        if (parent != null) {
-            prefix = parent.getPrefix(namespace);
-        }
-        if (prefix != null) {
-            return prefix;
-        }
-
-        if (namespace != null && !namespaces.isEmpty()) {
-            for (Map.Entry<String, String> entry : namespaces.entrySet()) {
-                if (!entry.getKey().equals("") && entry.getValue().equals(namespace)) {
-                    prefix = entry.getKey();
-                }
-            }
-        }
-        return prefix;
-    }
-
-    private boolean _lookupNamespace(String namespace) {
-        boolean result = false;
-        if (parent != null) {
-            result = parent._lookupNamespace(namespace);
-        }
-        if (result) {
-            return true;
-        } else {
-            return namespace.equals(getNamespace());
-        }
-    }
-
-    protected boolean lookupNamespace(String namespace) {
-        if (parent == null) {
-            return true;
-        }
-        return !parent._lookupNamespace(namespace);
-    }
-
-    protected boolean lookupNamespace(String prefix, String namespace) {
-        if (parent == null) {
-            return true;
-        }
-        return !parent._lookupNamespace(prefix, namespace);
-    }
-
-    private boolean _lookupNamespace(String prefix, String namespace) {
-        boolean result = false;
-        if (parent != null) {
-            result = parent._lookupNamespace(prefix, namespace);
-        }
-        if (result) {
-            return true;
-        } else {
-            return namespaces.containsKey(prefix) && namespaces.get(prefix).equals(namespace);
-        }
-    }
-
-    protected String getXmlRootElement() {
-        return null;
-    }
-
-    public XMLSerializer<T> setType(String value, Inheritance type) {
-        if (Inheritance.XSI.equals(type)) {
-            xsiType.add(value);
-        } else if (Inheritance.TAG.equals(type)) {
-            propertyName = value;
-        }
-        inheritanceType = type;
-        return this;
-    }
-
-    /**
-     * <p>isEmpty.</p>
-     * @param value the value
-     * @return true if the value is empty
-     */
-    protected boolean isEmpty(T value) {
-        return null == value;
-    }
+  /**
+   * isEmpty.
+   *
+   * @param value the value
+   * @return true if the value is empty
+   */
+  protected boolean isEmpty(T value) {
+    return null == value;
+  }
 }

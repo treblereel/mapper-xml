@@ -17,7 +17,6 @@
 package org.treblereel.gwt.jackson.api.ser;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -31,29 +30,30 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public class EnumXMLSerializer<E extends Enum<E>> extends XMLSerializer<E> {
 
-    private static final EnumXMLSerializer<?> INSTANCE = new EnumXMLSerializer();
+  private static final EnumXMLSerializer<?> INSTANCE = new EnumXMLSerializer();
 
-    /**
-     * <p>getInstance</p>
-     *
-     * @return an instance of {@link EnumXMLSerializer}
-     */
-    @SuppressWarnings("unchecked")
-    public static XMLSerializer getInstance() {
-        return INSTANCE;
-    }
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link EnumXMLSerializer}
+   */
+  @SuppressWarnings("unchecked")
+  public static XMLSerializer getInstance() {
+    return INSTANCE;
+  }
 
-    private EnumXMLSerializer() {
-    }
+  private EnumXMLSerializer() {}
 
-    /** {@inheritDoc} */
-    @Override
-    public void doSerialize(XMLWriter writer, E value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        if (isAttribute) {
-            writer.writeAttribute(propertyName, value.toString());
-            isAttribute = false;
-        } else {
-            writer.value(value.name());
-        }
+  /** {@inheritDoc} */
+  @Override
+  public void doSerialize(
+      XMLWriter writer, E value, XMLSerializationContext ctx, XMLSerializerParameters params)
+      throws XMLStreamException {
+    if (isAttribute) {
+      writer.writeAttribute(propertyName, value.toString());
+      isAttribute = false;
+    } else {
+      writer.value(value.name());
     }
+  }
 }

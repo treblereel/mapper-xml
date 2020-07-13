@@ -1,147 +1,193 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.treblereel.gwt.jackson</groupId>
-    <artifactId>jackson-parent</artifactId>
-    <version>0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
+  <groupId>org.treblereel.gwt.jackson</groupId>
+  <artifactId>jackson-parent</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
-    <name>jackson-parent</name>
-    <description>XML marshallers</description>
+  <name>jackson-parent</name>
+  <description>XML marshallers</description>
+  <url>https://github.com/treblereel</url>
+
+  <developers>
+    <developer>
+      <id>treblereel</id>
+      <name>Dmitrii Tikhomirov</name>
+      <email>chani@me.com</email>
+    </developer>
+  </developers>
+
+  <licenses>
+    <license>
+      <name>Apache License Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>Treblereel</name>
     <url>https://github.com/treblereel</url>
+  </organization>
 
-    <developers>
-        <developer>
-            <id>treblereel</id>
-            <name>Dmitrii Tikhomirov</name>
-            <email>chani@me.com</email>
-        </developer>
-    </developers>
+  <properties>
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
+    <maven.compiler.version>3.8.0</maven.compiler.version>
+    <maven.source.version>3.0.1</maven.source.version>
+    <maven.fmt.plugin>2.9</maven.fmt.plugin>
+    <maven.license.plugin>3.0</maven.license.plugin>
 
-    <licenses>
-        <license>
-            <name>Apache License Version 2.0</name>
-            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <javaparser.core.version>3.13.1</javaparser.core.version>
+    <junit.version>4.11</junit.version>
+    <com.fasterxml.woodstox.version>6.2.1</com.fasterxml.woodstox.version>
+    <auto.common.version>0.10</auto.common.version>
+    <auto.service.version>1.0-rc6</auto.service.version>
+  </properties>
 
-    <organization>
-        <name>Treblereel</name>
-        <url>https://github.com/treblereel</url>
-    </organization>
+  <modules>
+    <module>common</module>
+    <module>backend</module>
+    <module>api</module>
+    <module>processor</module>
+    <module>tests</module>
+  </modules>
 
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <maven.compiler.version>3.8.0</maven.compiler.version>
-        <maven.source.version>3.0.1</maven.source.version>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <javaparser.core.version>3.13.1</javaparser.core.version>
-        <junit.version>4.11</junit.version>
-        <com.fasterxml.woodstox.version>6.2.1</com.fasterxml.woodstox.version>
-        <auto.common.version>0.10</auto.common.version>
-        <auto.service.version>1.0-rc6</auto.service.version>
-    </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.version}</version>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+        </configuration>
+      </plugin>
+<!--      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.17</version>
+        <executions>
+          <execution>
+            <id>validate</id>
+            <phase>validate</phase>
+            <configuration>
+              <encoding>UTF-8</encoding>
+              <consoleOutput>true</consoleOutput>
+              <failsOnError>true</failsOnError>
+              <configLocation>gwt-checkstyle.xml</configLocation>
+            </configuration>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>-->
+      <plugin>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>${maven.license.plugin}</version>
+        <configuration>
+          <header>LICENSE.header</header>
+          <encoding>${project.build.sourceEncoding}</encoding>
+          <skipExistingHeaders>true</skipExistingHeaders>
+          <mapping>
+            <java>SLASHSTAR_STYLE</java>
+          </mapping>
+          <excludes>
+            <exclude>**/README.md</exclude>
+            <exclude>**/LICENSE</exclude>
+            <exclude>**/LICENSE.header</exclude>
+            <exclude>**/AUTHORS</exclude>
+            <exclude>**/src/test/resources/**</exclude>
+            <exclude>**/src/main/resources/**</exclude>
+            <exclude>**/war</exclude>
+            <exclude>**/pom.xml</exclude>
+            <exclude>**/.flattened-pom.xml</exclude>
+            <exclude>**/gwt-unitcache</exclude>
+          </excludes>
+          <properties>
+            <year>${project.inceptionYear}</year>
+            <name>${project.organization.name}</name>
+          </properties>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.coveo</groupId>
+        <artifactId>fmt-maven-plugin</artifactId>
+        <version>${maven.fmt.plugin}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
-    <modules>
-        <module>common</module>
-        <module>backend</module>
-        <module>api</module>
-        <module>processor</module>
-        <module>tests</module>
-    </modules>
+  <!-- Specify that we will push snapshots and releases to sonatype's repos -->
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.11</version>
-                <scope>test</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <build>
-        <pluginManagement>
-
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven.compiler.version}</version>
-                    <configuration>
-                        <source>${maven.compiler.source}</source>
-                        <target>${maven.compiler.target}</target>
-                    </configuration>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>2.17</version>
-                    <executions>
-                        <execution>
-                            <id>validate</id>
-                            <phase>validate</phase>
-                            <configuration>
-                                <encoding>UTF-8</encoding>
-                                <consoleOutput>true</consoleOutput>
-                                <failsOnError>true</failsOnError>
-                                <configLocation>gwt-checkstyle.xml</configLocation>
-                            </configuration>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
-
-    <!-- Specify that we will push snapshots and releases to sonatype's repos -->
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
-
-    <repositories>
-        <repository>
-            <id>vertispan</id>
-            <name>vertispan</name>
-            <url>https://repo.vertispan.com/gwt-snapshot/</url>
-        </repository>
-        <repository>
-            <id>vertispan-releases</id>
-            <name>Vertispan hosted artifacts-releases</name>
-            <url>https://repo.vertispan.com/j2cl</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>vertispan-snapshots</id>
-            <name>Vertispan Snapshots</name>
-            <url>https://repo.vertispan.com/gwt-snapshot/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>fail</checksumPolicy>
-            </snapshots>
-        </repository>
-    </repositories>
+  <repositories>
+    <repository>
+      <id>vertispan</id>
+      <name>vertispan</name>
+      <url>https://repo.vertispan.com/gwt-snapshot/</url>
+    </repository>
+    <repository>
+      <id>vertispan-releases</id>
+      <name>Vertispan hosted artifacts-releases</name>
+      <url>https://repo.vertispan.com/j2cl</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>vertispan-snapshots</id>
+      <name>Vertispan Snapshots</name>
+      <url>https://repo.vertispan.com/gwt-snapshot/</url>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>fail</checksumPolicy>
+      </snapshots>
+    </repository>
+  </repositories>
 </project>

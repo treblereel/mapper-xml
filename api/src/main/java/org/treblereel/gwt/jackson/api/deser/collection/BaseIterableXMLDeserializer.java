@@ -17,28 +17,31 @@
 package org.treblereel.gwt.jackson.api.deser.collection;
 
 import java.util.function.Function;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 /**
  * Base {@link XMLDeserializer} implementation for {@link java.lang.Iterable}.
+ *
  * @param <I> {@link java.lang.Iterable} type
  * @param <T> Type of the elements inside the {@link java.lang.Iterable}
  * @author Nicolas Morel
  * @version $Id: $
  */
-public abstract class BaseIterableXMLDeserializer<I extends Iterable<T>, T> extends XMLDeserializer<I> {
+public abstract class BaseIterableXMLDeserializer<I extends Iterable<T>, T>
+    extends XMLDeserializer<I> {
 
-    protected final Function<String, XMLDeserializer<T>> deserializer;
+  protected final Function<String, XMLDeserializer<T>> deserializer;
 
-    /**
-     * <p>Constructor for BaseIterableXMLDeserializer.</p>
-     * @param deserializer {@link XMLDeserializer} used to map the objects inside the {@link java.lang.Iterable}.
-     */
-    public BaseIterableXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
-        if (null == deserializer) {
-            throw new IllegalArgumentException("deserializer can't be null");
-        }
-        this.deserializer = deserializer;
+  /**
+   * Constructor for BaseIterableXMLDeserializer.
+   *
+   * @param deserializer {@link XMLDeserializer} used to map the objects inside the {@link
+   *     java.lang.Iterable}.
+   */
+  public BaseIterableXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
+    if (null == deserializer) {
+      throw new IllegalArgumentException("deserializer can't be null");
     }
+    this.deserializer = deserializer;
+  }
 }

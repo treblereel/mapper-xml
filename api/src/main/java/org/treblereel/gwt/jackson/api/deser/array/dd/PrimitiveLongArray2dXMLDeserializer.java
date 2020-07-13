@@ -17,9 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.array.dd;
 
 import java.util.List;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -34,48 +32,52 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public class PrimitiveLongArray2dXMLDeserializer extends AbstractArray2dXMLDeserializer<long[][]> {
 
-    private static final PrimitiveLongArray2dXMLDeserializer INSTANCE = new PrimitiveLongArray2dXMLDeserializer();
+  private static final PrimitiveLongArray2dXMLDeserializer INSTANCE =
+      new PrimitiveLongArray2dXMLDeserializer();
 
-    /**
-     * <p>getInstance</p>
-     *
-     * @return an instance of {@link PrimitiveLongArray2dXMLDeserializer}
-     */
-    public static PrimitiveLongArray2dXMLDeserializer getInstance() {
-        return INSTANCE;
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link PrimitiveLongArray2dXMLDeserializer}
+   */
+  public static PrimitiveLongArray2dXMLDeserializer getInstance() {
+    return INSTANCE;
+  }
+
+  private PrimitiveLongArray2dXMLDeserializer() {}
+
+  /** {@inheritDoc} */
+  @Override
+  public long[][] doDeserialize(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    List<List<Long>> list =
+        deserializeIntoList(
+            reader, ctx, s -> BaseNumberXMLDeserializer.LongXMLDeserializer.getInstance(), params);
+
+    if (list.isEmpty()) {
+      return new long[0][0];
     }
 
-    private PrimitiveLongArray2dXMLDeserializer() {
+    List<Long> firstList = list.get(0);
+    if (firstList.isEmpty()) {
+      return new long[list.size()][0];
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public long[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<List<Long>> list = deserializeIntoList(reader, ctx, s -> BaseNumberXMLDeserializer.LongXMLDeserializer.getInstance(), params);
+    long[][] array = new long[list.size()][firstList.size()];
 
-        if (list.isEmpty()) {
-            return new long[0][0];
+    int i = 0;
+    int j;
+    for (List<Long> innerList : list) {
+      j = 0;
+      for (Long value : innerList) {
+        if (null != value) {
+          array[i][j] = value;
         }
-
-        List<Long> firstList = list.get(0);
-        if (firstList.isEmpty()) {
-            return new long[list.size()][0];
-        }
-
-        long[][] array = new long[list.size()][firstList.size()];
-
-        int i = 0;
-        int j;
-        for (List<Long> innerList : list) {
-            j = 0;
-            for (Long value : innerList) {
-                if (null != value) {
-                    array[i][j] = value;
-                }
-                j++;
-            }
-            i++;
-        }
-        return array;
+        j++;
+      }
+      i++;
     }
+    return array;
+  }
 }

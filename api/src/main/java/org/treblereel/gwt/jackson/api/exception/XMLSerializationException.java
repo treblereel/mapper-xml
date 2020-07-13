@@ -24,37 +24,34 @@ package org.treblereel.gwt.jackson.api.exception;
  */
 public class XMLSerializationException extends XMLMappingException {
 
-    /**
-     * <p>Constructor for XMLSerializationException.</p>
-     */
-    public XMLSerializationException() {
-    }
+  /** Constructor for XMLSerializationException. */
+  public XMLSerializationException() {}
 
-    /**
-     * <p>Constructor for XMLSerializationException.</p>
-     *
-     * @param message a {@link String} object.
-     */
-    public XMLSerializationException(String message) {
-        super(message);
-    }
+  /**
+   * Constructor for XMLSerializationException.
+   *
+   * @param message a {@link String} object.
+   */
+  public XMLSerializationException(String message) {
+    super(message);
+  }
 
-    /**
-     * <p>Constructor for XMLSerializationException.</p>
-     *
-     * @param message a {@link String} object.
-     * @param cause   a {@link Throwable} object.
-     */
-    public XMLSerializationException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  /**
+   * Constructor for XMLSerializationException.
+   *
+   * @param message a {@link String} object.
+   * @param cause a {@link Throwable} object.
+   */
+  public XMLSerializationException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    /**
-     * <p>Constructor for XMLSerializationException.</p>
-     *
-     * @param cause a {@link Throwable} object.
-     */
-    public XMLSerializationException(Throwable cause) {
-        super(cause);
-    }
+  /**
+   * Constructor for XMLSerializationException.
+   *
+   * @param cause a {@link Throwable} object.
+   */
+  public XMLSerializationException(Throwable cause) {
+    super(cause);
+  }
 }

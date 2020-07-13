@@ -16,14 +16,14 @@
 
 package org.treblereel.gwt.jackson.api.deser.collection;
 
-import org.treblereel.gwt.jackson.api.XMLDeserializer;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Function;
+import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 /**
- * Default {@link XMLDeserializer} implementation for {@link java.util.Collection}. The deserialization process returns an {@link java.util.ArrayList}.
+ * Default {@link XMLDeserializer} implementation for {@link java.util.Collection}. The
+ * deserialization process returns an {@link java.util.ArrayList}.
  *
  * @param <T> Type of the elements inside the {@link java.util.Collection}
  * @author Nicolas Morel
@@ -31,27 +31,30 @@ import java.util.function.Function;
  */
 public class CollectionXMLDeserializer<T> extends BaseCollectionXMLDeserializer<Collection<T>, T> {
 
-    /**
-     * <p>newInstance</p>
-     *
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link java.util.Collection}.
-     * @param <T>          Type of the elements inside the {@link java.util.Collection}
-     * @return a new instance of {@link CollectionXMLDeserializer}
-     */
-    public static <T> CollectionXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
-        return new CollectionXMLDeserializer<>(deserializer);
-    }
+  /**
+   * newInstance
+   *
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     java.util.Collection}.
+   * @param <T> Type of the elements inside the {@link java.util.Collection}
+   * @return a new instance of {@link CollectionXMLDeserializer}
+   */
+  public static <T> CollectionXMLDeserializer<T> newInstance(
+      Function<String, XMLDeserializer<T>> deserializer) {
+    return new CollectionXMLDeserializer<>(deserializer);
+  }
 
-    /**
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link Collection}.
-     */
-    private CollectionXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
-        super(deserializer);
-    }
+  /**
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     Collection}.
+   */
+  private CollectionXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
+    super(deserializer);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected Collection<T> newCollection() {
-        return new ArrayList<>();
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected Collection<T> newCollection() {
+    return new ArrayList<>();
+  }
 }

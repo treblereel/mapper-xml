@@ -24,37 +24,34 @@ package org.treblereel.gwt.jackson.api.exception;
  */
 public class XMLMappingException extends RuntimeException {
 
-    /**
-     * <p>Constructor for XMLMappingException.</p>
-     */
-    public XMLMappingException() {
-    }
+  /** Constructor for XMLMappingException. */
+  public XMLMappingException() {}
 
-    /**
-     * <p>Constructor for XMLMappingException.</p>
-     *
-     * @param message a {@link String} object.
-     */
-    public XMLMappingException(String message) {
-        super(message);
-    }
+  /**
+   * Constructor for XMLMappingException.
+   *
+   * @param message a {@link String} object.
+   */
+  public XMLMappingException(String message) {
+    super(message);
+  }
 
-    /**
-     * <p>Constructor for XMLMappingException.</p>
-     *
-     * @param message a {@link String} object.
-     * @param cause   a {@link Throwable} object.
-     */
-    public XMLMappingException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  /**
+   * Constructor for XMLMappingException.
+   *
+   * @param message a {@link String} object.
+   * @param cause a {@link Throwable} object.
+   */
+  public XMLMappingException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    /**
-     * <p>Constructor for XMLMappingException.</p>
-     *
-     * @param cause a {@link Throwable} object.
-     */
-    public XMLMappingException(Throwable cause) {
-        super(cause);
-    }
+  /**
+   * Constructor for XMLMappingException.
+   *
+   * @param cause a {@link Throwable} object.
+   */
+  public XMLMappingException(Throwable cause) {
+    super(cause);
+  }
 }

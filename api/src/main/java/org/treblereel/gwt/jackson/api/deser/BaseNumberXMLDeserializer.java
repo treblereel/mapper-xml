@@ -18,9 +18,7 @@ package org.treblereel.gwt.jackson.api.deser;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -30,328 +28,313 @@ import org.treblereel.gwt.jackson.api.utils.NumberUtils;
 
 /**
  * Base implementation of {@link XMLDeserializer} for {@link java.lang.Number}.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public abstract class BaseNumberXMLDeserializer<N extends Number> extends XMLDeserializer<N> {
 
-    /**
-     * Default implementation of {@link BaseNumberXMLDeserializer} for {@link BigDecimal}
-     */
-    public static final class BigDecimalXMLDeserializer extends BaseNumberXMLDeserializer<BigDecimal> {
+  /** Default implementation of {@link BaseNumberXMLDeserializer} for {@link BigDecimal} */
+  public static final class BigDecimalXMLDeserializer
+      extends BaseNumberXMLDeserializer<BigDecimal> {
 
-        private static final BigDecimalXMLDeserializer INSTANCE = new BigDecimalXMLDeserializer();
+    private static final BigDecimalXMLDeserializer INSTANCE = new BigDecimalXMLDeserializer();
 
-        private BigDecimalXMLDeserializer() {
-        }
+    private BigDecimalXMLDeserializer() {}
 
-        /**
-         * @return an instance of {@link BigDecimalXMLDeserializer}
-         */
-        public static BigDecimalXMLDeserializer getInstance() {
-            return INSTANCE;
-        }
-
-        @Override
-        protected BigDecimal doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-            String value = reader.nextString();
-            if (value == null) {
-                return null;
-            }
-            return new BigDecimal(value);
-        }
-
-        @Override
-        public BigDecimal deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
-                XMLDeserializationException {
-            if (value.isEmpty()) {
-                return null;
-            }
-            return new BigDecimal(value);
-        }
+    /** @return an instance of {@link BigDecimalXMLDeserializer} */
+    public static BigDecimalXMLDeserializer getInstance() {
+      return INSTANCE;
     }
 
-    /**
-     * Default implementation of {@link BaseNumberXMLDeserializer} for {@link BigInteger}
-     */
-    public static final class BigIntegerXMLDeserializer extends BaseNumberXMLDeserializer<BigInteger> {
-
-        private static final BigIntegerXMLDeserializer INSTANCE = new BigIntegerXMLDeserializer();
-
-        private BigIntegerXMLDeserializer() {
-        }
-
-        /**
-         * @return an instance of {@link BigIntegerXMLDeserializer}
-         */
-        public static BigIntegerXMLDeserializer getInstance() {
-            return INSTANCE;
-        }
-
-        @Override
-        protected BigInteger doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-            String value = reader.nextString();
-            if (value == null) {
-                return null;
-            }
-            return new BigInteger(value);
-        }
-
-        @Override
-        public BigInteger deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
-                XMLDeserializationException {
-            if (value.isEmpty()) {
-                return null;
-            }
-            return new BigInteger(value);
-        }
+    @Override
+    protected BigDecimal doDeserialize(
+        XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLStreamException {
+      String value = reader.nextString();
+      if (value == null) {
+        return null;
+      }
+      return new BigDecimal(value);
     }
 
-    /**
-     * Default implementation of {@link BaseNumberXMLDeserializer} for {@link Byte}
-     */
-    public static final class ByteXMLDeserializer extends BaseNumberXMLDeserializer<Byte> {
+    @Override
+    public BigDecimal deserialize(
+        String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLDeserializationException {
+      if (value.isEmpty()) {
+        return null;
+      }
+      return new BigDecimal(value);
+    }
+  }
 
-        private static final ByteXMLDeserializer INSTANCE = new ByteXMLDeserializer();
+  /** Default implementation of {@link BaseNumberXMLDeserializer} for {@link BigInteger} */
+  public static final class BigIntegerXMLDeserializer
+      extends BaseNumberXMLDeserializer<BigInteger> {
 
-        private ByteXMLDeserializer() {
-        }
+    private static final BigIntegerXMLDeserializer INSTANCE = new BigIntegerXMLDeserializer();
 
-        /**
-         * @return an instance of {@link ByteXMLDeserializer}
-         */
-        public static ByteXMLDeserializer getInstance() {
-            return INSTANCE;
-        }
+    private BigIntegerXMLDeserializer() {}
 
-        @Override
-        protected Byte doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-            String value = reader.nextString();
-            if (value == null) {
-                return null;
-            }
-            return Byte.valueOf(value);
-        }
-
-        @Override
-        public Byte deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
-                XMLDeserializationException {
-            if (value.isEmpty()) {
-                return null;
-            }
-            return Byte.valueOf(value);
-        }
+    /** @return an instance of {@link BigIntegerXMLDeserializer} */
+    public static BigIntegerXMLDeserializer getInstance() {
+      return INSTANCE;
     }
 
-    /**
-     * Default implementation of {@link BaseNumberXMLDeserializer} for {@link Double}
-     */
-    public static final class DoubleXMLDeserializer extends BaseNumberXMLDeserializer<Double> {
-
-        private static final DoubleXMLDeserializer INSTANCE = new DoubleXMLDeserializer();
-
-        private DoubleXMLDeserializer() {
-        }
-
-        /**
-         * @return an instance of {@link DoubleXMLDeserializer}
-         */
-        public static DoubleXMLDeserializer getInstance() {
-            return INSTANCE;
-        }
-
-        @Override
-        protected Double doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-            String value = reader.nextString();
-            if (value == null) {
-                return null;
-            }
-            return Double.valueOf(value);
-        }
-
-        @Override
-        public Double deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
-                XMLDeserializationException {
-            if (value.isEmpty()) {
-                return null;
-            }
-            return Double.valueOf(value);
-        }
+    @Override
+    protected BigInteger doDeserialize(
+        XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLStreamException {
+      String value = reader.nextString();
+      if (value == null) {
+        return null;
+      }
+      return new BigInteger(value);
     }
 
-    /**
-     * Default implementation of {@link BaseNumberXMLDeserializer} for {@link Float}
-     */
-    public static final class FloatXMLDeserializer extends BaseNumberXMLDeserializer<Float> {
+    @Override
+    public BigInteger deserialize(
+        String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLDeserializationException {
+      if (value.isEmpty()) {
+        return null;
+      }
+      return new BigInteger(value);
+    }
+  }
 
-        private static final FloatXMLDeserializer INSTANCE = new FloatXMLDeserializer();
+  /** Default implementation of {@link BaseNumberXMLDeserializer} for {@link Byte} */
+  public static final class ByteXMLDeserializer extends BaseNumberXMLDeserializer<Byte> {
 
-        private FloatXMLDeserializer() {
-        }
+    private static final ByteXMLDeserializer INSTANCE = new ByteXMLDeserializer();
 
-        /**
-         * @return an instance of {@link FloatXMLDeserializer}
-         */
-        public static FloatXMLDeserializer getInstance() {
-            return INSTANCE;
-        }
+    private ByteXMLDeserializer() {}
 
-        @Override
-        protected Float doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-            String value = reader.nextString();
-            if (value == null) {
-                return null;
-            }
-            return Float.parseFloat(value);
-        }
-
-        @Override
-        public Float deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
-                XMLDeserializationException {
-            if (value.isEmpty()) {
-                return null;
-            }
-            return Float.parseFloat(value);
-        }
+    /** @return an instance of {@link ByteXMLDeserializer} */
+    public static ByteXMLDeserializer getInstance() {
+      return INSTANCE;
     }
 
-    /**
-     * Default implementation of {@link BaseNumberXMLDeserializer} for {@link Integer}
-     */
-    public static final class IntegerXMLDeserializer extends BaseNumberXMLDeserializer<Integer> {
-
-        private static final IntegerXMLDeserializer INSTANCE = new IntegerXMLDeserializer();
-
-        private IntegerXMLDeserializer() {
-        }
-
-        /**
-         * @return an instance of {@link IntegerXMLDeserializer}
-         */
-        public static IntegerXMLDeserializer getInstance() {
-            return INSTANCE;
-        }
-
-        @Override
-        protected Integer doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-            String value = reader.nextString();
-            if (value == null) {
-                return null;
-            }
-            return Integer.valueOf(value);
-        }
-
-        @Override
-        public Integer deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
-                XMLDeserializationException {
-            if (value.isEmpty()) {
-                return null;
-            }
-            return Integer.valueOf(value);
-        }
+    @Override
+    protected Byte doDeserialize(
+        XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLStreamException {
+      String value = reader.nextString();
+      if (value == null) {
+        return null;
+      }
+      return Byte.valueOf(value);
     }
 
-    /**
-     * Default implementation of {@link BaseNumberXMLDeserializer} for {@link Long}
-     */
-    public static final class LongXMLDeserializer extends BaseNumberXMLDeserializer<Long> {
+    @Override
+    public Byte deserialize(
+        String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLDeserializationException {
+      if (value.isEmpty()) {
+        return null;
+      }
+      return Byte.valueOf(value);
+    }
+  }
 
-        private static final LongXMLDeserializer INSTANCE = new LongXMLDeserializer();
+  /** Default implementation of {@link BaseNumberXMLDeserializer} for {@link Double} */
+  public static final class DoubleXMLDeserializer extends BaseNumberXMLDeserializer<Double> {
 
-        private LongXMLDeserializer() {
-        }
+    private static final DoubleXMLDeserializer INSTANCE = new DoubleXMLDeserializer();
 
-        /**
-         * @return an instance of {@link LongXMLDeserializer}
-         */
-        public static LongXMLDeserializer getInstance() {
-            return INSTANCE;
-        }
+    private DoubleXMLDeserializer() {}
 
-        @Override
-        protected Long doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-            String value = reader.nextString();
-            if (value == null) {
-                return null;
-            }
-            return Long.valueOf(value);
-        }
-
-        @Override
-        public Long deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
-                XMLDeserializationException {
-            if (value.isEmpty()) {
-                return null;
-            }
-            return Long.valueOf(value);
-        }
+    /** @return an instance of {@link DoubleXMLDeserializer} */
+    public static DoubleXMLDeserializer getInstance() {
+      return INSTANCE;
     }
 
-    /**
-     * Default implementation of {@link BaseNumberXMLDeserializer} for {@link Short}
-     */
-    public static final class ShortXMLDeserializer extends BaseNumberXMLDeserializer<Short> {
-
-        private static final ShortXMLDeserializer INSTANCE = new ShortXMLDeserializer();
-
-        private ShortXMLDeserializer() {
-        }
-
-        /**
-         * @return an instance of {@link ShortXMLDeserializer}
-         */
-        public static ShortXMLDeserializer getInstance() {
-            return INSTANCE;
-        }
-
-        @Override
-        protected Short doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-            String value = reader.nextString();
-            if (value == null) {
-                return null;
-            }
-            return Short.valueOf(value);
-        }
-
-        @Override
-        public Short deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
-                XMLDeserializationException {
-            if (value.isEmpty()) {
-                return null;
-            }
-            return Short.valueOf(value);
-        }
+    @Override
+    protected Double doDeserialize(
+        XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLStreamException {
+      String value = reader.nextString();
+      if (value == null) {
+        return null;
+      }
+      return Double.valueOf(value);
     }
 
-    /**
-     * Default implementation of {@link BaseNumberXMLDeserializer} for {@link Number}
-     */
-    public static final class NumberXMLDeserializer extends BaseNumberXMLDeserializer<Number> {
-
-        private static final NumberXMLDeserializer INSTANCE = new NumberXMLDeserializer();
-
-        private NumberXMLDeserializer() {
-        }
-
-        /**
-         * @return an instance of {@link NumberXMLDeserializer}
-         */
-        public static NumberXMLDeserializer getInstance() {
-            return INSTANCE;
-        }
-
-        @Override
-        public Number doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-            return reader.nextNumber();
-        }
-
-        @Override
-        public Number deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
-                XMLDeserializationException {
-            if (value.isEmpty()) {
-                return null;
-            }
-            return NumberUtils.toNumber(value);
-        }
+    @Override
+    public Double deserialize(
+        String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLDeserializationException {
+      if (value.isEmpty()) {
+        return null;
+      }
+      return Double.valueOf(value);
     }
+  }
+
+  /** Default implementation of {@link BaseNumberXMLDeserializer} for {@link Float} */
+  public static final class FloatXMLDeserializer extends BaseNumberXMLDeserializer<Float> {
+
+    private static final FloatXMLDeserializer INSTANCE = new FloatXMLDeserializer();
+
+    private FloatXMLDeserializer() {}
+
+    /** @return an instance of {@link FloatXMLDeserializer} */
+    public static FloatXMLDeserializer getInstance() {
+      return INSTANCE;
+    }
+
+    @Override
+    protected Float doDeserialize(
+        XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLStreamException {
+      String value = reader.nextString();
+      if (value == null) {
+        return null;
+      }
+      return Float.parseFloat(value);
+    }
+
+    @Override
+    public Float deserialize(
+        String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLDeserializationException {
+      if (value.isEmpty()) {
+        return null;
+      }
+      return Float.parseFloat(value);
+    }
+  }
+
+  /** Default implementation of {@link BaseNumberXMLDeserializer} for {@link Integer} */
+  public static final class IntegerXMLDeserializer extends BaseNumberXMLDeserializer<Integer> {
+
+    private static final IntegerXMLDeserializer INSTANCE = new IntegerXMLDeserializer();
+
+    private IntegerXMLDeserializer() {}
+
+    /** @return an instance of {@link IntegerXMLDeserializer} */
+    public static IntegerXMLDeserializer getInstance() {
+      return INSTANCE;
+    }
+
+    @Override
+    protected Integer doDeserialize(
+        XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLStreamException {
+      String value = reader.nextString();
+      if (value == null) {
+        return null;
+      }
+      return Integer.valueOf(value);
+    }
+
+    @Override
+    public Integer deserialize(
+        String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLDeserializationException {
+      if (value.isEmpty()) {
+        return null;
+      }
+      return Integer.valueOf(value);
+    }
+  }
+
+  /** Default implementation of {@link BaseNumberXMLDeserializer} for {@link Long} */
+  public static final class LongXMLDeserializer extends BaseNumberXMLDeserializer<Long> {
+
+    private static final LongXMLDeserializer INSTANCE = new LongXMLDeserializer();
+
+    private LongXMLDeserializer() {}
+
+    /** @return an instance of {@link LongXMLDeserializer} */
+    public static LongXMLDeserializer getInstance() {
+      return INSTANCE;
+    }
+
+    @Override
+    protected Long doDeserialize(
+        XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLStreamException {
+      String value = reader.nextString();
+      if (value == null) {
+        return null;
+      }
+      return Long.valueOf(value);
+    }
+
+    @Override
+    public Long deserialize(
+        String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLDeserializationException {
+      if (value.isEmpty()) {
+        return null;
+      }
+      return Long.valueOf(value);
+    }
+  }
+
+  /** Default implementation of {@link BaseNumberXMLDeserializer} for {@link Short} */
+  public static final class ShortXMLDeserializer extends BaseNumberXMLDeserializer<Short> {
+
+    private static final ShortXMLDeserializer INSTANCE = new ShortXMLDeserializer();
+
+    private ShortXMLDeserializer() {}
+
+    /** @return an instance of {@link ShortXMLDeserializer} */
+    public static ShortXMLDeserializer getInstance() {
+      return INSTANCE;
+    }
+
+    @Override
+    protected Short doDeserialize(
+        XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLStreamException {
+      String value = reader.nextString();
+      if (value == null) {
+        return null;
+      }
+      return Short.valueOf(value);
+    }
+
+    @Override
+    public Short deserialize(
+        String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLDeserializationException {
+      if (value.isEmpty()) {
+        return null;
+      }
+      return Short.valueOf(value);
+    }
+  }
+
+  /** Default implementation of {@link BaseNumberXMLDeserializer} for {@link Number} */
+  public static final class NumberXMLDeserializer extends BaseNumberXMLDeserializer<Number> {
+
+    private static final NumberXMLDeserializer INSTANCE = new NumberXMLDeserializer();
+
+    private NumberXMLDeserializer() {}
+
+    /** @return an instance of {@link NumberXMLDeserializer} */
+    public static NumberXMLDeserializer getInstance() {
+      return INSTANCE;
+    }
+
+    @Override
+    public Number doDeserialize(
+        XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLStreamException {
+      return reader.nextNumber();
+    }
+
+    @Override
+    public Number deserialize(
+        String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLDeserializationException {
+      if (value.isEmpty()) {
+        return null;
+      }
+      return NumberUtils.toNumber(value);
+    }
+  }
 }

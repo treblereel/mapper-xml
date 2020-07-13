@@ -17,9 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.array;
 
 import java.util.List;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -34,39 +32,50 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public class PrimitiveDoubleArrayXMLDeserializer extends AbstractArrayXMLDeserializer<double[]> {
 
-    private static final PrimitiveDoubleArrayXMLDeserializer INSTANCE = new PrimitiveDoubleArrayXMLDeserializer();
+  private static final PrimitiveDoubleArrayXMLDeserializer INSTANCE =
+      new PrimitiveDoubleArrayXMLDeserializer();
 
-    /**
-     * <p>getInstance</p>
-     *
-     * @return an instance of {@link PrimitiveDoubleArrayXMLDeserializer}
-     */
-    public static PrimitiveDoubleArrayXMLDeserializer getInstance() {
-        return INSTANCE;
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link PrimitiveDoubleArrayXMLDeserializer}
+   */
+  public static PrimitiveDoubleArrayXMLDeserializer getInstance() {
+    return INSTANCE;
+  }
+
+  private PrimitiveDoubleArrayXMLDeserializer() {}
+
+  /** {@inheritDoc} */
+  @Override
+  public double[] doDeserializeArray(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    List<Double> list =
+        deserializeIntoList(
+            reader,
+            ctx,
+            s -> BaseNumberXMLDeserializer.DoubleXMLDeserializer.getInstance(),
+            params);
+
+    double[] result = new double[list.size()];
+    int i = 0;
+    for (Double value : list) {
+      if (null != value) {
+        result[i] = value;
+      }
+      i++;
     }
+    return result;
+  }
 
-    private PrimitiveDoubleArrayXMLDeserializer() {
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public double[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<Double> list = deserializeIntoList(reader, ctx, s -> BaseNumberXMLDeserializer.DoubleXMLDeserializer.getInstance(), params);
-
-        double[] result = new double[list.size()];
-        int i = 0;
-        for (Double value : list) {
-            if (null != value) {
-                result[i] = value;
-            }
-            i++;
-        }
-        return result;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected double[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        return new double[]{BaseNumberXMLDeserializer.DoubleXMLDeserializer.getInstance().deserialize(reader, ctx, params)};
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected double[] doDeserializeSingleArray(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    return new double[] {
+      BaseNumberXMLDeserializer.DoubleXMLDeserializer.getInstance().deserialize(reader, ctx, params)
+    };
+  }
 }

@@ -19,45 +19,50 @@ package org.treblereel.gwt.jackson.api.deser.map;
 import java.util.AbstractMap;
 import java.util.LinkedHashMap;
 import java.util.function.Function;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 /**
- * Default {@link XMLDeserializer} implementation for {@link java.util.AbstractMap}. The deserialization process returns a {@link java.util.LinkedHashMap}.
- * <p>Cannot be overriden. Use {@link BaseMapXMLDeserializer}.</p>
+ * Default {@link XMLDeserializer} implementation for {@link java.util.AbstractMap}. The
+ * deserialization process returns a {@link java.util.LinkedHashMap}.
+ *
+ * <p>Cannot be overriden. Use {@link BaseMapXMLDeserializer}.
+ *
  * @param <K> Type of the keys inside the {@link java.util.AbstractMap}
  * @param <V> Type of the values inside the {@link java.util.AbstractMap}
  * @author Nicolas Morel
  * @version $Id: $
  */
-public final class AbstractMapXMLDeserializer<K, V> extends BaseMapXMLDeserializer<AbstractMap<K, V>, K, V> {
+public final class AbstractMapXMLDeserializer<K, V>
+    extends BaseMapXMLDeserializer<AbstractMap<K, V>, K, V> {
 
-    /**
-     * @param keyDeserializer {@link XMLDeserializer} used to deserialize the keys.
-     * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
-     */
-    private AbstractMapXMLDeserializer(Function<String, XMLDeserializer<K>> keyDeserializer, Function<String, XMLDeserializer<V>> valueDeserializer) {
-        super(keyDeserializer, valueDeserializer);
-    }
+  /**
+   * @param keyDeserializer {@link XMLDeserializer} used to deserialize the keys.
+   * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
+   */
+  private AbstractMapXMLDeserializer(
+      Function<String, XMLDeserializer<K>> keyDeserializer,
+      Function<String, XMLDeserializer<V>> valueDeserializer) {
+    super(keyDeserializer, valueDeserializer);
+  }
 
-    /**
-     * <p>newInstance</p>
-     * @param keyDeserializer {@link XMLDeserializer} used to deserialize the keys.
-     * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
-     * @param <K> Type of the keys inside the {@link java.util.AbstractMap}
-     * @param <V> Type of the values inside the {@link java.util.AbstractMap}
-     * @return a new instance of {@link AbstractMapXMLDeserializer}
-     */
-    public static <K, V> AbstractMapXMLDeserializer<K, V> newInstance(Function<String, XMLDeserializer<K>> keyDeserializer,
-                                                                      Function<String, XMLDeserializer<V>> valueDeserializer) {
-        return new AbstractMapXMLDeserializer<>(keyDeserializer, valueDeserializer);
-    }
+  /**
+   * newInstance
+   *
+   * @param keyDeserializer {@link XMLDeserializer} used to deserialize the keys.
+   * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
+   * @param <K> Type of the keys inside the {@link java.util.AbstractMap}
+   * @param <V> Type of the values inside the {@link java.util.AbstractMap}
+   * @return a new instance of {@link AbstractMapXMLDeserializer}
+   */
+  public static <K, V> AbstractMapXMLDeserializer<K, V> newInstance(
+      Function<String, XMLDeserializer<K>> keyDeserializer,
+      Function<String, XMLDeserializer<V>> valueDeserializer) {
+    return new AbstractMapXMLDeserializer<>(keyDeserializer, valueDeserializer);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected AbstractMap<K, V> newMap() {
-        return new LinkedHashMap<>();
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected AbstractMap<K, V> newMap() {
+    return new LinkedHashMap<>();
+  }
 }

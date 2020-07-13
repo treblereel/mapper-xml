@@ -17,7 +17,6 @@
 package org.treblereel.gwt.jackson.api.ser;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -25,41 +24,45 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for {@link Character}.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class CharacterXMLSerializer extends XMLSerializer<Character> {
 
-    private static final CharacterXMLSerializer INSTANCE = new CharacterXMLSerializer();
+  private static final CharacterXMLSerializer INSTANCE = new CharacterXMLSerializer();
 
-    private CharacterXMLSerializer() {
+  private CharacterXMLSerializer() {}
+
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link CharacterXMLSerializer}
+   */
+  public static CharacterXMLSerializer getInstance() {
+    return INSTANCE;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void doSerialize(
+      XMLWriter writer,
+      Character value,
+      XMLSerializationContext ctx,
+      XMLSerializerParameters params)
+      throws XMLStreamException {
+    String _value;
+    if (value.charValue() == '\u0000') {
+      _value = "";
+    } else {
+      _value = value.toString();
     }
 
-    /**
-     * <p>getInstance</p>
-     * @return an instance of {@link CharacterXMLSerializer}
-     */
-    public static CharacterXMLSerializer getInstance() {
-        return INSTANCE;
+    if (isAttribute) {
+      writer.writeAttribute(propertyName, _value);
+      isAttribute = false;
+    } else {
+      writer.value(_value);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void doSerialize(XMLWriter writer, Character value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        String _value;
-        if(value.charValue() == '\u0000') {
-            _value = "";
-        } else {
-            _value = value.toString();
-        }
-
-        if (isAttribute) {
-            writer.writeAttribute(propertyName, _value);
-            isAttribute = false;
-        } else {
-            writer.value(_value);
-        }
-    }
+  }
 }

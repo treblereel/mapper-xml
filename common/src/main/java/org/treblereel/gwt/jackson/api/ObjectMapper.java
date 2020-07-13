@@ -23,5 +23,4 @@ package org.treblereel.gwt.jackson.api;
  * @author Nicolas Morel
  * @version $Id: $
  */
-public interface ObjectMapper<T> extends ObjectReader<T>, ObjectWriter<T> {
-}
+public interface ObjectMapper<T> extends ObjectReader<T>, ObjectWriter<T> {}

@@ -19,10 +19,7 @@ package org.treblereel.gwt.jackson.api.deser;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
-
 import javax.xml.stream.XMLStreamException;
-
-import org.treblereel.gwt.jackson.api.JacksonContextProvider;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -31,164 +28,160 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
  * Base implementation of {@link XMLDeserializer} for dates.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public abstract class BaseDateXMLDeserializer<D extends Date> extends XMLDeserializer<D> {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public D doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        return deserializeNumber(reader.nextLong(), params);
+  /** {@inheritDoc} */
+  @Override
+  public D doDeserialize(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    return deserializeNumber(reader.nextLong(), params);
+  }
+
+  @Override
+  public D deserialize(
+      String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLDeserializationException {
+    return deserializeString(value, ctx, params);
+  }
+
+  /**
+   * deserializeString
+   *
+   * @param date a {@link java.lang.String} object.
+   * @param ctx a {@link XMLDeserializationContext} object.
+   * @param params a {@link XMLDeserializerParameters} object.
+   * @return a D object.
+   */
+  protected abstract D deserializeString(
+      String date, XMLDeserializationContext ctx, XMLDeserializerParameters params);
+
+  /**
+   * deserializeNumber
+   *
+   * @param millis a long.
+   * @param params a {@link XMLDeserializerParameters} object.
+   * @return a D object.
+   */
+  protected abstract D deserializeNumber(long millis, XMLDeserializerParameters params);
+
+  /** Default implementation of {@link BaseDateXMLDeserializer} for {@link Date} */
+  public static final class DateXMLDeserializer extends BaseDateXMLDeserializer<Date> {
+
+    private static final DateXMLDeserializer INSTANCE = new DateXMLDeserializer();
+
+    private DateXMLDeserializer() {}
+
+    /** @return an instance of {@link DateXMLDeserializer} */
+    public static DateXMLDeserializer getInstance() {
+      return INSTANCE;
     }
 
     @Override
-    public D deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
-            XMLDeserializationException {
-        return deserializeString(value, ctx, params);
+    protected Date deserializeNumber(long millis, XMLDeserializerParameters params) {
+      if (millis == 0) {
+        return null;
+      }
+      return new Date(millis);
     }
 
-    /**
-     * <p>deserializeString</p>
-     * @param date a {@link java.lang.String} object.
-     * @param ctx a {@link XMLDeserializationContext} object.
-     * @param params a {@link XMLDeserializerParameters} object.
-     * @return a D object.
-     */
-    protected abstract D deserializeString(String date, XMLDeserializationContext ctx, XMLDeserializerParameters params);
+    @Override
+    protected Date deserializeString(
+        String date, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+      if (date == null) {
+        return null;
+      }
+      return new Date(Long.valueOf(date));
+      // return JacksonContextProvider.get().dateFormat().parse(ctx.isUseBrowserTimezone(),
+      // params.getPattern(), null, date);
+    }
+  }
 
-    /**
-     * <p>deserializeNumber</p>
-     * @param millis a long.
-     * @param params a {@link XMLDeserializerParameters} object.
-     * @return a D object.
-     */
-    protected abstract D deserializeNumber(long millis, XMLDeserializerParameters params);
+  /** Default implementation of {@link BaseDateXMLDeserializer} for {@link java.sql.Date} */
+  public static final class SqlDateXMLDeserializer extends BaseDateXMLDeserializer<java.sql.Date> {
 
-    /**
-     * Default implementation of {@link BaseDateXMLDeserializer} for {@link Date}
-     */
-    public static final class DateXMLDeserializer extends BaseDateXMLDeserializer<Date> {
+    private static final SqlDateXMLDeserializer INSTANCE = new SqlDateXMLDeserializer();
 
-        private static final DateXMLDeserializer INSTANCE = new DateXMLDeserializer();
+    private static final String SQL_DATE_FORMAT = "yyyy-MM-dd";
 
-        private DateXMLDeserializer() {
-        }
+    private SqlDateXMLDeserializer() {}
 
-        /**
-         * @return an instance of {@link DateXMLDeserializer}
-         */
-        public static DateXMLDeserializer getInstance() {
-            return INSTANCE;
-        }
-
-        @Override
-        protected Date deserializeNumber(long millis, XMLDeserializerParameters params) {
-            if (millis == 0) {
-                return null;
-            }
-            return new Date(millis);
-        }
-
-        @Override
-        protected Date deserializeString(String date, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-            if (date == null) {
-                return null;
-            }
-            return new Date(Long.valueOf(date));
-            //return JacksonContextProvider.get().dateFormat().parse(ctx.isUseBrowserTimezone(), params.getPattern(), null, date);
-        }
+    /** @return an instance of {@link SqlDateXMLDeserializer} */
+    public static SqlDateXMLDeserializer getInstance() {
+      return INSTANCE;
     }
 
-    /**
-     * Default implementation of {@link BaseDateXMLDeserializer} for {@link java.sql.Date}
-     */
-    public static final class SqlDateXMLDeserializer extends BaseDateXMLDeserializer<java.sql.Date> {
-
-        private static final SqlDateXMLDeserializer INSTANCE = new SqlDateXMLDeserializer();
-
-        private static final String SQL_DATE_FORMAT = "yyyy-MM-dd";
-
-        private SqlDateXMLDeserializer() {
-        }
-
-        /**
-         * @return an instance of {@link SqlDateXMLDeserializer}
-         */
-        public static SqlDateXMLDeserializer getInstance() {
-            return INSTANCE;
-        }
-
-        @Override
-        protected java.sql.Date deserializeNumber(long millis, XMLDeserializerParameters params) {
-            return new java.sql.Date(millis);
-        }
-
-        @Override
-        protected java.sql.Date deserializeString(String date, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-            if (date == null) {
-                return null;
-            }
-            return new java.sql.Date(Long.valueOf(date));
-            //return new java.sql.Date(JacksonContextProvider.get().dateFormat().parse(ctx.isUseBrowserTimezone(), SQL_DATE_FORMAT, false, date).getTime());
-        }
+    @Override
+    protected java.sql.Date deserializeNumber(long millis, XMLDeserializerParameters params) {
+      return new java.sql.Date(millis);
     }
 
-    /**
-     * Default implementation of {@link BaseDateXMLDeserializer} for {@link Time}
-     */
-    public static final class SqlTimeXMLDeserializer extends BaseDateXMLDeserializer<Time> {
+    @Override
+    protected java.sql.Date deserializeString(
+        String date, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+      if (date == null) {
+        return null;
+      }
+      return new java.sql.Date(Long.valueOf(date));
+      // return new
+      // java.sql.Date(JacksonContextProvider.get().dateFormat().parse(ctx.isUseBrowserTimezone(),
+      // SQL_DATE_FORMAT, false, date).getTime());
+    }
+  }
 
-        private static final SqlTimeXMLDeserializer INSTANCE = new SqlTimeXMLDeserializer();
+  /** Default implementation of {@link BaseDateXMLDeserializer} for {@link Time} */
+  public static final class SqlTimeXMLDeserializer extends BaseDateXMLDeserializer<Time> {
 
-        private SqlTimeXMLDeserializer() {
-        }
+    private static final SqlTimeXMLDeserializer INSTANCE = new SqlTimeXMLDeserializer();
 
-        /**
-         * @return an instance of {@link SqlTimeXMLDeserializer}
-         */
-        public static SqlTimeXMLDeserializer getInstance() {
-            return INSTANCE;
-        }
+    private SqlTimeXMLDeserializer() {}
 
-        @Override
-        protected Time deserializeNumber(long millis, XMLDeserializerParameters params) {
-            return new Time(millis);
-        }
-
-        @Override
-        protected Time deserializeString(String date, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-            return Time.valueOf(date);
-        }
+    /** @return an instance of {@link SqlTimeXMLDeserializer} */
+    public static SqlTimeXMLDeserializer getInstance() {
+      return INSTANCE;
     }
 
-    /**
-     * Default implementation of {@link BaseDateXMLDeserializer} for {@link Timestamp}
-     */
-    public static final class SqlTimestampXMLDeserializer extends BaseDateXMLDeserializer<Timestamp> {
-
-        private static final SqlTimestampXMLDeserializer INSTANCE = new SqlTimestampXMLDeserializer();
-
-        private SqlTimestampXMLDeserializer() {
-        }
-
-        /**
-         * @return an instance of {@link SqlTimestampXMLDeserializer}
-         */
-        public static SqlTimestampXMLDeserializer getInstance() {
-            return INSTANCE;
-        }
-
-        @Override
-        protected Timestamp deserializeNumber(long millis, XMLDeserializerParameters params) {
-            return new Timestamp(millis);
-        }
-
-        @Override
-        protected Timestamp deserializeString(String date, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-            return new Timestamp(params.dateFormat().parse(ctx.isUseBrowserTimezone(), params.getPattern(), null, date).getTime());
-        }
+    @Override
+    protected Time deserializeNumber(long millis, XMLDeserializerParameters params) {
+      return new Time(millis);
     }
+
+    @Override
+    protected Time deserializeString(
+        String date, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+      return Time.valueOf(date);
+    }
+  }
+
+  /** Default implementation of {@link BaseDateXMLDeserializer} for {@link Timestamp} */
+  public static final class SqlTimestampXMLDeserializer extends BaseDateXMLDeserializer<Timestamp> {
+
+    private static final SqlTimestampXMLDeserializer INSTANCE = new SqlTimestampXMLDeserializer();
+
+    private SqlTimestampXMLDeserializer() {}
+
+    /** @return an instance of {@link SqlTimestampXMLDeserializer} */
+    public static SqlTimestampXMLDeserializer getInstance() {
+      return INSTANCE;
+    }
+
+    @Override
+    protected Timestamp deserializeNumber(long millis, XMLDeserializerParameters params) {
+      return new Timestamp(millis);
+    }
+
+    @Override
+    protected Timestamp deserializeString(
+        String date, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
+      return new Timestamp(
+          params
+              .dateFormat()
+              .parse(ctx.isUseBrowserTimezone(), params.getPattern(), null, date)
+              .getTime());
+    }
+  }
 }

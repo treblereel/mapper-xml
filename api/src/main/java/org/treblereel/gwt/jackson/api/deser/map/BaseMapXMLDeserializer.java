@@ -18,9 +18,7 @@ package org.treblereel.gwt.jackson.api.deser.map;
 
 import java.util.Map;
 import java.util.function.Function;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -28,6 +26,7 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
  * Base {@link XMLDeserializer} implementation for {@link java.util.Map}.
+ *
  * @param <M> Type of the {@link java.util.Map}
  * @param <K> Type of the keys inside the {@link java.util.Map}
  * @param <V> Type of the values inside the {@link java.util.Map}
@@ -36,45 +35,46 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public abstract class BaseMapXMLDeserializer<M extends Map<K, V>, K, V> extends XMLDeserializer<M> {
 
-    /**
-     * {@link XMLDeserializer} used to deserialize the keys.
-     */
-    protected final Function<String, XMLDeserializer<K>> keyDeserializer;
+  /** {@link XMLDeserializer} used to deserialize the keys. */
+  protected final Function<String, XMLDeserializer<K>> keyDeserializer;
 
-    /**
-     * {@link XMLDeserializer} used to deserialize the values.
-     */
-    protected final Function<String, XMLDeserializer<V>> valueDeserializer;
+  /** {@link XMLDeserializer} used to deserialize the values. */
+  protected final Function<String, XMLDeserializer<V>> valueDeserializer;
 
-    /**
-     * <p>Constructor for BaseMapXMLDeserializer.</p>
-     * @param keyDeserializer {@link XMLDeserializer} used to deserialize the keys.
-     * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
-     */
-    protected BaseMapXMLDeserializer(Function<String, XMLDeserializer<K>> keyDeserializer, Function<String, XMLDeserializer<V>> valueDeserializer) {
-        if (null == keyDeserializer) {
-            throw new IllegalArgumentException("keyDeserializer cannot be null");
-        }
-        if (null == valueDeserializer) {
-            throw new IllegalArgumentException("valueDeserializer cannot be null");
-        }
-        this.keyDeserializer = keyDeserializer;
-        this.valueDeserializer = valueDeserializer;
+  /**
+   * Constructor for BaseMapXMLDeserializer.
+   *
+   * @param keyDeserializer {@link XMLDeserializer} used to deserialize the keys.
+   * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
+   */
+  protected BaseMapXMLDeserializer(
+      Function<String, XMLDeserializer<K>> keyDeserializer,
+      Function<String, XMLDeserializer<V>> valueDeserializer) {
+    if (null == keyDeserializer) {
+      throw new IllegalArgumentException("keyDeserializer cannot be null");
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public M doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        M result = newMap();
-        ctx.iterator().doDeserializeMap(reader, result, keyDeserializer, valueDeserializer, ctx, params);
-        return result;
+    if (null == valueDeserializer) {
+      throw new IllegalArgumentException("valueDeserializer cannot be null");
     }
+    this.keyDeserializer = keyDeserializer;
+    this.valueDeserializer = valueDeserializer;
+  }
 
-    /**
-     * Instantiates a new map for deserialization process.
-     * @return the new map
-     */
-    protected abstract M newMap();
+  /** {@inheritDoc} */
+  @Override
+  public M doDeserialize(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    M result = newMap();
+    ctx.iterator()
+        .doDeserializeMap(reader, result, keyDeserializer, valueDeserializer, ctx, params);
+    return result;
+  }
+
+  /**
+   * Instantiates a new map for deserialization process.
+   *
+   * @return the new map
+   */
+  protected abstract M newMap();
 }

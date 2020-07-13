@@ -17,7 +17,6 @@
 package org.treblereel.gwt.jackson.api.ser;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -25,34 +24,35 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for {@link Boolean}.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class BooleanXMLSerializer extends XMLSerializer<Boolean> {
 
-    private static final BooleanXMLSerializer INSTANCE = new BooleanXMLSerializer();
+  private static final BooleanXMLSerializer INSTANCE = new BooleanXMLSerializer();
 
-    private BooleanXMLSerializer() {
-    }
+  private BooleanXMLSerializer() {}
 
-    /**
-     * <p>getInstance</p>
-     * @return an instance of {@link XMLSerializer}
-     */
-    public static BooleanXMLSerializer getInstance() {
-        return INSTANCE;
-    }
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link XMLSerializer}
+   */
+  public static BooleanXMLSerializer getInstance() {
+    return INSTANCE;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void doSerialize(XMLWriter writer, Boolean value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        if (isAttribute) {
-            writer.writeAttribute(propertyName, value.toString());
-            isAttribute = false;
-        } else {
-            writer.value(value);
-        }
+  /** {@inheritDoc} */
+  @Override
+  public void doSerialize(
+      XMLWriter writer, Boolean value, XMLSerializationContext ctx, XMLSerializerParameters params)
+      throws XMLStreamException {
+    if (isAttribute) {
+      writer.writeAttribute(propertyName, value.toString());
+      isAttribute = false;
+    } else {
+      writer.value(value);
     }
+  }
 }

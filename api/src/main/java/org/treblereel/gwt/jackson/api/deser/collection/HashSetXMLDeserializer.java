@@ -16,10 +16,9 @@
 
 package org.treblereel.gwt.jackson.api.deser.collection;
 
-import org.treblereel.gwt.jackson.api.XMLDeserializer;
-
 import java.util.HashSet;
 import java.util.function.Function;
+import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.HashSet}.
@@ -30,27 +29,30 @@ import java.util.function.Function;
  */
 public class HashSetXMLDeserializer<T> extends BaseSetXMLDeserializer<HashSet<T>, T> {
 
-    /**
-     * <p>newInstance</p>
-     *
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link java.util.HashSet}.
-     * @param <T>          Type of the elements inside the {@link java.util.HashSet}
-     * @return a new instance of {@link HashSetXMLDeserializer}
-     */
-    public static <T> HashSetXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
-        return new HashSetXMLDeserializer<>(deserializer);
-    }
+  /**
+   * newInstance
+   *
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     java.util.HashSet}.
+   * @param <T> Type of the elements inside the {@link java.util.HashSet}
+   * @return a new instance of {@link HashSetXMLDeserializer}
+   */
+  public static <T> HashSetXMLDeserializer<T> newInstance(
+      Function<String, XMLDeserializer<T>> deserializer) {
+    return new HashSetXMLDeserializer<>(deserializer);
+  }
 
-    /**
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link HashSet}.
-     */
-    private HashSetXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
-        super(deserializer);
-    }
+  /**
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     HashSet}.
+   */
+  private HashSetXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
+    super(deserializer);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected HashSet<T> newCollection() {
-        return new HashSet<>();
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected HashSet<T> newCollection() {
+    return new HashSet<>();
+  }
 }

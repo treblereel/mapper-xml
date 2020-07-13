@@ -17,9 +17,7 @@
 package org.treblereel.gwt.jackson.api.ser;
 
 import java.util.Iterator;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -27,64 +25,68 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for {@link Iterable}.
+ *
  * @param <T> Type of the elements inside the {@link Iterable}
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class IterableXMLSerializer<I extends Iterable<T>, T> extends XMLSerializer<I> {
 
-    protected final XMLSerializer<T> serializer;
+  protected final XMLSerializer<T> serializer;
 
-    /**
-     * <p>Constructor for IterableXMLSerializer.</p>
-     * @param serializer {@link XMLSerializer} used to serialize the objects inside the {@link Iterable}.
-     */
-    protected IterableXMLSerializer(XMLSerializer<T> serializer) {
-        if (null == serializer) {
-            throw new IllegalArgumentException("serializer cannot be null");
-        }
-        this.serializer = serializer;
+  /**
+   * Constructor for IterableXMLSerializer.
+   *
+   * @param serializer {@link XMLSerializer} used to serialize the objects inside the {@link
+   *     Iterable}.
+   */
+  protected IterableXMLSerializer(XMLSerializer<T> serializer) {
+    if (null == serializer) {
+      throw new IllegalArgumentException("serializer cannot be null");
     }
+    this.serializer = serializer;
+  }
 
-    /**
-     * <p>newInstance</p>
-     * @param serializer {@link XMLSerializer} used to serialize the objects inside the {@link Iterable}
-     * @param <I> Type of the {@link Iterable}
-     * @return a new instance of {@link IterableXMLSerializer}
-     */
-    public static <I extends Iterable<?>> IterableXMLSerializer<I, ?> newInstance(XMLSerializer<?> serializer) {
-        return new IterableXMLSerializer(serializer);
-    }
+  /**
+   * newInstance
+   *
+   * @param serializer {@link XMLSerializer} used to serialize the objects inside the {@link
+   *     Iterable}
+   * @param <I> Type of the {@link Iterable}
+   * @return a new instance of {@link IterableXMLSerializer}
+   */
+  public static <I extends Iterable<?>> IterableXMLSerializer<I, ?> newInstance(
+      XMLSerializer<?> serializer) {
+    return new IterableXMLSerializer(serializer);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean isEmpty(I value) {
-        return null == value || !value.iterator().hasNext();
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected boolean isEmpty(I value) {
+    return null == value || !value.iterator().hasNext();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void doSerialize(XMLWriter writer, I values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        Iterator<T> iterator = values.iterator();
+  /** {@inheritDoc} */
+  @Override
+  public void doSerialize(
+      XMLWriter writer, I values, XMLSerializationContext ctx, XMLSerializerParameters params)
+      throws XMLStreamException {
+    Iterator<T> iterator = values.iterator();
 
-        if (!iterator.hasNext()) {
-            if (ctx.isWriteEmptyXMLArrays()) {
-                writer.beginArray();
-                writer.endArray();
-            } else {
-                writer.nullValue();
-            }
-            return;
-        }
-
+    if (!iterator.hasNext()) {
+      if (ctx.isWriteEmptyXMLArrays()) {
         writer.beginArray();
-        while (iterator.hasNext()) {
-            serializer.serialize(writer, iterator.next(), ctx, params);
-        }
         writer.endArray();
+      } else {
+        writer.nullValue();
+      }
+      return;
     }
+
+    writer.beginArray();
+    while (iterator.hasNext()) {
+      serializer.serialize(writer, iterator.next(), ctx, params);
+    }
+    writer.endArray();
+  }
 }

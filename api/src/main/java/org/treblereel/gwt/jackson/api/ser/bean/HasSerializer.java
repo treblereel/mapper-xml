@@ -26,24 +26,24 @@ import org.treblereel.gwt.jackson.api.XMLSerializer;
  */
 public abstract class HasSerializer<V, S extends XMLSerializer<V>> {
 
-    private S serializer;
+  private S serializer;
 
-    /**
-     * <p>Getter for the field <code>serializer</code>.</p>
-     *
-     * @return a S object.
-     */
-    protected S getSerializer(Class value) {
-        if (null == serializer) {
-            serializer = (S) newSerializer(value);
-        }
-        return serializer;
+  /**
+   * Getter for the field <code>serializer</code>.
+   *
+   * @return a S object.
+   */
+  protected S getSerializer(Class value) {
+    if (null == serializer) {
+      serializer = (S) newSerializer(value);
     }
+    return serializer;
+  }
 
-    /**
-     * <p>newSerializer</p>
-     *
-     * @return a {@link XMLSerializer} object.
-     */
-    protected abstract XMLSerializer<?> newSerializer(Class value);
+  /**
+   * newSerializer
+   *
+   * @return a {@link XMLSerializer} object.
+   */
+  protected abstract XMLSerializer<?> newSerializer(Class value);
 }

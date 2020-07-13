@@ -15,46 +15,43 @@
  */
 package org.treblereel.gwt.jackson.api.utils;
 
+import elemental2.core.JsObject;
 import java.util.HashSet;
 import java.util.Set;
-
-import elemental2.core.JsObject;
 import jsinterop.base.Js;
 import jsinterop.base.JsPropertyMap;
 import org.treblereel.gwt.jackson.api.deser.bean.MapLike;
 
 /**
- * <p>JsMapLike class.</p>
+ * JsMapLike class.
+ *
  * @author vegegoku
  * @version $Id: $Id
  */
 public class JsMapLike<T> implements MapLike<T> {
 
-    private JsPropertyMap<T> map = (JsPropertyMap<T>) Js.asAny(JsObject.create(null)).asPropertyMap();
+  private JsPropertyMap<T> map = (JsPropertyMap<T>) Js.asAny(JsObject.create(null)).asPropertyMap();
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public T get(String key) {
-        return map.get(key);
-    }
+  /** {@inheritDoc} */
+  @Override
+  public T get(String key) {
+    return map.get(key);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void put(String key, T value) {
-        map.set(key, value);
-    }
+  /** {@inheritDoc} */
+  @Override
+  public void put(String key, T value) {
+    map.set(key, value);
+  }
 
-    @Override
-    public Set<String> keys() {
-        Set<String> result = new HashSet<>();
-        map.forEach(fn -> {
-            result.add(fn);
+  @Override
+  public Set<String> keys() {
+    Set<String> result = new HashSet<>();
+    map.forEach(
+        fn -> {
+          result.add(fn);
         });
 
-        return result;
-    }
+    return result;
+  }
 }

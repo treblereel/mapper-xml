@@ -17,7 +17,6 @@
 package org.treblereel.gwt.jackson.api.deser;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -26,42 +25,44 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.lang.Character}.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class CharacterXMLDeserializer extends XMLDeserializer<Character> {
 
-    private static final CharacterXMLDeserializer INSTANCE = new CharacterXMLDeserializer();
+  private static final CharacterXMLDeserializer INSTANCE = new CharacterXMLDeserializer();
 
-    private CharacterXMLDeserializer() {
-    }
+  private CharacterXMLDeserializer() {}
 
-    /**
-     * <p>getInstance</p>
-     * @return an instance of {@link CharacterXMLDeserializer}
-     */
-    public static CharacterXMLDeserializer getInstance() {
-        return INSTANCE;
-    }
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link CharacterXMLDeserializer}
+   */
+  public static CharacterXMLDeserializer getInstance() {
+    return INSTANCE;
+  }
 
-    @Override
-    public Character deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
-            XMLDeserializationException {
-        if (value.isEmpty()) {
-            return null;
-        }
-        return value.charAt(0);
+  @Override
+  public Character deserialize(
+      String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLDeserializationException {
+    if (value.isEmpty()) {
+      return null;
     }
+    return value.charAt(0);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Character doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        String value = reader.nextString();
-        if (value == null || value.isEmpty()) {
-            return null;
-        }
-        return value.charAt(0);
+  /** {@inheritDoc} */
+  @Override
+  public Character doDeserialize(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    String value = reader.nextString();
+    if (value == null || value.isEmpty()) {
+      return null;
     }
+    return value.charAt(0);
+  }
 }

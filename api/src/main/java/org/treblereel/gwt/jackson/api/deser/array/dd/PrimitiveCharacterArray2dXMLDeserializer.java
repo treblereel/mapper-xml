@@ -17,9 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.array.dd;
 
 import java.util.List;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -28,54 +26,58 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
  * Default {@link XMLDeserializer} implementation for 2D array of char.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
-public class PrimitiveCharacterArray2dXMLDeserializer extends AbstractArray2dXMLDeserializer<char[][]> {
+public class PrimitiveCharacterArray2dXMLDeserializer
+    extends AbstractArray2dXMLDeserializer<char[][]> {
 
-    private static final PrimitiveCharacterArray2dXMLDeserializer INSTANCE = new PrimitiveCharacterArray2dXMLDeserializer();
+  private static final PrimitiveCharacterArray2dXMLDeserializer INSTANCE =
+      new PrimitiveCharacterArray2dXMLDeserializer();
 
-    private PrimitiveCharacterArray2dXMLDeserializer() {
+  private PrimitiveCharacterArray2dXMLDeserializer() {}
+
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link PrimitiveCharacterArray2dXMLDeserializer}
+   */
+  public static PrimitiveCharacterArray2dXMLDeserializer getInstance() {
+    return INSTANCE;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public char[][] doDeserialize(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    List<List<Character>> list =
+        deserializeIntoList(reader, ctx, s -> CharacterXMLDeserializer.getInstance(), params);
+
+    if (list.isEmpty()) {
+      return new char[0][0];
     }
 
-    /**
-     * <p>getInstance</p>
-     * @return an instance of {@link PrimitiveCharacterArray2dXMLDeserializer}
-     */
-    public static PrimitiveCharacterArray2dXMLDeserializer getInstance() {
-        return INSTANCE;
+    List<Character> firstList = list.get(0);
+    if (firstList.isEmpty()) {
+      return new char[list.size()][0];
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public char[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<List<Character>> list = deserializeIntoList(reader, ctx, s -> CharacterXMLDeserializer.getInstance(), params);
+    char[][] array = new char[list.size()][firstList.size()];
 
-        if (list.isEmpty()) {
-            return new char[0][0];
+    int i = 0;
+    int j;
+    for (List<Character> innerList : list) {
+      j = 0;
+      for (Character value : innerList) {
+        if (null != value) {
+          array[i][j] = value;
         }
-
-        List<Character> firstList = list.get(0);
-        if (firstList.isEmpty()) {
-            return new char[list.size()][0];
-        }
-
-        char[][] array = new char[list.size()][firstList.size()];
-
-        int i = 0;
-        int j;
-        for (List<Character> innerList : list) {
-            j = 0;
-            for (Character value : innerList) {
-                if (null != value) {
-                    array[i][j] = value;
-                }
-                j++;
-            }
-            i++;
-        }
-        return array;
+        j++;
+      }
+      i++;
     }
+    return array;
+  }
 }

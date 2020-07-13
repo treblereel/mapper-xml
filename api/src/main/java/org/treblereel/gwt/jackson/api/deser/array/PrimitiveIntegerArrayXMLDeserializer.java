@@ -17,9 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.array;
 
 import java.util.List;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -34,39 +32,51 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public class PrimitiveIntegerArrayXMLDeserializer extends AbstractArrayXMLDeserializer<int[]> {
 
-    private static final PrimitiveIntegerArrayXMLDeserializer INSTANCE = new PrimitiveIntegerArrayXMLDeserializer();
+  private static final PrimitiveIntegerArrayXMLDeserializer INSTANCE =
+      new PrimitiveIntegerArrayXMLDeserializer();
 
-    /**
-     * <p>getInstance</p>
-     *
-     * @return an instance of {@link PrimitiveIntegerArrayXMLDeserializer}
-     */
-    public static PrimitiveIntegerArrayXMLDeserializer getInstance() {
-        return INSTANCE;
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link PrimitiveIntegerArrayXMLDeserializer}
+   */
+  public static PrimitiveIntegerArrayXMLDeserializer getInstance() {
+    return INSTANCE;
+  }
+
+  private PrimitiveIntegerArrayXMLDeserializer() {}
+
+  /** {@inheritDoc} */
+  @Override
+  public int[] doDeserializeArray(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    List<Integer> list =
+        deserializeIntoList(
+            reader,
+            ctx,
+            s -> BaseNumberXMLDeserializer.IntegerXMLDeserializer.getInstance(),
+            params);
+
+    int[] result = new int[list.size()];
+    int i = 0;
+    for (Integer value : list) {
+      if (null != value) {
+        result[i] = value;
+      }
+      i++;
     }
+    return result;
+  }
 
-    private PrimitiveIntegerArrayXMLDeserializer() {
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public int[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<Integer> list = deserializeIntoList(reader, ctx, s -> BaseNumberXMLDeserializer.IntegerXMLDeserializer.getInstance(), params);
-
-        int[] result = new int[list.size()];
-        int i = 0;
-        for (Integer value : list) {
-            if (null != value) {
-                result[i] = value;
-            }
-            i++;
-        }
-        return result;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected int[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        return new int[]{BaseNumberXMLDeserializer.IntegerXMLDeserializer.getInstance().deserialize(reader, ctx, params)};
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected int[] doDeserializeSingleArray(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    return new int[] {
+      BaseNumberXMLDeserializer.IntegerXMLDeserializer.getInstance()
+          .deserialize(reader, ctx, params)
+    };
+  }
 }

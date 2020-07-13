@@ -17,9 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.array.dd;
 
 import java.util.List;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -32,50 +30,58 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  * @author Nicolas Morel
  * @version $Id: $
  */
-public class PrimitiveDoubleArray2dXMLDeserializer extends AbstractArray2dXMLDeserializer<double[][]> {
+public class PrimitiveDoubleArray2dXMLDeserializer
+    extends AbstractArray2dXMLDeserializer<double[][]> {
 
-    private static final PrimitiveDoubleArray2dXMLDeserializer INSTANCE = new PrimitiveDoubleArray2dXMLDeserializer();
+  private static final PrimitiveDoubleArray2dXMLDeserializer INSTANCE =
+      new PrimitiveDoubleArray2dXMLDeserializer();
 
-    /**
-     * <p>getInstance</p>
-     *
-     * @return an instance of {@link PrimitiveDoubleArray2dXMLDeserializer}
-     */
-    public static PrimitiveDoubleArray2dXMLDeserializer getInstance() {
-        return INSTANCE;
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link PrimitiveDoubleArray2dXMLDeserializer}
+   */
+  public static PrimitiveDoubleArray2dXMLDeserializer getInstance() {
+    return INSTANCE;
+  }
+
+  private PrimitiveDoubleArray2dXMLDeserializer() {}
+
+  /** {@inheritDoc} */
+  @Override
+  public double[][] doDeserialize(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    List<List<Double>> list =
+        deserializeIntoList(
+            reader,
+            ctx,
+            s -> BaseNumberXMLDeserializer.DoubleXMLDeserializer.getInstance(),
+            params);
+
+    if (list.isEmpty()) {
+      return new double[0][0];
     }
 
-    private PrimitiveDoubleArray2dXMLDeserializer() {
+    List<Double> firstList = list.get(0);
+    if (firstList.isEmpty()) {
+      return new double[list.size()][0];
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public double[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<List<Double>> list = deserializeIntoList(reader, ctx, s -> BaseNumberXMLDeserializer.DoubleXMLDeserializer.getInstance(), params);
+    double[][] array = new double[list.size()][firstList.size()];
 
-        if (list.isEmpty()) {
-            return new double[0][0];
+    int i = 0;
+    int j;
+    for (List<Double> innerList : list) {
+      j = 0;
+      for (Double value : innerList) {
+        if (null != value) {
+          array[i][j] = value;
         }
-
-        List<Double> firstList = list.get(0);
-        if (firstList.isEmpty()) {
-            return new double[list.size()][0];
-        }
-
-        double[][] array = new double[list.size()][firstList.size()];
-
-        int i = 0;
-        int j;
-        for (List<Double> innerList : list) {
-            j = 0;
-            for (Double value : innerList) {
-                if (null != value) {
-                    array[i][j] = value;
-                }
-                j++;
-            }
-            i++;
-        }
-        return array;
+        j++;
+      }
+      i++;
     }
+    return array;
+  }
 }

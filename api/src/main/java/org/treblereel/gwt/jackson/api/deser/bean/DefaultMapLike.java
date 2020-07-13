@@ -15,35 +15,34 @@
  */
 package org.treblereel.gwt.jackson.api.deser.bean;
 
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * <p>DefaultMapLike class.</p>
+ * DefaultMapLike class.
  *
  * @author vegegoku
  * @version $Id: $Id
  */
 public class DefaultMapLike<T> implements MapLike<T> {
 
-    private Map<String, T> map = new HashMap<>();
+  private Map<String, T> map = new HashMap<>();
 
-    /** {@inheritDoc} */
-    @Override
-    public T get(String key) {
-        return map.get(key);
-    }
+  /** {@inheritDoc} */
+  @Override
+  public T get(String key) {
+    return map.get(key);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public void put(String key, T value) {
-        map.put(key, value);
-    }
+  /** {@inheritDoc} */
+  @Override
+  public void put(String key, T value) {
+    map.put(key, value);
+  }
 
-    @Override
-    public Set<String> keys() {
-        return map.keySet();
-    }
+  @Override
+  public Set<String> keys() {
+    return map.keySet();
+  }
 }

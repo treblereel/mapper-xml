@@ -16,42 +16,46 @@
 
 package org.treblereel.gwt.jackson.api.deser.collection;
 
-import org.treblereel.gwt.jackson.api.XMLDeserializer;
-
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Function;
+import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 /**
- * Default {@link XMLDeserializer} implementation for {@link java.util.SortedSet}. The deserialization process returns a {@link java.util.TreeSet}.
+ * Default {@link XMLDeserializer} implementation for {@link java.util.SortedSet}. The
+ * deserialization process returns a {@link java.util.TreeSet}.
  *
  * @param <T> Type of the elements inside the {@link java.util.SortedSet}
  * @author Nicolas Morel
  * @version $Id: $
  */
-public final class SortedSetXMLDeserializer<T> extends BaseSortedSetXMLDeserializer<SortedSet<T>, T> {
+public final class SortedSetXMLDeserializer<T>
+    extends BaseSortedSetXMLDeserializer<SortedSet<T>, T> {
 
-    /**
-     * <p>newInstance</p>
-     *
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link java.util.SortedSet}.
-     * @param <T>          Type of the elements inside the {@link java.util.SortedSet}
-     * @return a new instance of {@link SortedSetXMLDeserializer}
-     */
-    public static <T> SortedSetXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
-        return new SortedSetXMLDeserializer<>(deserializer);
-    }
+  /**
+   * newInstance
+   *
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     java.util.SortedSet}.
+   * @param <T> Type of the elements inside the {@link java.util.SortedSet}
+   * @return a new instance of {@link SortedSetXMLDeserializer}
+   */
+  public static <T> SortedSetXMLDeserializer<T> newInstance(
+      Function<String, XMLDeserializer<T>> deserializer) {
+    return new SortedSetXMLDeserializer<>(deserializer);
+  }
 
-    /**
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link SortedSet}.
-     */
-    private SortedSetXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
-        super(deserializer);
-    }
+  /**
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     SortedSet}.
+   */
+  private SortedSetXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
+    super(deserializer);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected SortedSet<T> newCollection() {
-        return new TreeSet<>();
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected SortedSet<T> newCollection() {
+    return new TreeSet<>();
+  }
 }

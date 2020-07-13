@@ -147,7 +147,7 @@ public class JsNativeXMLReader implements XMLReader {
     @Override
     public QName getAttributeName(int index) {
         Attr attr = (Attr) current.node.attributes.item(index);
-        return new QName(attr.namespaceURI, attr.name);
+        return new QName(attr.namespaceURI, attr.name.replaceAll("xsi:",""));
     }
 
     @Override

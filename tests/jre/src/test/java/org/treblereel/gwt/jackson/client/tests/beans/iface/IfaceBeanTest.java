@@ -29,7 +29,7 @@ public class IfaceBeanTest {
         user.setIAddress(address);
 
         String userXml = userMapper.write(user);
-        System.out.println(userXml);
+        //System.out.println(userXml);
         assertEquals("<?xml version='1.0' encoding='UTF-8'?><User><user>test</user><iAddress xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"_Address1\"><address>iAddress</address></iAddress></User>", userXml);
         assertEquals(user, userMapper.read(userXml));
     }

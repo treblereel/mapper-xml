@@ -82,18 +82,16 @@ public abstract class XMLDeserializer<T> {
      */
     protected abstract T doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException;
 
-    private String getXsiType(XMLReader reader) {
-        if (reader != null) {
+    protected String getXsiType(XMLReader reader) {
             for (int i = 0; i < reader.getAttributeCount(); i++) {
                 if (reader.getAttributeName(i).equals(xsiType)) {
                     return reader.getAttributeValue(i);
                 }
             }
-        }
-        return null;
+        return "";
     }
 
-    private String getTag(XMLReader reader) {
+    protected String getTag(XMLReader reader) {
         try {
             return reader.peekNodeName().getLocalPart();
         } catch (XMLStreamException e) {

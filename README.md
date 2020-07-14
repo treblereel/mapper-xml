@@ -118,19 +118,19 @@ Example of deserializing to POJO:
 
 Supported `JAXB` annotations:
 
-* [@XmlAttribute](###@xmlattribute)
-* [@XmlElement](#@xmlelement)
-* [@XmlCData](#@xmlcdata)
-* [@XmlTransient](#@xmltransient)
-* [@XmlRootElement](#@xmlrootelement)
-* [@XmlType](#@XmlType)
-* [@XmlElementWrapper](#@xmlelementwrapper)
-* [@XmlSchema](#@xmlschema)
-* [@XmlNs](#@xmlns)
-* [@XmlSeeAlso](#@xmlseealso)
-* [@XmlElements](#@xmlelements)
-* [@XmlElementRefs](#@xmlElementrefs)
-* [@XmlElementRef](#@xmlElementrefs)
+* [@XmlAttribute](###xmlattribute)
+* [@XmlElement](#xmlelement)
+* [@XmlCData](#xmlcdata)
+* [@XmlTransient](#xmltransient)
+* [@XmlRootElement](#xmlrootelement)
+* [@XmlType](#xmltype)
+* [@XmlElementWrapper](#xmlelementwrapper)
+* [@XmlSchema](#xmlschema)
+* [@XmlNs](#xmlns)
+* [@XmlSeeAlso](#xmlseealso)
+* [@XmlElements](#xmlelements)
+* [@XmlElementRefs](#xmlelementrefs)
+* [@XmlElementRef](#xmlelementrefs)
 * XmlNsForm
 * XmlAccessorType
 * XmlAccessType

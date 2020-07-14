@@ -17,10 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.array;
 
 import java.util.List;
-import java.util.function.Function;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -35,39 +32,44 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public class PrimitiveBooleanArrayXMLDeserializer extends AbstractArrayXMLDeserializer<boolean[]> {
 
-    private static final PrimitiveBooleanArrayXMLDeserializer INSTANCE = new PrimitiveBooleanArrayXMLDeserializer();
+  private static final PrimitiveBooleanArrayXMLDeserializer INSTANCE =
+      new PrimitiveBooleanArrayXMLDeserializer();
 
-    /**
-     * <p>getInstance</p>
-     *
-     * @return an instance of {@link PrimitiveBooleanArrayXMLDeserializer}
-     */
-    public static PrimitiveBooleanArrayXMLDeserializer getInstance() {
-        return INSTANCE;
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link PrimitiveBooleanArrayXMLDeserializer}
+   */
+  public static PrimitiveBooleanArrayXMLDeserializer getInstance() {
+    return INSTANCE;
+  }
+
+  private PrimitiveBooleanArrayXMLDeserializer() {}
+
+  /** {@inheritDoc} */
+  @Override
+  public boolean[] doDeserializeArray(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    List<Boolean> list =
+        deserializeIntoList(reader, ctx, s -> BooleanXMLDeserializer.getInstance(), params);
+
+    boolean[] result = new boolean[list.size()];
+    int i = 0;
+    for (Boolean value : list) {
+      if (null != value) {
+        result[i] = value;
+      }
+      i++;
     }
+    return result;
+  }
 
-    private PrimitiveBooleanArrayXMLDeserializer() {
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<Boolean> list = deserializeIntoList(reader, ctx, s -> BooleanXMLDeserializer.getInstance(), params);
-
-        boolean[] result = new boolean[list.size()];
-        int i = 0;
-        for (Boolean value : list) {
-            if (null != value) {
-                result[i] = value;
-            }
-            i++;
-        }
-        return result;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected boolean[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        return new boolean[]{BooleanXMLDeserializer.getInstance().deserialize(reader, ctx, params)};
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected boolean[] doDeserializeSingleArray(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    return new boolean[] {BooleanXMLDeserializer.getInstance().deserialize(reader, ctx, params)};
+  }
 }

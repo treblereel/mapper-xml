@@ -17,38 +17,39 @@
 package org.treblereel.gwt.jackson.api.deser.bean;
 
 import java.util.Map;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
- * <p>InstanceBuilder interface.</p>
+ * InstanceBuilder interface.
  *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public interface InstanceBuilder<T> {
 
-    /**
-     * <p>newInstance</p>
-     *
-     * @param reader                   a {@link XMLReader} object.
-     * @param ctx                      a {@link XMLDeserializationContext} object.
-     * @param params                   a {@link XMLDeserializerParameters} object.
-     * @param bufferedProperties       a {@link Map} object.
-     * @param bufferedPropertiesValues a {@link Map} object.
-     * @return a {@link deser.bean.Instance} object.
-     */
-    Instance<T> newInstance(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params,
-                            Map<String, String> bufferedProperties,
-                            Map<String, Object> bufferedPropertiesValues);
+  /**
+   * newInstance
+   *
+   * @param reader a {@link XMLReader} object.
+   * @param ctx a {@link XMLDeserializationContext} object.
+   * @param params a {@link XMLDeserializerParameters} object.
+   * @param bufferedProperties a {@link Map} object.
+   * @param bufferedPropertiesValues a {@link Map} object.
+   * @return a {@link deser.bean.Instance} object.
+   */
+  Instance<T> newInstance(
+      XMLReader reader,
+      XMLDeserializationContext ctx,
+      XMLDeserializerParameters params,
+      Map<String, String> bufferedProperties,
+      Map<String, Object> bufferedPropertiesValues);
 
-    /**
-     * <p>getParametersDeserializer</p>
-     *
-     * @return a {@link deser.bean.MapLike} object.
-     */
-    MapLike<HasDeserializerAndParameters> getParametersDeserializer();
-
+  /**
+   * getParametersDeserializer
+   *
+   * @return a {@link deser.bean.MapLike} object.
+   */
+  MapLike<HasDeserializerAndParameters> getParametersDeserializer();
 }

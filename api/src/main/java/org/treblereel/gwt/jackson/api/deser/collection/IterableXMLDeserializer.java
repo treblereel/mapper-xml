@@ -17,64 +17,68 @@
 package org.treblereel.gwt.jackson.api.deser.collection;
 
 import java.util.function.Function;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
- * Default {@link XMLDeserializer} implementation for {@link java.lang.Iterable}. The deserialization process returns an {@link java.util.ArrayList}.
+ * Default {@link XMLDeserializer} implementation for {@link java.lang.Iterable}. The
+ * deserialization process returns an {@link java.util.ArrayList}.
+ *
  * @param <T> Type of the elements inside the {@link java.lang.Iterable}
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class IterableXMLDeserializer<T> extends BaseIterableXMLDeserializer<Iterable<T>, T> {
 
-    /**
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link Iterable}.
-     */
-    private IterableXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
-        super(deserializer);
-    }
+  /**
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     Iterable}.
+   */
+  private IterableXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
+    super(deserializer);
+  }
 
-    /**
-     * <p>newInstance</p>
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link java.lang.Iterable}.
-     * @param <T> Type of the elements inside the {@link java.lang.Iterable}
-     * @return a new instance of {@link IterableXMLDeserializer}
-     */
-    public static <T> IterableXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
-        return new IterableXMLDeserializer<>(deserializer);
-    }
+  /**
+   * newInstance
+   *
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     java.lang.Iterable}.
+   * @param <T> Type of the elements inside the {@link java.lang.Iterable}
+   * @return a new instance of {@link IterableXMLDeserializer}
+   */
+  public static <T> IterableXMLDeserializer<T> newInstance(
+      Function<String, XMLDeserializer<T>> deserializer) {
+    return new IterableXMLDeserializer<>(deserializer);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Iterable<T> doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-/*        if (XMLToken.BEGIN_ARRAY == reader.peek()) {
+  /** {@inheritDoc} */
+  @Override
+  public Iterable<T> doDeserialize(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    /*        if (XMLToken.BEGIN_ARRAY == reader.peek()) {
 
-            Collection<T> result = new ArrayList<T>();
+        Collection<T> result = new ArrayList<T>();
 
-            reader.beginArray();
-            while (XMLToken.END_ARRAY != reader.peek()) {
-                result.add(deserializer.deserialize(reader, ctx, params));
-            }
-            reader.endArray();
-            return result;
-
-        } else if (ctx.isAcceptSingleValueAsArray()) {
-
-            Collection<T> result = new ArrayList<T>();
+        reader.beginArray();
+        while (XMLToken.END_ARRAY != reader.peek()) {
             result.add(deserializer.deserialize(reader, ctx, params));
-            return result;
+        }
+        reader.endArray();
+        return result;
 
-        } else {
-            throw ctx.traceError("Cannot deserialize a java.lang.Iterable out of " + reader.peek() + " token", reader);
-        }*/
-        throw new UnsupportedOperationException();
-    }
+    } else if (ctx.isAcceptSingleValueAsArray()) {
+
+        Collection<T> result = new ArrayList<T>();
+        result.add(deserializer.deserialize(reader, ctx, params));
+        return result;
+
+    } else {
+        throw ctx.traceError("Cannot deserialize a java.lang.Iterable out of " + reader.peek() + " token", reader);
+    }*/
+    throw new UnsupportedOperationException();
+  }
 }

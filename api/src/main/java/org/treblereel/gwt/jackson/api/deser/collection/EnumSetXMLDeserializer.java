@@ -16,11 +16,10 @@
 
 package org.treblereel.gwt.jackson.api.deser.collection;
 
-import org.treblereel.gwt.jackson.api.XMLDeserializer;
-import org.treblereel.gwt.jackson.api.deser.EnumXMLDeserializer;
-
 import java.util.EnumSet;
 import java.util.function.Function;
+import org.treblereel.gwt.jackson.api.XMLDeserializer;
+import org.treblereel.gwt.jackson.api.deser.EnumXMLDeserializer;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.EnumSet}.
@@ -29,37 +28,41 @@ import java.util.function.Function;
  * @author Nicolas Morel
  * @version $Id: $
  */
-public class EnumSetXMLDeserializer<E extends Enum<E>> extends BaseSetXMLDeserializer<EnumSet<E>, E> {
+public class EnumSetXMLDeserializer<E extends Enum<E>>
+    extends BaseSetXMLDeserializer<EnumSet<E>, E> {
 
-    /**
-     * <p>newInstance</p>
-     *
-     * @param deserializer {@link EnumXMLDeserializer} used to deserialize the enums inside the {@link java.util.EnumSet}.
-     * @return a new instance of {@link EnumSetXMLDeserializer}
-     */
-    public static <E extends Enum<E>> EnumSetXMLDeserializer<E> newInstance(Function<String, XMLDeserializer<E>> deserializer) {
-        return new EnumSetXMLDeserializer<>(deserializer);
-    }
+  /**
+   * newInstance
+   *
+   * @param deserializer {@link EnumXMLDeserializer} used to deserialize the enums inside the {@link
+   *     java.util.EnumSet}.
+   * @return a new instance of {@link EnumSetXMLDeserializer}
+   */
+  public static <E extends Enum<E>> EnumSetXMLDeserializer<E> newInstance(
+      Function<String, XMLDeserializer<E>> deserializer) {
+    return new EnumSetXMLDeserializer<>(deserializer);
+  }
 
-    private final Class<E> enumClass;
+  private final Class<E> enumClass;
 
-    /**
-     * @param deserializer {@link EnumXMLDeserializer} used to deserialize the enums inside the {@link EnumSet}.
-     */
-    private EnumSetXMLDeserializer(Function<String, XMLDeserializer<E>> deserializer) {
-        super(deserializer);
-        this.enumClass = ((EnumXMLDeserializer<E>)deserializer.apply(null)).getEnumClass();
-    }
+  /**
+   * @param deserializer {@link EnumXMLDeserializer} used to deserialize the enums inside the {@link
+   *     EnumSet}.
+   */
+  private EnumSetXMLDeserializer(Function<String, XMLDeserializer<E>> deserializer) {
+    super(deserializer);
+    this.enumClass = ((EnumXMLDeserializer<E>) deserializer.apply(null)).getEnumClass();
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected EnumSet<E> newCollection() {
-        return EnumSet.noneOf(enumClass);
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected EnumSet<E> newCollection() {
+    return EnumSet.noneOf(enumClass);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected boolean isNullValueAllowed() {
-        return false;
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected boolean isNullValueAllowed() {
+    return false;
+  }
 }

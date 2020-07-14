@@ -16,14 +16,14 @@
 
 package org.treblereel.gwt.jackson.api.deser.collection;
 
-import org.treblereel.gwt.jackson.api.XMLDeserializer;
-
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.function.Function;
+import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 /**
- * Default {@link XMLDeserializer} implementation for {@link java.util.Queue}. The deserialization process returns a {@link java.util.LinkedList}.
+ * Default {@link XMLDeserializer} implementation for {@link java.util.Queue}. The deserialization
+ * process returns a {@link java.util.LinkedList}.
  *
  * @param <T> Type of the elements inside the {@link java.util.Queue}
  * @author Nicolas Morel
@@ -31,27 +31,30 @@ import java.util.function.Function;
  */
 public final class QueueXMLDeserializer<T> extends BaseQueueXMLDeserializer<Queue<T>, T> {
 
-    /**
-     * <p>newInstance</p>
-     *
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link java.util.Queue}.
-     * @param <T>          Type of the elements inside the {@link java.util.Queue}
-     * @return a new instance of {@link QueueXMLDeserializer}
-     */
-    public static <T> QueueXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
-        return new QueueXMLDeserializer<>(deserializer);
-    }
+  /**
+   * newInstance
+   *
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     java.util.Queue}.
+   * @param <T> Type of the elements inside the {@link java.util.Queue}
+   * @return a new instance of {@link QueueXMLDeserializer}
+   */
+  public static <T> QueueXMLDeserializer<T> newInstance(
+      Function<String, XMLDeserializer<T>> deserializer) {
+    return new QueueXMLDeserializer<>(deserializer);
+  }
 
-    /**
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link Queue}.
-     */
-    private QueueXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
-        super(deserializer);
-    }
+  /**
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     Queue}.
+   */
+  private QueueXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
+    super(deserializer);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected Queue<T> newCollection() {
-        return new LinkedList<>();
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected Queue<T> newCollection() {
+    return new LinkedList<>();
+  }
 }

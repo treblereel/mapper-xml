@@ -17,7 +17,6 @@
 package org.treblereel.gwt.jackson.api.deser.array;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -28,43 +27,47 @@ import org.treblereel.gwt.jackson.api.utils.Base64Utils;
 
 /**
  * Default {@link XMLDeserializer} implementation for array of byte.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class PrimitiveByteArrayXMLDeserializer extends AbstractArrayXMLDeserializer<byte[]> {
 
-    private static final PrimitiveByteArrayXMLDeserializer INSTANCE = new PrimitiveByteArrayXMLDeserializer();
+  private static final PrimitiveByteArrayXMLDeserializer INSTANCE =
+      new PrimitiveByteArrayXMLDeserializer();
 
-    private PrimitiveByteArrayXMLDeserializer() {
+  private PrimitiveByteArrayXMLDeserializer() {}
+
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link PrimitiveByteArrayXMLDeserializer}
+   */
+  public static PrimitiveByteArrayXMLDeserializer getInstance() {
+    return INSTANCE;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public byte[] doDeserializeArray(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+
+    String result = StringXMLDeserializer.getInstance().doDeserialize(reader, ctx, params);
+    if (result != null) {
+      return Base64Utils.fromBase64(result);
     }
 
-    /**
-     * <p>getInstance</p>
-     * @return an instance of {@link PrimitiveByteArrayXMLDeserializer}
-     */
-    public static PrimitiveByteArrayXMLDeserializer getInstance() {
-        return INSTANCE;
-    }
+    return new byte[0];
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public byte[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-
-        String result = StringXMLDeserializer.getInstance().doDeserialize(reader, ctx, params);
-        if (result != null) {
-            return Base64Utils.fromBase64(result);
-        }
-
-        return new byte[0];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected byte[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        return new byte[]{BaseNumberXMLDeserializer.ByteXMLDeserializer.getInstance().deserialize(reader, ctx, params)};
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected byte[] doDeserializeSingleArray(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    return new byte[] {
+      BaseNumberXMLDeserializer.ByteXMLDeserializer.getInstance().deserialize(reader, ctx, params)
+    };
+  }
 }

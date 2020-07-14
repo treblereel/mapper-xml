@@ -17,7 +17,6 @@
 package org.treblereel.gwt.jackson.api.ser.bean;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.JacksonContextProvider;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
@@ -26,93 +25,102 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Serializes a bean's property
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLSerializer<V>> {
 
-    protected String propertyName;
-    protected boolean cdata = false;
+  protected String propertyName;
+  protected boolean cdata = false;
 
-    private XMLSerializerParameters parameters = newParameters();
-    private XMLSerializer parent;
+  private XMLSerializerParameters parameters = newParameters();
+  private XMLSerializer parent;
 
-    /**
-     * <p>Constructor for BeanPropertySerializer.</p>
-     * @param propertyName a {@link String} object.
-     */
-    protected BeanPropertySerializer(String propertyName) {
-        this(propertyName, false);
-    }
+  /**
+   * Constructor for BeanPropertySerializer.
+   *
+   * @param propertyName a {@link String} object.
+   */
+  protected BeanPropertySerializer(String propertyName) {
+    this(propertyName, false);
+  }
 
-    protected BeanPropertySerializer(String propertyName, boolean cdata) {
-        this.propertyName = propertyName;
-        this.cdata = cdata;
-    }
+  protected BeanPropertySerializer(String propertyName, boolean cdata) {
+    this.propertyName = propertyName;
+    this.cdata = cdata;
+  }
 
-    /**
-     * <p>newParameters</p>
-     * @return a {@link XMLSerializerParameters} object.
-     */
-    protected XMLSerializerParameters newParameters() {
-        return JacksonContextProvider.get().defaultSerializerParameters();
-    }
+  /**
+   * newParameters
+   *
+   * @return a {@link XMLSerializerParameters} object.
+   */
+  protected XMLSerializerParameters newParameters() {
+    return JacksonContextProvider.get().defaultSerializerParameters();
+  }
 
-    /**
-     * <p>Getter for the field <code>propertyName</code>.</p>
-     * @return a {@link String} object.
-     */
-    public String getPropertyName() {
-        return propertyName;
-    }
+  /**
+   * Getter for the field <code>propertyName</code>.
+   *
+   * @return a {@link String} object.
+   */
+  public String getPropertyName() {
+    return propertyName;
+  }
 
-    /**
-     * Serializes the property defined for this instance.
-     * @param writer writer
-     * @param bean bean containing the property to serialize
-     * @param ctx context of the serialization process
-     */
-    public void serialize(XMLWriter writer, T bean, XMLSerializationContext ctx) throws XMLStreamException {
-        writer.unescapeName(propertyName);
-        getSerializer(getValue(bean, ctx) != null ? getValue(bean, ctx).getClass() : null).setPropertyName(propertyName)
-                .setCdata(cdata)
-                .setNamespace(getNamespace())
-                .setPrefix(getPrefix())
-                .setParent(parent)
-                .isAttribute(isAttribute())
-                .serialize(writer, getValue(bean, ctx), ctx, getParameters());
-    }
+  /**
+   * Serializes the property defined for this instance.
+   *
+   * @param writer writer
+   * @param bean bean containing the property to serialize
+   * @param ctx context of the serialization process
+   */
+  public void serialize(XMLWriter writer, T bean, XMLSerializationContext ctx)
+      throws XMLStreamException {
+    writer.unescapeName(propertyName);
+    getSerializer(getValue(bean, ctx) != null ? getValue(bean, ctx).getClass() : null)
+        .setPropertyName(propertyName)
+        .setCdata(cdata)
+        .setNamespace(getNamespace())
+        .setPrefix(getPrefix())
+        .setParent(parent)
+        .isAttribute(isAttribute())
+        .serialize(writer, getValue(bean, ctx), ctx, getParameters());
+  }
 
-    /**
-     * <p>getValue</p>
-     * @param bean bean containing the property to serialize
-     * @param ctx context of the serialization process
-     * @return the property's value
-     */
-    public abstract V getValue(T bean, XMLSerializationContext ctx);
+  /**
+   * getValue
+   *
+   * @param bean bean containing the property to serialize
+   * @param ctx context of the serialization process
+   * @return the property's value
+   */
+  public abstract V getValue(T bean, XMLSerializationContext ctx);
 
-    protected String getNamespace() {
-        return null;
-    }
+  protected String getNamespace() {
+    return null;
+  }
 
-    protected String getPrefix() {
-        return null;
-    }
+  protected String getPrefix() {
+    return null;
+  }
 
-    protected boolean isAttribute() {
-        return false;
-    }
+  protected boolean isAttribute() {
+    return false;
+  }
 
-    /**
-     * <p>Getter for the field <code>parameters</code>.</p>
-     * @return a {@link XMLSerializerParameters} object.
-     */
-    protected XMLSerializerParameters getParameters() {
-        return parameters;
-    }
+  /**
+   * Getter for the field <code>parameters</code>.
+   *
+   * @return a {@link XMLSerializerParameters} object.
+   */
+  protected XMLSerializerParameters getParameters() {
+    return parameters;
+  }
 
-    BeanPropertySerializer<T, V> setParent(XMLSerializer parent) {
-        this.parent = parent;
-        return this;
-    }
+  BeanPropertySerializer<T, V> setParent(XMLSerializer parent) {
+    this.parent = parent;
+    return this;
+  }
 }

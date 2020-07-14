@@ -19,12 +19,13 @@ package org.treblereel.gwt.jackson.api.deser.map;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 /**
- * Default {@link XMLDeserializer} implementation for {@link java.util.Map}. The deserialization process returns a {@link java.util.LinkedHashMap}.
- * <p>Cannot be overriden. Use {@link BaseMapXMLDeserializer}.</p>
+ * Default {@link XMLDeserializer} implementation for {@link java.util.Map}. The deserialization
+ * process returns a {@link java.util.LinkedHashMap}.
+ *
+ * <p>Cannot be overriden. Use {@link BaseMapXMLDeserializer}.
  *
  * @param <K> Type of the keys inside the {@link java.util.Map}
  * @param <V> Type of the values inside the {@link java.util.Map}
@@ -33,31 +34,34 @@ import org.treblereel.gwt.jackson.api.XMLDeserializer;
  */
 public final class MapXMLDeserializer<K, V> extends BaseMapXMLDeserializer<Map<K, V>, K, V> {
 
-    /**
-     * <p>newInstance</p>
-     *
-     * @param keyDeserializer   {@link XMLDeserializer} used to deserialize the keys.
-     * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
-     * @param <K>               Type of the keys inside the {@link java.util.Map}
-     * @param <V>               Type of the values inside the {@link java.util.Map}
-     * @return a new instance of {@link MapXMLDeserializer}
-     */
-    public static <K, V> MapXMLDeserializer<K, V> newInstance(Function<String, XMLDeserializer<K>> keyDeserializer,
-                                                              Function<String, XMLDeserializer<V>> valueDeserializer) {
-        return new MapXMLDeserializer<>(keyDeserializer, valueDeserializer);
-    }
+  /**
+   * newInstance
+   *
+   * @param keyDeserializer {@link XMLDeserializer} used to deserialize the keys.
+   * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
+   * @param <K> Type of the keys inside the {@link java.util.Map}
+   * @param <V> Type of the values inside the {@link java.util.Map}
+   * @return a new instance of {@link MapXMLDeserializer}
+   */
+  public static <K, V> MapXMLDeserializer<K, V> newInstance(
+      Function<String, XMLDeserializer<K>> keyDeserializer,
+      Function<String, XMLDeserializer<V>> valueDeserializer) {
+    return new MapXMLDeserializer<>(keyDeserializer, valueDeserializer);
+  }
 
-    /**
-     * @param keyDeserializer   {@link XMLDeserializer} used to deserialize the keys.
-     * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
-     */
-    private MapXMLDeserializer(Function<String, XMLDeserializer<K>> keyDeserializer, Function<String, XMLDeserializer<V>> valueDeserializer) {
-        super(keyDeserializer, valueDeserializer);
-    }
+  /**
+   * @param keyDeserializer {@link XMLDeserializer} used to deserialize the keys.
+   * @param valueDeserializer {@link XMLDeserializer} used to deserialize the values.
+   */
+  private MapXMLDeserializer(
+      Function<String, XMLDeserializer<K>> keyDeserializer,
+      Function<String, XMLDeserializer<V>> valueDeserializer) {
+    super(keyDeserializer, valueDeserializer);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected Map<K, V> newMap() {
-        return new LinkedHashMap<>();
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected Map<K, V> newMap() {
+    return new LinkedHashMap<>();
+  }
 }

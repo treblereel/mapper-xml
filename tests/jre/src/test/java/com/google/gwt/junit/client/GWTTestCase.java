@@ -18,39 +18,31 @@ package com.google.gwt.junit.client;
 import junit.framework.TestCase;
 
 /**
- * This is a slimmed down version of GWTTestCase, so that we can compile and run GWT's emul
- * tests in a JRE.
+ * This is a slimmed down version of GWTTestCase, so that we can compile and run GWT's emul tests in
+ * a JRE.
  */
 @SuppressWarnings("unused")
 public abstract class GWTTestCase extends TestCase {
 
-    public GWTTestCase() {
-    }
+  public GWTTestCase() {}
 
-    public abstract String getModuleName();
+  public abstract String getModuleName();
 
+  protected void gwtSetUp() throws Exception {}
 
-    protected void gwtSetUp() throws Exception {
-    }
+  protected void gwtTearDown() throws Exception {}
 
+  @Override
+  protected final void setUp() throws Exception {
+    gwtSetUp();
+  }
 
-    protected void gwtTearDown() throws Exception {
-    }
+  @Override
+  protected final void tearDown() throws Exception {
+    gwtTearDown();
+  }
 
-    @Override
-    protected final void setUp() throws Exception {
-        gwtSetUp();
-    }
+  protected final void delayTestFinish(int timeoutMillis) {}
 
-    @Override
-    protected final void tearDown() throws Exception {
-        gwtTearDown();
-    }
-
-    protected final void delayTestFinish(int timeoutMillis) {
-
-    }
-
-    protected final void finishTest() {
-    }
+  protected final void finishTest() {}
 }

@@ -16,10 +16,9 @@
 
 package org.treblereel.gwt.jackson.api.deser.collection;
 
-import org.treblereel.gwt.jackson.api.XMLDeserializer;
-
 import java.util.Vector;
 import java.util.function.Function;
+import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.Vector}.
@@ -30,27 +29,30 @@ import java.util.function.Function;
  */
 public class VectorXMLDeserializer<T> extends BaseListXMLDeserializer<Vector<T>, T> {
 
-    /**
-     * <p>newInstance</p>
-     *
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link java.util.Vector}.
-     * @param <T>          Type of the elements inside the {@link java.util.Vector}
-     * @return a new instance of {@link VectorXMLDeserializer}
-     */
-    public static <T> VectorXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
-        return new VectorXMLDeserializer<>(deserializer);
-    }
+  /**
+   * newInstance
+   *
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     java.util.Vector}.
+   * @param <T> Type of the elements inside the {@link java.util.Vector}
+   * @return a new instance of {@link VectorXMLDeserializer}
+   */
+  public static <T> VectorXMLDeserializer<T> newInstance(
+      Function<String, XMLDeserializer<T>> deserializer) {
+    return new VectorXMLDeserializer<>(deserializer);
+  }
 
-    /**
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link Vector}.
-     */
-    private VectorXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
-        super(deserializer);
-    }
+  /**
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     Vector}.
+   */
+  private VectorXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
+    super(deserializer);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected Vector<T> newCollection() {
-        return new Vector<>();
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected Vector<T> newCollection() {
+    return new Vector<>();
+  }
 }

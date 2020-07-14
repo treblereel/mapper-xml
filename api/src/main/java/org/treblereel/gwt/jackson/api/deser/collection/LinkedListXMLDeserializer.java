@@ -16,10 +16,9 @@
 
 package org.treblereel.gwt.jackson.api.deser.collection;
 
-import org.treblereel.gwt.jackson.api.XMLDeserializer;
-
 import java.util.LinkedList;
 import java.util.function.Function;
+import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.util.LinkedList}.
@@ -30,27 +29,30 @@ import java.util.function.Function;
  */
 public class LinkedListXMLDeserializer<T> extends BaseListXMLDeserializer<LinkedList<T>, T> {
 
-    /**
-     * <p>newInstance</p>
-     *
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link java.util.LinkedList}.
-     * @param <T>          Type of the elements inside the {@link java.util.LinkedList}
-     * @return a new instance of {@link LinkedListXMLDeserializer}
-     */
-    public static <T> LinkedListXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
-        return new LinkedListXMLDeserializer<>(deserializer);
-    }
+  /**
+   * newInstance
+   *
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     java.util.LinkedList}.
+   * @param <T> Type of the elements inside the {@link java.util.LinkedList}
+   * @return a new instance of {@link LinkedListXMLDeserializer}
+   */
+  public static <T> LinkedListXMLDeserializer<T> newInstance(
+      Function<String, XMLDeserializer<T>> deserializer) {
+    return new LinkedListXMLDeserializer<>(deserializer);
+  }
 
-    /**
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link LinkedList}.
-     */
-    private LinkedListXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
-        super(deserializer);
-    }
+  /**
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     LinkedList}.
+   */
+  private LinkedListXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
+    super(deserializer);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected LinkedList<T> newCollection() {
-        return new LinkedList<>();
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected LinkedList<T> newCollection() {
+    return new LinkedList<>();
+  }
 }

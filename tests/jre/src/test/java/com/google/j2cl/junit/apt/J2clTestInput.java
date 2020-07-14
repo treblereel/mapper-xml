@@ -19,7 +19,6 @@ package com.google.j2cl.junit.apt;
  * Annotation used to specify which class should be processed by the j2cl_test annotation processor.
  */
 public @interface J2clTestInput {
-    /** @return the class to be processed */
-    Class<?> value();
+  /** @return the class to be processed */
+  Class<?> value();
 }
-

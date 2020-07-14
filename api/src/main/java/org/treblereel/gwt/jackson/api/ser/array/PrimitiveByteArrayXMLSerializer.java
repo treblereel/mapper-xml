@@ -17,51 +17,49 @@
 package org.treblereel.gwt.jackson.api.ser.array;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
-import org.treblereel.gwt.jackson.api.ser.BaseNumberXMLSerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 import org.treblereel.gwt.jackson.api.utils.Base64Utils;
 
 /**
  * Default {@link XMLSerializer} implementation for array of byte.
+ *
  * @author Nicolas Morel
  * @version $Id: $Id
  */
 public class PrimitiveByteArrayXMLSerializer extends BasicArrayXMLSerializer<byte[]> {
 
-    private static final PrimitiveByteArrayXMLSerializer INSTANCE = new PrimitiveByteArrayXMLSerializer();
+  private static final PrimitiveByteArrayXMLSerializer INSTANCE =
+      new PrimitiveByteArrayXMLSerializer();
 
-    private PrimitiveByteArrayXMLSerializer() {
-    }
+  private PrimitiveByteArrayXMLSerializer() {}
 
-    /**
-     * <p>getInstance.</p>
-     * @return an instance of {@link PrimitiveByteArrayXMLSerializer}
-     */
-    public static BasicArrayXMLSerializer getInstance(String propertyName) {
-        return INSTANCE.setPropertyName(propertyName);
-    }
+  /**
+   * getInstance.
+   *
+   * @return an instance of {@link PrimitiveByteArrayXMLSerializer}
+   */
+  public static BasicArrayXMLSerializer getInstance(String propertyName) {
+    return INSTANCE.setPropertyName(propertyName);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean isEmpty(byte[] value) {
-        return null == value || value.length == 0;
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected boolean isEmpty(byte[] value) {
+    return null == value || value.length == 0;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void doSerialize(XMLWriter writer, byte[] values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
-            writer.nullValue();
-            return;
-        }
-        writer.value(Base64Utils.toBase64(values));
+  /** {@inheritDoc} */
+  @Override
+  public void doSerialize(
+      XMLWriter writer, byte[] values, XMLSerializationContext ctx, XMLSerializerParameters params)
+      throws XMLStreamException {
+    if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
+      writer.nullValue();
+      return;
     }
+    writer.value(Base64Utils.toBase64(values));
+  }
 }

@@ -1,115 +1,129 @@
+/*
+ * Copyright © 2020 Treblereel
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.treblereel.gwt.jackson.api;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.exception.XMLSerializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
- * <p>XMLSerializationContext interface.</p>
+ * XMLSerializationContext interface.
  *
  * @author vegegoku
  * @version $Id: $Id
  */
 public interface XMLSerializationContext extends XMLMappingContext {
-    /**
-     * <p>isSerializeNulls.</p>
-     *
-     * @return a boolean.
-     */
-    boolean isSerializeNulls();
+  /**
+   * isSerializeNulls.
+   *
+   * @return a boolean.
+   */
+  boolean isSerializeNulls();
 
-    /**
-     * <p>isWriteDatesAsTimestamps.</p>
-     *
-     * @return a boolean.
-     */
-    boolean isWriteDatesAsTimestamps();
+  /**
+   * isWriteDatesAsTimestamps.
+   *
+   * @return a boolean.
+   */
+  boolean isWriteDatesAsTimestamps();
 
-    /**
-     * <p>isWriteDateKeysAsTimestamps.</p>
-     *
-     * @return a boolean.
-     */
-    boolean isWriteDateKeysAsTimestamps();
+  /**
+   * isWriteDateKeysAsTimestamps.
+   *
+   * @return a boolean.
+   */
+  boolean isWriteDateKeysAsTimestamps();
 
-    /**
-     * <p>isWriteNullMapValues.</p>
-     *
-     * @return a boolean.
-     */
-    boolean isWriteNullMapValues();
+  /**
+   * isWriteNullMapValues.
+   *
+   * @return a boolean.
+   */
+  boolean isWriteNullMapValues();
 
-    /**
-     * <p>isWriteEmptyXMLArrays.</p>
-     *
-     * @return a boolean.
-     */
-    boolean isWriteEmptyXMLArrays();
+  /**
+   * isWriteEmptyXMLArrays.
+   *
+   * @return a boolean.
+   */
+  boolean isWriteEmptyXMLArrays();
 
-    /**
-     * <p>isOrderMapEntriesByKeys.</p>
-     *
-     * @return a boolean.
-     */
-    boolean isOrderMapEntriesByKeys();
+  /**
+   * isOrderMapEntriesByKeys.
+   *
+   * @return a boolean.
+   */
+  boolean isOrderMapEntriesByKeys();
 
-    /**
-     * <p>isWrapCollections.</p>
-     *
-     * @return a boolean.
-     */
-    boolean isWrapCollections();
+  /**
+   * isWrapCollections.
+   *
+   * @return a boolean.
+   */
+  boolean isWrapCollections();
 
-    /**
-     * <p>newXMLWriter.</p>
-     *
-     * @return a {@link XMLWriter} object.
-     */
-    XMLWriter newXMLWriter() throws XMLStreamException;
+  /**
+   * newXMLWriter.
+   *
+   * @return a {@link XMLWriter} object.
+   */
+  XMLWriter newXMLWriter() throws XMLStreamException;
 
-    /**
-     * <p>traceError.</p>
-     *
-     * @param value a {@link java.lang.Object} object.
-     * @param message a {@link java.lang.String} object.
-     * @return a {@link XMLSerializationException} object.
-     */
-    XMLSerializationException traceError(Object value, String message);
+  /**
+   * traceError.
+   *
+   * @param value a {@link java.lang.Object} object.
+   * @param message a {@link java.lang.String} object.
+   * @return a {@link XMLSerializationException} object.
+   */
+  XMLSerializationException traceError(Object value, String message);
 
-    /**
-     * <p>traceError.</p>
-     *
-     * @param value a {@link java.lang.Object} object.
-     * @param message a {@link java.lang.String} object.
-     * @param writer a {@link XMLWriter} object.
-     * @return a {@link XMLSerializationException} object.
-     */
-    XMLSerializationException traceError(Object value, String message, XMLWriter writer);
+  /**
+   * traceError.
+   *
+   * @param value a {@link java.lang.Object} object.
+   * @param message a {@link java.lang.String} object.
+   * @param writer a {@link XMLWriter} object.
+   * @return a {@link XMLSerializationException} object.
+   */
+  XMLSerializationException traceError(Object value, String message, XMLWriter writer);
 
-    /**
-     * <p>traceError.</p>
-     *
-     * @param value a {@link java.lang.Object} object.
-     * @param cause a {@link java.lang.RuntimeException} object.
-     * @return a {@link java.lang.RuntimeException} object.
-     */
-    RuntimeException traceError(Object value, RuntimeException cause);
+  /**
+   * traceError.
+   *
+   * @param value a {@link java.lang.Object} object.
+   * @param cause a {@link java.lang.RuntimeException} object.
+   * @return a {@link java.lang.RuntimeException} object.
+   */
+  RuntimeException traceError(Object value, RuntimeException cause);
 
-    /**
-     * <p>traceError.</p>
-     *
-     * @param value a {@link java.lang.Object} object.
-     * @param cause a {@link java.lang.RuntimeException} object.
-     * @param writer a {@link XMLWriter} object.
-     * @return a {@link java.lang.RuntimeException} object.
-     */
-    RuntimeException traceError(Object value, RuntimeException cause, XMLWriter writer);
+  /**
+   * traceError.
+   *
+   * @param value a {@link java.lang.Object} object.
+   * @param cause a {@link java.lang.RuntimeException} object.
+   * @param writer a {@link XMLWriter} object.
+   * @return a {@link java.lang.RuntimeException} object.
+   */
+  RuntimeException traceError(Object value, RuntimeException cause, XMLWriter writer);
 
-    /**
-     * <p>defaultParameters.</p>
-     *
-     * @return a {@link XMLSerializerParameters} object.
-     */
-    XMLSerializerParameters defaultParameters();
+  /**
+   * defaultParameters.
+   *
+   * @return a {@link XMLSerializerParameters} object.
+   */
+  XMLSerializerParameters defaultParameters();
 }

@@ -17,9 +17,7 @@
 package org.treblereel.gwt.jackson.api.ser;
 
 import java.util.UUID;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -27,34 +25,35 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for {@link UUID}.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class UUIDXMLSerializer extends XMLSerializer<UUID> {
 
-    private static final UUIDXMLSerializer INSTANCE = new UUIDXMLSerializer();
+  private static final UUIDXMLSerializer INSTANCE = new UUIDXMLSerializer();
 
-    private UUIDXMLSerializer() {
-    }
+  private UUIDXMLSerializer() {}
 
-    /**
-     * <p>getInstance</p>
-     * @return an instance of {@link UUIDXMLSerializer}
-     */
-    public static UUIDXMLSerializer getInstance() {
-        return INSTANCE;
-    }
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link UUIDXMLSerializer}
+   */
+  public static UUIDXMLSerializer getInstance() {
+    return INSTANCE;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void doSerialize(XMLWriter writer, UUID value, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        if (isAttribute) {
-            writer.writeAttribute(propertyName, value.toString());
-            isAttribute = false;
-        } else {
-            writer.value(value.toString());
-        }
+  /** {@inheritDoc} */
+  @Override
+  public void doSerialize(
+      XMLWriter writer, UUID value, XMLSerializationContext ctx, XMLSerializerParameters params)
+      throws XMLStreamException {
+    if (isAttribute) {
+      writer.writeAttribute(propertyName, value.toString());
+      isAttribute = false;
+    } else {
+      writer.value(value.toString());
     }
+  }
 }

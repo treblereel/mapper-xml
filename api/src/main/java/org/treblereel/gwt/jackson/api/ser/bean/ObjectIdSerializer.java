@@ -17,41 +17,41 @@
 package org.treblereel.gwt.jackson.api.ser.bean;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
- * Contains the id of a bean and a serializer to facilitate the serialization of the next instances of the object.
+ * Contains the id of a bean and a serializer to facilitate the serialization of the next instances
+ * of the object.
  *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class ObjectIdSerializer<I> {
 
-    private final I id;
+  private final I id;
 
-    private final XMLSerializer<I> serializer;
+  private final XMLSerializer<I> serializer;
 
-    /**
-     * <p>Constructor for ObjectIdSerializer.</p>
-     *
-     * @param id         a I object.
-     * @param serializer a {@link XMLSerializer} object.
-     */
-    public ObjectIdSerializer(I id, XMLSerializer<I> serializer) {
-        this.id = id;
-        this.serializer = serializer;
-    }
+  /**
+   * Constructor for ObjectIdSerializer.
+   *
+   * @param id a I object.
+   * @param serializer a {@link XMLSerializer} object.
+   */
+  public ObjectIdSerializer(I id, XMLSerializer<I> serializer) {
+    this.id = id;
+    this.serializer = serializer;
+  }
 
-    /**
-     * <p>serializeId</p>
-     *
-     * @param writer a {@link XMLWriter} object.
-     * @param ctx    a {@link XMLSerializationContext} object.
-     */
-    public void serializeId(XMLWriter writer, XMLSerializationContext ctx) throws XMLStreamException {
-        serializer.serialize(writer, id, ctx);
-    }
+  /**
+   * serializeId
+   *
+   * @param writer a {@link XMLWriter} object.
+   * @param ctx a {@link XMLSerializationContext} object.
+   */
+  public void serializeId(XMLWriter writer, XMLSerializationContext ctx) throws XMLStreamException {
+    serializer.serialize(writer, id, ctx);
+  }
 }

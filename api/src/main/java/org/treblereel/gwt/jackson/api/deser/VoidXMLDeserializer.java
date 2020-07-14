@@ -17,7 +17,6 @@
 package org.treblereel.gwt.jackson.api.deser;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -31,25 +30,27 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public class VoidXMLDeserializer extends XMLDeserializer<Void> {
 
-    private static final VoidXMLDeserializer INSTANCE = new VoidXMLDeserializer();
+  private static final VoidXMLDeserializer INSTANCE = new VoidXMLDeserializer();
 
-    /**
-     * <p>getInstance</p>
-     *
-     * @return an instance of {@link VoidXMLDeserializer}
-     */
-    public static VoidXMLDeserializer getInstance() {
-        return INSTANCE;
-    }
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link VoidXMLDeserializer}
+   */
+  public static VoidXMLDeserializer getInstance() {
+    return INSTANCE;
+  }
 
-    private VoidXMLDeserializer() {
-    }
+  private VoidXMLDeserializer() {}
 
-    /** {@inheritDoc} */
-    @Override
-    public Void doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        // we should never be here, the null value is already handled and it's the only possible value for Void
-        reader.skipValue();
-        return null;
-    }
+  /** {@inheritDoc} */
+  @Override
+  public Void doDeserialize(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    // we should never be here, the null value is already handled and it's the only possible value
+    // for Void
+    reader.skipValue();
+    return null;
+  }
 }

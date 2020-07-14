@@ -147,22 +147,22 @@ public abstract class TreeLogger {
    * a logger parameter.
    */
   public static final TreeLogger NULL =
-          new TreeLogger() {
-            @Override
-            public TreeLogger branch(Type type, String msg, Throwable caught, HelpInfo helpInfo) {
-              return this;
-            }
+      new TreeLogger() {
+        @Override
+        public TreeLogger branch(Type type, String msg, Throwable caught, HelpInfo helpInfo) {
+          return this;
+        }
 
-            @Override
-            public boolean isLoggable(Type type) {
-              return false;
-            }
+        @Override
+        public boolean isLoggable(Type type) {
+          return false;
+        }
 
-            @Override
-            public void log(Type type, String msg, Throwable caught, HelpInfo helpInfo) {
-              // nothing
-            }
-          };
+        @Override
+        public void log(Type type, String msg, Throwable caught, HelpInfo helpInfo) {
+          // nothing
+        }
+      };
 
   /**
    * Calls {@link #branch(TreeLogger.Type, String, Throwable, TreeLogger.HelpInfo)} with a <code>
@@ -208,7 +208,7 @@ public abstract class TreeLogger {
    *     same instance on which this method is called
    */
   public abstract TreeLogger branch(
-          TreeLogger.Type type, String msg, Throwable caught, HelpInfo helpInfo);
+      TreeLogger.Type type, String msg, Throwable caught, HelpInfo helpInfo);
 
   /**
    * Determines whether or not a log entry of the specified type would actually be logged. Caller

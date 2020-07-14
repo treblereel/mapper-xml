@@ -27,24 +27,24 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public abstract class HasDeserializer<V, S extends XMLDeserializer<V>> {
 
-    private S deserializer;
+  private S deserializer;
 
-    /**
-     * <p>Getter for the field <code>deserializer</code>.</p>
-     *
-     * @return a S object.
-     */
-    public S getDeserializer(XMLReader reader) {
-        if (null == deserializer) {
-            deserializer = (S) newDeserializer(reader);
-        }
-        return deserializer;
+  /**
+   * Getter for the field <code>deserializer</code>.
+   *
+   * @return a S object.
+   */
+  public S getDeserializer(XMLReader reader) {
+    if (null == deserializer) {
+      deserializer = (S) newDeserializer(reader);
     }
+    return deserializer;
+  }
 
-    /**
-     * <p>newDeserializer</p>
-     *
-     * @return a {@link XMLDeserializer} object.
-     */
-    protected abstract XMLDeserializer<?> newDeserializer(XMLReader reader);
+  /**
+   * newDeserializer
+   *
+   * @return a {@link XMLDeserializer} object.
+   */
+  protected abstract XMLDeserializer<?> newDeserializer(XMLReader reader);
 }

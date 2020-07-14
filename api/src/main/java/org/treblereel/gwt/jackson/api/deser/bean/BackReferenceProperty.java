@@ -19,19 +19,19 @@ package org.treblereel.gwt.jackson.api.deser.bean;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 
 /**
- * <p>BackReferenceProperty interface.</p>
+ * BackReferenceProperty interface.
  *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public interface BackReferenceProperty<T, R> {
 
-    /**
-     * <p>setBackReference</p>
-     *
-     * @param value     a T object.
-     * @param reference a R object.
-     * @param ctx       a {@link XMLDeserializationContext} object.
-     */
-    void setBackReference(T value, R reference, XMLDeserializationContext ctx);
+  /**
+   * setBackReference
+   *
+   * @param value a T object.
+   * @param reference a R object.
+   * @param ctx a {@link XMLDeserializationContext} object.
+   */
+  void setBackReference(T value, R reference, XMLDeserializationContext ctx);
 }

@@ -1,107 +1,119 @@
+/*
+ * Copyright © 2020 Treblereel
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.treblereel.gwt.jackson.api;
 
 import java.util.Set;
-
 import org.treblereel.gwt.jackson.api.ser.bean.TypeSerializationInfo;
 
 /**
- * <p>XMLSerializerParameters interface.</p>
+ * XMLSerializerParameters interface.
  *
  * @author vegegoku
  * @version $Id: $Id
  */
 public interface XMLSerializerParameters {
-    /**
-     * <p>getPattern.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    String getPattern();
+  /**
+   * getPattern.
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  String getPattern();
 
+  /**
+   * setPattern.
+   *
+   * @param pattern a {@link java.lang.String} object.
+   * @return a {@link XMLSerializerParameters} object.
+   */
+  XMLSerializerParameters setPattern(String pattern);
 
+  /**
+   * getLocale.
+   *
+   * @return a {@link java.lang.String} object.
+   */
+  String getLocale();
 
-    /**
-     * <p>setPattern.</p>
-     *
-     * @param pattern a {@link java.lang.String} object.
-     * @return a {@link XMLSerializerParameters} object.
-     */
-    XMLSerializerParameters setPattern(String pattern);
+  /**
+   * setLocale.
+   *
+   * @param locale a {@link java.lang.String} object.
+   * @return a {@link XMLSerializerParameters} object.
+   */
+  XMLSerializerParameters setLocale(String locale);
 
-    /**
-     * <p>getLocale.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    String getLocale();
+  /**
+   * getTimezone.
+   *
+   * @return a {@link java.lang.Object} object.
+   */
+  Object getTimezone();
 
-    /**
-     * <p>setLocale.</p>
-     *
-     * @param locale a {@link java.lang.String} object.
-     * @return a {@link XMLSerializerParameters} object.
-     */
-    XMLSerializerParameters setLocale(String locale);
+  /**
+   * setTimezone.
+   *
+   * @param timezone a {@link java.lang.Object} object.
+   * @return a {@link XMLSerializerParameters} object.
+   */
+  XMLSerializerParameters setTimezone(Object timezone);
 
-    /**
-     * <p>getTimezone.</p>
-     *
-     * @return a {@link java.lang.Object} object.
-     */
-    Object getTimezone();
+  /**
+   * getIgnoredProperties.
+   *
+   * @return a {@link java.util.Set} object.
+   */
+  Set<String> getIgnoredProperties();
 
-    /**
-     * <p>setTimezone.</p>
-     *
-     * @param timezone a {@link java.lang.Object} object.
-     * @return a {@link XMLSerializerParameters} object.
-     */
-    XMLSerializerParameters setTimezone(Object timezone);
+  /**
+   * addIgnoredProperty.
+   *
+   * @param ignoredProperty a {@link java.lang.String} object.
+   * @return a {@link XMLSerializerParameters} object.
+   */
+  XMLSerializerParameters addIgnoredProperty(String ignoredProperty);
 
-    /**
-     * <p>getIgnoredProperties.</p>
-     *
-     * @return a {@link java.util.Set} object.
-     */
-    Set<String> getIgnoredProperties();
+  /**
+   * getTypeInfo.
+   *
+   * @return a {@link TypeSerializationInfo} object.
+   */
+  TypeSerializationInfo getTypeInfo();
 
-    /**
-     * <p>addIgnoredProperty.</p>
-     *
-     * @param ignoredProperty a {@link java.lang.String} object.
-     * @return a {@link XMLSerializerParameters} object.
-     */
-    XMLSerializerParameters addIgnoredProperty(String ignoredProperty);
+  /**
+   * setTypeInfo.
+   *
+   * @param typeInfo a {@link TypeSerializationInfo} object.
+   * @return a {@link XMLSerializerParameters} object.
+   */
+  XMLSerializerParameters setTypeInfo(TypeSerializationInfo typeInfo);
 
-    /**
-     * <p>getTypeInfo.</p>
-     *
-     * @return a {@link TypeSerializationInfo} object.
-     */
-    TypeSerializationInfo getTypeInfo();
+  /**
+   * isUnwrapped.
+   *
+   * @return a boolean.
+   */
+  boolean isUnwrapped();
 
-    /**
-     * <p>setTypeInfo.</p>
-     *
-     * @param typeInfo a {@link TypeSerializationInfo} object.
-     * @return a {@link XMLSerializerParameters} object.
-     */
-    XMLSerializerParameters setTypeInfo(TypeSerializationInfo typeInfo);
+  /**
+   * setUnwrapped.
+   *
+   * @param unwrapped a boolean.
+   * @return a {@link XMLSerializerParameters} object.
+   */
+  XMLSerializerParameters setUnwrapped(boolean unwrapped);
 
-    /**
-     * <p>isUnwrapped.</p>
-     *
-     * @return a boolean.
-     */
-    boolean isUnwrapped();
-
-    /**
-     * <p>setUnwrapped.</p>
-     *
-     * @param unwrapped a boolean.
-     * @return a {@link XMLSerializerParameters} object.
-     */
-    XMLSerializerParameters setUnwrapped(boolean unwrapped);
-
-    String doubleValue(Double value);
+  String doubleValue(Double value);
 }

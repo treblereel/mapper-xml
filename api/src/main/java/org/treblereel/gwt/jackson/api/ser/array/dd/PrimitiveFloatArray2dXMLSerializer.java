@@ -17,7 +17,6 @@
 package org.treblereel.gwt.jackson.api.ser.array.dd;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -27,48 +26,51 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for 2D array of float.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class PrimitiveFloatArray2dXMLSerializer extends BasicArrayXMLSerializer<float[][]> {
 
-    private static final PrimitiveFloatArray2dXMLSerializer INSTANCE = new PrimitiveFloatArray2dXMLSerializer();
+  private static final PrimitiveFloatArray2dXMLSerializer INSTANCE =
+      new PrimitiveFloatArray2dXMLSerializer();
 
-    private PrimitiveFloatArray2dXMLSerializer() {
+  private PrimitiveFloatArray2dXMLSerializer() {}
+
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link PrimitiveFloatArray2dXMLSerializer}
+   */
+  public static BasicArrayXMLSerializer getInstance(String propertyName) {
+    return INSTANCE.setPropertyName(propertyName);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  protected boolean isEmpty(float[][] value) {
+    return null == value || value.length == 0;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void doSerialize(
+      XMLWriter writer,
+      float[][] values,
+      XMLSerializationContext ctx,
+      XMLSerializerParameters params)
+      throws XMLStreamException {
+    if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
+      writer.nullValue();
+      return;
     }
 
-    /**
-     * <p>getInstance</p>
-     * @return an instance of {@link PrimitiveFloatArray2dXMLSerializer}
-     */
-    public static BasicArrayXMLSerializer getInstance(String propertyName) {
-        return INSTANCE.setPropertyName(propertyName);
+    BasicArrayXMLSerializer serializer = PrimitiveFloatArrayXMLSerializer.getInstance(propertyName);
+
+    writer.beginObject(propertyName);
+    for (float[] value : values) {
+      serializer.serialize(writer, value, ctx, params);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean isEmpty(float[][] value) {
-        return null == value || value.length == 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void doSerialize(XMLWriter writer, float[][] values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
-            writer.nullValue();
-            return;
-        }
-
-        BasicArrayXMLSerializer serializer = PrimitiveFloatArrayXMLSerializer.getInstance(propertyName);
-
-        writer.beginObject(propertyName);
-        for (float[] value : values) {
-            serializer.serialize(writer, value, ctx, params);
-        }
-        writer.endObject();
-    }
+    writer.endObject();
+  }
 }

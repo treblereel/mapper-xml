@@ -19,39 +19,43 @@ package org.treblereel.gwt.jackson.api.deser.collection;
 import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.function.Function;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 /**
- * Default {@link XMLDeserializer} implementation for {@link java.util.AbstractCollection}. The deserialization process returns an {@link java.util.ArrayList}.
+ * Default {@link XMLDeserializer} implementation for {@link java.util.AbstractCollection}. The
+ * deserialization process returns an {@link java.util.ArrayList}.
  *
  * @param <T> Type of the elements inside the {@link java.util.AbstractCollection}
  * @author Nicolas Morel
  * @version $Id: $
  */
-public class AbstractCollectionXMLDeserializer<T> extends BaseCollectionXMLDeserializer<AbstractCollection<T>, T> {
+public class AbstractCollectionXMLDeserializer<T>
+    extends BaseCollectionXMLDeserializer<AbstractCollection<T>, T> {
 
-    /**
-     * <p>newInstance</p>
-     *
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link java.util.AbstractCollection}.
-     * @param <T>          Type of the elements inside the {@link java.util.AbstractCollection}
-     * @return a new instance of {@link AbstractCollectionXMLDeserializer}
-     */
-    public static <T> AbstractCollectionXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
-        return new AbstractCollectionXMLDeserializer<>(deserializer);
-    }
+  /**
+   * newInstance
+   *
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     java.util.AbstractCollection}.
+   * @param <T> Type of the elements inside the {@link java.util.AbstractCollection}
+   * @return a new instance of {@link AbstractCollectionXMLDeserializer}
+   */
+  public static <T> AbstractCollectionXMLDeserializer<T> newInstance(
+      Function<String, XMLDeserializer<T>> deserializer) {
+    return new AbstractCollectionXMLDeserializer<>(deserializer);
+  }
 
-    /**
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link AbstractCollection}.
-     */
-    private AbstractCollectionXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
-        super(deserializer);
-    }
+  /**
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     AbstractCollection}.
+   */
+  private AbstractCollectionXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
+    super(deserializer);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected AbstractCollection<T> newCollection() {
-        return new ArrayList<>();
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected AbstractCollection<T> newCollection() {
+    return new ArrayList<>();
+  }
 }

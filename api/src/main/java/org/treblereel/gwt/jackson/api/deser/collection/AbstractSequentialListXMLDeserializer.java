@@ -16,43 +16,46 @@
 
 package org.treblereel.gwt.jackson.api.deser.collection;
 
-import org.treblereel.gwt.jackson.api.XMLDeserializer;
-
 import java.util.AbstractSequentialList;
 import java.util.LinkedList;
 import java.util.function.Function;
+import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 /**
- * Default {@link XMLDeserializer} implementation for {@link java.util.AbstractSequentialList}. The deserialization process returns a {@link
- * LinkedList}.
+ * Default {@link XMLDeserializer} implementation for {@link java.util.AbstractSequentialList}. The
+ * deserialization process returns a {@link LinkedList}.
  *
  * @param <T> Type of the elements inside the {@link java.util.AbstractSequentialList}
  * @author Nicolas Morel
  * @version $Id: $Id
  */
-public class AbstractSequentialListXMLDeserializer<T> extends BaseListXMLDeserializer<AbstractSequentialList<T>, T> {
+public class AbstractSequentialListXMLDeserializer<T>
+    extends BaseListXMLDeserializer<AbstractSequentialList<T>, T> {
 
-    /**
-     * <p>newInstance.</p>
-     *
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link java.util.AbstractSequentialList}.
-     * @param <T>          Type of the elements inside the {@link java.util.AbstractSequentialList}
-     * @return a new instance of {@link AbstractSequentialListXMLDeserializer}
-     */
-    public static <T> AbstractSequentialListXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
-        return new AbstractSequentialListXMLDeserializer<>(deserializer);
-    }
+  /**
+   * newInstance.
+   *
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     java.util.AbstractSequentialList}.
+   * @param <T> Type of the elements inside the {@link java.util.AbstractSequentialList}
+   * @return a new instance of {@link AbstractSequentialListXMLDeserializer}
+   */
+  public static <T> AbstractSequentialListXMLDeserializer<T> newInstance(
+      Function<String, XMLDeserializer<T>> deserializer) {
+    return new AbstractSequentialListXMLDeserializer<>(deserializer);
+  }
 
-    /**
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link AbstractSequentialList}.
-     */
-    private AbstractSequentialListXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
-        super(deserializer);
-    }
+  /**
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     AbstractSequentialList}.
+   */
+  private AbstractSequentialListXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
+    super(deserializer);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected AbstractSequentialList<T> newCollection() {
-        return new LinkedList<>();
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected AbstractSequentialList<T> newCollection() {
+    return new LinkedList<>();
+  }
 }

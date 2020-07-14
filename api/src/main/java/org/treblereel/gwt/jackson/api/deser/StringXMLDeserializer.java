@@ -17,7 +17,6 @@
 package org.treblereel.gwt.jackson.api.deser;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -26,48 +25,50 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
  * Default {@link XMLDeserializer} implementation for {@link java.lang.String}.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class StringXMLDeserializer extends XMLDeserializer<String> {
 
-    private static final StringXMLDeserializer INSTANCE = new StringXMLDeserializer();
+  private static final StringXMLDeserializer INSTANCE = new StringXMLDeserializer();
 
-    private boolean cdata = false;
+  private boolean cdata = false;
 
-    private StringXMLDeserializer() {
+  private StringXMLDeserializer() {}
+
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link StringXMLDeserializer}
+   */
+  public static StringXMLDeserializer getInstance() {
+    return INSTANCE;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public String doDeserialize(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    if (cdata) {
+      this.cdata = false;
+      reader.next();
+      return reader.nextValue();
     }
 
-    /**
-     * <p>getInstance</p>
-     * @return an instance of {@link StringXMLDeserializer}
-     */
-    public static StringXMLDeserializer getInstance() {
-        return INSTANCE;
-    }
+    return reader.nextString();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        if (cdata) {
-            this.cdata = false;
-            reader.next();
-            return reader.nextValue();
-        }
+  @Override
+  public String deserialize(
+      String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLDeserializationException {
+    return value;
+  }
 
-        return reader.nextString();
-    }
-
-    @Override
-    public String deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
-            XMLDeserializationException {
-        return value;
-    }
-
-    public StringXMLDeserializer setCdata(boolean cdata) {
-        this.cdata = cdata;
-        return this;
-    }
+  public StringXMLDeserializer setCdata(boolean cdata) {
+    this.cdata = cdata;
+    return this;
+  }
 }

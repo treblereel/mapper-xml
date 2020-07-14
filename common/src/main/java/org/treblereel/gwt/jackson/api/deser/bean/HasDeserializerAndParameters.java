@@ -17,7 +17,6 @@
 package org.treblereel.gwt.jackson.api.deser.bean;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.JacksonContextProvider;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
@@ -26,43 +25,48 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
  * Lazy initialize a {@link XMLDeserializer}
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
-public abstract class HasDeserializerAndParameters<V, S extends XMLDeserializer<V>> extends HasDeserializer<V, S> {
+public abstract class HasDeserializerAndParameters<V, S extends XMLDeserializer<V>>
+    extends HasDeserializer<V, S> {
 
-    private XMLDeserializerParameters parameters;
+  private XMLDeserializerParameters parameters;
 
-    /**
-     * Deserializes the property defined for this instance.
-     * @param reader reader
-     * @param ctx context of the deserialization process
-     * @return a V object.
-     */
-    public V deserialize(XMLReader reader, XMLDeserializationContext ctx) throws XMLStreamException {
-        return getDeserializer(reader).deserialize(reader, ctx, getParameters());
+  /**
+   * Deserializes the property defined for this instance.
+   *
+   * @param reader reader
+   * @param ctx context of the deserialization process
+   * @return a V object.
+   */
+  public V deserialize(XMLReader reader, XMLDeserializationContext ctx) throws XMLStreamException {
+    return getDeserializer(reader).deserialize(reader, ctx, getParameters());
+  }
+
+  /**
+   * Getter for the field <code>parameters</code>.
+   *
+   * @return a {@link XMLDeserializerParameters} object.
+   */
+  protected XMLDeserializerParameters getParameters() {
+    if (null == parameters) {
+      parameters = newParameters();
     }
+    return parameters;
+  }
 
-    /**
-     * <p>Getter for the field <code>parameters</code>.</p>
-     * @return a {@link XMLDeserializerParameters} object.
-     */
-    protected XMLDeserializerParameters getParameters() {
-        if (null == parameters) {
-            parameters = newParameters();
-        }
-        return parameters;
-    }
+  /**
+   * newParameters
+   *
+   * @return a {@link XMLDeserializerParameters} object.
+   */
+  protected XMLDeserializerParameters newParameters() {
+    return JacksonContextProvider.get().defaultDeserializerParameters();
+  }
 
-    /**
-     * <p>newParameters</p>
-     * @return a {@link XMLDeserializerParameters} object.
-     */
-    protected XMLDeserializerParameters newParameters() {
-        return JacksonContextProvider.get().defaultDeserializerParameters();
-    }
-
-    public V deserialize(String value, XMLDeserializationContext ctx) {
-        return getDeserializer(null).deserialize(value, ctx, getParameters());
-    }
+  public V deserialize(String value, XMLDeserializationContext ctx) {
+    return getDeserializer(null).deserialize(value, ctx, getParameters());
+  }
 }

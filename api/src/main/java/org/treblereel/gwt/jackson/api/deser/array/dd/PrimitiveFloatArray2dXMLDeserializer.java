@@ -17,9 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.array.dd;
 
 import java.util.List;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -32,50 +30,55 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  * @author Nicolas Morel
  * @version $Id: $
  */
-public class PrimitiveFloatArray2dXMLDeserializer extends AbstractArray2dXMLDeserializer<float[][]> {
+public class PrimitiveFloatArray2dXMLDeserializer
+    extends AbstractArray2dXMLDeserializer<float[][]> {
 
-    private static final PrimitiveFloatArray2dXMLDeserializer INSTANCE = new PrimitiveFloatArray2dXMLDeserializer();
+  private static final PrimitiveFloatArray2dXMLDeserializer INSTANCE =
+      new PrimitiveFloatArray2dXMLDeserializer();
 
-    /**
-     * <p>getInstance</p>
-     *
-     * @return an instance of {@link PrimitiveFloatArray2dXMLDeserializer}
-     */
-    public static PrimitiveFloatArray2dXMLDeserializer getInstance() {
-        return INSTANCE;
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link PrimitiveFloatArray2dXMLDeserializer}
+   */
+  public static PrimitiveFloatArray2dXMLDeserializer getInstance() {
+    return INSTANCE;
+  }
+
+  private PrimitiveFloatArray2dXMLDeserializer() {}
+
+  /** {@inheritDoc} */
+  @Override
+  public float[][] doDeserialize(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    List<List<Float>> list =
+        deserializeIntoList(
+            reader, ctx, s -> BaseNumberXMLDeserializer.FloatXMLDeserializer.getInstance(), params);
+
+    if (list.isEmpty()) {
+      return new float[0][0];
     }
 
-    private PrimitiveFloatArray2dXMLDeserializer() {
+    List<Float> firstList = list.get(0);
+    if (firstList.isEmpty()) {
+      return new float[list.size()][0];
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public float[][] doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<List<Float>> list = deserializeIntoList(reader, ctx, s -> BaseNumberXMLDeserializer.FloatXMLDeserializer.getInstance(), params);
+    float[][] array = new float[list.size()][firstList.size()];
 
-        if (list.isEmpty()) {
-            return new float[0][0];
+    int i = 0;
+    int j;
+    for (List<Float> innerList : list) {
+      j = 0;
+      for (Float value : innerList) {
+        if (null != value) {
+          array[i][j] = value;
         }
-
-        List<Float> firstList = list.get(0);
-        if (firstList.isEmpty()) {
-            return new float[list.size()][0];
-        }
-
-        float[][] array = new float[list.size()][firstList.size()];
-
-        int i = 0;
-        int j;
-        for (List<Float> innerList : list) {
-            j = 0;
-            for (Float value : innerList) {
-                if (null != value) {
-                    array[i][j] = value;
-                }
-                j++;
-            }
-            i++;
-        }
-        return array;
+        j++;
+      }
+      i++;
     }
+    return array;
+  }
 }

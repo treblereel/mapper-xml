@@ -16,14 +16,14 @@
 
 package org.treblereel.gwt.jackson.api.deser.collection;
 
-import org.treblereel.gwt.jackson.api.XMLDeserializer;
-
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Function;
+import org.treblereel.gwt.jackson.api.XMLDeserializer;
 
 /**
- * Default {@link XMLDeserializer} implementation for {@link java.util.Set}. The deserialization process returns a {@link java.util.LinkedHashSet}.
+ * Default {@link XMLDeserializer} implementation for {@link java.util.Set}. The deserialization
+ * process returns a {@link java.util.LinkedHashSet}.
  *
  * @param <T> Type of the elements inside the {@link java.util.Set}
  * @author Nicolas Morel
@@ -31,27 +31,30 @@ import java.util.function.Function;
  */
 public final class SetXMLDeserializer<T> extends BaseSetXMLDeserializer<Set<T>, T> {
 
-    /**
-     * <p>newInstance</p>
-     *
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link java.util.Set}.
-     * @param <T>          Type of the elements inside the {@link java.util.Set}
-     * @return a new instance of {@link SetXMLDeserializer}
-     */
-    public static <T> SetXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer) {
-        return new SetXMLDeserializer<>(deserializer);
-    }
+  /**
+   * newInstance
+   *
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     java.util.Set}.
+   * @param <T> Type of the elements inside the {@link java.util.Set}
+   * @return a new instance of {@link SetXMLDeserializer}
+   */
+  public static <T> SetXMLDeserializer<T> newInstance(
+      Function<String, XMLDeserializer<T>> deserializer) {
+    return new SetXMLDeserializer<>(deserializer);
+  }
 
-    /**
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link Set}.
-     */
-    private SetXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
-        super(deserializer);
-    }
+  /**
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the {@link
+   *     Set}.
+   */
+  private SetXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer) {
+    super(deserializer);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    protected Set<T> newCollection() {
-        return new LinkedHashSet<>();
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected Set<T> newCollection() {
+    return new LinkedHashSet<>();
+  }
 }

@@ -17,13 +17,14 @@
 package org.treblereel.gwt.jackson.api;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
  * Reads a XML input and return an object
- * <p>Example : </p>
+ *
+ * <p>Example :
+ *
  * <pre>
  * public class Person {
  *     public String firstName, lastName;
@@ -44,29 +45,30 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public interface ObjectReader<T> {
 
-    /**
-     * Reads a XML input into an object.
-     *
-     * @param input XML input to read
-     * @return the read object
-     * @throws XMLDeserializationException if an exception occurs while reading the input
-     */
-    T read(String input) throws XMLDeserializationException, XMLStreamException;
+  /**
+   * Reads a XML input into an object.
+   *
+   * @param input XML input to read
+   * @return the read object
+   * @throws XMLDeserializationException if an exception occurs while reading the input
+   */
+  T read(String input) throws XMLDeserializationException, XMLStreamException;
 
-    /**
-     * Reads a XML input into an object.
-     *
-     * @param input XML input to read
-     * @param ctx   Context for the full reading process
-     * @return the read object
-     * @throws XMLDeserializationException if an exception occurs while reading the input
-     */
-    T read(String input, XMLDeserializationContext ctx) throws XMLDeserializationException, XMLStreamException;
+  /**
+   * Reads a XML input into an object.
+   *
+   * @param input XML input to read
+   * @param ctx Context for the full reading process
+   * @return the read object
+   * @throws XMLDeserializationException if an exception occurs while reading the input
+   */
+  T read(String input, XMLDeserializationContext ctx)
+      throws XMLDeserializationException, XMLStreamException;
 
-    /**
-     * <p>getDeserializer.</p>
-     *
-     * @return a {@link XMLDeserializer} object.
-     */
-    XMLDeserializer<T> getDeserializer(XMLReader reader);
+  /**
+   * getDeserializer.
+   *
+   * @return a {@link XMLDeserializer} object.
+   */
+  XMLDeserializer<T> getDeserializer(XMLReader reader);
 }

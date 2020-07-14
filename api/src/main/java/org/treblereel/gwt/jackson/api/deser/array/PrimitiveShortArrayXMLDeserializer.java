@@ -17,9 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser.array;
 
 import java.util.List;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -34,39 +32,47 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public class PrimitiveShortArrayXMLDeserializer extends AbstractArrayXMLDeserializer<short[]> {
 
-    private static final PrimitiveShortArrayXMLDeserializer INSTANCE = new PrimitiveShortArrayXMLDeserializer();
+  private static final PrimitiveShortArrayXMLDeserializer INSTANCE =
+      new PrimitiveShortArrayXMLDeserializer();
 
-    /**
-     * <p>getInstance</p>
-     *
-     * @return an instance of {@link PrimitiveShortArrayXMLDeserializer}
-     */
-    public static PrimitiveShortArrayXMLDeserializer getInstance() {
-        return INSTANCE;
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link PrimitiveShortArrayXMLDeserializer}
+   */
+  public static PrimitiveShortArrayXMLDeserializer getInstance() {
+    return INSTANCE;
+  }
+
+  private PrimitiveShortArrayXMLDeserializer() {}
+
+  /** {@inheritDoc} */
+  @Override
+  public short[] doDeserializeArray(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    List<Short> list =
+        deserializeIntoList(
+            reader, ctx, s -> BaseNumberXMLDeserializer.ShortXMLDeserializer.getInstance(), params);
+
+    short[] result = new short[list.size()];
+    int i = 0;
+    for (Short value : list) {
+      if (null != value) {
+        result[i] = value;
+      }
+      i++;
     }
+    return result;
+  }
 
-    private PrimitiveShortArrayXMLDeserializer() {
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public short[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<Short> list = deserializeIntoList(reader, ctx, s -> BaseNumberXMLDeserializer.ShortXMLDeserializer.getInstance(), params);
-
-        short[] result = new short[list.size()];
-        int i = 0;
-        for (Short value : list) {
-            if (null != value) {
-                result[i] = value;
-            }
-            i++;
-        }
-        return result;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected short[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        return new short[]{BaseNumberXMLDeserializer.ShortXMLDeserializer.getInstance().deserialize(reader, ctx, params)};
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected short[] doDeserializeSingleArray(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    return new short[] {
+      BaseNumberXMLDeserializer.ShortXMLDeserializer.getInstance().deserialize(reader, ctx, params)
+    };
+  }
 }

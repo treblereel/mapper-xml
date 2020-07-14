@@ -17,7 +17,6 @@
 package org.treblereel.gwt.jackson.api.deser;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -33,73 +32,78 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public class EnumXMLDeserializer<E extends Enum<E>> extends XMLDeserializer<E> {
 
-    /**
-     * <p>newInstance</p>
-     *
-     * @param enumClass class of the enumeration
-     * @return a new instance of {@link EnumXMLDeserializer}
-     */
-    public static <E extends Enum<E>> EnumXMLDeserializer<E> newInstance(Class<E> enumClass, E... values) {
-        return new EnumXMLDeserializer<>(enumClass,values);
-    }
+  /**
+   * newInstance
+   *
+   * @param enumClass class of the enumeration
+   * @return a new instance of {@link EnumXMLDeserializer}
+   */
+  public static <E extends Enum<E>> EnumXMLDeserializer<E> newInstance(
+      Class<E> enumClass, E... values) {
+    return new EnumXMLDeserializer<>(enumClass, values);
+  }
 
-    private final Class<E> enumClass;
-    private final E[] values;
+  private final Class<E> enumClass;
+  private final E[] values;
 
-    /**
-     * <p>Constructor for EnumXMLDeserializer.</p>
-     *
-     * @param enumClass class of the enumeration
-     */
-    protected EnumXMLDeserializer(Class<E> enumClass, E[] values) {
-        if (null == enumClass) {
-            throw new IllegalArgumentException("enumClass cannot be null");
-        }
-        this.enumClass = enumClass;
-        this.values = values;
+  /**
+   * Constructor for EnumXMLDeserializer.
+   *
+   * @param enumClass class of the enumeration
+   */
+  protected EnumXMLDeserializer(Class<E> enumClass, E[] values) {
+    if (null == enumClass) {
+      throw new IllegalArgumentException("enumClass cannot be null");
     }
+    this.enumClass = enumClass;
+    this.values = values;
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public E doDeserialize(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        try {
-            return getEnum(values, reader.nextString());
-        } catch (IllegalArgumentException ex) {
-            if (ctx.isReadUnknownEnumValuesAsNull()) {
-                return null;
-            }
-            throw ex;
-        }
+  /** {@inheritDoc} */
+  @Override
+  public E doDeserialize(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    try {
+      return getEnum(values, reader.nextString());
+    } catch (IllegalArgumentException ex) {
+      if (ctx.isReadUnknownEnumValuesAsNull()) {
+        return null;
+      }
+      throw ex;
     }
+  }
 
-    public <E extends Enum<E>> E getEnum(E[] values, String name){
-        for(int i=0;i<values.length;i++){
-            if(values[i].name().equals(name)){
-                return values[i];
-            }
-        }
-        throw new IllegalArgumentException("["+name + "] is not a valid enum constant for Enum type "+ getEnumClass().getName());
+  public <E extends Enum<E>> E getEnum(E[] values, String name) {
+    for (int i = 0; i < values.length; i++) {
+      if (values[i].name().equals(name)) {
+        return values[i];
+      }
     }
+    throw new IllegalArgumentException(
+        "[" + name + "] is not a valid enum constant for Enum type " + getEnumClass().getName());
+  }
 
-    @Override
-    public E deserialize(String value, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws
-            XMLDeserializationException {
-        try {
-            return Enum.valueOf(enumClass, value);
-        } catch (IllegalArgumentException ex) {
-            if (ctx.isReadUnknownEnumValuesAsNull()) {
-                return null;
-            }
-            throw ex;
-        }
+  @Override
+  public E deserialize(
+      String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLDeserializationException {
+    try {
+      return Enum.valueOf(enumClass, value);
+    } catch (IllegalArgumentException ex) {
+      if (ctx.isReadUnknownEnumValuesAsNull()) {
+        return null;
+      }
+      throw ex;
     }
+  }
 
-    /**
-     * <p>Getter for the field <code>enumClass</code>.</p>
-     *
-     * @return a {@link java.lang.Class} object.
-     */
-    public Class<E> getEnumClass() {
-        return enumClass;
-    }
+  /**
+   * Getter for the field <code>enumClass</code>.
+   *
+   * @return a {@link java.lang.Class} object.
+   */
+  public Class<E> getEnumClass() {
+    return enumClass;
+  }
 }

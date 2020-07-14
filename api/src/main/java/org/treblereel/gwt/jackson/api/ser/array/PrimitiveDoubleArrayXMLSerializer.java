@@ -17,7 +17,6 @@
 package org.treblereel.gwt.jackson.api.ser.array;
 
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -26,46 +25,50 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
  * Default {@link XMLSerializer} implementation for array of double.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class PrimitiveDoubleArrayXMLSerializer extends BasicArrayXMLSerializer<double[]> {
 
-    private static final PrimitiveDoubleArrayXMLSerializer INSTANCE = new PrimitiveDoubleArrayXMLSerializer();
-    private BaseNumberXMLSerializer.DoubleXMLSerializer serializer = BaseNumberXMLSerializer.DoubleXMLSerializer.getInstance();
+  private static final PrimitiveDoubleArrayXMLSerializer INSTANCE =
+      new PrimitiveDoubleArrayXMLSerializer();
+  private BaseNumberXMLSerializer.DoubleXMLSerializer serializer =
+      BaseNumberXMLSerializer.DoubleXMLSerializer.getInstance();
 
-    private PrimitiveDoubleArrayXMLSerializer() {
+  private PrimitiveDoubleArrayXMLSerializer() {}
+
+  /**
+   * getInstance
+   *
+   * @return an instance of {@link PrimitiveDoubleArrayXMLSerializer}
+   */
+  public static BasicArrayXMLSerializer getInstance(String propertyName) {
+    return INSTANCE.setPropertyName(propertyName);
+  }
+  /** {@inheritDoc} */
+  @Override
+  protected boolean isEmpty(double[] value) {
+    return null == value || value.length == 0;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void doSerialize(
+      XMLWriter writer,
+      double[] values,
+      XMLSerializationContext ctx,
+      XMLSerializerParameters params)
+      throws XMLStreamException {
+    if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
+      writer.nullValue();
+      return;
     }
 
-    /**
-     * <p>getInstance</p>
-     * @return an instance of {@link PrimitiveDoubleArrayXMLSerializer}
-     */
-    public static BasicArrayXMLSerializer getInstance(String propertyName) {
-        return INSTANCE.setPropertyName(propertyName);
+    writer.beginObject(propertyName);
+    for (double value : values) {
+      serializer.doSerialize(writer, value, ctx, params);
     }
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean isEmpty(double[] value) {
-        return null == value || value.length == 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void doSerialize(XMLWriter writer, double[] values, XMLSerializationContext ctx, XMLSerializerParameters params) throws XMLStreamException {
-        if (!ctx.isWriteEmptyXMLArrays() && values.length == 0) {
-            writer.nullValue();
-            return;
-        }
-
-        writer.beginObject(propertyName);
-        for (double value : values) {
-            serializer.doSerialize(writer, value, ctx, params);
-        }
-        writer.endObject();
-    }
+    writer.endObject();
+  }
 }

@@ -27,51 +27,49 @@ import java.util.Map;
  */
 public class TypeDeserializationInfo<T> {
 
-    /**
-     * Name of the property containing information about the type
-     */
-    private final String propertyName;
+  /** Name of the property containing information about the type */
+  private final String propertyName;
 
-    private final Map<String, Class<? extends T>> typeInfoToClass;
+  private final Map<String, Class<? extends T>> typeInfoToClass;
 
-    /**
-     * <p>Constructor for TypeDeserializationInfo.</p>
-     *
-     * @param propertyName a {@link String} object.
-     */
-    public TypeDeserializationInfo(String propertyName) {
-        this.propertyName = propertyName;
-        this.typeInfoToClass = new HashMap<>();
-    }
+  /**
+   * Constructor for TypeDeserializationInfo.
+   *
+   * @param propertyName a {@link String} object.
+   */
+  public TypeDeserializationInfo(String propertyName) {
+    this.propertyName = propertyName;
+    this.typeInfoToClass = new HashMap<>();
+  }
 
-    /**
-     * <p>addTypeInfo</p>
-     *
-     * @param clazz    a {@link Class} object.
-     * @param typeInfo a {@link String} object.
-     * @return a {@link TypeDeserializationInfo} object.
-     */
-    public <S extends T> TypeDeserializationInfo<T> addTypeInfo(Class<S> clazz, String typeInfo) {
-        typeInfoToClass.put(typeInfo, clazz);
-        return this;
-    }
+  /**
+   * addTypeInfo
+   *
+   * @param clazz a {@link Class} object.
+   * @param typeInfo a {@link String} object.
+   * @return a {@link TypeDeserializationInfo} object.
+   */
+  public <S extends T> TypeDeserializationInfo<T> addTypeInfo(Class<S> clazz, String typeInfo) {
+    typeInfoToClass.put(typeInfo, clazz);
+    return this;
+  }
 
-    /**
-     * <p>Getter for the field <code>propertyName</code>.</p>
-     *
-     * @return a {@link String} object.
-     */
-    public String getPropertyName() {
-        return propertyName;
-    }
+  /**
+   * Getter for the field <code>propertyName</code>.
+   *
+   * @return a {@link String} object.
+   */
+  public String getPropertyName() {
+    return propertyName;
+  }
 
-    /**
-     * <p>getTypeClass</p>
-     *
-     * @param typeInfo a {@link String} object.
-     * @return a {@link Class} object.
-     */
-    public Class<? extends T> getTypeClass(String typeInfo) {
-        return typeInfoToClass.get(typeInfo);
-    }
+  /**
+   * getTypeClass
+   *
+   * @param typeInfo a {@link String} object.
+   * @return a {@link Class} object.
+   */
+  public Class<? extends T> getTypeClass(String typeInfo) {
+    return typeInfoToClass.get(typeInfo);
+  }
 }

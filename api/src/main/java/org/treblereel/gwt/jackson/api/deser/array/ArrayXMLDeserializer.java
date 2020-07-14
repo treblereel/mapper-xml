@@ -18,9 +18,7 @@ package org.treblereel.gwt.jackson.api.deser.array;
 
 import java.util.List;
 import java.util.function.Function;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -28,66 +26,72 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 
 /**
  * Default {@link XMLDeserializer} implementation for array.
+ *
  * @author Nicolas Morel
  * @version $Id: $
  */
 public class ArrayXMLDeserializer<T> extends AbstractArrayXMLDeserializer<T[]> {
 
-    private final Function<String, XMLDeserializer<T>> deserializer;
-    private final ArrayCreator<T> arrayCreator;
+  private final Function<String, XMLDeserializer<T>> deserializer;
+  private final ArrayCreator<T> arrayCreator;
 
-    /**
-     * <p>Constructor for ArrayXMLDeserializer.</p>
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the array.
-     * @param arrayCreator {@link ArrayXMLDeserializer.ArrayCreator} used to create a new array
-     */
-    protected ArrayXMLDeserializer(Function<String, XMLDeserializer<T>> deserializer, ArrayCreator<T> arrayCreator) {
-        if (null == deserializer) {
-            throw new IllegalArgumentException("deserializer cannot be null");
-        }
-        if (null == arrayCreator) {
-            throw new IllegalArgumentException("Cannot deserialize an array without an arrayCreator");
-        }
-        this.deserializer = deserializer;
-        this.arrayCreator = arrayCreator;
+  /**
+   * Constructor for ArrayXMLDeserializer.
+   *
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the array.
+   * @param arrayCreator {@link ArrayXMLDeserializer.ArrayCreator} used to create a new array
+   */
+  protected ArrayXMLDeserializer(
+      Function<String, XMLDeserializer<T>> deserializer, ArrayCreator<T> arrayCreator) {
+    if (null == deserializer) {
+      throw new IllegalArgumentException("deserializer cannot be null");
     }
-
-    /**
-     * <p>newInstance</p>
-     * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the array.
-     * @param arrayCreator {@link ArrayXMLDeserializer.ArrayCreator} used to create a new array
-     * @param <T> Type of the elements inside the {@link java.util.AbstractCollection}
-     * @return a new instance of {@link ArrayXMLDeserializer}
-     */
-    public static <T> ArrayXMLDeserializer<T> newInstance(Function<String, XMLDeserializer<T>> deserializer, ArrayCreator<T> arrayCreator) {
-        return new ArrayXMLDeserializer<>(deserializer, arrayCreator);
+    if (null == arrayCreator) {
+      throw new IllegalArgumentException("Cannot deserialize an array without an arrayCreator");
     }
+    this.deserializer = deserializer;
+    this.arrayCreator = arrayCreator;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public T[] doDeserializeArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        List<T> list = deserializeIntoList(reader, ctx, deserializer, params);
-        if (list == null) {
-            return null;
-        }
-        return list.toArray(arrayCreator.create(list.size()));
+  /**
+   * newInstance
+   *
+   * @param deserializer {@link XMLDeserializer} used to deserialize the objects inside the array.
+   * @param arrayCreator {@link ArrayXMLDeserializer.ArrayCreator} used to create a new array
+   * @param <T> Type of the elements inside the {@link java.util.AbstractCollection}
+   * @return a new instance of {@link ArrayXMLDeserializer}
+   */
+  public static <T> ArrayXMLDeserializer<T> newInstance(
+      Function<String, XMLDeserializer<T>> deserializer, ArrayCreator<T> arrayCreator) {
+    return new ArrayXMLDeserializer<>(deserializer, arrayCreator);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public T[] doDeserializeArray(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    List<T> list = deserializeIntoList(reader, ctx, deserializer, params);
+    if (list == null) {
+      return null;
     }
+    return list.toArray(arrayCreator.create(list.size()));
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected T[] doDeserializeSingleArray(XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params) throws XMLStreamException {
-        T[] result = arrayCreator.create(1);
-        result[0] = deserializer.apply(inheritanceChooser.get().apply(reader)).deserialize(reader, ctx, params);
-        return result;
-    }
+  /** {@inheritDoc} */
+  @Override
+  protected T[] doDeserializeSingleArray(
+      XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLStreamException {
+    T[] result = arrayCreator.create(1);
+    result[0] =
+        deserializer.apply(inheritanceChooser.get().apply(reader)).deserialize(reader, ctx, params);
+    return result;
+  }
 
-    @FunctionalInterface
-    public interface ArrayCreator<T> {
+  @FunctionalInterface
+  public interface ArrayCreator<T> {
 
-        T[] create(int length);
-    }
+    T[] create(int length);
+  }
 }

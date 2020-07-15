@@ -43,75 +43,19 @@ public class DefaultBeanFieldDefinition extends FieldDefinition {
 
   @Override
   public Expression getFieldDeserializer(PropertyDefinition field, CompilationUnit cu) {
-    if (field != null
-        && (context.getBeanDefinition(getBean()).getXmlSeeAlso() != null
-            || field.getProperty().getAnnotation(XmlElements.class) != null
-            || field.getProperty().getAnnotation(XmlElementRefs.class) != null)) {
+    if (field != null && isPolymorphic(field)) {
       Pair<Class, Map<String, TypeMirror>> pair = maybePolymorphicType(field, bean);
       String inheritance =
           pair.key.equals(XmlElementRefs.class) ? "xsiTagChooser" : "xsiTypeChooser";
 
       return new MethodCallExpr(
-              generateXMLDeserializerFactory(field, bean, bean.toString(), cu, pair), "apply")
+              generateXMLDeserializerFactory(bean, bean.toString(), cu, pair), "apply")
           .addArgument(
               new MethodCallExpr(new NameExpr(inheritance), "apply").addArgument("reader"));
     }
     return new ObjectCreationExpr()
         .setType(
             new ClassOrInterfaceType().setName(typeUtils.canonicalDeserializerName(getBean())));
-
-    /*
-    if (context.getBeanDefinition(getBean()).getXmlSeeAlso() != null && field != null && field.getPropertyName() != null) {
-        cu.addImport(Function.class);
-        NodeList<BodyDeclaration<?>> anonymousClassBody = new NodeList<>();
-
-        NodeList<Type> typeArguments = new NodeList<>();
-        typeArguments.add(new ClassOrInterfaceType().setName("String"));
-        typeArguments.add(new ClassOrInterfaceType().setName("XMLDeserializer<?>"));
-
-        ClassOrInterfaceType iface = new ClassOrInterfaceType().setName("Function");
-        iface.setTypeArguments(typeArguments);
-
-        ObjectCreationExpr func = new ObjectCreationExpr().setType(iface);
-        func.setAnonymousClassBody(anonymousClassBody);
-
-        MethodDeclaration method = new MethodDeclaration();
-        method.setModifiers(Modifier.Keyword.PUBLIC);
-        method.addAnnotation(Override.class);
-        method.setName("apply");
-        method.setType(new ClassOrInterfaceType().setName("XMLDeserializer"));
-        method.addParameter("String", "value");
-
-        if (context.getBeanDefinition(field.getBean()).getXmlSeeAlso() != null && field != null && field.getPropertyName() != null) {
-
-            for (TypeElement typeElement : context.getBeanDefinition(getBean()).getXmlSeeAlso()) {
-                method.getBody().ifPresent(body -> body.addAndGetStatement(
-                        new IfStmt().setCondition(new MethodCallExpr(new StringLiteralExpr(context.getBeanDefinition(typeElement.asType()).getXmlRootElement()), "equals")
-                                                          .addArgument(new NameExpr("value"))))
-                        .setThenStmt(new ReturnStmt(
-                                new ObjectCreationExpr().setType(
-                                        new ClassOrInterfaceType().setName(typeUtils.canonicalDeserializerName(typeElement.asType()))))));
-            }
-        }
-        anonymousClassBody.add(method);
-        method.getBody().ifPresent(body -> body.addAndGetStatement(
-                new ReturnStmt(new ObjectCreationExpr().setType(new ClassOrInterfaceType()
-                                                                        .setName(typeUtils.canonicalDeserializerName(getBean()))))));
-
-        return new MethodCallExpr(func, "apply").addArgument(new MethodCallExpr(new NameExpr("typeChooser"), "apply").addArgument("reader"));
-
-
-
-
-
-
-
-
-
-    }
-
-    return new ObjectCreationExpr().setType(new ClassOrInterfaceType()
-                                                    .setName(typeUtils.canonicalDeserializerName(bean)));*/
   }
 
   @Override

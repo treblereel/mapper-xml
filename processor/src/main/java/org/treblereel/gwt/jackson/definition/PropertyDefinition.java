@@ -23,6 +23,7 @@ import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlCData;
 import javax.xml.bind.annotation.XmlElement;
@@ -35,6 +36,7 @@ import org.treblereel.gwt.jackson.exception.GenerationException;
 /** @author Dmitrii Tikhomirov Created by treblereel 4/1/20 */
 public class PropertyDefinition extends Definition {
 
+  public static final String DEFAULT = "##default";
   private final VariableElement property;
 
   protected PropertyDefinition(VariableElement property, GenerationContext context) {
@@ -52,12 +54,12 @@ public class PropertyDefinition extends Definition {
   }
 
   public boolean isCData() {
-    return property.asType().toString().equals(String.class.getCanonicalName())
+    return bean.toString().equals(String.class.getCanonicalName())
         && property.getAnnotation(XmlCData.class) != null
         && property.getAnnotation(XmlCData.class).value();
   }
 
-  public Expression getFieldSerializer(CompilationUnit cu, GenerationContext context) {
+  public Expression getFieldSerializer(CompilationUnit cu) {
     FieldDefinition fieldDefinition =
         propertyDefinitionFactory.getFieldDefinition(bean != null ? bean : getBean());
     return fieldDefinition.getFieldSerializer(this, cu);
@@ -65,12 +67,12 @@ public class PropertyDefinition extends Definition {
 
   public String getPropertyName() {
     if (property.getAnnotation(XmlElement.class) != null
-        && !property.getAnnotation(XmlElement.class).name().equals("##default")) {
+        && !property.getAnnotation(XmlElement.class).name().equals(DEFAULT)) {
       return property.getAnnotation(XmlElement.class).name();
     }
 
     if (property.getAnnotation(XmlAttribute.class) != null
-        && !property.getAnnotation(XmlAttribute.class).name().equals("##default")) {
+        && !property.getAnnotation(XmlAttribute.class).name().equals(DEFAULT)) {
       return property.getAnnotation(XmlAttribute.class).name();
     }
 
@@ -79,21 +81,19 @@ public class PropertyDefinition extends Definition {
 
   public String getNamespace() {
     if (property.getAnnotation(XmlElement.class) != null
-        && !property.getAnnotation(XmlElement.class).namespace().equals("##default")) {
+        && !property.getAnnotation(XmlElement.class).namespace().equals(DEFAULT)) {
       return property.getAnnotation(XmlElement.class).namespace();
     }
 
     if (property.getAnnotation(XmlAttribute.class) != null
-        && !property.getAnnotation(XmlAttribute.class).namespace().equals("##default")) {
+        && !property.getAnnotation(XmlAttribute.class).namespace().equals(DEFAULT)) {
       return property.getAnnotation(XmlAttribute.class).namespace();
     }
 
     XmlSchema schema = null;
-    if (!context.getTypeUtils().isSimpleType(property.asType())
-        && !property.asType().getKind().equals(TypeKind.ARRAY)) {
+    if (!context.getTypeUtils().isSimpleType(bean) && !bean.getKind().equals(TypeKind.ARRAY)) {
       schema =
-          MoreElements.getPackage(MoreTypes.asTypeElement(property.asType()))
-              .getAnnotation(XmlSchema.class);
+          MoreElements.getPackage(MoreTypes.asTypeElement(bean)).getAnnotation(XmlSchema.class);
     }
     if (schema != null && !schema.namespace().isEmpty()) {
       return schema.namespace();
@@ -126,13 +126,18 @@ public class PropertyDefinition extends Definition {
   }
 
   public String getWrapped() {
-    return !property.getAnnotation(XmlElementWrapper.class).name().equals("##default")
+    return !property.getAnnotation(XmlElementWrapper.class).name().equals(DEFAULT)
         ? property.getAnnotation(XmlElementWrapper.class).name()
         : property.getSimpleName().toString();
   }
 
   public VariableElement getProperty() {
     return property;
+  }
+
+  @Override
+  public TypeMirror getBean() {
+    return bean;
   }
 
   @Override

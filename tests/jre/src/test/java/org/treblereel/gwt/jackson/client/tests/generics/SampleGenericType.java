@@ -13,23 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.treblereel.gwt.jackson.client.tests.beans.iface;
+package org.treblereel.gwt.jackson.client.tests.generics;
 
-import java.util.Objects;
+import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
-/** @author Dmitrii Tikhomirov Created by treblereel 5/13/20 */
-public class Address implements IAddress {
+/** @author Dmitrii Tikhomirov Created by treblereel 7/15/20 */
+@XMLMapper
+public class SampleGenericType extends BaseGenericType<String, Integer> {
 
-  private String address;
-
-  @Override
-  public String getAddress() {
-    return address;
-  }
+  private String field3;
 
   @Override
-  public void setAddress(String address) {
-    this.address = address;
+  public int hashCode() {
+    return getField3().hashCode();
   }
 
   @Override
@@ -37,15 +33,22 @@ public class Address implements IAddress {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof Address)) {
+    if (!(o instanceof SampleGenericType)) {
       return false;
     }
-    Address address1 = (Address) o;
-    return Objects.equals(getAddress(), address1.getAddress());
+
+    SampleGenericType that = (SampleGenericType) o;
+
+    return getField3().equals(that.getField3())
+        && getField2().equals(that.getField2())
+        && getField1().equals(that.getField1());
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(getAddress());
+  public String getField3() {
+    return field3;
+  }
+
+  public void setField3(String field3) {
+    this.field3 = field3;
   }
 }

@@ -21,9 +21,9 @@ import org.treblereel.gwt.jackson.context.GenerationContext;
 /** @author Dmitrii Tikhomirov Created by treblereel 4/1/20 */
 public abstract class Definition {
 
-  protected final TypeMirror bean;
   protected final GenerationContext context;
   protected final FieldDefinitionFactory propertyDefinitionFactory;
+  protected TypeMirror bean;
 
   protected Definition(TypeMirror bean, GenerationContext context) {
     this.propertyDefinitionFactory = new FieldDefinitionFactory(context);
@@ -33,5 +33,10 @@ public abstract class Definition {
 
   public TypeMirror getBean() {
     return bean;
+  }
+
+  public Definition setBean(TypeMirror bean) {
+    this.bean = bean;
+    return this;
   }
 }

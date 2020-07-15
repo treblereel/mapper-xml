@@ -38,7 +38,6 @@ import com.github.javaparser.ast.type.Type;
 import com.google.auto.common.MoreTypes;
 import java.util.Map;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.api.JacksonContextProvider;
@@ -213,7 +212,7 @@ public class DeserializerGenerator extends AbstractGenerator {
       BlockStmt body, TypeElement type, PropertyDefinition field) {
     NodeList<BodyDeclaration<?>> anonymousClassBody = new NodeList<>();
 
-    ClassOrInterfaceType typeArg = getWrappedType(field.getProperty());
+    ClassOrInterfaceType typeArg = getWrappedType(field);
     ClassOrInterfaceType beanPropertyDeserializer =
         new ClassOrInterfaceType().setName(BeanPropertyDeserializer.class.getSimpleName());
     beanPropertyDeserializer.setTypeArguments(
@@ -251,13 +250,13 @@ public class DeserializerGenerator extends AbstractGenerator {
     body.addStatement(new ReturnStmt(instanceBuilder));
   }
 
-  private ClassOrInterfaceType getWrappedType(VariableElement field) {
+  private ClassOrInterfaceType getWrappedType(PropertyDefinition field) {
     ClassOrInterfaceType typeArg =
-        new ClassOrInterfaceType().setName(TypeUtils.wrapperType(field.asType()));
-    if (field.asType() instanceof DeclaredType) {
-      if (!((DeclaredType) field.asType()).getTypeArguments().isEmpty()) {
+        new ClassOrInterfaceType().setName(TypeUtils.wrapperType(field.getBean()));
+    if (field.getBean() instanceof DeclaredType) {
+      if (!((DeclaredType) field.getBean()).getTypeArguments().isEmpty()) {
         NodeList<Type> types = new NodeList<>();
-        ((DeclaredType) field.asType())
+        ((DeclaredType) field.getBean())
             .getTypeArguments()
             .forEach(t -> types.add(new ClassOrInterfaceType().setName(TypeUtils.wrapperType(t))));
         typeArg.setTypeArguments(types);

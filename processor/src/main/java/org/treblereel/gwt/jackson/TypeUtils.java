@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,7 @@ import javax.lang.model.type.TypeVariable;
 import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
+import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 import javax.lang.model.util.SimpleTypeVisitor8;
 import javax.lang.model.util.Types;
 import org.apache.commons.lang3.StringUtils;
@@ -408,6 +410,54 @@ public class TypeUtils {
                         .orElse(null)));
   }
 
+  public static Map<String, TypeMirror> getXmlElements(
+      GenerationContext context, VariableElement element, Class clazz) {
+    Map<String, TypeMirror> result = new HashMap<>();
+    context.getProcessingEnv().getElementUtils().getAllAnnotationMirrors(element).stream()
+        .filter(elm -> elm.getAnnotationType().toString().equals(clazz.getCanonicalName()))
+        .forEach(
+            e ->
+                e.getElementValues()
+                    .forEach(
+                        (a1, a2) ->
+                            new SimpleAnnotationValueVisitor8<
+                                AnnotationValue, Map<String, TypeMirror>>() {
+                              @Override
+                              public AnnotationValue visitArray(
+                                  List<? extends AnnotationValue> z, Map<String, TypeMirror> map) {
+                                for (AnnotationValue annotationValue : z) {
+                                  new SimpleAnnotationValueVisitor8<
+                                      AnnotationValue, Map<String, TypeMirror>>() {
+                                    @Override
+                                    public AnnotationValue visitAnnotation(
+                                        AnnotationMirror a, Map<String, TypeMirror> map) {
+                                      String name = null;
+                                      TypeMirror value = null;
+                                      for (Map.Entry<
+                                              ? extends ExecutableElement,
+                                              ? extends AnnotationValue>
+                                          entry : a.getElementValues().entrySet()) {
+                                        if (entry
+                                            .getKey()
+                                            .getSimpleName()
+                                            .toString()
+                                            .equals("name")) {
+                                          name = entry.getValue().getValue().toString();
+                                        } else {
+                                          value = (TypeMirror) entry.getValue().getValue();
+                                        }
+                                      }
+                                      map.put(name, value);
+                                      return null;
+                                    }
+                                  }.visit(annotationValue, map);
+                                }
+                                return z.get(1);
+                              }
+                            }.visit(a2, result)));
+    return result;
+  }
+
   /**
    * Check if given type has type argument containing unbounded wildcard
    *
@@ -449,6 +499,22 @@ public class TypeUtils {
           }
         },
         null);
+  }
+
+  public TypeMirror getTypeArgumentByName(TypeMirror superType, TypeMirror name) {
+    TypeElement superElement =
+        elements.getTypeElement(((DeclaredType) superType).asElement().toString());
+
+    List<String> params =
+        superElement.getTypeParameters().stream()
+            .map(param -> param.getSimpleName().toString())
+            .collect(Collectors.toList());
+    List<TypeMirror> typeArguments =
+        (List<TypeMirror>) ((DeclaredType) superType).getTypeArguments();
+    if (params.contains(name.toString())) {
+      return typeArguments.get(params.indexOf(name.toString()));
+    }
+    return null;
   }
 
   /**

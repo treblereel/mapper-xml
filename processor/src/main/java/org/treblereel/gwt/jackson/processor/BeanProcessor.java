@@ -91,10 +91,9 @@ public class BeanProcessor {
         if (!context.getTypeUtils().isSimpleType(arrayType.getComponentType())) {
           processBean(typeUtils.toTypeElement(arrayType.getComponentType()));
         }
-      } else if (MoreTypes.isType(type)) {
-        if (!MoreTypes.asElement(type).getKind().equals(ElementKind.ENUM)) {
-          processBean(typeUtils.toTypeElement(type));
-        }
+      } else if (MoreTypes.isType(type)
+          && !MoreTypes.asElement(type).getKind().equals(ElementKind.ENUM)) {
+        processBean(typeUtils.toTypeElement(type));
       }
     }
 
@@ -145,10 +144,9 @@ public class BeanProcessor {
       throw new GenerationException("A @XMLMapper bean [" + type + "] must be public");
     }
 
-    if (type.getEnclosingElement().getKind().isClass()) {
-      if (!type.getModifiers().contains(Modifier.STATIC)) {
-        throw new GenerationException("A @XMLMapper bean [" + type + "] must be static");
-      }
+    if (type.getEnclosingElement().getKind().isClass()
+        && !type.getModifiers().contains(Modifier.STATIC)) {
+      throw new GenerationException("A @XMLMapper bean [" + type + "] must be static");
     }
 
     List<ExecutableElement> constructors = ElementFilter.constructorsIn(type.getEnclosedElements());

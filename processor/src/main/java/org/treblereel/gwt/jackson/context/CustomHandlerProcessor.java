@@ -111,18 +111,15 @@ public class CustomHandlerProcessor {
   }
 
   private void checkExtends(TypeElement handler, TypeElement ser, TypeElement deser) {
-    if (ser != null) {
-      if (!context.getTypeUtils().isAssignableFrom(ser, CustomXMLSerializer.class)) {
-        throw new GenerationException(
-            handler + " must extends " + CustomXMLSerializer.class.getCanonicalName());
-      }
+    if (ser != null && !context.getTypeUtils().isAssignableFrom(ser, CustomXMLSerializer.class)) {
+      throw new GenerationException(
+          handler + " must extends " + CustomXMLSerializer.class.getCanonicalName());
     }
 
-    if (deser != null) {
-      if (!context.getTypeUtils().isAssignableFrom(deser, CustomXMLDeserializer.class)) {
-        throw new GenerationException(
-            handler + " must extends " + CustomXMLDeserializer.class.getCanonicalName());
-      }
+    if (deser != null
+        && !context.getTypeUtils().isAssignableFrom(deser, CustomXMLDeserializer.class)) {
+      throw new GenerationException(
+          handler + " must extends " + CustomXMLDeserializer.class.getCanonicalName());
     }
   }
 }

@@ -75,12 +75,11 @@ public class ApplicationProcessor extends AbstractProcessor {
   }
 
   private void processXmlSeeAlso(Stream<? extends Element> stream) {
-    stream.forEach(elm -> processXmlSeeAlso(elm));
+    stream.forEach(this::processXmlSeeAlso);
   }
 
   private void processXmlElements(GenerationContext context, Class clazz) {
-    Set<Element> elms =
-        (Set<Element>) context.getRoundEnvironment().getElementsAnnotatedWith(clazz);
+    Set<Element> elms = context.getRoundEnvironment().getElementsAnnotatedWith(clazz);
     for (Element elm : elms) {
       TypeUtils.getXmlElements(context, MoreElements.asVariable(elm), clazz)
           .forEach((k, v) -> beans.add(MoreTypes.asTypeElement(v)));

@@ -58,7 +58,7 @@ public class IterableBeanFieldDefinition extends FieldDefinition {
     if (!maybePolymorphicType.value.isEmpty()) {
       cu.addImport(Inheritance.class);
       method.addArgument(
-          generateXMLDeserializerFactory(field, type, type.toString(), cu, maybePolymorphicType));
+          generateXMLDeserializerFactory(type, type.toString(), cu, maybePolymorphicType));
       method = new MethodCallExpr(method, "setInheritanceType").addArgument(inheritance);
     } else {
       method.addArgument(generateXMLDeserializerFactory(field, type, type.toString(), cu));

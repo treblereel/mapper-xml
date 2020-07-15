@@ -59,12 +59,10 @@ public abstract class FieldDefinition extends Definition {
 
   protected Expression generateXMLDeserializerFactory(
       PropertyDefinition field, TypeMirror type, String typeArg, CompilationUnit cu) {
-    return generateXMLDeserializerFactory(
-        field, type, typeArg, cu, maybePolymorphicType(field, type));
+    return generateXMLDeserializerFactory(type, typeArg, cu, maybePolymorphicType(field, type));
   }
 
   protected Expression generateXMLDeserializerFactory(
-      PropertyDefinition field,
       TypeMirror type,
       String typeArg,
       CompilationUnit cu,

@@ -31,9 +31,8 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.MirroredTypesException;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
@@ -64,7 +63,8 @@ public class ApplicationProcessor extends AbstractProcessor {
       processXMLMapper(roundEnvironment.getElementsAnnotatedWith(XMLMapper.class).stream());
 
       processXmlSeeAlso(roundEnvironment.getElementsAnnotatedWith(XmlSeeAlso.class).stream());
-      processXmlElements(roundEnvironment);
+      processXmlElements(context, XmlElements.class);
+      processXmlElements(context, XmlElementRefs.class);
       new BeanProcessor(context, logger, beans).process();
     }
     return false;
@@ -78,30 +78,12 @@ public class ApplicationProcessor extends AbstractProcessor {
     stream.forEach(elm -> processXmlSeeAlso(elm));
   }
 
-  private void processXmlElements(RoundEnvironment roundEnvironment) {
-    Set<Element> elms = (Set<Element>) roundEnvironment.getElementsAnnotatedWith(XmlElements.class);
+  private void processXmlElements(GenerationContext context, Class clazz) {
+    Set<Element> elms =
+        (Set<Element>) context.getRoundEnvironment().getElementsAnnotatedWith(clazz);
     for (Element elm : elms) {
-      XmlElement[] elements = elm.getAnnotation(XmlElements.class).value();
-
-      for (XmlElement element : elements) {
-        try {
-          elm.getAnnotation(XmlElements.class).value();
-        } catch (MirroredTypeException e) {
-          beans.add(MoreTypes.asTypeElement(e.getTypeMirror()));
-        }
-      }
-
-      /*            try {
-          elm.getAnnotation(XmlElements.class).value();
-      } catch (MirroredTypesException e) {
-          e.getTypeMirrors().forEach(type -> {
-              if (MoreTypes.asTypeElement(type).getAnnotation(XmlElement.class) == null) {
-                  throw new GenerationException(type + " must be annotated with @XmlRootElement because it's declared in @XmlSeeAlso at " + elm);
-              } else {
-                  beans.add(MoreTypes.asTypeElement(type));
-              }
-          });
-      }*/
+      TypeUtils.getXmlElements(context, MoreElements.asVariable(elm), clazz)
+          .forEach((k, v) -> beans.add(MoreTypes.asTypeElement(v)));
     }
   }
 

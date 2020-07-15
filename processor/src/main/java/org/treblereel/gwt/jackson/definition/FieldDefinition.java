@@ -36,17 +36,11 @@ import com.github.javaparser.ast.type.TypeParameter;
 import com.google.auto.common.MoreTypes;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlSeeAlso;
@@ -143,12 +137,15 @@ public abstract class FieldDefinition extends Definition {
       PropertyDefinition field, TypeMirror type) {
     XmlElements xmlElements = field.getProperty().getAnnotation(XmlElements.class);
     if (xmlElements != null) {
-      return new Pair<>(XmlElements.class, getXmlElements(field.getProperty(), XmlElements.class));
+      return new Pair<>(
+          XmlElements.class,
+          TypeUtils.getXmlElements(context, field.getProperty(), XmlElements.class));
     }
     XmlElementRefs xmlElementRefs = field.getProperty().getAnnotation(XmlElementRefs.class);
     if (xmlElementRefs != null) {
       return new Pair<>(
-          XmlElementRefs.class, getXmlElements(field.getProperty(), XmlElementRefs.class));
+          XmlElementRefs.class,
+          TypeUtils.getXmlElements(context, field.getProperty(), XmlElementRefs.class));
     }
     XmlSeeAlso xmlSeeAlso = MoreTypes.asTypeElement(type).getAnnotation(XmlSeeAlso.class);
     if (xmlSeeAlso != null) {
@@ -165,53 +162,6 @@ public abstract class FieldDefinition extends Definition {
   }
 
   public abstract Expression getFieldDeserializer(PropertyDefinition field, CompilationUnit cu);
-
-  private Map<String, TypeMirror> getXmlElements(VariableElement element, Class clazz) {
-    Map<String, TypeMirror> result = new HashMap<>();
-    context.getProcessingEnv().getElementUtils().getAllAnnotationMirrors(element).stream()
-        .filter(elm -> elm.getAnnotationType().toString().equals(clazz.getCanonicalName()))
-        .forEach(
-            e ->
-                e.getElementValues()
-                    .forEach(
-                        (a1, a2) ->
-                            new SimpleAnnotationValueVisitor8<
-                                AnnotationValue, Map<String, TypeMirror>>() {
-                              @Override
-                              public AnnotationValue visitArray(
-                                  List<? extends AnnotationValue> z, Map<String, TypeMirror> map) {
-                                for (AnnotationValue annotationValue : z) {
-                                  new SimpleAnnotationValueVisitor8<
-                                      AnnotationValue, Map<String, TypeMirror>>() {
-                                    @Override
-                                    public AnnotationValue visitAnnotation(
-                                        AnnotationMirror a, Map<String, TypeMirror> map) {
-                                      String name = null;
-                                      TypeMirror value = null;
-                                      for (Map.Entry<
-                                              ? extends ExecutableElement,
-                                              ? extends AnnotationValue>
-                                          entry : a.getElementValues().entrySet()) {
-                                        if (entry
-                                            .getKey()
-                                            .getSimpleName()
-                                            .toString()
-                                            .equals("name")) {
-                                          name = entry.getValue().getValue().toString();
-                                        } else {
-                                          value = (TypeMirror) entry.getValue().getValue();
-                                        }
-                                      }
-                                      map.put(name, value);
-                                      return null;
-                                    }
-                                  }.visit(annotationValue, map);
-                                }
-                                return z.get(1);
-                              }
-                            }.visit(a2, result)));
-    return result;
-  }
 
   private TypeElement[] getXmlSeeAlso(XmlSeeAlso xmlSeeAlso) {
     try {
@@ -296,7 +246,6 @@ public abstract class FieldDefinition extends Definition {
               .addArgument(new NameExpr(inheritance));
       // TODO
       if (inheritance.equals("Inheritance.XSI")) {
-
         methodCallExpr =
             new MethodCallExpr(methodCallExpr, "addNamespace")
                 .addArgument(new StringLiteralExpr("xsi"))

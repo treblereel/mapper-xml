@@ -16,10 +16,8 @@
 package org.treblereel.gwt.jackson.client.tests.beans.iface;
 
 import java.util.Objects;
-import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 5/13/20 */
-@XMLMapper
 public class Address implements IAddress {
 
   private String address;

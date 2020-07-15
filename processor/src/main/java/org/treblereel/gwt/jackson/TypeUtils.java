@@ -501,6 +501,22 @@ public class TypeUtils {
         null);
   }
 
+  public TypeMirror getTypeArgumentByName(TypeMirror superType, TypeMirror name) {
+    TypeElement superElement =
+        elements.getTypeElement(((DeclaredType) superType).asElement().toString());
+
+    List<String> params =
+        superElement.getTypeParameters().stream()
+            .map(param -> param.getSimpleName().toString())
+            .collect(Collectors.toList());
+    List<TypeMirror> typeArguments =
+        (List<TypeMirror>) ((DeclaredType) superType).getTypeArguments();
+    if (params.contains(name.toString())) {
+      return typeArguments.get(params.indexOf(name.toString()));
+    }
+    return null;
+  }
+
   /**
    * see: typetools/checker-framework Return all methods declared in the given type or any
    * superclass/interface. Note that no constructors will be returned. TODO: should this use

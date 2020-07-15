@@ -31,6 +31,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.MirroredTypesException;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -89,19 +90,16 @@ public class BeanDefinition extends Definition {
 
   private void loadProperties(boolean annotated) {
     Predicate<VariableElement> isAnnotated =
-        new Predicate<VariableElement>() {
-          @Override
-          public boolean test(VariableElement field) {
-            if (annotated) {
-              for (Class anno : allowedPropertyAnnotations) {
-                if (field.getAnnotation(anno) != null) {
-                  return true;
-                }
+        field -> {
+          if (annotated) {
+            for (Class anno : allowedPropertyAnnotations) {
+              if (field.getAnnotation(anno) != null) {
+                return true;
               }
-              return false;
             }
-            return true;
+            return false;
           }
+          return true;
         };
 
     Stream<PropertyDefinition> stream =
@@ -111,7 +109,17 @@ public class BeanDefinition extends Definition {
             .filter(field -> !field.getModifiers().contains(Modifier.TRANSIENT))
             .filter(field -> field.getAnnotation(XmlTransient.class) == null)
             .filter(isAnnotated)
-            .map(field -> new PropertyDefinition(field, context));
+            .map(
+                field -> {
+                  PropertyDefinition propertyDefinition = new PropertyDefinition(field, context);
+                  if (field.asType().getKind().equals(TypeKind.TYPEVAR)) {
+                    propertyDefinition.setBean(
+                        context
+                            .getTypeUtils()
+                            .getTypeArgumentByName(element.getSuperclass(), field.asType()));
+                  }
+                  return propertyDefinition;
+                });
 
     if (xmlType == null || xmlType.propOrder() == null) {
       stream.forEach(elm -> fields.add(elm));

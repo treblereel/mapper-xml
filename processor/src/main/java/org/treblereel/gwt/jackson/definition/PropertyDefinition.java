@@ -23,6 +23,7 @@ import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlCData;
 import javax.xml.bind.annotation.XmlElement;
@@ -52,7 +53,7 @@ public class PropertyDefinition extends Definition {
   }
 
   public boolean isCData() {
-    return property.asType().toString().equals(String.class.getCanonicalName())
+    return bean.toString().equals(String.class.getCanonicalName())
         && property.getAnnotation(XmlCData.class) != null
         && property.getAnnotation(XmlCData.class).value();
   }
@@ -89,11 +90,9 @@ public class PropertyDefinition extends Definition {
     }
 
     XmlSchema schema = null;
-    if (!context.getTypeUtils().isSimpleType(property.asType())
-        && !property.asType().getKind().equals(TypeKind.ARRAY)) {
+    if (!context.getTypeUtils().isSimpleType(bean) && !bean.getKind().equals(TypeKind.ARRAY)) {
       schema =
-          MoreElements.getPackage(MoreTypes.asTypeElement(property.asType()))
-              .getAnnotation(XmlSchema.class);
+          MoreElements.getPackage(MoreTypes.asTypeElement(bean)).getAnnotation(XmlSchema.class);
     }
     if (schema != null && !schema.namespace().isEmpty()) {
       return schema.namespace();
@@ -133,6 +132,11 @@ public class PropertyDefinition extends Definition {
 
   public VariableElement getProperty() {
     return property;
+  }
+
+  @Override
+  public TypeMirror getBean() {
+    return bean;
   }
 
   @Override

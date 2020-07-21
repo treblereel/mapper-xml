@@ -17,6 +17,8 @@ package org.treblereel.gwt.jackson.generator;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.expr.NormalAnnotationExpr;
+import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.google.auto.common.MoreElements;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -49,11 +51,20 @@ public abstract class AbstractGenerator {
     cu = new CompilationUnit();
     cu.setPackageDeclaration(context.getTypeUtils().getPackage(type.getBean()));
     declaration = cu.addClass(getMapperName(type.getElement()));
+
+    addGeneratedAnnotation(declaration);
     configureClassType(type);
     addTypeParam(type, declaration);
     getType(type);
     init(type);
     write(type.getElement());
+  }
+
+  private void addGeneratedAnnotation(ClassOrInterfaceDeclaration declaration) {
+    NormalAnnotationExpr generated = new NormalAnnotationExpr();
+    generated.setName("javax.annotation.Generated");
+    generated.addPair("value", new StringLiteralExpr(this.getClass().getCanonicalName()));
+    declaration.addAnnotation(generated);
   }
 
   protected abstract String getMapperName(TypeElement type);

@@ -16,7 +16,7 @@
 package org.treblereel.gwt.jackson.client.tests.beans.date;
 
 import java.util.Date;
-import java.util.Objects;
+import javax.xml.bind.annotation.XmlAttribute;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/27/20 */
@@ -25,12 +25,22 @@ public class DateBean {
 
   private Date val;
 
+  @XmlAttribute private Date val2;
+
   public Date getVal() {
     return val;
   }
 
   public void setVal(Date val) {
     this.val = val;
+  }
+
+  public Date getVal2() {
+    return val2;
+  }
+
+  public void setVal2(Date val2) {
+    this.val2 = val2;
   }
 
   @Override
@@ -41,12 +51,19 @@ public class DateBean {
     if (!(o instanceof DateBean)) {
       return false;
     }
+
     DateBean dateBean = (DateBean) o;
-    return Objects.equals(getVal(), dateBean.getVal());
+
+    if (getVal() != null ? !getVal().equals(dateBean.getVal()) : dateBean.getVal() != null) {
+      return false;
+    }
+    return getVal2() != null ? getVal2().equals(dateBean.getVal2()) : dateBean.getVal2() == null;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getVal());
+    int result = getVal() != null ? getVal().hashCode() : 0;
+    result = 31 * result + (getVal2() != null ? getVal2().hashCode() : 0);
+    return result;
   }
 }

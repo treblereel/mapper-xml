@@ -125,11 +125,9 @@ public abstract class XMLSerializer<T> {
       XMLSerializerParameters params,
       boolean isMapValue)
       throws XMLSerializationException, XMLStreamException {
-    if (null == value && !isAttribute) {
+    if (null == value) {
       if (ctx.isSerializeNulls() || (isMapValue && ctx.isWriteNullMapValues())) {
         serializeNullValue(writer, ctx, params);
-      } else {
-        writer.nullValue();
       }
     } else {
       doSerialize(writer, value, ctx, params);
@@ -146,7 +144,11 @@ public abstract class XMLSerializer<T> {
   protected void serializeNullValue(
       XMLWriter writer, XMLSerializationContext ctx, XMLSerializerParameters params)
       throws XMLStreamException {
-    writer.nullValue();
+    if (isAttribute) {
+      writer.writeAttribute(propertyName, "");
+    } else {
+      writer.nullValue();
+    }
   }
 
   /**

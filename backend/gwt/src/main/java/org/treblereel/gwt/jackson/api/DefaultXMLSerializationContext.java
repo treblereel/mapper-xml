@@ -265,6 +265,8 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
 
     protected boolean wrapCollections = true;
 
+    protected boolean writeDataAsTimestamp = true;
+
     /**
      * Determines whether Object Identity is compared using true JVM-level identity of Object
      * (false); or, <code>equals()</code> method. Latter is sometimes useful when dealing with

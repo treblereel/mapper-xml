@@ -22,23 +22,79 @@ import com.google.j2cl.junit.apt.J2clTestInput;
 import java.util.Date;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
+import org.treblereel.gwt.jackson.api.DefaultXMLDeserializationContext;
+import org.treblereel.gwt.jackson.api.DefaultXMLSerializationContext;
+import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
+import org.treblereel.gwt.jackson.api.XMLSerializationContext;
+import org.treblereel.gwt.jackson.client.tests.beans.date.DateBean;
 import org.treblereel.gwt.jackson.client.tests.beans.date.DateBean_MapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/27/20 */
 @J2clTestInput(DateTest.class)
 public class DateTest {
 
+  private static final String XML_TIMESTAMP =
+      "<?xml version='1.0' encoding='UTF-8'?><DateBean val2=\"1377543971773\"><val>1377543971773</val></DateBean>";
+
+  private static final String XML_ISO =
+      "<?xml version='1.0' encoding='UTF-8'?><DateBean val2=\"2013-08-26T19:06:11.773Z\"><val>2013-08-26T19:06:11.773Z</val></DateBean>";
+
+  private static final String XML_ISO_NULL =
+      "<?xml version='1.0' encoding='UTF-8'?><DateBean val2=\"\"><val/></DateBean>";
+
+  private final DateBean_MapperImpl mapper = DateBean_MapperImpl.INSTANCE;
+
   @Test
-  public void testDeserializeValue() throws XMLStreamException {
+  public void testDatesAsTimestampsValue() throws XMLStreamException {
+    DateBean dateBean = new DateBean();
+    dateBean.setVal(new Date(1377543971773l));
+    dateBean.setVal2(new Date(1377543971773l));
+
+    assertEquals(XML_TIMESTAMP, mapper.write(dateBean));
+    assertEquals(dateBean, mapper.read(mapper.write(dateBean)));
+  }
+
+  @Test
+  public void testDatesAsISO8601Value() throws XMLStreamException {
+    XMLDeserializationContext deserializationContext =
+        DefaultXMLDeserializationContext.builder().readDateAsTimestamp(false).build();
+
+    XMLSerializationContext serializationContext =
+        DefaultXMLSerializationContext.builder().writeDatesAsTimestamps(false).build();
+
     assertNull(
-        DateBean_MapperImpl.INSTANCE
-            .read("<?xml version='1.0' encoding='UTF-8'?><DateBean><val/></DateBean>")
-            .getVal());
-    assertEquals(
-        new Date(1377543971773l),
-        DateBean_MapperImpl.INSTANCE
+        mapper
             .read(
-                "<?xml version='1.0' encoding='UTF-8'?><DateBean><val>1377543971773</val></DateBean>")
+                "<?xml version='1.0' encoding='UTF-8'?><DateBean><val/></DateBean>",
+                deserializationContext)
             .getVal());
+
+    DateBean dateBean = new DateBean();
+    dateBean.setVal(new Date(1377543971773l));
+    dateBean.setVal2(new Date(1377543971773l));
+
+    assertEquals(XML_ISO, mapper.write(dateBean, serializationContext));
+    assertEquals(
+        dateBean,
+        mapper.read(mapper.write(dateBean, serializationContext), deserializationContext));
+  }
+
+  @Test
+  public void testDatesAsISO8601NullValue() throws XMLStreamException {
+    XMLDeserializationContext deserializationContext =
+        DefaultXMLDeserializationContext.builder().readDateAsTimestamp(false).build();
+
+    XMLSerializationContext serializationContext =
+        DefaultXMLSerializationContext.builder()
+            .serializeNulls(true)
+            .writeDatesAsTimestamps(false)
+            .build();
+
+    DateBean dateBean = new DateBean();
+
+    assertEquals(XML_ISO_NULL, mapper.write(dateBean, serializationContext));
+    assertEquals(
+        dateBean,
+        mapper.read(mapper.write(dateBean, serializationContext), deserializationContext));
   }
 }

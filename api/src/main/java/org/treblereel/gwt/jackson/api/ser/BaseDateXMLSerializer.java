@@ -56,20 +56,19 @@ public abstract class BaseDateXMLSerializer<D extends Date> extends XMLSerialize
     protected void doSerialize(
         XMLWriter writer, Date value, XMLSerializationContext ctx, XMLSerializerParameters params)
         throws XMLStreamException {
+      String date;
+
+      if ((ctx.isWriteDatesAsTimestamps())) {
+        date = value.getTime() + "";
+      } else {
+        date = JacksonContextProvider.get().dateFormat().format(params, value);
+      }
+
       if (isAttribute) {
-        writer.writeAttribute(propertyName, value.getTime() + "");
+        writer.writeAttribute(propertyName, date);
         isAttribute = false;
       } else {
-        if ((ctx.isWriteDatesAsTimestamps())) {
-          writer.value(value.getTime());
-        } else {
-          String date = JacksonContextProvider.get().dateFormat().format(params, value);
-          if (null == params.getPattern()) {
-            writer.unescapeValue(date);
-          } else {
-            writer.value(date);
-          }
-        }
+        writer.value(date);
       }
     }
   }

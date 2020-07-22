@@ -48,6 +48,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
   private final XMLInputFactory xmlInputFactory;
   private final XMLIterator iterator;
   private final boolean wrapCollections;
+  private final boolean readDateAsTimestamps;
 
   private DefaultXMLDeserializationContext(
       boolean failOnUnknownProperties,
@@ -56,7 +57,8 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
       boolean wrapCollections,
       boolean useSafeEval,
       boolean readUnknownEnumValuesAsNull,
-      boolean useBrowserTimezone) {
+      boolean useBrowserTimezone,
+      boolean readDateAsTimestamps) {
     this.failOnUnknownProperties = failOnUnknownProperties;
     this.acceptSingleValueAsArray = acceptSingleValueAsArray;
     this.wrapExceptions = wrapExceptions;
@@ -65,6 +67,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
     this.wrapCollections = wrapCollections;
     this.useBrowserTimezone = useBrowserTimezone;
     this.xmlInputFactory = new WstxInputFactory();
+    this.readDateAsTimestamps = readDateAsTimestamps;
     this.iterator = new DefaultXMLIterator();
   }
 
@@ -140,6 +143,11 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
   @Override
   public boolean isWrapCollections() {
     return wrapCollections;
+  }
+
+  @Override
+  public boolean isReadDateAsTimestamps() {
+    return readDateAsTimestamps;
   }
 
   /**
@@ -255,6 +263,8 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
 
     private boolean wrapCollections = true;
 
+    private boolean readDateAsTimestamp = true;
+
     private Builder() {}
 
     /**
@@ -353,6 +363,11 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
       return this;
     }
 
+    public Builder readDateAsTimestamp(boolean readDateAsTimestamp) {
+      this.readDateAsTimestamp = readDateAsTimestamp;
+      return this;
+    }
+
     public final XMLDeserializationContext build() {
       return new DefaultXMLDeserializationContext(
           failOnUnknownProperties,
@@ -361,7 +376,8 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
           wrapCollections,
           useSafeEval,
           readUnknownEnumValuesAsNull,
-          useBrowserTimezone);
+          useBrowserTimezone,
+          readDateAsTimestamp);
     }
   }
 

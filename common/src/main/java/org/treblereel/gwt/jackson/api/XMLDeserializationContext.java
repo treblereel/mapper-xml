@@ -65,6 +65,8 @@ public interface XMLDeserializationContext extends XMLMappingContext {
 
   boolean isWrapCollections();
 
+  boolean isReadDateAsTimestamps();
+
   /**
    * newXMLReader.
    *

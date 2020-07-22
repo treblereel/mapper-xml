@@ -20,6 +20,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
 import javax.xml.stream.XMLStreamException;
+import org.treblereel.gwt.jackson.api.JacksonContextProvider;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -34,20 +35,35 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public abstract class BaseDateXMLDeserializer<D extends Date> extends XMLDeserializer<D> {
 
+  @Override
+  public D deserialize(
+      String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLDeserializationException {
+    if (ctx.isReadDateAsTimestamps()) {
+      return deserializeNumber(Long.valueOf(value), params);
+    }
+    return deserializeString(value, ctx, params);
+  }
+
   /** {@inheritDoc} */
   @Override
   public D doDeserialize(
       XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
       throws XMLStreamException {
-    return deserializeNumber(reader.nextLong(), params);
+    if (ctx.isReadDateAsTimestamps()) {
+      return deserializeNumber(Long.valueOf(reader.nextLong()), params);
+    }
+    return deserializeString(reader.nextString(), ctx, params);
   }
 
-  @Override
-  public D deserialize(
-      String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
-      throws XMLDeserializationException {
-    return deserializeString(value, ctx, params);
-  }
+  /**
+   * deserializeNumber
+   *
+   * @param millis a long.
+   * @param params a {@link XMLDeserializerParameters} object.
+   * @return a D object.
+   */
+  protected abstract D deserializeNumber(long millis, XMLDeserializerParameters params);
 
   /**
    * deserializeString
@@ -59,15 +75,6 @@ public abstract class BaseDateXMLDeserializer<D extends Date> extends XMLDeseria
    */
   protected abstract D deserializeString(
       String date, XMLDeserializationContext ctx, XMLDeserializerParameters params);
-
-  /**
-   * deserializeNumber
-   *
-   * @param millis a long.
-   * @param params a {@link XMLDeserializerParameters} object.
-   * @return a D object.
-   */
-  protected abstract D deserializeNumber(long millis, XMLDeserializerParameters params);
 
   /** Default implementation of {@link BaseDateXMLDeserializer} for {@link Date} */
   public static final class DateXMLDeserializer extends BaseDateXMLDeserializer<Date> {
@@ -82,22 +89,32 @@ public abstract class BaseDateXMLDeserializer<D extends Date> extends XMLDeseria
     }
 
     @Override
-    protected Date deserializeNumber(long millis, XMLDeserializerParameters params) {
-      if (millis == 0) {
-        return null;
+    public Date doDeserialize(
+        XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+        throws XMLStreamException {
+      if (ctx.isReadDateAsTimestamps()) {
+        return deserializeNumber(Long.valueOf(reader.nextLong()), params);
       }
-      return new Date(millis);
+      return deserializeString(reader.nextString(), ctx, params);
     }
 
     @Override
     protected Date deserializeString(
         String date, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
-      if (date == null) {
+      if (date == null || date.isEmpty()) {
         return null;
       }
-      return new Date(Long.valueOf(date));
-      // return JacksonContextProvider.get().dateFormat().parse(ctx.isUseBrowserTimezone(),
-      // params.getPattern(), null, date);
+      return JacksonContextProvider.get()
+          .dateFormat()
+          .parse(ctx.isUseBrowserTimezone(), params.getPattern(), null, date);
+    }
+
+    @Override
+    protected Date deserializeNumber(long millis, XMLDeserializerParameters params) {
+      if (millis == 0) {
+        return null;
+      }
+      return new Date(millis);
     }
   }
 
@@ -116,11 +133,6 @@ public abstract class BaseDateXMLDeserializer<D extends Date> extends XMLDeseria
     }
 
     @Override
-    protected java.sql.Date deserializeNumber(long millis, XMLDeserializerParameters params) {
-      return new java.sql.Date(millis);
-    }
-
-    @Override
     protected java.sql.Date deserializeString(
         String date, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
       if (date == null) {
@@ -130,6 +142,11 @@ public abstract class BaseDateXMLDeserializer<D extends Date> extends XMLDeseria
       // return new
       // java.sql.Date(JacksonContextProvider.get().dateFormat().parse(ctx.isUseBrowserTimezone(),
       // SQL_DATE_FORMAT, false, date).getTime());
+    }
+
+    @Override
+    protected java.sql.Date deserializeNumber(long millis, XMLDeserializerParameters params) {
+      return new java.sql.Date(millis);
     }
   }
 
@@ -146,14 +163,14 @@ public abstract class BaseDateXMLDeserializer<D extends Date> extends XMLDeseria
     }
 
     @Override
-    protected Time deserializeNumber(long millis, XMLDeserializerParameters params) {
-      return new Time(millis);
-    }
-
-    @Override
     protected Time deserializeString(
         String date, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
       return Time.valueOf(date);
+    }
+
+    @Override
+    protected Time deserializeNumber(long millis, XMLDeserializerParameters params) {
+      return new Time(millis);
     }
   }
 
@@ -170,11 +187,6 @@ public abstract class BaseDateXMLDeserializer<D extends Date> extends XMLDeseria
     }
 
     @Override
-    protected Timestamp deserializeNumber(long millis, XMLDeserializerParameters params) {
-      return new Timestamp(millis);
-    }
-
-    @Override
     protected Timestamp deserializeString(
         String date, XMLDeserializationContext ctx, XMLDeserializerParameters params) {
       return new Timestamp(
@@ -182,6 +194,11 @@ public abstract class BaseDateXMLDeserializer<D extends Date> extends XMLDeseria
               .dateFormat()
               .parse(ctx.isUseBrowserTimezone(), params.getPattern(), null, date)
               .getTime());
+    }
+
+    @Override
+    protected Timestamp deserializeNumber(long millis, XMLDeserializerParameters params) {
+      return new Timestamp(millis);
     }
   }
 }

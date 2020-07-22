@@ -67,6 +67,9 @@ public abstract class HasDeserializerAndParameters<V, S extends XMLDeserializer<
   }
 
   public V deserialize(String value, XMLDeserializationContext ctx) {
+    if (value == null || value.isEmpty()) {
+      return null;
+    }
     return getDeserializer(null).deserialize(value, ctx, getParameters());
   }
 }

@@ -159,7 +159,8 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T>
             deserializers.get(getPropertyName(reader.getAttributeName(i)));
         if (property != null) {
           attrNode = true;
-          property.deserialize(reader.getAttributeValue(i), instance, ctx);
+          if (reader.getAttributeValue(i) != null)
+            property.deserialize(reader.getAttributeValue(i), instance, ctx);
         }
       }
     }

@@ -72,7 +72,8 @@ public final class DefaultDateFormat implements JacksonContext.DateFormat {
    * <p>Format a date using {@link #DATE_FORMAT_STR_ISO8601} and {@link #UTC_TIMEZONE}
    */
   public String format(Date date) {
-    return format(DefaultDateFormat.DATE_FORMAT_STR_ISO8601, DefaultDateFormat.UTC_TIMEZONE, date);
+    return format(
+        DefaultDateFormat.DATE_FORMAT_STR_ISO8601_Z, DefaultDateFormat.UTC_TIMEZONE, date);
   }
 
   /**
@@ -84,7 +85,7 @@ public final class DefaultDateFormat implements JacksonContext.DateFormat {
   public String format(XMLSerializerParameters params, Date date) {
     DateTimeFormatter format;
     if (null == params.getPattern()) {
-      format = DefaultDateFormat.DATE_FORMAT_STR_ISO8601;
+      format = DefaultDateFormat.DATE_FORMAT_STR_ISO8601_Z;
     } else {
       format = DateTimeFormatter.ofPattern(params.getPattern());
     }

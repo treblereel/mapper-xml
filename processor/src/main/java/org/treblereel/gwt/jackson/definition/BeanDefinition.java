@@ -31,8 +31,8 @@ import java.util.stream.Stream;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.MirroredTypesException;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -45,6 +45,7 @@ import javax.xml.bind.annotation.XmlSchema;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.api.annotation.TargetNamespace;
 import org.treblereel.gwt.jackson.api.annotation.XmlXsiType;
 import org.treblereel.gwt.jackson.api.utils.Pair;
@@ -137,11 +138,13 @@ public class BeanDefinition extends Definition {
         .map(
             field -> {
               PropertyDefinition propertyDefinition = new PropertyDefinition(field, context);
-              if (field.asType().getKind().equals(TypeKind.TYPEVAR)) {
-                propertyDefinition.setBean(
+              if (TypeUtils.hasTypeParameter(field.asType())) {
+                TypeMirror typeMirror =
                     context
+                        .getProcessingEnv()
                         .getTypeUtils()
-                        .getTypeArgumentByName(element.getSuperclass(), field.asType()));
+                        .asMemberOf((DeclaredType) element.asType(), field);
+                propertyDefinition.setBean(typeMirror);
               }
               return propertyDefinition;
             });

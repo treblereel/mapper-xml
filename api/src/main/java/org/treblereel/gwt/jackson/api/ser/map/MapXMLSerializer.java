@@ -119,12 +119,14 @@ public class MapXMLSerializer<M extends Map<K, V>, K, V> extends XMLSerializer<M
         keySerializer
             .apply(entry.getKey().getClass())
             .setPropertyName(keyName)
+            .setParent(this)
             .serialize(writer, entry.getKey(), ctx, params, true);
 
         writer.unescapeName(valueName);
         valueSerializer
             .apply(entry.getValue().getClass())
             .setPropertyName(valueName)
+            .setParent(this)
             .serialize(writer, entry.getValue(), ctx, params, true);
 
         writer.endObject();

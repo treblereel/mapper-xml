@@ -361,7 +361,6 @@ public class SerializerGenerator extends AbstractGenerator {
 
     ClassOrInterfaceType interfaceType =
         new ClassOrInterfaceType().setName(TypeUtils.wrapperType(field.getBean()));
-    addTypeArguments(field.getBean(), interfaceType);
 
     method.setType(interfaceType);
     method

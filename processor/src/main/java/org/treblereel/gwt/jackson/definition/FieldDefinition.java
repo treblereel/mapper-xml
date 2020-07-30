@@ -59,10 +59,12 @@ public abstract class FieldDefinition extends Definition {
 
   protected Expression generateXMLDeserializerFactory(
       PropertyDefinition field, TypeMirror type, String typeArg, CompilationUnit cu) {
-    return generateXMLDeserializerFactory(type, typeArg, cu, maybePolymorphicType(field, type));
+    return generateXMLDeserializerFactory(
+        field, type, typeArg, cu, maybePolymorphicType(field, type));
   }
 
   protected Expression generateXMLDeserializerFactory(
+      PropertyDefinition field,
       TypeMirror type,
       String typeArg,
       CompilationUnit cu,
@@ -118,10 +120,18 @@ public abstract class FieldDefinition extends Definition {
     if (MoreTypes.asTypeElement(type)
         .getModifiers()
         .contains(javax.lang.model.element.Modifier.ABSTRACT)) {
-      ClassOrInterfaceType instanceBuilderType =
-          new ClassOrInterfaceType().setName(Error.class.getSimpleName());
-      expression =
-          new ThrowStmt().setExpression(new ObjectCreationExpr().setType(instanceBuilderType));
+      if (context
+          .getTypeUtils()
+          .isSimpleType(context.getProcessingEnv().getTypeUtils().erasure(type))) {
+        expression =
+            new ReturnStmt(
+                propertyDefinitionFactory.getFieldDefinition(type).getFieldDeserializer(field, cu));
+      } else {
+        ClassOrInterfaceType instanceBuilderType =
+            new ClassOrInterfaceType().setName(Error.class.getSimpleName());
+        expression =
+            new ThrowStmt().setExpression(new ObjectCreationExpr().setType(instanceBuilderType));
+      }
     } else {
       expression =
           new ReturnStmt(
@@ -131,35 +141,37 @@ public abstract class FieldDefinition extends Definition {
     return func;
   }
 
+  public abstract Expression getFieldDeserializer(PropertyDefinition field, CompilationUnit cu);
+
   protected Pair<Class, Map<String, TypeMirror>> maybePolymorphicType(
       PropertyDefinition field, TypeMirror type) {
-    XmlElements xmlElements = field.getProperty().getAnnotation(XmlElements.class);
-    if (xmlElements != null) {
-      return new Pair<>(
-          XmlElements.class,
-          TypeUtils.getXmlElements(context, field.getProperty(), XmlElements.class));
-    }
-    XmlElementRefs xmlElementRefs = field.getProperty().getAnnotation(XmlElementRefs.class);
-    if (xmlElementRefs != null) {
-      return new Pair<>(
-          XmlElementRefs.class,
-          TypeUtils.getXmlElements(context, field.getProperty(), XmlElementRefs.class));
-    }
-    XmlSeeAlso xmlSeeAlso = MoreTypes.asTypeElement(type).getAnnotation(XmlSeeAlso.class);
-    if (xmlSeeAlso != null) {
-      Map<String, TypeMirror> result = new HashMap<>();
-      for (TypeElement typeElement : getXmlSeeAlso(xmlSeeAlso)) {
-        result.put(
-            context.getBeanDefinition(typeElement.asType()).getXmlRootElement(),
-            typeElement.asType());
+    if (field != null && field.getProperty() != null) {
+      XmlElements xmlElements = field.getProperty().getAnnotation(XmlElements.class);
+      if (xmlElements != null) {
+        return new Pair<>(
+            XmlElements.class,
+            TypeUtils.getXmlElements(context, field.getProperty(), XmlElements.class));
       }
+      XmlElementRefs xmlElementRefs = field.getProperty().getAnnotation(XmlElementRefs.class);
+      if (xmlElementRefs != null) {
+        return new Pair<>(
+            XmlElementRefs.class,
+            TypeUtils.getXmlElements(context, field.getProperty(), XmlElementRefs.class));
+      }
+      XmlSeeAlso xmlSeeAlso = MoreTypes.asTypeElement(type).getAnnotation(XmlSeeAlso.class);
+      if (xmlSeeAlso != null) {
+        Map<String, TypeMirror> result = new HashMap<>();
+        for (TypeElement typeElement : getXmlSeeAlso(xmlSeeAlso)) {
+          result.put(
+              context.getBeanDefinition(typeElement.asType()).getXmlRootElement(),
+              typeElement.asType());
+        }
 
-      return new Pair<>(XmlSeeAlso.class, result);
+        return new Pair<>(XmlSeeAlso.class, result);
+      }
     }
     return new Pair<>(Class.class, Collections.emptyMap());
   }
-
-  public abstract Expression getFieldDeserializer(PropertyDefinition field, CompilationUnit cu);
 
   private TypeElement[] getXmlSeeAlso(XmlSeeAlso xmlSeeAlso) {
     try {
@@ -206,10 +218,18 @@ public abstract class FieldDefinition extends Definition {
     if (MoreTypes.asTypeElement(type)
         .getModifiers()
         .contains(javax.lang.model.element.Modifier.ABSTRACT)) {
-      ClassOrInterfaceType instanceBuilderType =
-          new ClassOrInterfaceType().setName(Error.class.getSimpleName());
-      defaultReturn =
-          new ThrowStmt().setExpression(new ObjectCreationExpr().setType(instanceBuilderType));
+      if (context
+          .getTypeUtils()
+          .isSimpleType(context.getProcessingEnv().getTypeUtils().erasure(type))) {
+        defaultReturn =
+            new ReturnStmt(
+                propertyDefinitionFactory.getFieldDefinition(type).getFieldSerializer(field, cu));
+      } else {
+        ClassOrInterfaceType instanceBuilderType =
+            new ClassOrInterfaceType().setName(Error.class.getSimpleName());
+        defaultReturn =
+            new ThrowStmt().setExpression(new ObjectCreationExpr().setType(instanceBuilderType));
+      }
     } else {
       defaultReturn =
           new ReturnStmt(

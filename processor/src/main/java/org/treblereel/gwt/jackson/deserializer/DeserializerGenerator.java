@@ -34,11 +34,9 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
-import com.github.javaparser.ast.type.Type;
 import com.google.auto.common.MoreTypes;
 import java.util.Map;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.api.JacksonContextProvider;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
@@ -251,18 +249,7 @@ public class DeserializerGenerator extends AbstractGenerator {
   }
 
   private ClassOrInterfaceType getWrappedType(PropertyDefinition field) {
-    ClassOrInterfaceType typeArg =
-        new ClassOrInterfaceType().setName(TypeUtils.wrapperType(field.getBean()));
-    if (field.getBean() instanceof DeclaredType) {
-      if (!((DeclaredType) field.getBean()).getTypeArguments().isEmpty()) {
-        NodeList<Type> types = new NodeList<>();
-        ((DeclaredType) field.getBean())
-            .getTypeArguments()
-            .forEach(t -> types.add(new ClassOrInterfaceType().setName(TypeUtils.wrapperType(t))));
-        typeArg.setTypeArguments(types);
-      }
-    }
-    return typeArg;
+    return new ClassOrInterfaceType().setName(TypeUtils.wrapperType(field.getBean()));
   }
 
   private void addNewDeserializer(

@@ -34,7 +34,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSerializer<C> {
 
   private final Function<Class, XMLSerializer<T>> serializer;
-  protected final String propertyName;
 
   /**
    * Constructor for CollectionXMLSerializer.

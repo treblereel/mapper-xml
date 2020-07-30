@@ -46,7 +46,8 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
     cu.addImport(ArrayXMLDeserializer.class);
 
     ArrayType array = (ArrayType) bean;
-    String arrayType = array.getComponentType().toString();
+    TypeMirror componentType = array.getComponentType();
+    String arrayType = componentType.toString();
     if (array.getComponentType().getKind().isPrimitive()) {
       arrayType =
           context
@@ -100,7 +101,12 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
             generateXMLDeserializerFactory(
                 field, array.getComponentType(), array.getComponentType().toString(), cu))
         .addArgument(
-            new CastExpr().setType(typeOf).setExpression(new NameExpr(arrayType + "[]::new")));
+            new CastExpr()
+                .setType(typeOf)
+                .setExpression(
+                    new NameExpr(
+                        context.getProcessingEnv().getTypeUtils().erasure(componentType)
+                            + "[]::new")));
   }
 
   @Override

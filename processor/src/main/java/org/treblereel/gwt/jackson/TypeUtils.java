@@ -115,7 +115,7 @@ public class TypeUtils {
       ArrayType arrayType = (ArrayType) type;
       return arrayType.toString();
     } else {
-      return MoreTypes.asElement(type).toString();
+      return type.toString();
     }
   }
 
@@ -499,22 +499,6 @@ public class TypeUtils {
           }
         },
         null);
-  }
-
-  public TypeMirror getTypeArgumentByName(TypeMirror superType, TypeMirror name) {
-    TypeElement superElement =
-        elements.getTypeElement(((DeclaredType) superType).asElement().toString());
-
-    List<String> params =
-        superElement.getTypeParameters().stream()
-            .map(param -> param.getSimpleName().toString())
-            .collect(Collectors.toList());
-    List<TypeMirror> typeArguments =
-        (List<TypeMirror>) ((DeclaredType) superType).getTypeArguments();
-    if (params.contains(name.toString())) {
-      return typeArguments.get(params.indexOf(name.toString()));
-    }
-    return null;
   }
 
   /**

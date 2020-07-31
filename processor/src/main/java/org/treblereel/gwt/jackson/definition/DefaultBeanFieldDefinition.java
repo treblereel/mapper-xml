@@ -49,7 +49,7 @@ public class DefaultBeanFieldDefinition extends FieldDefinition {
           pair.key.equals(XmlElementRefs.class) ? "xsiTagChooser" : "xsiTypeChooser";
 
       return new MethodCallExpr(
-              generateXMLDeserializerFactory(bean, bean.toString(), cu, pair), "apply")
+              generateXMLDeserializerFactory(field, bean, bean.toString(), cu, pair), "apply")
           .addArgument(
               new MethodCallExpr(new NameExpr(inheritance), "apply").addArgument("reader"));
     }

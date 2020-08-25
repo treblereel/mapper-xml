@@ -17,6 +17,8 @@ package org.treblereel.gwt.jackson.client.tests.annotations.handler;
 
 import java.util.Objects;
 import org.treblereel.gwt.jackson.api.annotation.XmlTypeAdapter;
+import org.treblereel.gwt.jackson.client.tests.annotations.handler.marshaller.IdDemarshaller;
+import org.treblereel.gwt.jackson.client.tests.annotations.handler.marshaller.IdMarshaller;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 5/19/20 */
 @XmlTypeAdapter(

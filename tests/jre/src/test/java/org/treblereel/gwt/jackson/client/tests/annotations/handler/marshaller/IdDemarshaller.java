@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.treblereel.gwt.jackson.client.tests.annotations.handler;
+package org.treblereel.gwt.jackson.client.tests.annotations.handler.marshaller;
 
 import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
@@ -21,6 +21,7 @@ import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
 import org.treblereel.gwt.jackson.api.custom.CustomXMLDeserializer;
 import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
+import org.treblereel.gwt.jackson.client.tests.annotations.handler.Id;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 5/19/20 */
 public class IdDemarshaller extends CustomXMLDeserializer<Id> {

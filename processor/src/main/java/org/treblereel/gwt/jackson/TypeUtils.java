@@ -757,6 +757,9 @@ public class TypeUtils {
    * @return fully-qualified serializer class name
    */
   public String canonicalSerializerName(TypeMirror beanType) {
+    if (typeRegistry.containsSerializer(beanType.toString())) {
+      return typeRegistry.getCustomSerializer(beanType).toString();
+    }
     return getPackage(beanType) + "." + serializerName(beanType);
   }
 
@@ -791,6 +794,9 @@ public class TypeUtils {
    * @return fully qualified deserializer name
    */
   public String canonicalDeserializerName(TypeMirror beanType) {
+    if (typeRegistry.containsDeserializer(beanType.toString())) {
+      return typeRegistry.getCustomDeserializer(beanType).toString();
+    }
     return getPackage(beanType) + "." + deserializerName(beanType);
   }
 

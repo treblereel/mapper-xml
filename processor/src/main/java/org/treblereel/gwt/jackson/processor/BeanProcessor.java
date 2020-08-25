@@ -76,8 +76,9 @@ public class BeanProcessor {
   }
 
   private void processField(VariableElement field) {
-    checkField(field);
-    checkTypeAndAdd(field.asType());
+    if (checkField(field)) {
+      checkTypeAndAdd(field.asType());
+    }
   }
 
   private void checkTypeAndAdd(TypeMirror type) {

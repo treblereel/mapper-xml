@@ -911,10 +911,10 @@ public class TypeUtils {
   }
 
   public ExecutableElement getGetter(VariableElement variable) {
-    String method = compileGetterMethodName(variable);
+    List<String> method = compileGetterMethodName(variable);
     return MoreElements.asType(variable.getEnclosingElement()).getEnclosedElements().stream()
         .filter(e -> e.getKind().equals(ElementKind.METHOD))
-        .filter(e -> e.toString().equals(method))
+        .filter(e -> method.contains(e.toString()))
         .filter(e -> !e.getModifiers().contains(Modifier.PRIVATE))
         .filter(e -> !e.getModifiers().contains(Modifier.STATIC))
         .map(MoreElements::asExecutable)
@@ -924,9 +924,15 @@ public class TypeUtils {
         .orElse(null);
   }
 
-  public String compileGetterMethodName(VariableElement variable) {
+  public List<String> compileGetterMethodName(VariableElement variable) {
     String varName = variable.getSimpleName().toString();
-    return (isBoolean(variable) ? "is" : "get") + StringUtils.capitalize(varName) + "()";
+    boolean isBoolean = isBoolean(variable);
+    List<String> result = new ArrayList<>();
+    result.add("get" + StringUtils.capitalize(varName) + "()");
+    if (isBoolean) {
+      result.add("is" + StringUtils.capitalize(varName) + "()");
+    }
+    return result;
   }
 
   public boolean isBoolean(VariableElement variable) {

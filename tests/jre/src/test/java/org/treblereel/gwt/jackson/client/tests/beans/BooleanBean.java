@@ -24,7 +24,7 @@ public class BooleanBean {
 
   private boolean check;
 
-  public boolean isCheck() {
+  public boolean getCheck() {
     return check;
   }
 
@@ -41,11 +41,11 @@ public class BooleanBean {
       return false;
     }
     BooleanBean that = (BooleanBean) o;
-    return isCheck() == that.isCheck();
+    return getCheck() == that.getCheck();
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(isCheck());
+    return Objects.hash(getCheck());
   }
 }

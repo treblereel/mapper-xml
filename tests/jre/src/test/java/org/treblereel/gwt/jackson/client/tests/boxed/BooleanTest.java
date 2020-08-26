@@ -32,11 +32,11 @@ public class BooleanTest {
         BooleanBean_MapperImpl.INSTANCE
             .read(
                 "<?xml version='1.0' encoding='UTF-8'?><BooleanBean><check>true</check></BooleanBean>")
-            .isCheck());
+            .getCheck());
     assertFalse(
         BooleanBean_MapperImpl.INSTANCE
             .read(
                 "<?xml version='1.0' encoding='UTF-8'?><BooleanBean><check>false</check></BooleanBean>")
-            .isCheck());
+            .getCheck());
   }
 }

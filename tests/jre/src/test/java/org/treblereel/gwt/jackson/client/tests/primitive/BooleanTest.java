@@ -51,8 +51,8 @@ public class BooleanTest extends GWTTestCase {
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {
-    assertTrue(mapper.read(XML_TRUE).isCheck());
-    assertFalse(mapper.read(XML_FALSE).isCheck());
+    assertTrue(mapper.read(XML_TRUE).getCheck());
+    assertFalse(mapper.read(XML_FALSE).getCheck());
     BooleanBean test = new BooleanBean();
     test.setCheck(true);
     assertEquals(

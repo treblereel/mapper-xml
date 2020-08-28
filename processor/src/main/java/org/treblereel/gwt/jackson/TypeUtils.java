@@ -452,6 +452,10 @@ public class TypeUtils {
                                     }
                                   }.visit(annotationValue, map);
                                 }
+                                if (z.size() == 1) {
+                                  return null;
+                                }
+
                                 return z.get(1);
                               }
                             }.visit(a2, result)));

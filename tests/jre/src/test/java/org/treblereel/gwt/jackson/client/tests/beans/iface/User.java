@@ -57,6 +57,12 @@ public class User implements IUser {
   })
   private IAddress iAddressRef;
 
+  @XmlElementRefs({@XmlElementRef(name = "_Address3", type = Address3.class)})
+  private List<IAddress> iAddressOneElm;
+
+  @XmlElements({@XmlElement(name = "_Address3", type = Address3.class)})
+  private List<IAddress> iAddress2OneElm;
+
   public IAddress getIAddressRef() {
     return iAddressRef;
   }
@@ -81,6 +87,8 @@ public class User implements IUser {
     User user1 = (User) o;
     return Objects.equals(getUser(), user1.getUser())
         && Objects.equals(iAddress, user1.iAddress)
+        && Objects.equals(iAddressOneElm, user1.iAddressOneElm)
+        && Objects.equals(iAddress2OneElm, user1.iAddress2OneElm)
         && Objects.equals(iAddressRef, user1.iAddressRef);
   }
 
@@ -118,5 +126,21 @@ public class User implements IUser {
 
   public void setIAddressListRef(List<IAddress> iAddressListRef) {
     this.iAddressListRef = iAddressListRef;
+  }
+
+  public List<IAddress> getIAddressOneElm() {
+    return iAddressOneElm;
+  }
+
+  public void setIAddressOneElm(List<IAddress> iAddressOneElm) {
+    this.iAddressOneElm = iAddressOneElm;
+  }
+
+  public List<IAddress> getIAddress2OneElm() {
+    return iAddress2OneElm;
+  }
+
+  public void setIAddress2OneElm(List<IAddress> iAddress2OneElm) {
+    this.iAddress2OneElm = iAddress2OneElm;
   }
 }

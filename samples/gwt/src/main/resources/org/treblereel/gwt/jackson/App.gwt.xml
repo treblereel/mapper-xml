@@ -2,7 +2,6 @@
 <module rename-to='App'>
   <inherits name='com.google.gwt.user.User'/>
 
-  <inherits name='org.treblereel.gwt.jackson.Gwt'/>
   <inherits name="org.treblereel.gwt.jackson.Jackson"/>
 
   <entry-point class='org.treblereel.gwt.jackson.client.App'/>

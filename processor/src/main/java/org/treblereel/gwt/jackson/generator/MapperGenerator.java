@@ -111,6 +111,15 @@ public class MapperGenerator extends AbstractGenerator {
   }
 
   private void newSerializer(BeanDefinition type) {
+    if (context.getTypeRegistry().containsSerializer(getTypeName(type))) {
+      TypeElement customSerializer =
+          context.getTypeRegistry().getCustomSerializer(getTypeName(type));
+      if (MoreElements.getPackage(customSerializer)
+          .equals(MoreElements.getPackage(type.getElement()))) {
+        cu.addImport(customSerializer.getQualifiedName().toString());
+      }
+    }
+
     ClassOrInterfaceType returnType =
         new ClassOrInterfaceType()
             .setName(XMLSerializer.class.getSimpleName())
@@ -134,6 +143,15 @@ public class MapperGenerator extends AbstractGenerator {
   }
 
   private void addDeserializer(BeanDefinition type) {
+    if (context.getTypeRegistry().containsDeserializer(getTypeName(type))) {
+      TypeElement customDeserializer =
+          context.getTypeRegistry().getCustomDeserializer(getTypeName(type));
+      if (MoreElements.getPackage(customDeserializer)
+          .equals(MoreElements.getPackage(type.getElement()))) {
+        cu.addImport(customDeserializer.getQualifiedName().toString());
+      }
+    }
+
     ClassOrInterfaceType returnType =
         new ClassOrInterfaceType()
             .setName(XMLDeserializer.class.getSimpleName())

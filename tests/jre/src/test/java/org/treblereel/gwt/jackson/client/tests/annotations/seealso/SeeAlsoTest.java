@@ -41,7 +41,7 @@ public class SeeAlsoTest {
   private final String XML_XSI =
       "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoAnimalXsiTypeHolder xmlns=\"http://www.omg.org/bpmn20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><first xsi:type=\"Cat\"><nickname>Cat</nickname></first><second xsi:type=\"Dog\"><nickname>Dog</nickname></second><animal><name>Animal</name></animal></SeeAlsoAnimalXsiTypeHolder>";
   private final String XML_COLLECTION_XSI =
-      "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoAnimalCollection><animals><Cat xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></Cat><Dog xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></Dog><Animal><name>Animal</name></Animal></animals><list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></list><list><name>Animal</name></list></list><map><entry><key xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></key><value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></value></entry><entry><key xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></key><value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></value></entry><entry><key><name>Animal</name></key><value><name>Animal</name></value></entry></map></SeeAlsoAnimalCollection>";
+      "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoAnimalCollection><animals><Cat xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></Cat><Dog xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></Dog><Animal><name>Animal</name></Animal></animals><list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></list><list><name>Animal</name></list></list><map><entry><key xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></key><value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></value></entry><entry><key xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></key><value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></value></entry><entry><key><name>Animal</name></key><value><name>Animal</name></value></entry></map><vehicle xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Car\"><name>CAR</name></vehicle></SeeAlsoAnimalCollection>";
 
   @Test
   public void testFoo() throws XMLStreamException {
@@ -126,7 +126,10 @@ public class SeeAlsoTest {
     collection.setMap(map);
     collection.setAnimals(animals);
 
+    collection.setVehicle(new Car("CAR"));
+
     String result = mapper.write(collection);
+    // System.out.println("result \n " + result);
     assertEquals(XML_COLLECTION_XSI, result);
     assertEquals(collection, mapper.read(mapper.write(collection)));
   }
@@ -255,6 +258,9 @@ public class SeeAlsoTest {
     private List<Animal> list;
     private Map<Animal, Animal> map;
 
+    private Vehicle vehicle;
+    private List<Vehicle> vehicles;
+
     public List<Animal> getList() {
       return list;
     }
@@ -279,24 +285,49 @@ public class SeeAlsoTest {
       this.map = map;
     }
 
+    public Vehicle getVehicle() {
+      return vehicle;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+      this.vehicle = vehicle;
+    }
+
+    public List<Vehicle> getVehicles() {
+      return vehicles;
+    }
+
+    public void setVehicles(List<Vehicle> vehicles) {
+      this.vehicles = vehicles;
+    }
+
     @Override
     public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (!(o instanceof SeeAlsoAnimalCollection)) {
-        return false;
-      }
+      if (this == o) return true;
+      if (!(o instanceof SeeAlsoAnimalCollection)) return false;
+
       SeeAlsoAnimalCollection that = (SeeAlsoAnimalCollection) o;
-      return Arrays.equals(getAnimals(), that.getAnimals())
-          && Objects.equals(getList(), that.getList())
-          && Objects.equals(getMap(), that.getMap());
+
+      // Probably incorrect - comparing Object[] arrays with Arrays.equals
+      if (!Arrays.equals(getAnimals(), that.getAnimals())) return false;
+      if (getList() != null ? !getList().equals(that.getList()) : that.getList() != null)
+        return false;
+      if (getMap() != null ? !getMap().equals(that.getMap()) : that.getMap() != null) return false;
+      if (getVehicle() != null
+          ? !getVehicle().equals(that.getVehicle())
+          : that.getVehicle() != null) return false;
+      return getVehicles() != null
+          ? getVehicles().equals(that.getVehicles())
+          : that.getVehicles() == null;
     }
 
     @Override
     public int hashCode() {
-      int result = Objects.hash(getList(), getMap());
-      result = 31 * result + Arrays.hashCode(getAnimals());
+      int result = Arrays.hashCode(getAnimals());
+      result = 31 * result + (getList() != null ? getList().hashCode() : 0);
+      result = 31 * result + (getMap() != null ? getMap().hashCode() : 0);
+      result = 31 * result + (getVehicle() != null ? getVehicle().hashCode() : 0);
+      result = 31 * result + (getVehicles() != null ? getVehicles().hashCode() : 0);
       return result;
     }
   }

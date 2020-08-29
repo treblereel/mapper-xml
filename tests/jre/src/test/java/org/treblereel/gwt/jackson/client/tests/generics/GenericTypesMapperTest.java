@@ -116,7 +116,7 @@ public class GenericTypesMapperTest {
     object.genericMap = new HashMap<>();
     object.genericMap.put("key", Arrays.asList(1, 2, 3));
 
-    System.out.println("XML \n " + GENERICHILDOFGENERICOBJECTMAPPER.write(object));
+    // System.out.println("XML \n " + GENERICHILDOFGENERICOBJECTMAPPER.write(object));
 
     assertEquals(
         GENERICHILDOFGENERICOBJECTMAPPER_XML, GENERICHILDOFGENERICOBJECTMAPPER.write(object));

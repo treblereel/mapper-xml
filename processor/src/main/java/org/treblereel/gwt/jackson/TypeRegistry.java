@@ -792,7 +792,7 @@ public final class TypeRegistry {
    * @return a {@link TypeElement} object.
    */
   public TypeElement getCustomSerializer(TypeMirror typeMirror) {
-    return getCustomSerializer(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+    return getCustomSerializer(typeMirror.toString());
   }
 
   /**
@@ -825,7 +825,7 @@ public final class TypeRegistry {
    * @return a {@link TypeElement} object.
    */
   public TypeElement getCustomDeserializer(TypeMirror typeMirror) {
-    return getCustomDeserializer(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+    return getCustomDeserializer(typeMirror.toString());
   }
 
   /**
@@ -948,7 +948,7 @@ public final class TypeRegistry {
    * @return a boolean.
    */
   public boolean containsSerializer(TypeMirror typeMirror) {
-    return containsSerializer(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+    return containsSerializer(typeMirror.toString());
   }
 
   /**
@@ -958,7 +958,7 @@ public final class TypeRegistry {
    * @return a boolean.
    */
   public boolean containsDeserializer(TypeMirror typeMirror) {
-    return containsDeserializer(context.getTypeUtils().stringifyTypeWithPackage(typeMirror));
+    return containsDeserializer(typeMirror.toString());
   }
 
   private static class TypeSerializerNotFoundException extends RuntimeException {

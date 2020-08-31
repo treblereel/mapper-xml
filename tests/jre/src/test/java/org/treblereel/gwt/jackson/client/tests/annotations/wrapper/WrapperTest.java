@@ -35,7 +35,7 @@ public class WrapperTest {
   WrapperTest_Foo_MapperImpl mapper = WrapperTest_Foo_MapperImpl.INSTANCE;
 
   private static final String XML =
-      "<?xml version='1.0' encoding='UTF-8'?><my-foo><stuff><stuff><stuff><name>AAAA</name></stuff><stuff><name>BBBB</name></stuff><stuff><name>CCCC</name></stuff></stuff></stuff><wrapper><stuff2><stuff2><name>AAAA</name></stuff2><stuff2><name>BBBB</name></stuff2><stuff2><name>CCCC</name></stuff2></stuff2></wrapper><wrapper_root><Root><test>ROOT</test></Root></wrapper_root></my-foo>";
+      "<?xml version='1.0' encoding='UTF-8'?><my-foo><ZZZ><stuff><stuff><name>AAAA</name></stuff><stuff><name>BBBB</name></stuff><stuff><name>CCCC</name></stuff></stuff></ZZZ><wrapper><stuff2><stuff2><name>AAAA</name></stuff2><stuff2><name>BBBB</name></stuff2><stuff2><name>CCCC</name></stuff2></stuff2></wrapper><wrapper_root><Root xmlns=\"ololo.org\"><test>ROOT</test></Root></wrapper_root></my-foo>";
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {
@@ -49,6 +49,8 @@ public class WrapperTest {
     test.setStuff(children);
     test.setStuff2(children);
 
+    System.out.println("RESULT " + mapper.write(test));
+
     assertEquals(XML, mapper.write(test));
     assertEquals(test, mapper.read(mapper.write(test)));
   }
@@ -57,7 +59,8 @@ public class WrapperTest {
   @XmlRootElement(name = "my-foo")
   public static class Foo {
 
-    @XmlElementWrapper private List<Child> stuff;
+    @XmlElementWrapper(name = "ZZZ")
+    private List<Child> stuff;
 
     @XmlElementWrapper(name = "wrapper")
     private List<Child> stuff2;

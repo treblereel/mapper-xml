@@ -38,7 +38,7 @@ public class XmlElementWrapperSerializer<T> extends XMLSerializer<T> {
       XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters params)
       throws XMLStreamException {
     writer.beginObject(name);
-    internalXMLSerializer.serialize(writer, value, ctx, params);
+    internalXMLSerializer.setParent(this).serialize(writer, value, ctx, params);
     writer.endObject();
   }
 

@@ -79,10 +79,14 @@ public class ArrayXMLSerializer<T> extends XMLSerializer<T[]> {
       return;
     }
 
-    writer.beginObject(propertyName);
+    if (ctx.isWrapCollections()) {
+      writer.beginObject(propertyName);
+    }
     for (T value : values) {
       serializer.apply(value.getClass()).serialize(writer, value, ctx, params);
     }
-    writer.endObject();
+    if (ctx.isWrapCollections()) {
+      writer.endObject();
+    }
   }
 }

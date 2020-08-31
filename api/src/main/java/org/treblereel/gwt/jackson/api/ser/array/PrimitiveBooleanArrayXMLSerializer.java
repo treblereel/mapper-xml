@@ -43,12 +43,6 @@ public class PrimitiveBooleanArrayXMLSerializer extends BasicArrayXMLSerializer<
 
   /** {@inheritDoc} */
   @Override
-  protected boolean isEmpty(boolean[] value) {
-    return null == value || value.length == 0;
-  }
-
-  /** {@inheritDoc} */
-  @Override
   public void doSerialize(
       XMLWriter writer,
       boolean[] values,
@@ -60,10 +54,20 @@ public class PrimitiveBooleanArrayXMLSerializer extends BasicArrayXMLSerializer<
       return;
     }
 
-    writer.beginObject(propertyName);
+    if (ctx.isWrapCollections()) {
+      writer.beginObject(propertyName);
+    }
     for (boolean value : values) {
       serializer.doSerialize(writer, value, ctx, params);
     }
-    writer.endObject();
+    if (ctx.isWrapCollections()) {
+      writer.endObject();
+    }
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  protected boolean isEmpty(boolean[] value) {
+    return null == value || value.length == 0;
   }
 }

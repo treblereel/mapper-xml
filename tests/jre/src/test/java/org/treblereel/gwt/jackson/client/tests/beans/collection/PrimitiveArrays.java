@@ -125,21 +125,20 @@ public class PrimitiveArrays {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof PrimitiveArrays)) {
-      return false;
-    }
+    if (this == o) return true;
+    if (!(o instanceof PrimitiveArrays)) return false;
+
     PrimitiveArrays that = (PrimitiveArrays) o;
-    return Arrays.equals(getStrings(), that.getStrings())
-        && Arrays.equals(getBooleans(), that.getBooleans())
-        && Arrays.equals(getChars(), that.getChars())
-        && Arrays.equals(getBytes(), that.getBytes())
-        && Arrays.equals(getDoubles(), that.getDoubles())
-        && Arrays.equals(getInts(), that.getInts())
-        && Arrays.equals(getLongs(), that.getLongs())
-        && Arrays.equals(getShorts(), that.getShorts());
+
+    // Probably incorrect - comparing Object[] arrays with Arrays.equals
+    if (!Arrays.equals(getStrings(), that.getStrings())) return false;
+    if (!Arrays.equals(getBooleans(), that.getBooleans())) return false;
+    if (!Arrays.equals(getChars(), that.getChars())) return false;
+    if (!Arrays.equals(getBytes(), that.getBytes())) return false;
+    if (!Arrays.equals(getDoubles(), that.getDoubles())) return false;
+    if (!Arrays.equals(getInts(), that.getInts())) return false;
+    if (!Arrays.equals(getLongs(), that.getLongs())) return false;
+    return Arrays.equals(getShorts(), that.getShorts());
   }
 
   @Override
@@ -153,5 +152,27 @@ public class PrimitiveArrays {
     result = 31 * result + Arrays.hashCode(getLongs());
     result = 31 * result + Arrays.hashCode(getShorts());
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return "PrimitiveArrays{"
+        + "\nstrings="
+        + Arrays.toString(strings)
+        + ",\n booleans="
+        + Arrays.toString(booleans)
+        + ",\n chars="
+        + Arrays.toString(chars)
+        + ",\n bytes="
+        + Arrays.toString(bytes)
+        + ",\n doubles="
+        + Arrays.toString(doubles)
+        + ",\n ints="
+        + Arrays.toString(ints)
+        + ",\n longs="
+        + Arrays.toString(longs)
+        + ",\n shorts="
+        + Arrays.toString(shorts)
+        + '}';
   }
 }

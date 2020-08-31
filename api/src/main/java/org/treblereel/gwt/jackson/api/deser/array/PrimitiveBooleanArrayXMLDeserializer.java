@@ -32,16 +32,13 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public class PrimitiveBooleanArrayXMLDeserializer extends AbstractArrayXMLDeserializer<boolean[]> {
 
-  private static final PrimitiveBooleanArrayXMLDeserializer INSTANCE =
-      new PrimitiveBooleanArrayXMLDeserializer();
-
   /**
    * getInstance
    *
    * @return an instance of {@link PrimitiveBooleanArrayXMLDeserializer}
    */
   public static PrimitiveBooleanArrayXMLDeserializer getInstance() {
-    return INSTANCE;
+    return new PrimitiveBooleanArrayXMLDeserializer();
   }
 
   private PrimitiveBooleanArrayXMLDeserializer() {}

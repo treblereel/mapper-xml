@@ -17,7 +17,6 @@
 package org.treblereel.gwt.jackson.api.deser.array;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import javax.xml.stream.XMLStreamException;
@@ -34,7 +33,18 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public abstract class AbstractArrayXMLDeserializer<T> extends XMLDeserializer<T> {
 
-  /** {@inheritDoc} */
+  protected List collection = new ArrayList();
+
+  /**
+   * Deserializes the array into a {@link java.util.List}. We need the length of the array before
+   * creating it.
+   *
+   * @param reader reader
+   * @param ctx context of the deserialization process
+   * @param params Parameters for the deserializer
+   * @param <T> type of the element inside the array
+   * @return a list containing all the elements of the array /** {@inheritDoc}
+   */
   @Override
   public T doDeserialize(
       XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
@@ -66,35 +76,23 @@ public abstract class AbstractArrayXMLDeserializer<T> extends XMLDeserializer<T>
       XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
       throws XMLStreamException;
 
-  /**
-   * Deserializes the array into a {@link java.util.List}. We need the length of the array before
-   * creating it.
-   *
-   * @param reader reader
-   * @param ctx context of the deserialization process
-   * @param deserializer deserializer for element inside the array
-   * @param params Parameters for the deserializer
-   * @param <C> type of the element inside the array
-   * @return a list containing all the elements of the array
-   */
-  protected <C> List<C> deserializeIntoList(
+  protected <T> List<T> deserializeIntoList(
       XMLReader reader,
       XMLDeserializationContext ctx,
-      Function<String, XMLDeserializer<C>> deserializer,
+      Function<String, XMLDeserializer<T>> deserializer,
       XMLDeserializerParameters params)
       throws XMLStreamException {
-    List<C> list = new ArrayList<>();
-    return (List<C>)
+    return (List<T>)
         ctx.iterator()
             .iterateOverCollection(
                 reader,
-                (Collection<T>) list,
+                collection,
                 (reader1, ctx1, instance) -> {
-                  C bean =
+                  T bean =
                       deserializer
                           .apply(inheritanceChooser.get().apply(reader1))
                           .deserialize(reader1, ctx1, params);
-                  list.add(bean);
+                  collection.add(bean);
                   return null;
                 },
                 ctx,

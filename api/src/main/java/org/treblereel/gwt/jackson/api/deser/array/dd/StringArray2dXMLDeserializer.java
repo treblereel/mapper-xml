@@ -25,8 +25,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 /** @author Dmitrii Tikhomirov Created by treblereel 3/28/20 */
 public class StringArray2dXMLDeserializer extends AbstractArray2dXMLDeserializer<String[][]> {
 
-  private static final StringArray2dXMLDeserializer INSTANCE = new StringArray2dXMLDeserializer();
-
   private StringArray2dXMLDeserializer() {}
 
   /**
@@ -35,7 +33,7 @@ public class StringArray2dXMLDeserializer extends AbstractArray2dXMLDeserializer
    * @return an instance of {@link StringArray2dXMLDeserializer}
    */
   public static StringArray2dXMLDeserializer newInstance() {
-    return INSTANCE;
+    return new StringArray2dXMLDeserializer();
   }
 
   /** {@inheritDoc} */

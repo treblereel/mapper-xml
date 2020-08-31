@@ -32,16 +32,13 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public class PrimitiveShortArrayXMLDeserializer extends AbstractArrayXMLDeserializer<short[]> {
 
-  private static final PrimitiveShortArrayXMLDeserializer INSTANCE =
-      new PrimitiveShortArrayXMLDeserializer();
-
   /**
    * getInstance
    *
    * @return an instance of {@link PrimitiveShortArrayXMLDeserializer}
    */
   public static PrimitiveShortArrayXMLDeserializer getInstance() {
-    return INSTANCE;
+    return new PrimitiveShortArrayXMLDeserializer();
   }
 
   private PrimitiveShortArrayXMLDeserializer() {}

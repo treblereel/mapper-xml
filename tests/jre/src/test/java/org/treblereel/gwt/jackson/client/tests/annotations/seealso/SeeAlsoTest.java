@@ -26,6 +26,10 @@ import java.util.Map;
 import java.util.Objects;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
+import org.treblereel.gwt.jackson.api.DefaultXMLDeserializationContext;
+import org.treblereel.gwt.jackson.api.DefaultXMLSerializationContext;
+import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
+import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 import org.treblereel.gwt.jackson.client.tests.annotations.seealso.type.SeeAlsoAnimalXsiTypeHolder;
 import org.treblereel.gwt.jackson.client.tests.annotations.seealso.type.SeeAlsoAnimalXsiTypeHolder_MapperImpl;
@@ -42,6 +46,9 @@ public class SeeAlsoTest {
       "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoAnimalXsiTypeHolder xmlns=\"http://www.omg.org/bpmn20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><first xsi:type=\"Cat\"><nickname>Cat</nickname></first><second xsi:type=\"Dog\"><nickname>Dog</nickname></second><animal><name>Animal</name></animal></SeeAlsoAnimalXsiTypeHolder>";
   private final String XML_COLLECTION_XSI =
       "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoAnimalCollection><animals><Cat xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></Cat><Dog xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></Dog><Animal><name>Animal</name></Animal></animals><list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></list><list><name>Animal</name></list></list><map><entry><key xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></key><value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></value></entry><entry><key xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></key><value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></value></entry><entry><key><name>Animal</name></key><value><name>Animal</name></value></entry></map><vehicle xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Car\"><name>CAR</name></vehicle></SeeAlsoAnimalCollection>";
+
+  private final String XML_COLLECTION_XSI_UNWRAP =
+      "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoAnimalCollection><animals><Cat xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></Cat><Dog xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></Dog><Animal><name>Animal</name></Animal></animals><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></list><list><name>Animal</name></list><map><entry><key xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></key><value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></value></entry><entry><key xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></key><value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></value></entry><entry><key><name>Animal</name></key><value><name>Animal</name></value></entry></map><vehicle xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Car\"><name>CAR</name></vehicle></SeeAlsoAnimalCollection>";
 
   @Test
   public void testFoo() throws XMLStreamException {
@@ -99,6 +106,36 @@ public class SeeAlsoTest {
     SeeAlsoTest_SeeAlsoAnimalCollection_MapperImpl mapper =
         SeeAlsoTest_SeeAlsoAnimalCollection_MapperImpl.INSTANCE;
 
+    SeeAlsoAnimalCollection collection = getSeeAlsoAnimalCollection();
+
+    String result = mapper.write(collection);
+    // System.out.println("result 1 \n " + result);
+    assertEquals(XML_COLLECTION_XSI, result);
+    assertEquals(collection, mapper.read(mapper.write(collection)));
+  }
+
+  // @Test
+  public void testAnimalCollection2() throws XMLStreamException {
+    XMLSerializationContext serializationContext =
+        DefaultXMLSerializationContext.builder().wrapCollections(false).build();
+
+    XMLDeserializationContext deserializationContext =
+        DefaultXMLDeserializationContext.builder().wrapCollections(false).build();
+
+    SeeAlsoTest_SeeAlsoAnimalCollection_MapperImpl mapper =
+        SeeAlsoTest_SeeAlsoAnimalCollection_MapperImpl.INSTANCE;
+
+    SeeAlsoAnimalCollection collection = getSeeAlsoAnimalCollection();
+
+    String result = mapper.write(collection, serializationContext);
+    // System.out.println("result 2 \n " + result);
+    assertEquals(XML_COLLECTION_XSI_UNWRAP, result);
+    assertEquals(
+        collection,
+        mapper.read(mapper.write(collection, serializationContext), deserializationContext));
+  }
+
+  private SeeAlsoAnimalCollection getSeeAlsoAnimalCollection() {
     SeeAlsoAnimalCollection collection = new SeeAlsoAnimalCollection();
     List<Animal> list = new LinkedList<>();
 
@@ -127,11 +164,7 @@ public class SeeAlsoTest {
     collection.setAnimals(animals);
 
     collection.setVehicle(new Car("CAR"));
-
-    String result = mapper.write(collection);
-    // System.out.println("result \n " + result);
-    assertEquals(XML_COLLECTION_XSI, result);
-    assertEquals(collection, mapper.read(mapper.write(collection)));
+    return collection;
   }
 
   @Test

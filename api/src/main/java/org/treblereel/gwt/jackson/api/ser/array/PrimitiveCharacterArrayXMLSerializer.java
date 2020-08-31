@@ -48,12 +48,6 @@ public class PrimitiveCharacterArrayXMLSerializer extends BasicArrayXMLSerialize
 
   /** {@inheritDoc} */
   @Override
-  protected boolean isEmpty(char[] value) {
-    return null == value || value.length == 0;
-  }
-
-  /** {@inheritDoc} */
-  @Override
   public void doSerialize(
       XMLWriter writer, char[] values, XMLSerializationContext ctx, XMLSerializerParameters params)
       throws XMLStreamException {
@@ -62,10 +56,20 @@ public class PrimitiveCharacterArrayXMLSerializer extends BasicArrayXMLSerialize
       return;
     }
 
-    writer.beginObject(propertyName);
+    if (ctx.isWrapCollections()) {
+      writer.beginObject(propertyName);
+    }
     for (char value : values) {
       serializer.doSerialize(writer, value, ctx, params);
     }
-    writer.endObject();
+    if (ctx.isWrapCollections()) {
+      writer.endObject();
+    }
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  protected boolean isEmpty(char[] value) {
+    return null == value || value.length == 0;
   }
 }

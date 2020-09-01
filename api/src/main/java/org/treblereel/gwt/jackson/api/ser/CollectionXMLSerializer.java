@@ -83,11 +83,10 @@ public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSeri
     if (ctx.isWrapCollections()) {
       writer.beginObject(propertyName);
     }
-
     for (T value : values) {
       serializer
           .apply(value.getClass())
-          .setParent(this)
+          .setParent(parent)
           .setPropertyName(propertyName)
           .serialize(writer, value, ctx, params);
     }

@@ -85,7 +85,7 @@ public class IterableXMLSerializer<I extends Iterable<T>, T> extends XMLSerializ
 
     writer.beginArray();
     while (iterator.hasNext()) {
-      serializer.serialize(writer, iterator.next(), ctx, params);
+      serializer.setParent(parent).serialize(writer, iterator.next(), ctx, params);
     }
     writer.endArray();
   }

@@ -84,7 +84,7 @@ public class Array2dXMLSerializer<T> extends XMLSerializer<T[][]> {
     for (T[] array : values) {
       writer.beginObject(propertyName);
       for (T value : array) {
-        serializer.apply(value.getClass()).serialize(writer, value, ctx, params);
+        serializer.apply(value.getClass()).setParent(this).serialize(writer, value, ctx, params);
       }
       writer.endObject();
     }

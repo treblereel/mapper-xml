@@ -83,7 +83,7 @@ public class ArrayXMLSerializer<T> extends XMLSerializer<T[]> {
       writer.beginObject(propertyName);
     }
     for (T value : values) {
-      serializer.apply(value.getClass()).serialize(writer, value, ctx, params);
+      serializer.apply(value.getClass()).setParent(this).serialize(writer, value, ctx, params);
     }
     if (ctx.isWrapCollections()) {
       writer.endObject();

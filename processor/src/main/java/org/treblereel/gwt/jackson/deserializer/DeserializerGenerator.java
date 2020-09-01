@@ -220,7 +220,7 @@ public class DeserializerGenerator extends AbstractGenerator {
         new MethodCallExpr(new NameExpr("map"), "put")
             .addArgument(
                 new StringLiteralExpr(
-                    field.isWrapped() ? field.getWrapped() : field.getPropertyName()))
+                    field.isWrapped() ? field.getWrapped().key : field.getPropertyName()))
             .addArgument(
                 new ObjectCreationExpr()
                     .setType(beanPropertyDeserializer)

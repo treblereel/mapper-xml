@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlSchema;
 import org.treblereel.gwt.jackson.api.annotation.XmlTypeAdapter;
+import org.treblereel.gwt.jackson.api.utils.Pair;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 import org.treblereel.gwt.jackson.exception.GenerationException;
 
@@ -57,6 +58,11 @@ public class PropertyDefinition extends Definition {
     return bean.toString().equals(String.class.getCanonicalName())
         && property.getAnnotation(XmlCData.class) != null
         && property.getAnnotation(XmlCData.class).value();
+  }
+
+  @Override
+  public TypeMirror getBean() {
+    return bean;
   }
 
   public Expression getFieldSerializer(CompilationUnit cu) {
@@ -125,19 +131,20 @@ public class PropertyDefinition extends Definition {
     return property.getAnnotation(XmlElementWrapper.class) != null;
   }
 
-  public String getWrapped() {
-    return !property.getAnnotation(XmlElementWrapper.class).name().equals(DEFAULT)
-        ? property.getAnnotation(XmlElementWrapper.class).name()
-        : property.getSimpleName().toString();
+  public Pair<String, String> getWrapped() {
+    String name =
+        !property.getAnnotation(XmlElementWrapper.class).name().equals(DEFAULT)
+            ? property.getAnnotation(XmlElementWrapper.class).name()
+            : property.getSimpleName().toString();
+    String namespace =
+        !property.getAnnotation(XmlElementWrapper.class).namespace().equals(DEFAULT)
+            ? property.getAnnotation(XmlElementWrapper.class).namespace()
+            : null;
+    return new Pair<>(name, namespace);
   }
 
   public VariableElement getProperty() {
     return property;
-  }
-
-  @Override
-  public TypeMirror getBean() {
-    return bean;
   }
 
   @Override

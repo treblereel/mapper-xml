@@ -26,6 +26,7 @@ public class XmlElementWrapperSerializer<T> extends XMLSerializer<T> {
 
   private final XMLSerializer<T> internalXMLSerializer;
   private final String name;
+  private String defaultNamespace;
 
   public XmlElementWrapperSerializer(XMLSerializer<T> internalXMLSerializer, String name) {
     this.internalXMLSerializer = internalXMLSerializer;
@@ -37,8 +38,15 @@ public class XmlElementWrapperSerializer<T> extends XMLSerializer<T> {
   public void doSerialize(
       XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters params)
       throws XMLStreamException {
-    writer.beginObject(name);
-    internalXMLSerializer.setParent(this).serialize(writer, value, ctx, params);
+    if (defaultNamespace != null) {
+      String prefix = getPrefix(defaultNamespace);
+      if (prefix != null) {
+        writer.beginObject(prefix, defaultNamespace, name);
+      } else writer.beginObject(defaultNamespace, name);
+    } else {
+      writer.beginObject(name);
+    }
+    internalXMLSerializer.setParent(parent).serialize(writer, value, ctx, params);
     writer.endObject();
   }
 
@@ -46,5 +54,10 @@ public class XmlElementWrapperSerializer<T> extends XMLSerializer<T> {
   @Override
   protected boolean isEmpty(T value) {
     return null == value;
+  }
+
+  public XmlElementWrapperSerializer<T> setDefaultNamespace(String n) {
+    defaultNamespace = n;
+    return this;
   }
 }

@@ -49,7 +49,7 @@ public class WrapperTest {
     test.setStuff(children);
     test.setStuff2(children);
 
-    System.out.println("RESULT " + mapper.write(test));
+    // System.out.println("RESULT " + mapper.write(test));
 
     assertEquals(XML, mapper.write(test));
     assertEquals(test, mapper.read(mapper.write(test)));

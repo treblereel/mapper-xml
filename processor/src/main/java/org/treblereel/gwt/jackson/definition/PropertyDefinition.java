@@ -21,15 +21,21 @@ import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
+import java.util.Map;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlCData;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlSchema;
+import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.api.annotation.XmlTypeAdapter;
+import org.treblereel.gwt.jackson.api.annotation.XmlUnwrappedCollection;
 import org.treblereel.gwt.jackson.api.utils.Pair;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 import org.treblereel.gwt.jackson.exception.GenerationException;
@@ -131,6 +137,68 @@ public class PropertyDefinition extends Definition {
     return property.getAnnotation(XmlElementWrapper.class) != null;
   }
 
+  public boolean isUnWrapped() {
+    if (property.getAnnotation(XmlUnwrappedCollection.class) != null) {
+      if (getBean().getKind().equals(TypeKind.ARRAY)
+          || context.getTypeUtils().isCollection(getBean())
+          || context.getTypeUtils().isIterable(getBean())) return true;
+    }
+    return false;
+  }
+
+  public boolean hasXmlSeeAlso() {
+    return getXmlSeeAlso() != null;
+  }
+
+  public TypeElement[] getXmlSeeAlso() {
+    TypeMirror type = asTypeMirror();
+    if (type == null) {
+      return null;
+    }
+    return context.getBeanDefinition(type).getXmlSeeAlso();
+  }
+
+  private TypeMirror asTypeMirror() {
+    if (bean.getKind().isPrimitive()) {
+      return null;
+    }
+    TypeMirror type = bean;
+    if (type.getKind().equals(TypeKind.ARRAY)) {
+      ArrayType arrayType = (ArrayType) getBean();
+      if (arrayType.getComponentType().getKind().equals(TypeKind.ARRAY)) {
+        arrayType = (ArrayType) arrayType.getComponentType();
+      }
+      type = arrayType.getComponentType();
+    }
+    if (type.getKind().isPrimitive()) {
+      return null;
+    }
+    return type;
+  }
+
+  public boolean hasXmlElementRefs() {
+    return getXmlElementRefs() != null;
+  }
+
+  public Map<String, TypeMirror> getXmlElementRefs() {
+    TypeMirror type = asTypeMirror();
+    if (type != null) {
+      XmlElementRefs xmlElementRefs = getProperty().getAnnotation(XmlElementRefs.class);
+      if (xmlElementRefs != null) {
+        return TypeUtils.getXmlElements(context, getProperty(), XmlElementRefs.class);
+      }
+    }
+    return null;
+  }
+
+  public VariableElement getProperty() {
+    return property;
+  }
+
+  public TypeElement asTypeElement() {
+    return MoreTypes.asTypeElement(asTypeMirror());
+  }
+
   public Pair<String, String> getWrapped() {
     String name =
         !property.getAnnotation(XmlElementWrapper.class).name().equals(DEFAULT)
@@ -141,10 +209,6 @@ public class PropertyDefinition extends Definition {
             ? property.getAnnotation(XmlElementWrapper.class).namespace()
             : null;
     return new Pair<>(name, namespace);
-  }
-
-  public VariableElement getProperty() {
-    return property;
   }
 
   @Override

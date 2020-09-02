@@ -82,7 +82,8 @@ public abstract class AbstractArray2dXMLDeserializer<T> extends XMLDeserializer<
               return null;
             },
             ctx,
-            params);
+            params,
+            isWrapCollections);
     return list;
   }
 
@@ -106,7 +107,8 @@ public abstract class AbstractArray2dXMLDeserializer<T> extends XMLDeserializer<
               return null;
             },
             ctx,
-            params);
+            params,
+            isWrapCollections);
     return innerList;
   }
 }

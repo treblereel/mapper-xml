@@ -72,10 +72,11 @@ public class DefaultXMLIterator implements XMLIterator {
       Collection<T> collection,
       Scanner<T> scanner,
       XMLDeserializationContext ctx,
-      XMLDeserializerParameters params)
+      XMLDeserializerParameters params,
+      boolean isWrapCollections)
       throws XMLStreamException {
     int counter = 0;
-    if (!ctx.isWrapCollections()) {
+    if (!isWrapCollections) {
       scanner.accept(reader, ctx, (T) collection);
     } else {
       while (reader.hasNext()) {
@@ -92,7 +93,6 @@ public class DefaultXMLIterator implements XMLIterator {
         }
       }
     }
-
     return collection;
   }
 

@@ -24,11 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
-import org.treblereel.gwt.jackson.api.DefaultXMLDeserializationContext;
-import org.treblereel.gwt.jackson.api.DefaultXMLSerializationContext;
-import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
-import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
+import org.treblereel.gwt.jackson.api.annotation.XmlUnwrappedCollection;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 8/31/20 */
 @J2clTestInput(ArrayAndListWrapTest.class)
@@ -36,12 +33,6 @@ public class ArrayAndListWrapTest {
 
   @Test
   public void test() throws XMLStreamException {
-
-    XMLSerializationContext serializationContext =
-        DefaultXMLSerializationContext.builder().wrapCollections(false).build();
-
-    XMLDeserializationContext deserializationContext =
-        DefaultXMLDeserializationContext.builder().wrapCollections(false).build();
 
     Demo demo = new Demo();
     String[] arr = new String[3];
@@ -65,21 +56,39 @@ public class ArrayAndListWrapTest {
 
     ArrayAndListWrapTest_Demo_MapperImpl mapper = ArrayAndListWrapTest_Demo_MapperImpl.INSTANCE;
 
-    assertTrue(
-        demo.equals(mapper.read(mapper.write(demo, serializationContext), deserializationContext)));
-    assertTrue(
-        demo.equals(mapper.read(mapper.write(demo, serializationContext), deserializationContext)));
-    assertTrue(
-        demo.equals(mapper.read(mapper.write(demo, serializationContext), deserializationContext)));
-    assertTrue(
-        demo.equals(mapper.read(mapper.write(demo, serializationContext), deserializationContext)));
+    assertTrue(demo.equals(mapper.read(mapper.write(demo))));
+    assertTrue(demo.equals(mapper.read(mapper.write(demo))));
+    assertTrue(demo.equals(mapper.read(mapper.write(demo))));
+    assertTrue(demo.equals(mapper.read(mapper.write(demo))));
   }
 
   @XMLMapper
   public static class Demo {
-    private Boolean[] array1;
-    private String[] array2;
-    private List<String> list;
+    @XmlUnwrappedCollection private Boolean[] array1;
+    @XmlUnwrappedCollection private String[] array2;
+    @XmlUnwrappedCollection private List<String> list;
+
+    @Override
+    public int hashCode() {
+      int result = Arrays.hashCode(getArray1());
+      result = 31 * result + Arrays.hashCode(getArray2());
+      result = 31 * result + (getList() != null ? getList().hashCode() : 0);
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof Demo)) return false;
+
+      Demo demo = (Demo) o;
+
+      // Probably incorrect - comparing Object[] arrays with Arrays.equals
+      if (!Arrays.equals(getArray1(), demo.getArray1())) return false;
+      // Probably incorrect - comparing Object[] arrays with Arrays.equals
+      if (!Arrays.equals(getArray2(), demo.getArray2())) return false;
+      return getList() != null ? getList().equals(demo.getList()) : demo.getList() == null;
+    }
 
     public List<String> getList() {
       return list;
@@ -115,28 +124,6 @@ public class ArrayAndListWrapTest {
           + ", list="
           + list
           + '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof Demo)) return false;
-
-      Demo demo = (Demo) o;
-
-      // Probably incorrect - comparing Object[] arrays with Arrays.equals
-      if (!Arrays.equals(getArray1(), demo.getArray1())) return false;
-      // Probably incorrect - comparing Object[] arrays with Arrays.equals
-      if (!Arrays.equals(getArray2(), demo.getArray2())) return false;
-      return getList() != null ? getList().equals(demo.getList()) : demo.getList() == null;
-    }
-
-    @Override
-    public int hashCode() {
-      int result = Arrays.hashCode(getArray1());
-      result = 31 * result + Arrays.hashCode(getArray2());
-      result = 31 * result + (getList() != null ? getList().hashCode() : 0);
-      return result;
     }
   }
 }

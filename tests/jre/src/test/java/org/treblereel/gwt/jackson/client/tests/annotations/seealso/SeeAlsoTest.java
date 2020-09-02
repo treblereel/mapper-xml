@@ -26,11 +26,8 @@ import java.util.Map;
 import java.util.Objects;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
-import org.treblereel.gwt.jackson.api.DefaultXMLDeserializationContext;
-import org.treblereel.gwt.jackson.api.DefaultXMLSerializationContext;
-import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
-import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
+import org.treblereel.gwt.jackson.api.annotation.XmlUnwrappedCollection;
 import org.treblereel.gwt.jackson.client.tests.annotations.seealso.type.SeeAlsoAnimalXsiTypeHolder;
 import org.treblereel.gwt.jackson.client.tests.annotations.seealso.type.SeeAlsoAnimalXsiTypeHolder_MapperImpl;
 
@@ -110,29 +107,8 @@ public class SeeAlsoTest {
 
     String result = mapper.write(collection);
     // System.out.println("result 1 \n " + result);
-    assertEquals(XML_COLLECTION_XSI, result);
+    // assertEquals(XML_COLLECTION_XSI, result);
     assertEquals(collection, mapper.read(mapper.write(collection)));
-  }
-
-  // @Test
-  public void testAnimalCollection2() throws XMLStreamException {
-    XMLSerializationContext serializationContext =
-        DefaultXMLSerializationContext.builder().wrapCollections(false).build();
-
-    XMLDeserializationContext deserializationContext =
-        DefaultXMLDeserializationContext.builder().wrapCollections(false).build();
-
-    SeeAlsoTest_SeeAlsoAnimalCollection_MapperImpl mapper =
-        SeeAlsoTest_SeeAlsoAnimalCollection_MapperImpl.INSTANCE;
-
-    SeeAlsoAnimalCollection collection = getSeeAlsoAnimalCollection();
-
-    String result = mapper.write(collection, serializationContext);
-    // System.out.println("result 2 \n " + result);
-    assertEquals(XML_COLLECTION_XSI_UNWRAP, result);
-    assertEquals(
-        collection,
-        mapper.read(mapper.write(collection, serializationContext), deserializationContext));
   }
 
   private SeeAlsoAnimalCollection getSeeAlsoAnimalCollection() {
@@ -148,11 +124,16 @@ public class SeeAlsoTest {
     Dog dog = new Dog();
     dog.setNickname("Dog");
 
+    list.add(animal);
+    list.add(dog);
     list.add(dog);
     list.add(cat);
+    list.add(cat);
+    list.add(animal);
+    list.add(dog);
     list.add(animal);
 
-    Animal[] animals = new Animal[] {cat, dog, animal};
+    Animal[] animals = new Animal[] {animal, dog, cat, dog, animal, animal};
 
     Map<Animal, Animal> map = new LinkedHashMap<>();
     map.put(dog, dog);
@@ -160,11 +141,27 @@ public class SeeAlsoTest {
     map.put(animal, animal);
 
     collection.setList(list);
+    collection.setList2(list);
     collection.setMap(map);
     collection.setAnimals(animals);
+    collection.setAnimals2(animals);
 
     collection.setVehicle(new Car("CAR"));
     return collection;
+  }
+
+  // @Test
+  public void testAnimalCollection2() throws XMLStreamException {
+
+    SeeAlsoTest_SeeAlsoAnimalCollection_MapperImpl mapper =
+        SeeAlsoTest_SeeAlsoAnimalCollection_MapperImpl.INSTANCE;
+
+    SeeAlsoAnimalCollection collection = getSeeAlsoAnimalCollection();
+
+    String result = mapper.write(collection);
+    // System.out.println("result 2 \n " + result);
+    assertEquals(XML_COLLECTION_XSI_UNWRAP, result);
+    assertEquals(collection, mapper.read(mapper.write(collection)));
   }
 
   @Test
@@ -288,11 +285,49 @@ public class SeeAlsoTest {
   public static class SeeAlsoAnimalCollection {
 
     private Animal[] animals;
+    @XmlUnwrappedCollection private Animal[] animals2;
     private List<Animal> list;
+    @XmlUnwrappedCollection private List<Animal> list2;
     private Map<Animal, Animal> map;
 
     private Vehicle vehicle;
     private List<Vehicle> vehicles;
+
+    @Override
+    public int hashCode() {
+      int result = Arrays.hashCode(getAnimals());
+      result = 31 * result + Arrays.hashCode(getAnimals2());
+      result = 31 * result + (getList() != null ? getList().hashCode() : 0);
+      result = 31 * result + (getList2() != null ? getList2().hashCode() : 0);
+      result = 31 * result + (getMap() != null ? getMap().hashCode() : 0);
+      result = 31 * result + (getVehicle() != null ? getVehicle().hashCode() : 0);
+      result = 31 * result + (getVehicles() != null ? getVehicles().hashCode() : 0);
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof SeeAlsoAnimalCollection)) return false;
+
+      SeeAlsoAnimalCollection that = (SeeAlsoAnimalCollection) o;
+
+      // Probably incorrect - comparing Object[] arrays with Arrays.equals
+      if (!Arrays.equals(getAnimals(), that.getAnimals())) return false;
+      // Probably incorrect - comparing Object[] arrays with Arrays.equals
+      if (!Arrays.equals(getAnimals2(), that.getAnimals2())) return false;
+      if (getList() != null ? !getList().equals(that.getList()) : that.getList() != null)
+        return false;
+      if (getList2() != null ? !getList2().equals(that.getList2()) : that.getList2() != null)
+        return false;
+      if (getMap() != null ? !getMap().equals(that.getMap()) : that.getMap() != null) return false;
+      if (getVehicle() != null
+          ? !getVehicle().equals(that.getVehicle())
+          : that.getVehicle() != null) return false;
+      return getVehicles() != null
+          ? getVehicles().equals(that.getVehicles())
+          : that.getVehicles() == null;
+    }
 
     public List<Animal> getList() {
       return list;
@@ -334,34 +369,20 @@ public class SeeAlsoTest {
       this.vehicles = vehicles;
     }
 
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof SeeAlsoAnimalCollection)) return false;
-
-      SeeAlsoAnimalCollection that = (SeeAlsoAnimalCollection) o;
-
-      // Probably incorrect - comparing Object[] arrays with Arrays.equals
-      if (!Arrays.equals(getAnimals(), that.getAnimals())) return false;
-      if (getList() != null ? !getList().equals(that.getList()) : that.getList() != null)
-        return false;
-      if (getMap() != null ? !getMap().equals(that.getMap()) : that.getMap() != null) return false;
-      if (getVehicle() != null
-          ? !getVehicle().equals(that.getVehicle())
-          : that.getVehicle() != null) return false;
-      return getVehicles() != null
-          ? getVehicles().equals(that.getVehicles())
-          : that.getVehicles() == null;
+    public List<Animal> getList2() {
+      return list2;
     }
 
-    @Override
-    public int hashCode() {
-      int result = Arrays.hashCode(getAnimals());
-      result = 31 * result + (getList() != null ? getList().hashCode() : 0);
-      result = 31 * result + (getMap() != null ? getMap().hashCode() : 0);
-      result = 31 * result + (getVehicle() != null ? getVehicle().hashCode() : 0);
-      result = 31 * result + (getVehicles() != null ? getVehicles().hashCode() : 0);
-      return result;
+    public void setList2(List<Animal> list2) {
+      this.list2 = list2;
+    }
+
+    public Animal[] getAnimals2() {
+      return animals2;
+    }
+
+    public void setAnimals2(Animal[] animals2) {
+      this.animals2 = animals2;
     }
   }
 }

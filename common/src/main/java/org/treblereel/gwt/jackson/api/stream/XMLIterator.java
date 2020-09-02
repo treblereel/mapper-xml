@@ -40,7 +40,8 @@ public interface XMLIterator {
       Collection<T> collection,
       Scanner<T> scanner,
       XMLDeserializationContext ctx,
-      XMLDeserializerParameters params)
+      XMLDeserializerParameters params,
+      boolean isWrapCollections)
       throws XMLStreamException;
 
   <K, V> Map<K, V> doDeserializeMap(

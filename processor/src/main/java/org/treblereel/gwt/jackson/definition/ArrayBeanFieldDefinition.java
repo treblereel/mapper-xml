@@ -23,10 +23,12 @@ import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import java.util.function.Function;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import org.treblereel.gwt.jackson.api.annotation.XmlUnwrappedCollection;
 import org.treblereel.gwt.jackson.api.deser.array.ArrayXMLDeserializer;
 import org.treblereel.gwt.jackson.api.deser.array.dd.Array2dXMLDeserializer;
 import org.treblereel.gwt.jackson.api.ser.array.ArrayXMLSerializer;
@@ -77,16 +79,22 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
                 .setName(Array2dXMLDeserializer.Array2dCreator.class.getSimpleName())
                 .setTypeArguments(new ClassOrInterfaceType().setName(arrayType));
 
-        return new MethodCallExpr(
-                new NameExpr(Array2dXMLDeserializer.class.getSimpleName()), "newInstance")
-            .addArgument(
-                generateXMLDeserializerFactory(
-                    field, array2d.getComponentType(), array2d.getComponentType().toString(), cu))
-            .addArgument(
-                new CastExpr()
-                    .setType(typeOf)
-                    .setExpression(
-                        new NameExpr("(first, second) -> new " + arrayType + "[first][second]")));
+        return maybeXmlUnwrappedCollection(
+            field.getProperty(),
+            new MethodCallExpr(
+                    new NameExpr(Array2dXMLDeserializer.class.getSimpleName()), "newInstance")
+                .addArgument(
+                    generateXMLDeserializerFactory(
+                        field,
+                        array2d.getComponentType(),
+                        array2d.getComponentType().toString(),
+                        cu))
+                .addArgument(
+                    new CastExpr()
+                        .setType(typeOf)
+                        .setExpression(
+                            new NameExpr(
+                                "(first, second) -> new " + arrayType + "[first][second]"))));
       }
     }
 
@@ -95,18 +103,19 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
             .setName(ArrayXMLDeserializer.ArrayCreator.class.getSimpleName())
             .setTypeArguments(new ClassOrInterfaceType().setName(arrayType));
 
-    return new MethodCallExpr(
-            new NameExpr(ArrayXMLDeserializer.class.getSimpleName()), "newInstance")
-        .addArgument(
-            generateXMLDeserializerFactory(
-                field, array.getComponentType(), array.getComponentType().toString(), cu))
-        .addArgument(
-            new CastExpr()
-                .setType(typeOf)
-                .setExpression(
-                    new NameExpr(
-                        context.getProcessingEnv().getTypeUtils().erasure(componentType)
-                            + "[]::new")));
+    return maybeXmlUnwrappedCollection(
+        field.getProperty(),
+        new MethodCallExpr(new NameExpr(ArrayXMLDeserializer.class.getSimpleName()), "newInstance")
+            .addArgument(
+                generateXMLDeserializerFactory(
+                    field, array.getComponentType(), array.getComponentType().toString(), cu))
+            .addArgument(
+                new CastExpr()
+                    .setType(typeOf)
+                    .setExpression(
+                        new NameExpr(
+                            context.getProcessingEnv().getTypeUtils().erasure(componentType)
+                                + "[]::new"))));
   }
 
   @Override
@@ -126,9 +135,19 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
       serializer = ArrayXMLSerializer.class.getSimpleName();
       type = array.getComponentType();
     }
-    return new MethodCallExpr(new NameExpr(serializer), "getInstance")
-        .addArgument(generateXMLSerializerFactory(field, type, type.toString(), cu))
-        .addArgument(new StringLiteralExpr(field.getPropertyName()));
+    return maybeXmlUnwrappedCollection(
+        field.getProperty(),
+        new MethodCallExpr(new NameExpr(serializer), "getInstance")
+            .addArgument(generateXMLSerializerFactory(field, type, type.toString(), cu))
+            .addArgument(new StringLiteralExpr(field.getPropertyName())));
+  }
+
+  private Expression maybeXmlUnwrappedCollection(VariableElement element, Expression expression) {
+    if (element.getAnnotation(XmlUnwrappedCollection.class) != null) {
+      return new MethodCallExpr(expression, "setUnWrapCollections");
+    }
+
+    return expression;
   }
 
   @Override

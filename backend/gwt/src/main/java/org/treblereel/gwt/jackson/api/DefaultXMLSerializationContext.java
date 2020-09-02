@@ -37,7 +37,6 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
   private final boolean writeDateKeysAsTimestamps;
   private final boolean writeNullMapValues;
   private final boolean writeEmptyXMLArrays;
-  private final boolean wrapCollections;
   private final boolean orderMapEntriesByKeys;
   private final boolean wrapExceptions;
 
@@ -48,8 +47,7 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
       boolean writeNullMapValues,
       boolean writeEmptyXMLArrays,
       boolean orderMapEntriesByKeys,
-      boolean wrapExceptions,
-      boolean wrapCollections) {
+      boolean wrapExceptions) {
     this.serializeNulls = serializeNulls;
     this.writeDatesAsTimestamps = writeDatesAsTimestamps;
     this.writeDateKeysAsTimestamps = writeDateKeysAsTimestamps;
@@ -57,7 +55,6 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
     this.writeEmptyXMLArrays = writeEmptyXMLArrays;
     this.orderMapEntriesByKeys = orderMapEntriesByKeys;
     this.wrapExceptions = wrapExceptions;
-    this.wrapCollections = wrapCollections;
   }
 
   /**
@@ -139,11 +136,6 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
   @Override
   public boolean isOrderMapEntriesByKeys() {
     return orderMapEntriesByKeys;
-  }
-
-  @Override
-  public boolean isWrapCollections() {
-    return wrapCollections;
   }
 
   /**
@@ -262,8 +254,6 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
     protected boolean orderMapEntriesByKeys = false;
 
     protected boolean wrapExceptions = true;
-
-    protected boolean wrapCollections = true;
 
     protected boolean writeDataAsTimestamp = true;
 
@@ -391,17 +381,15 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
       return this;
     }
 
-    public DefaultXMLSerializationContext.Builder wrapCollections(boolean wrapCollections) {
-      this.wrapCollections = wrapCollections;
-      return this;
-    }
-
     public final XMLSerializationContext build() {
       return new DefaultXMLSerializationContext(
-          serializeNulls, writeDatesAsTimestamps,
-          writeDateKeysAsTimestamps, writeNullMapValues,
-          writeEmptyXMLArrays, orderMapEntriesByKeys,
-          wrapExceptions, wrapCollections);
+          serializeNulls,
+          writeDatesAsTimestamps,
+          writeDateKeysAsTimestamps,
+          writeNullMapValues,
+          writeEmptyXMLArrays,
+          orderMapEntriesByKeys,
+          wrapExceptions);
     }
   }
 

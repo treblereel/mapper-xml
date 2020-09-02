@@ -13,22 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.treblereel.gwt.jackson.api.ser.array;
 
-import org.treblereel.gwt.jackson.api.XMLSerializer;
+package org.treblereel.gwt.jackson.client.tests.bpmn.bpmn2;
 
-/** @author Dmitrii Tikhomirov Created by treblereel 3/28/20 */
-public abstract class BasicArrayXMLSerializer<T> extends XMLSerializer<T> {
-
-  protected boolean isWrapCollections = true;
-
-  public BasicArrayXMLSerializer<T> setPropertyName(String propertyName) {
-    this.propertyName = propertyName;
-    return this;
-  }
-
-  public BasicArrayXMLSerializer<T> setUnWrapCollections() {
-    isWrapCollections = false;
-    return this;
-  }
-}
+/** @author Dmitrii Tikhomirov Created by treblereel 9/1/20 */
+public interface BPMNViewDefinition {}

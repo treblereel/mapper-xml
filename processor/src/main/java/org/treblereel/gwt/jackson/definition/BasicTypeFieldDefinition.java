@@ -22,6 +22,7 @@ import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import org.treblereel.gwt.jackson.api.annotation.XmlUnwrappedCollection;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/1/20 */
@@ -33,8 +34,17 @@ public class BasicTypeFieldDefinition extends FieldDefinition {
 
   @Override
   public Expression getFieldDeserializer(PropertyDefinition field, CompilationUnit cu) {
-    return new MethodCallExpr(
-        new NameExpr(context.getTypeRegistry().getDeserializer(bean).toString()), "getInstance");
+    MethodCallExpr method =
+        new MethodCallExpr(
+            new NameExpr(context.getTypeRegistry().getDeserializer(bean).toString()),
+            "getInstance");
+    if (getBean().getKind().equals(TypeKind.ARRAY)) {
+      if (field.getProperty() != null
+          && field.getProperty().getAnnotation(XmlUnwrappedCollection.class) != null) {
+        method = new MethodCallExpr(method, "setUnWrapCollections");
+      }
+    }
+    return method;
   }
 
   @Override
@@ -49,6 +59,10 @@ public class BasicTypeFieldDefinition extends FieldDefinition {
             "getInstance");
     if (getBean().getKind().equals(TypeKind.ARRAY)) {
       method.addArgument(new StringLiteralExpr(field.getPropertyName()));
+      if (field.getProperty() != null
+          && field.getProperty().getAnnotation(XmlUnwrappedCollection.class) != null) {
+        method = new MethodCallExpr(method, "setUnWrapCollections");
+      }
     }
     return method;
   }

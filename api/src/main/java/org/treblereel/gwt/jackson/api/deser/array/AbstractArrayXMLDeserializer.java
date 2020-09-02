@@ -33,7 +33,7 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
  */
 public abstract class AbstractArrayXMLDeserializer<T> extends XMLDeserializer<T> {
 
-  protected List collection = new ArrayList();
+  private List collection = new ArrayList();
 
   /**
    * Deserializes the array into a {@link java.util.List}. We need the length of the array before
@@ -42,7 +42,6 @@ public abstract class AbstractArrayXMLDeserializer<T> extends XMLDeserializer<T>
    * @param reader reader
    * @param ctx context of the deserialization process
    * @param params Parameters for the deserializer
-   * @param <T> type of the element inside the array
    * @return a list containing all the elements of the array /** {@inheritDoc}
    */
   @Override
@@ -96,6 +95,7 @@ public abstract class AbstractArrayXMLDeserializer<T> extends XMLDeserializer<T>
                   return null;
                 },
                 ctx,
-                params);
+                params,
+                isWrapCollections);
   }
 }

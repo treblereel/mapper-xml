@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.treblereel.gwt.jackson.api.ser.array;
 
-import org.treblereel.gwt.jackson.api.XMLSerializer;
+package org.treblereel.gwt.jackson.api.annotation;
 
-/** @author Dmitrii Tikhomirov Created by treblereel 3/28/20 */
-public abstract class BasicArrayXMLSerializer<T> extends XMLSerializer<T> {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-  protected boolean isWrapCollections = true;
-
-  public BasicArrayXMLSerializer<T> setPropertyName(String propertyName) {
-    this.propertyName = propertyName;
-    return this;
-  }
-
-  public BasicArrayXMLSerializer<T> setUnWrapCollections() {
-    isWrapCollections = false;
-    return this;
-  }
-}
+/** @author Dmitrii Tikhomirov Created by treblereel 9/2/20 */
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface XmlUnwrappedCollection {}

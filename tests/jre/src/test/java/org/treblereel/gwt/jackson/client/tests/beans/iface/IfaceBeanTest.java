@@ -39,7 +39,6 @@ public class IfaceBeanTest {
     user.setIAddress(address);
 
     String userXml = userMapper.write(user);
-    // System.out.println(userXml);
     assertEquals(
         "<?xml version='1.0' encoding='UTF-8'?><User><user>test</user><iAddress xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"_Address1\"><address>iAddress</address></iAddress></User>",
         userXml);
@@ -68,6 +67,7 @@ public class IfaceBeanTest {
 
     user.setIAddressList(list);
     user.setIAddressListRef(list);
+    user.setIAddressListRef2(list);
 
     List<IAddress> list1 = new ArrayList<>();
     list1.add(address3);
@@ -75,9 +75,8 @@ public class IfaceBeanTest {
     user.setIAddress2OneElm(list1);
 
     String xml = userMapper.write(user);
-    // System.out.println(xml);
     assertEquals(
-        "<?xml version='1.0' encoding='UTF-8'?><User><user>test</user><iAddress xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"_Address1\"><address>AAAAA</address></iAddress><iAddressList><iAddressList xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"_Address1\"><address>AAAAA</address></iAddressList><iAddressList xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"_Address2\"><address>BBB</address></iAddressList><iAddressList xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"_Address3\"><address>CCC</address></iAddressList></iAddressList><iAddressListRef><_Address1><address>AAAAA</address></_Address1><_Address2><address>BBB</address></_Address2><_Address3><address>CCC</address></_Address3></iAddressListRef><iAddressOneElm><_Address3><address>CCC</address></_Address3></iAddressOneElm><iAddress2OneElm><iAddress2OneElm xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"_Address3\"><address>CCC</address></iAddress2OneElm></iAddress2OneElm></User>",
+        "<?xml version='1.0' encoding='UTF-8'?><User><user>test</user><iAddress xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"_Address1\"><address>AAAAA</address></iAddress><iAddressList><iAddressList xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"_Address1\"><address>AAAAA</address></iAddressList><iAddressList xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"_Address2\"><address>BBB</address></iAddressList><iAddressList xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"_Address3\"><address>CCC</address></iAddressList></iAddressList><iAddressListRef><_Address1><address>AAAAA</address></_Address1><_Address2><address>BBB</address></_Address2><_Address3><address>CCC</address></_Address3></iAddressListRef><_Address1><address>AAAAA</address></_Address1><_Address2><address>BBB</address></_Address2><_Address3><address>CCC</address></_Address3><iAddressOneElm><_Address3><address>CCC</address></_Address3></iAddressOneElm><iAddress2OneElm><iAddress2OneElm xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"_Address3\"><address>CCC</address></iAddress2OneElm></iAddress2OneElm></User>",
         xml);
     assertEquals(user, userMapper.read(xml));
   }

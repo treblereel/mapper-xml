@@ -47,14 +47,12 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
   private final boolean useBrowserTimezone;
   private final XMLInputFactory xmlInputFactory;
   private final XMLIterator iterator;
-  private final boolean wrapCollections;
   private final boolean readDateAsTimestamps;
 
   private DefaultXMLDeserializationContext(
       boolean failOnUnknownProperties,
       boolean acceptSingleValueAsArray,
       boolean wrapExceptions,
-      boolean wrapCollections,
       boolean useSafeEval,
       boolean readUnknownEnumValuesAsNull,
       boolean useBrowserTimezone,
@@ -64,7 +62,6 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
     this.wrapExceptions = wrapExceptions;
     this.useSafeEval = useSafeEval;
     this.readUnknownEnumValuesAsNull = readUnknownEnumValuesAsNull;
-    this.wrapCollections = wrapCollections;
     this.useBrowserTimezone = useBrowserTimezone;
     this.xmlInputFactory = new WstxInputFactory();
     this.readDateAsTimestamps = readDateAsTimestamps;
@@ -138,11 +135,6 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
   @Override
   public boolean isUseBrowserTimezone() {
     return useBrowserTimezone;
-  }
-
-  @Override
-  public boolean isWrapCollections() {
-    return wrapCollections;
   }
 
   @Override
@@ -261,8 +253,6 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
 
     protected boolean useBrowserTimezone = false;
 
-    private boolean wrapCollections = true;
-
     private boolean readDateAsTimestamp = true;
 
     private Builder() {}
@@ -346,11 +336,6 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
       return this;
     }
 
-    public Builder wrapCollections(boolean wrapCollections) {
-      this.wrapCollections = wrapCollections;
-      return this;
-    }
-
     /**
      * Feature that specifies whether dates that doesn't contain timezone information are
      * interpreted using the browser timezone or being relative to UTC (the default).
@@ -373,7 +358,6 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
           failOnUnknownProperties,
           acceptSingleValueAsArray,
           wrapExceptions,
-          wrapCollections,
           useSafeEval,
           readUnknownEnumValuesAsNull,
           useBrowserTimezone,

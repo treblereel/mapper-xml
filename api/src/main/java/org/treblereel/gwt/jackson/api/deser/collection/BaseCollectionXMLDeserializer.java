@@ -70,12 +70,11 @@ public abstract class BaseCollectionXMLDeserializer<C extends Collection<T>, T>
         ctx.iterator()
             .iterateOverCollection(
                 reader,
-                ctx.isWrapCollections()
-                    ? ((Collection<C>) newCollection())
-                    : (Collection<C>) collection,
+                isWrapCollections ? ((Collection<C>) newCollection()) : (Collection<C>) collection,
                 scanner,
                 ctx,
-                params);
+                params,
+                isWrapCollections);
   }
 
   /**

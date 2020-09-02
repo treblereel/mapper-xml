@@ -31,9 +31,6 @@ import org.treblereel.gwt.jackson.api.utils.Base64Utils;
  */
 public class PrimitiveByteArrayXMLSerializer extends BasicArrayXMLSerializer<byte[]> {
 
-  private static final PrimitiveByteArrayXMLSerializer INSTANCE =
-      new PrimitiveByteArrayXMLSerializer();
-
   private PrimitiveByteArrayXMLSerializer() {}
 
   /**
@@ -42,7 +39,7 @@ public class PrimitiveByteArrayXMLSerializer extends BasicArrayXMLSerializer<byt
    * @return an instance of {@link PrimitiveByteArrayXMLSerializer}
    */
   public static BasicArrayXMLSerializer getInstance(String propertyName) {
-    return INSTANCE.setPropertyName(propertyName);
+    return new PrimitiveByteArrayXMLSerializer().setPropertyName(propertyName);
   }
 
   /** {@inheritDoc} */

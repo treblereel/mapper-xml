@@ -22,10 +22,6 @@ import java.util.Arrays;
 import java.util.List;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
-import org.treblereel.gwt.jackson.api.DefaultXMLDeserializationContext;
-import org.treblereel.gwt.jackson.api.DefaultXMLSerializationContext;
-import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
-import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.client.tests.beans.collection.BoxedLists;
 import org.treblereel.gwt.jackson.client.tests.beans.collection.BoxedLists_MapperImpl;
 
@@ -55,24 +51,16 @@ public class BoxedListsTest {
     assertEquals(test, mapper.read(mapper.write(test)));
   }
 
+  // TODO
   @Test
   public void testInlined() throws XMLStreamException {
 
-    XMLSerializationContext serializationContext =
-        DefaultXMLSerializationContext.builder().wrapCollections(false).build();
-
-    XMLDeserializationContext deserializationContext =
-        DefaultXMLDeserializationContext.builder().wrapCollections(false).build();
-
     BoxedLists testUnwrappedCollections =
         new BoxedLists(strings, booleans, chars, bytes, doubles, ints, longs, shorts);
-    String xmlUnwrappedCollections = mapper.write(testUnwrappedCollections, serializationContext);
+    String xmlUnwrappedCollections = mapper.write(testUnwrappedCollections);
 
-    BoxedLists processed = mapper.read(xmlUnwrappedCollections, deserializationContext);
+    BoxedLists processed = mapper.read(xmlUnwrappedCollections);
     assertEquals(testUnwrappedCollections, processed);
-    assertEquals(
-        testUnwrappedCollections,
-        mapper.read(
-            mapper.write(testUnwrappedCollections, serializationContext), deserializationContext));
+    assertEquals(testUnwrappedCollections, mapper.read(mapper.write(testUnwrappedCollections)));
   }
 }

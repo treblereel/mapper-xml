@@ -63,8 +63,6 @@ public interface XMLDeserializationContext extends XMLMappingContext {
    */
   boolean isUseBrowserTimezone();
 
-  boolean isWrapCollections();
-
   boolean isReadDateAsTimestamps();
 
   /**

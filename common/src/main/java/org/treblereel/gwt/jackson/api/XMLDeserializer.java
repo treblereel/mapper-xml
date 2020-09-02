@@ -36,6 +36,7 @@ public abstract class XMLDeserializer<T> {
   protected Function<XMLReader, String> xsiTypeChooser = this::getXsiType;
   protected Function<XMLReader, String> xsiTagChooser = this::getTag;
   private Inheritance type = Inheritance.NONE;
+  protected boolean isWrapCollections = true;
   protected Supplier<Function<XMLReader, String>> inheritanceChooser =
       () -> {
         if (type.equals(Inheritance.TAG)) {
@@ -110,6 +111,11 @@ public abstract class XMLDeserializer<T> {
 
   public XMLDeserializer<T> setInheritanceType(Inheritance type) {
     this.type = type;
+    return this;
+  }
+
+  public XMLDeserializer<T> setUnWrapCollections() {
+    this.isWrapCollections = false;
     return this;
   }
 }

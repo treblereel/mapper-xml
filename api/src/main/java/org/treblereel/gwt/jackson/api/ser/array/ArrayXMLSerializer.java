@@ -30,10 +30,9 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  * @author Nicolas Morel
  * @version $Id: $
  */
-public class ArrayXMLSerializer<T> extends XMLSerializer<T[]> {
+public class ArrayXMLSerializer<T> extends BasicArrayXMLSerializer<T[]> {
 
   private final Function<Class, XMLSerializer<T>> serializer;
-  protected final String propertyName;
 
   /**
    * Constructor for ArrayXMLSerializer.
@@ -79,10 +78,14 @@ public class ArrayXMLSerializer<T> extends XMLSerializer<T[]> {
       return;
     }
 
-    writer.beginObject(propertyName);
-    for (T value : values) {
-      serializer.apply(value.getClass()).serialize(writer, value, ctx, params);
+    if (isWrapCollections) {
+      writer.beginObject(propertyName);
     }
-    writer.endObject();
+    for (T value : values) {
+      serializer.apply(value.getClass()).setParent(this).serialize(writer, value, ctx, params);
+    }
+    if (isWrapCollections) {
+      writer.endObject();
+    }
   }
 }

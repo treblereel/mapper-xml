@@ -278,11 +278,12 @@ public abstract class FieldDefinition extends Definition {
                   body.addAndGetStatement(
                           new IfStmt()
                               .setCondition(
-                                  new MethodCallExpr(new NameExpr("value"), "equals")
-                                      .addArgument(
+                                  new MethodCallExpr(
                                           new FieldAccessExpr(
                                               new NameExpr(typeElement.getValue().toString()),
-                                              "class"))))
+                                              "class"),
+                                          "equals")
+                                      .addArgument(new NameExpr("value"))))
                       .setThenStmt(returnStmt));
     }
   }

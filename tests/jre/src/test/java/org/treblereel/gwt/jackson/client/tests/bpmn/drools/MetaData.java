@@ -18,13 +18,25 @@ package org.treblereel.gwt.jackson.client.tests.bpmn.drools;
 import java.util.Objects;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlCData;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/6/20 */
+@XmlRootElement(name = "metaData", namespace = "http://www.jboss.org/drools")
 public class MetaData {
 
   @XmlAttribute private String name;
 
-  @XmlCData private String metaValue;
+  @XmlCData
+  @XmlElement(name = "metaValue", namespace = "http://www.jboss.org/drools")
+  private String metaValue;
+
+  public MetaData() {}
+
+  public MetaData(String name, String metaValue) {
+    this.name = name;
+    this.metaValue = metaValue;
+  }
 
   public String getName() {
     return name;

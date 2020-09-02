@@ -17,6 +17,9 @@ package org.treblereel.gwt.jackson.client.tests.annotations.handler;
 
 import java.util.Objects;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
+import org.treblereel.gwt.jackson.api.annotation.XmlTypeAdapter;
+import org.treblereel.gwt.jackson.client.tests.annotations.handler.marshaller.IdDemarshaller;
+import org.treblereel.gwt.jackson.client.tests.annotations.handler.marshaller.IdMarshaller;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 5/19/20 */
 @XMLMapper
@@ -57,5 +60,46 @@ public class Bean {
   @Override
   public int hashCode() {
     return Objects.hash(getMyBean(), getId());
+  }
+
+  @XmlTypeAdapter(
+      serializer = IdMarshaller.class,
+      deserializer = IdDemarshaller.class,
+      isAttribute = true)
+  public static class Id {
+
+    private String id;
+
+    public Id() {}
+
+    public Id(String id) {
+      this.id = id;
+    }
+
+    public String getId() {
+      return id;
+    }
+
+    public void setId(String id) {
+      this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (!(o instanceof org.treblereel.gwt.jackson.client.tests.annotations.handler.Bean.Id)) {
+        return false;
+      }
+      org.treblereel.gwt.jackson.client.tests.annotations.handler.Bean.Id id1 =
+          (org.treblereel.gwt.jackson.client.tests.annotations.handler.Bean.Id) o;
+      return Objects.equals(getId(), id1.getId());
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(getId());
+    }
   }
 }

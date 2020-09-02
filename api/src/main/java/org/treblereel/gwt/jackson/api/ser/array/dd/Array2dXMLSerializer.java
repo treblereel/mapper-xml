@@ -21,6 +21,7 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
+import org.treblereel.gwt.jackson.api.ser.array.BasicArrayXMLSerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
@@ -30,7 +31,7 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  * @author Nicolas Morel
  * @version $Id: $
  */
-public class Array2dXMLSerializer<T> extends XMLSerializer<T[][]> {
+public class Array2dXMLSerializer<T> extends BasicArrayXMLSerializer<T[][]> {
 
   protected final String propertyName;
   private final Function<Class, XMLSerializer<T>> serializer;
@@ -84,7 +85,7 @@ public class Array2dXMLSerializer<T> extends XMLSerializer<T[][]> {
     for (T[] array : values) {
       writer.beginObject(propertyName);
       for (T value : array) {
-        serializer.apply(value.getClass()).serialize(writer, value, ctx, params);
+        serializer.apply(value.getClass()).setParent(this).serialize(writer, value, ctx, params);
       }
       writer.endObject();
     }

@@ -31,20 +31,12 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public class PrimitiveBooleanArrayXMLSerializer extends BasicArrayXMLSerializer<boolean[]> {
 
-  private static final PrimitiveBooleanArrayXMLSerializer INSTANCE =
-      new PrimitiveBooleanArrayXMLSerializer();
   private BooleanXMLSerializer serializer = BooleanXMLSerializer.getInstance();
 
   private PrimitiveBooleanArrayXMLSerializer() {}
 
   public static BasicArrayXMLSerializer getInstance(String propertyName) {
-    return INSTANCE.setPropertyName(propertyName);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  protected boolean isEmpty(boolean[] value) {
-    return null == value || value.length == 0;
+    return new PrimitiveBooleanArrayXMLSerializer().setPropertyName(propertyName);
   }
 
   /** {@inheritDoc} */
@@ -60,10 +52,20 @@ public class PrimitiveBooleanArrayXMLSerializer extends BasicArrayXMLSerializer<
       return;
     }
 
-    writer.beginObject(propertyName);
+    if (isWrapCollections) {
+      writer.beginObject(propertyName);
+    }
     for (boolean value : values) {
       serializer.doSerialize(writer, value, ctx, params);
     }
-    writer.endObject();
+    if (isWrapCollections) {
+      writer.endObject();
+    }
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  protected boolean isEmpty(boolean[] value) {
+    return null == value || value.length == 0;
   }
 }

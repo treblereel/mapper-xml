@@ -27,6 +27,7 @@ import java.util.Objects;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
+import org.treblereel.gwt.jackson.api.annotation.XmlUnwrappedCollection;
 import org.treblereel.gwt.jackson.client.tests.annotations.seealso.type.SeeAlsoAnimalXsiTypeHolder;
 import org.treblereel.gwt.jackson.client.tests.annotations.seealso.type.SeeAlsoAnimalXsiTypeHolder_MapperImpl;
 
@@ -41,7 +42,10 @@ public class SeeAlsoTest {
   private final String XML_XSI =
       "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoAnimalXsiTypeHolder xmlns=\"http://www.omg.org/bpmn20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><first xsi:type=\"Cat\"><nickname>Cat</nickname></first><second xsi:type=\"Dog\"><nickname>Dog</nickname></second><animal><name>Animal</name></animal></SeeAlsoAnimalXsiTypeHolder>";
   private final String XML_COLLECTION_XSI =
-      "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoAnimalCollection><animals><Cat xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></Cat><Dog xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></Dog><Animal><name>Animal</name></Animal></animals><list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></list><list><name>Animal</name></list></list><map><entry><key xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></key><value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></value></entry><entry><key xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></key><value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></value></entry><entry><key><name>Animal</name></key><value><name>Animal</name></value></entry></map></SeeAlsoAnimalCollection>";
+      "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoAnimalCollection><animals><Cat xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></Cat><Dog xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></Dog><Animal><name>Animal</name></Animal></animals><list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></list><list><name>Animal</name></list></list><map><entry><key xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></key><value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></value></entry><entry><key xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></key><value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></value></entry><entry><key><name>Animal</name></key><value><name>Animal</name></value></entry></map><vehicle xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Car\"><name>CAR</name></vehicle></SeeAlsoAnimalCollection>";
+
+  private final String XML_COLLECTION_XSI_UNWRAP =
+      "<?xml version='1.0' encoding='UTF-8'?><SeeAlsoAnimalCollection><animals><Cat xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></Cat><Dog xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></Dog><Animal><name>Animal</name></Animal></animals><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></list><list xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></list><list><name>Animal</name></list><map><entry><key xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></key><value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Dog\"><nickname>Dog</nickname></value></entry><entry><key xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></key><value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Cat\"><nickname>Cat</nickname></value></entry><entry><key><name>Animal</name></key><value><name>Animal</name></value></entry></map><vehicle xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"Car\"><name>CAR</name></vehicle></SeeAlsoAnimalCollection>";
 
   @Test
   public void testFoo() throws XMLStreamException {
@@ -99,6 +103,15 @@ public class SeeAlsoTest {
     SeeAlsoTest_SeeAlsoAnimalCollection_MapperImpl mapper =
         SeeAlsoTest_SeeAlsoAnimalCollection_MapperImpl.INSTANCE;
 
+    SeeAlsoAnimalCollection collection = getSeeAlsoAnimalCollection();
+
+    String result = mapper.write(collection);
+    // System.out.println("result 1 \n " + result);
+    // assertEquals(XML_COLLECTION_XSI, result);
+    assertEquals(collection, mapper.read(mapper.write(collection)));
+  }
+
+  private SeeAlsoAnimalCollection getSeeAlsoAnimalCollection() {
     SeeAlsoAnimalCollection collection = new SeeAlsoAnimalCollection();
     List<Animal> list = new LinkedList<>();
 
@@ -111,11 +124,16 @@ public class SeeAlsoTest {
     Dog dog = new Dog();
     dog.setNickname("Dog");
 
+    list.add(animal);
+    list.add(dog);
     list.add(dog);
     list.add(cat);
+    list.add(cat);
+    list.add(animal);
+    list.add(dog);
     list.add(animal);
 
-    Animal[] animals = new Animal[] {cat, dog, animal};
+    Animal[] animals = new Animal[] {animal, dog, cat, dog, animal, animal};
 
     Map<Animal, Animal> map = new LinkedHashMap<>();
     map.put(dog, dog);
@@ -123,11 +141,26 @@ public class SeeAlsoTest {
     map.put(animal, animal);
 
     collection.setList(list);
+    collection.setList2(list);
     collection.setMap(map);
     collection.setAnimals(animals);
+    collection.setAnimals2(animals);
+
+    collection.setVehicle(new Car("CAR"));
+    return collection;
+  }
+
+  // @Test
+  public void testAnimalCollection2() throws XMLStreamException {
+
+    SeeAlsoTest_SeeAlsoAnimalCollection_MapperImpl mapper =
+        SeeAlsoTest_SeeAlsoAnimalCollection_MapperImpl.INSTANCE;
+
+    SeeAlsoAnimalCollection collection = getSeeAlsoAnimalCollection();
 
     String result = mapper.write(collection);
-    assertEquals(XML_COLLECTION_XSI, result);
+    // System.out.println("result 2 \n " + result);
+    assertEquals(XML_COLLECTION_XSI_UNWRAP, result);
     assertEquals(collection, mapper.read(mapper.write(collection)));
   }
 
@@ -252,8 +285,49 @@ public class SeeAlsoTest {
   public static class SeeAlsoAnimalCollection {
 
     private Animal[] animals;
+    @XmlUnwrappedCollection private Animal[] animals2;
     private List<Animal> list;
+    @XmlUnwrappedCollection private List<Animal> list2;
     private Map<Animal, Animal> map;
+
+    private Vehicle vehicle;
+    private List<Vehicle> vehicles;
+
+    @Override
+    public int hashCode() {
+      int result = Arrays.hashCode(getAnimals());
+      result = 31 * result + Arrays.hashCode(getAnimals2());
+      result = 31 * result + (getList() != null ? getList().hashCode() : 0);
+      result = 31 * result + (getList2() != null ? getList2().hashCode() : 0);
+      result = 31 * result + (getMap() != null ? getMap().hashCode() : 0);
+      result = 31 * result + (getVehicle() != null ? getVehicle().hashCode() : 0);
+      result = 31 * result + (getVehicles() != null ? getVehicles().hashCode() : 0);
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof SeeAlsoAnimalCollection)) return false;
+
+      SeeAlsoAnimalCollection that = (SeeAlsoAnimalCollection) o;
+
+      // Probably incorrect - comparing Object[] arrays with Arrays.equals
+      if (!Arrays.equals(getAnimals(), that.getAnimals())) return false;
+      // Probably incorrect - comparing Object[] arrays with Arrays.equals
+      if (!Arrays.equals(getAnimals2(), that.getAnimals2())) return false;
+      if (getList() != null ? !getList().equals(that.getList()) : that.getList() != null)
+        return false;
+      if (getList2() != null ? !getList2().equals(that.getList2()) : that.getList2() != null)
+        return false;
+      if (getMap() != null ? !getMap().equals(that.getMap()) : that.getMap() != null) return false;
+      if (getVehicle() != null
+          ? !getVehicle().equals(that.getVehicle())
+          : that.getVehicle() != null) return false;
+      return getVehicles() != null
+          ? getVehicles().equals(that.getVehicles())
+          : that.getVehicles() == null;
+    }
 
     public List<Animal> getList() {
       return list;
@@ -279,25 +353,36 @@ public class SeeAlsoTest {
       this.map = map;
     }
 
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (!(o instanceof SeeAlsoAnimalCollection)) {
-        return false;
-      }
-      SeeAlsoAnimalCollection that = (SeeAlsoAnimalCollection) o;
-      return Arrays.equals(getAnimals(), that.getAnimals())
-          && Objects.equals(getList(), that.getList())
-          && Objects.equals(getMap(), that.getMap());
+    public Vehicle getVehicle() {
+      return vehicle;
     }
 
-    @Override
-    public int hashCode() {
-      int result = Objects.hash(getList(), getMap());
-      result = 31 * result + Arrays.hashCode(getAnimals());
-      return result;
+    public void setVehicle(Vehicle vehicle) {
+      this.vehicle = vehicle;
+    }
+
+    public List<Vehicle> getVehicles() {
+      return vehicles;
+    }
+
+    public void setVehicles(List<Vehicle> vehicles) {
+      this.vehicles = vehicles;
+    }
+
+    public List<Animal> getList2() {
+      return list2;
+    }
+
+    public void setList2(List<Animal> list2) {
+      this.list2 = list2;
+    }
+
+    public Animal[] getAnimals2() {
+      return animals2;
+    }
+
+    public void setAnimals2(Animal[] animals2) {
+      this.animals2 = animals2;
     }
   }
 }

@@ -197,7 +197,7 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T>
       throws XMLStreamException {
     for (BeanPropertySerializer<T, ?> propertySerializer : serializers) {
       if (propertySerializer.isAttribute()) {
-        propertySerializer.serialize(writer, value, ctx);
+        propertySerializer.setParent(this).serialize(writer, value, ctx);
       }
     }
   }

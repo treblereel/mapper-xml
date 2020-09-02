@@ -21,22 +21,22 @@ import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
 import org.treblereel.gwt.jackson.api.custom.CustomXMLDeserializer;
 import org.treblereel.gwt.jackson.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
-import org.treblereel.gwt.jackson.client.tests.annotations.handler.Id;
+import org.treblereel.gwt.jackson.client.tests.annotations.handler.Bean;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 5/19/20 */
-public class IdDemarshaller extends CustomXMLDeserializer<Id> {
+public class IdDemarshaller extends CustomXMLDeserializer<Bean.Id> {
 
   @Override
-  protected Id doDeserialize(
+  protected Bean.Id doDeserialize(
       XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
       throws XMLStreamException {
-    return new Id(reader.nextString());
+    return new Bean.Id(reader.nextString());
   }
 
   @Override
-  public Id deserialize(
+  public Bean.Id deserialize(
       String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
       throws XMLDeserializationException {
-    return new Id(value);
+    return new Bean.Id(value);
   }
 }

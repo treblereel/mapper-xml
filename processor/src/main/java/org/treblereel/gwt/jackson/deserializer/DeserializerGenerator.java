@@ -146,7 +146,7 @@ public class DeserializerGenerator extends AbstractGenerator {
             .setName("MapLike")
             .setTypeArguments(
                 new ClassOrInterfaceType()
-                    .setName("BeanPropertyDeserializer")
+                    .setName(BeanPropertyDeserializer.class.getSimpleName())
                     .setTypeArguments(
                         new ClassOrInterfaceType()
                             .setName(beanDefinition.getElement().getSimpleName().toString()),
@@ -168,13 +168,181 @@ public class DeserializerGenerator extends AbstractGenerator {
         .ifPresent(
             body -> {
               body.addStatement(expressionStmt);
-              beanDefinition
-                  .getFields()
-                  .forEach(
-                      field ->
-                          addBeanPropertyDeserializer(body, beanDefinition.getElement(), field));
+              for (PropertyDefinition field : beanDefinition.getFields()) {
+                if (field.isUnWrapped() && (field.hasXmlSeeAlso() || field.hasXmlElementRefs())) {
+                  addBeanPropertyDeserializerInstance(body, beanDefinition.getElement(), field);
+                } else {
+                  addBeanPropertyDeserializer(body, beanDefinition.getElement(), field);
+                }
+              }
               body.addStatement(new ReturnStmt("map"));
             });
+  }
+
+  private void addBeanPropertyDeserializerInstance(
+      BlockStmt body, TypeElement type, PropertyDefinition field) {
+    ClassOrInterfaceType typeArg = getWrappedType(field);
+    ClassOrInterfaceType beanPropertyDeserializer =
+        new ClassOrInterfaceType().setName(BeanPropertyDeserializer.class.getSimpleName());
+    beanPropertyDeserializer.setTypeArguments(
+        new ClassOrInterfaceType().setName(type.getSimpleName().toString()), typeArg);
+
+    VariableDeclarator result = new VariableDeclarator();
+    result.setType(beanPropertyDeserializer);
+    result.setName(field.getPropertyName());
+
+    NodeList<BodyDeclaration<?>> anonymousClassBody = new NodeList<>();
+
+    result.setInitializer(
+        new ObjectCreationExpr()
+            .setType(beanPropertyDeserializer)
+            .setAnonymousClassBody(anonymousClassBody));
+    addNewDeserializer(field, anonymousClassBody);
+    setValue(type, typeArg, field, anonymousClassBody);
+
+    ExpressionStmt expressionStmt = new ExpressionStmt();
+    VariableDeclarationExpr variableDeclarationExpr = new VariableDeclarationExpr();
+
+    expressionStmt.setExpression(variableDeclarationExpr);
+    variableDeclarationExpr.getVariables().add(result);
+    body.addStatement(variableDeclarationExpr);
+    addAliasToMap(body, field);
+  }
+
+  private void addAliasToMap(BlockStmt body, PropertyDefinition field) {
+    if (field.hasXmlSeeAlso()) {
+
+      for (TypeElement typeElement : field.getXmlSeeAlso()) {
+        body.addStatement(
+            new MethodCallExpr(new NameExpr("map"), "put")
+                .addArgument(new StringLiteralExpr(typeElement.getSimpleName().toString()))
+                .addArgument(field.getPropertyName()));
+      }
+      body.addStatement(
+          new MethodCallExpr(new NameExpr("map"), "put")
+              .addArgument(new StringLiteralExpr(field.asTypeElement().getSimpleName().toString()))
+              .addArgument(field.getPropertyName()));
+    } else if (field.hasXmlElementRefs()) {
+      for (String typeElement : field.getXmlElementRefs().keySet()) {
+        body.addStatement(
+            new MethodCallExpr(new NameExpr("map"), "put")
+                .addArgument(new StringLiteralExpr(typeElement))
+                .addArgument(field.getPropertyName()));
+      }
+    }
+  }
+
+  private void addBeanPropertyDeserializer(
+      BlockStmt body, TypeElement type, PropertyDefinition field) {
+    NodeList<BodyDeclaration<?>> anonymousClassBody = new NodeList<>();
+
+    ClassOrInterfaceType typeArg = getWrappedType(field);
+    ClassOrInterfaceType beanPropertyDeserializer =
+        new ClassOrInterfaceType().setName(BeanPropertyDeserializer.class.getSimpleName());
+    beanPropertyDeserializer.setTypeArguments(
+        new ClassOrInterfaceType().setName(type.getSimpleName().toString()), typeArg);
+
+    body.addStatement(
+        new MethodCallExpr(new NameExpr("map"), "put")
+            .addArgument(
+                new StringLiteralExpr(
+                    field.isWrapped() ? field.getWrapped().key : field.getPropertyName()))
+            .addArgument(
+                new ObjectCreationExpr()
+                    .setType(beanPropertyDeserializer)
+                    .setAnonymousClassBody(anonymousClassBody)));
+    addNewDeserializer(field, anonymousClassBody);
+    setValue(type, typeArg, field, anonymousClassBody);
+    isAttribute(anonymousClassBody, field);
+  }
+
+  private ClassOrInterfaceType getWrappedType(PropertyDefinition field) {
+    return new ClassOrInterfaceType().setName(TypeUtils.wrapperType(field.getBean()));
+  }
+
+  private void addNewDeserializer(
+      PropertyDefinition field, NodeList<BodyDeclaration<?>> anonymousClassBody) {
+    MethodDeclaration method = new MethodDeclaration();
+    method.setModifiers(Modifier.Keyword.PROTECTED);
+    method.addAnnotation(Override.class);
+    method.setName("newDeserializer");
+    method.addParameter(XMLReader.class.getCanonicalName(), "reader");
+    method.setType(new ClassOrInterfaceType().setName("XMLDeserializer<?>"));
+    method
+        .getBody()
+        .ifPresent(
+            body ->
+                body.addAndGetStatement(
+                    new ReturnStmt().setExpression(createFieldDeserializerExpr(field))));
+    anonymousClassBody.add(method);
+  }
+
+  private Expression createFieldDeserializerExpr(PropertyDefinition field) {
+    Expression expr = field.getFieldDeserializer(cu);
+    if (field.isWrapped()) {
+      ClassOrInterfaceType wrapper =
+          new ClassOrInterfaceType()
+              .setName(XmlElementWrapperDeserializer.class.getCanonicalName());
+      ObjectCreationExpr beanProperty = new ObjectCreationExpr();
+      beanProperty.setType(wrapper);
+      expr =
+          beanProperty
+              .addArgument(expr)
+              .addArgument(new StringLiteralExpr(field.getPropertyName()));
+    }
+    return expr;
+  }
+
+  private void setValue(
+      TypeElement type,
+      ClassOrInterfaceType fieldType,
+      PropertyDefinition field,
+      NodeList<BodyDeclaration<?>> anonymousClassBody) {
+    MethodDeclaration method = new MethodDeclaration();
+    method.setModifiers(Modifier.Keyword.PUBLIC);
+    method.addAnnotation(Override.class);
+    method.setName("setValue");
+    method.setType("void");
+    method.addParameter(type.getSimpleName().toString(), "bean");
+    method.addParameter(fieldType, "value");
+    method.addParameter(XMLDeserializationContext.class.getSimpleName(), "ctx");
+
+    method.getBody().ifPresent(body -> body.addAndGetStatement(getFieldAccessor(field)));
+    anonymousClassBody.add(method);
+  }
+
+  private Expression getFieldAccessor(PropertyDefinition field) {
+    if (typeUtils.hasSetter(field.getProperty())) {
+      return new MethodCallExpr(
+              new NameExpr("bean"),
+              typeUtils.getSetter(field.getProperty()).getSimpleName().toString())
+          .addArgument("value");
+    } else {
+      return new AssignExpr()
+          .setTarget(
+              new FieldAccessExpr(
+                  new NameExpr("bean"), field.getProperty().getSimpleName().toString()))
+          .setValue(new NameExpr("value"));
+    }
+  }
+
+  private void isAttribute(
+      NodeList<BodyDeclaration<?>> anonymousClassBody, PropertyDefinition propertyDefinition) {
+    if (propertyDefinition.isAttribute()) {
+      MethodDeclaration method = new MethodDeclaration();
+      method.setModifiers(Modifier.Keyword.PROTECTED);
+      method.addAnnotation(Override.class);
+      method.setName("isAttribute");
+      method.setType(new ClassOrInterfaceType().setName("boolean"));
+
+      method
+          .getBody()
+          .ifPresent(
+              body ->
+                  body.addAndGetStatement(
+                      new ReturnStmt().setExpression(new BooleanLiteralExpr(true))));
+      anonymousClassBody.add(method);
+    }
   }
 
   private void initInstanceBuilder(BeanDefinition type) {
@@ -206,30 +374,6 @@ public class DeserializerGenerator extends AbstractGenerator {
             });
   }
 
-  private void addBeanPropertyDeserializer(
-      BlockStmt body, TypeElement type, PropertyDefinition field) {
-    NodeList<BodyDeclaration<?>> anonymousClassBody = new NodeList<>();
-
-    ClassOrInterfaceType typeArg = getWrappedType(field);
-    ClassOrInterfaceType beanPropertyDeserializer =
-        new ClassOrInterfaceType().setName(BeanPropertyDeserializer.class.getSimpleName());
-    beanPropertyDeserializer.setTypeArguments(
-        new ClassOrInterfaceType().setName(type.getSimpleName().toString()), typeArg);
-
-    body.addStatement(
-        new MethodCallExpr(new NameExpr("map"), "put")
-            .addArgument(
-                new StringLiteralExpr(
-                    field.isWrapped() ? field.getWrapped() : field.getPropertyName()))
-            .addArgument(
-                new ObjectCreationExpr()
-                    .setType(beanPropertyDeserializer)
-                    .setAnonymousClassBody(anonymousClassBody)));
-    addNewDeserializer(field, anonymousClassBody);
-    setValue(type, typeArg, field, anonymousClassBody);
-    isAttribute(anonymousClassBody, field);
-  }
-
   private void addInstanceBuilder(BeanDefinition type, BlockStmt body) {
     ObjectCreationExpr instanceBuilder = new ObjectCreationExpr();
     ClassOrInterfaceType instanceBuilderType =
@@ -246,64 +390,6 @@ public class DeserializerGenerator extends AbstractGenerator {
     create(type, anonymousClassBody);
 
     body.addStatement(new ReturnStmt(instanceBuilder));
-  }
-
-  private ClassOrInterfaceType getWrappedType(PropertyDefinition field) {
-    return new ClassOrInterfaceType().setName(TypeUtils.wrapperType(field.getBean()));
-  }
-
-  private void addNewDeserializer(
-      PropertyDefinition field, NodeList<BodyDeclaration<?>> anonymousClassBody) {
-    MethodDeclaration method = new MethodDeclaration();
-    method.setModifiers(Modifier.Keyword.PROTECTED);
-    method.addAnnotation(Override.class);
-    method.setName("newDeserializer");
-    method.addParameter(XMLReader.class.getCanonicalName(), "reader");
-    method.setType(new ClassOrInterfaceType().setName("XMLDeserializer<?>"));
-    method
-        .getBody()
-        .ifPresent(
-            body ->
-                body.addAndGetStatement(
-                    new ReturnStmt().setExpression(createFieldDeserializerExpr(field))));
-    anonymousClassBody.add(method);
-  }
-
-  private void setValue(
-      TypeElement type,
-      ClassOrInterfaceType fieldType,
-      PropertyDefinition field,
-      NodeList<BodyDeclaration<?>> anonymousClassBody) {
-    MethodDeclaration method = new MethodDeclaration();
-    method.setModifiers(Modifier.Keyword.PUBLIC);
-    method.addAnnotation(Override.class);
-    method.setName("setValue");
-    method.setType("void");
-    method.addParameter(type.getSimpleName().toString(), "bean");
-    method.addParameter(fieldType, "value");
-    method.addParameter(XMLDeserializationContext.class.getSimpleName(), "ctx");
-
-    method.getBody().ifPresent(body -> body.addAndGetStatement(getFieldAccessor(field)));
-    anonymousClassBody.add(method);
-  }
-
-  private void isAttribute(
-      NodeList<BodyDeclaration<?>> anonymousClassBody, PropertyDefinition propertyDefinition) {
-    if (propertyDefinition.isAttribute()) {
-      MethodDeclaration method = new MethodDeclaration();
-      method.setModifiers(Modifier.Keyword.PROTECTED);
-      method.addAnnotation(Override.class);
-      method.setName("isAttribute");
-      method.setType(new ClassOrInterfaceType().setName("boolean"));
-
-      method
-          .getBody()
-          .ifPresent(
-              body ->
-                  body.addAndGetStatement(
-                      new ReturnStmt().setExpression(new BooleanLiteralExpr(true))));
-      anonymousClassBody.add(method);
-    }
   }
 
   private void newInstance(BeanDefinition type, NodeList<BodyDeclaration<?>> anonymousClassBody) {
@@ -336,6 +422,10 @@ public class DeserializerGenerator extends AbstractGenerator {
         .ifPresent(
             body -> body.addAndGetStatement(new ReturnStmt().setExpression(instanceBuilder)));
     anonymousClassBody.add(method);
+  }
+
+  private void addParameter(MethodDeclaration method, String type, String name) {
+    method.addParameter(new ClassOrInterfaceType().setName(type), name);
   }
 
   private void getParametersDeserializer(NodeList<BodyDeclaration<?>> anonymousClassBody) {
@@ -384,40 +474,5 @@ public class DeserializerGenerator extends AbstractGenerator {
     }
 
     anonymousClassBody.add(method);
-  }
-
-  private Expression createFieldDeserializerExpr(PropertyDefinition field) {
-    Expression expr = field.getFieldDeserializer(cu);
-    if (field.isWrapped()) {
-      ClassOrInterfaceType wrapper =
-          new ClassOrInterfaceType()
-              .setName(XmlElementWrapperDeserializer.class.getCanonicalName());
-      ObjectCreationExpr beanProperty = new ObjectCreationExpr();
-      beanProperty.setType(wrapper);
-      expr =
-          beanProperty
-              .addArgument(expr)
-              .addArgument(new StringLiteralExpr(field.getPropertyName()));
-    }
-    return expr;
-  }
-
-  private Expression getFieldAccessor(PropertyDefinition field) {
-    if (typeUtils.hasSetter(field.getProperty())) {
-      return new MethodCallExpr(
-              new NameExpr("bean"),
-              typeUtils.getSetter(field.getProperty()).getSimpleName().toString())
-          .addArgument("value");
-    } else {
-      return new AssignExpr()
-          .setTarget(
-              new FieldAccessExpr(
-                  new NameExpr("bean"), field.getProperty().getSimpleName().toString()))
-          .setValue(new NameExpr("value"));
-    }
-  }
-
-  private void addParameter(MethodDeclaration method, String type, String name) {
-    method.addParameter(new ClassOrInterfaceType().setName(type), name);
   }
 }

@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/6/20 */
@@ -40,6 +42,12 @@ public class Process {
 
   @XmlAttribute(name = "drools:adHoc")
   private boolean adHoc;
+
+  @XmlElementRefs({
+    @XmlElementRef(name = "userTask", type = UserTask.class),
+    // @XmlElementRef(name = "bpmn2:scriptTask", type = ScriptTask.class)
+  })
+  private List<BPMNViewDefinition> definitionList;
 
   private List<SubProcess> subProcesses = new ArrayList<>();
 
@@ -179,5 +187,13 @@ public class Process {
 
   public void setId(String id) {
     this.id = id;
+  }
+
+  public List<BPMNViewDefinition> getDefinitionList() {
+    return definitionList;
+  }
+
+  public void setDefinitionList(List<BPMNViewDefinition> definitionList) {
+    this.definitionList = definitionList;
   }
 }

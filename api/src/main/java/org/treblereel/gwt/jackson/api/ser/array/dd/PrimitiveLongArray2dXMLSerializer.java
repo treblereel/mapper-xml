@@ -32,9 +32,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public class PrimitiveLongArray2dXMLSerializer extends BasicArrayXMLSerializer<long[][]> {
 
-  private static final PrimitiveLongArray2dXMLSerializer INSTANCE =
-      new PrimitiveLongArray2dXMLSerializer();
-
   private PrimitiveLongArray2dXMLSerializer() {}
 
   /**
@@ -43,7 +40,7 @@ public class PrimitiveLongArray2dXMLSerializer extends BasicArrayXMLSerializer<l
    * @return an instance of {@link PrimitiveLongArray2dXMLSerializer}
    */
   public static BasicArrayXMLSerializer getInstance(String propertyName) {
-    return INSTANCE.setPropertyName(propertyName);
+    return new PrimitiveLongArray2dXMLSerializer().setPropertyName(propertyName);
   }
 
   /** {@inheritDoc} */

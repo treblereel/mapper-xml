@@ -31,8 +31,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public class PrimitiveCharacterArrayXMLSerializer extends BasicArrayXMLSerializer<char[]> {
 
-  private static final PrimitiveCharacterArrayXMLSerializer INSTANCE =
-      new PrimitiveCharacterArrayXMLSerializer();
   private CharacterXMLSerializer serializer = CharacterXMLSerializer.getInstance();
 
   private PrimitiveCharacterArrayXMLSerializer() {}
@@ -43,13 +41,7 @@ public class PrimitiveCharacterArrayXMLSerializer extends BasicArrayXMLSerialize
    * @return an instance of {@link PrimitiveCharacterArrayXMLSerializer}
    */
   public static BasicArrayXMLSerializer getInstance(String propertyName) {
-    return INSTANCE.setPropertyName(propertyName);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  protected boolean isEmpty(char[] value) {
-    return null == value || value.length == 0;
+    return new PrimitiveCharacterArrayXMLSerializer().setPropertyName(propertyName);
   }
 
   /** {@inheritDoc} */
@@ -62,10 +54,20 @@ public class PrimitiveCharacterArrayXMLSerializer extends BasicArrayXMLSerialize
       return;
     }
 
-    writer.beginObject(propertyName);
+    if (isWrapCollections) {
+      writer.beginObject(propertyName);
+    }
     for (char value : values) {
       serializer.doSerialize(writer, value, ctx, params);
     }
-    writer.endObject();
+    if (isWrapCollections) {
+      writer.endObject();
+    }
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  protected boolean isEmpty(char[] value) {
+    return null == value || value.length == 0;
   }
 }

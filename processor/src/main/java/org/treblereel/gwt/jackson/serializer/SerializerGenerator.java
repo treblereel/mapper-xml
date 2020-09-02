@@ -303,6 +303,18 @@ public class SerializerGenerator extends AbstractGenerator {
     beanType.setTypeArguments(typeArguments);
   }
 
+  private void addTypeArguments(TypeMirror type, ClassOrInterfaceType interfaceType) {
+    if (type instanceof DeclaredType) {
+      if (!((DeclaredType) type).getTypeArguments().isEmpty()) {
+        NodeList<Type> types = new NodeList<>();
+        ((DeclaredType) type)
+            .getTypeArguments()
+            .forEach(param -> types.add(new ClassOrInterfaceType().setName(param.toString())));
+        interfaceType.setTypeArguments(types);
+      }
+    }
+  }
+
   private void addMethods(
       ObjectCreationExpr beanProperty,
       BeanDefinition beanDefinition,
@@ -315,18 +327,6 @@ public class SerializerGenerator extends AbstractGenerator {
     isAttribute(anonymousClassBody, propertyDefinition);
     getNamespace(anonymousClassBody, propertyDefinition);
     getPrefix(anonymousClassBody, beanDefinition, propertyDefinition);
-  }
-
-  private void addTypeArguments(TypeMirror type, ClassOrInterfaceType interfaceType) {
-    if (type instanceof DeclaredType) {
-      if (!((DeclaredType) type).getTypeArguments().isEmpty()) {
-        NodeList<Type> types = new NodeList<>();
-        ((DeclaredType) type)
-            .getTypeArguments()
-            .forEach(param -> types.add(new ClassOrInterfaceType().setName(param.toString())));
-        interfaceType.setTypeArguments(types);
-      }
-    }
   }
 
   private void newSerializer(
@@ -348,6 +348,24 @@ public class SerializerGenerator extends AbstractGenerator {
     anonymousClassBody.add(method);
   }
 
+  private Expression createFieldSerializerExpr(PropertyDefinition field) {
+    Expression expr = field.getFieldSerializer(cu);
+    if (field.isWrapped()) {
+      ClassOrInterfaceType wrapper =
+          new ClassOrInterfaceType().setName(XmlElementWrapperSerializer.class.getCanonicalName());
+      ObjectCreationExpr beanProperty = new ObjectCreationExpr();
+      beanProperty.setType(wrapper);
+      Pair<String, String> wrapped = field.getWrapped();
+      expr = beanProperty.addArgument(expr).addArgument(new StringLiteralExpr(wrapped.key));
+      if (wrapped.value != null) {
+        expr =
+            new MethodCallExpr(expr, "setDefaultNamespace")
+                .addArgument(new StringLiteralExpr(wrapped.value));
+      }
+    }
+    return expr;
+  }
+
   private void getValue(
       NodeList<BodyDeclaration<?>> anonymousClassBody,
       BeanDefinition bean,
@@ -367,6 +385,17 @@ public class SerializerGenerator extends AbstractGenerator {
         .getBody()
         .ifPresent(body -> body.addAndGetStatement(new ReturnStmt(getFieldAccessor(field))));
     anonymousClassBody.add(method);
+  }
+
+  private Expression getFieldAccessor(PropertyDefinition field) {
+    if (typeUtils.hasGetter(field.getProperty())) {
+      return new MethodCallExpr(
+          new NameExpr("bean"),
+          typeUtils.getGetter(field.getProperty()).getSimpleName().toString());
+    } else {
+      return new FieldAccessExpr(
+          new NameExpr("bean"), field.getProperty().getSimpleName().toString());
+    }
   }
 
   private void isAttribute(
@@ -445,29 +474,6 @@ public class SerializerGenerator extends AbstractGenerator {
                   body.addAndGetStatement(
                       new ReturnStmt().setExpression(new StringLiteralExpr(finalPrefix))));
       anonymousClassBody.add(method);
-    }
-  }
-
-  private Expression createFieldSerializerExpr(PropertyDefinition field) {
-    Expression expr = field.getFieldSerializer(cu);
-    if (field.isWrapped()) {
-      ClassOrInterfaceType wrapper =
-          new ClassOrInterfaceType().setName(XmlElementWrapperSerializer.class.getCanonicalName());
-      ObjectCreationExpr beanProperty = new ObjectCreationExpr();
-      beanProperty.setType(wrapper);
-      expr = beanProperty.addArgument(expr).addArgument(new StringLiteralExpr(field.getWrapped()));
-    }
-    return expr;
-  }
-
-  private Expression getFieldAccessor(PropertyDefinition field) {
-    if (typeUtils.hasGetter(field.getProperty())) {
-      return new MethodCallExpr(
-          new NameExpr("bean"),
-          typeUtils.getGetter(field.getProperty()).getSimpleName().toString());
-    } else {
-      return new FieldAccessExpr(
-          new NameExpr("bean"), field.getProperty().getSimpleName().toString());
     }
   }
 }

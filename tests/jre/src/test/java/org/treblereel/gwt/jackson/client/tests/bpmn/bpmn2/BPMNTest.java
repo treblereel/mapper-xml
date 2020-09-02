@@ -22,10 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
-import org.treblereel.gwt.jackson.api.DefaultXMLDeserializationContext;
-import org.treblereel.gwt.jackson.api.DefaultXMLSerializationContext;
-import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
-import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.client.tests.bpmn.bpmn.dc.Bounds;
 import org.treblereel.gwt.jackson.client.tests.bpmn.bpmn.di.BPMNDiagram;
 import org.treblereel.gwt.jackson.client.tests.bpmn.bpmn.di.BPMNPlane;
@@ -36,13 +32,10 @@ import org.treblereel.gwt.jackson.client.tests.bpmn.drools.MetaData;
 @J2clTestInput(BPMNTest.class)
 public class BPMNTest {
 
-  Definitions_MapperImpl mapper = Definitions_MapperImpl.INSTANCE;
+  private static final Definitions_MapperImpl mapper = Definitions_MapperImpl.INSTANCE;
 
   @Test
   public void test() throws XMLStreamException {
-
-    String expected =
-        "<?xml version='1.0' encoding='UTF-8'?><bpmn2:definitions xmlns=\"http://www.omg.org/bpmn20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:bpmn2=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:bpsim=\"http://www.bpsim.org/schemas/1.0\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:drools=\"http://www.jboss.org/drools\" xsi:schemaLocation=\"http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd http://www.omg.org/spec/DD/20100524/DC DC.xsd http://www.omg.org/spec/DD/20100524/DI DI.xsd\" targetNamespace=\"http://www.omg.org/bpmn20\" id=\"ad04f8e4-9ac1-11ea-bb37-0242ac130002\" exporter=\"jBPM Process Modeler\" exporterVersion=\"2.0\"><itemDefinitions><bpmn2:itemDefinitions id=\"_DataObjectItem\" structureRef=\"String\"/></itemDefinitions><bpmn2:process id=\"twdo.twodosubprocess\" name=\"twodosubprocess\" isExecutable=\"true\" drools:packageName=\"com.myspace.twdo\" drools:version=\"1.0\" drools:adHoc=\"false\"><subProcesses><bpmn2:subProcesses id=\"_7503B170-81DB-47F5-BAF3-F67957B95DF7\" name=\"Event Sub-process\" triggeredByEvent=\"true\"><extensionElements><drools:extensionElements name=\"elementname\"><metaValue><![CDATA[Event Sub-process]]></metaValue></drools:extensionElements></extensionElements><dataObjectReference/></bpmn2:subProcesses></subProcesses><dataObjects><bpmn2:dataObjects id=\"DataObject\" name=\"DataObject\" itemSubjectRef=\"_DataObjectItem\"/></dataObjects><dataObjectReferences><bpmn2:dataObjectReferences id=\"_D7D714AE-A0C9-4A33-89C1-25300898967E\" dataObjectRef=\"DataObject\"/></dataObjectReferences></bpmn2:process><bpmndi:BPMNDiagram id=\"_QB3JgVY5Eeq0CdSiRkduQA\"><planes><bpmndi:planes id=\"_QB3JglY5Eeq0CdSiRkduQA\" bpmnElement=\"twdo.twodosubprocess\"><shapes><bpmndi:shapes id=\"shape__7503B170-81DB-47F5-BAF3-F67957B95DF7\" bpmnElement=\"_7503B170-81DB-47F5-BAF3-F67957B95DF7\" isExpanded=\"true\"><dc:bounds height=\"253.0\" width=\"653.0\" x=\"488.0\" y=\"210.0\"/></bpmndi:shapes></shapes></bpmndi:planes></planes></bpmndi:BPMNDiagram></bpmn2:definitions>";
 
     Definitions tested = new Definitions();
     tested.setId("ad04f8e4-9ac1-11ea-bb37-0242ac130002");
@@ -61,6 +54,39 @@ public class BPMNTest {
     process.setAdHoc(false);
     process.setVersion("1.0");
     process.setExecutable(true);
+
+    UserTask userTask = new UserTask();
+
+    List<BPMNViewDefinition> definitionList = new ArrayList<>();
+    definitionList.add(userTask);
+
+    List<Data> result = new ArrayList<>();
+    result.add(new DataInput(userTask.getId(), "TaskNameInputX", "getTaskName"));
+    result.add(new DataInput(userTask.getId(), "SkippableInputX", "getSkippable"));
+    result.add(new DataInput(userTask.getId(), "DescriptionInputX", "getDescription"));
+    result.add(new DataInput(userTask.getId(), "PriorityInputX", "getPriority"));
+    result.add(new DataInput(userTask.getId(), "ContentInputX", "getContent"));
+
+    List<MetaData> metaDataList = new ArrayList<>();
+    metaDataList.add(new MetaData("elementname", "getTaskName"));
+    metaDataList.add(new MetaData("customAsync", "getIsAsync"));
+    metaDataList.add(new MetaData("customAutoStart", "getAdHocAutostart"));
+    userTask.setExtensionElements(metaDataList);
+
+    InputSet inputSet = new InputSet();
+    List<String> list = new ArrayList<>();
+    list.add(userTask.getId() + "_TaskNameInputX");
+    list.add(userTask.getId() + "_SkippableInputX");
+    list.add(userTask.getId() + "_CommentInputX");
+    list.add(userTask.getId() + "_DescriptionInputX");
+    list.add(userTask.getId() + "_PriorityInputX");
+    list.add(userTask.getId() + "_ContentInputX");
+    inputSet.setSet(list);
+    result.add(inputSet);
+
+    userTask.setIoSpecification(result);
+
+    process.setDefinitionList(definitionList);
 
     SubProcess subProcess = new SubProcess();
     subProcess.setId("_7503B170-81DB-47F5-BAF3-F67957B95DF7");
@@ -110,21 +136,20 @@ public class BPMNTest {
     shape.setBounds(bounds);
 
     String xml = mapper.write(tested);
-
-    // assertEquals(expected, xml); // works in a browser. fails in htmlunit
+    // System.out.println("RESULT \n" + xml);
     Definitions encoded = mapper.read(xml);
+    assertEquals(tested, encoded);
     assertEquals(xml, mapper.write(encoded));
-    assertEquals(tested, mapper.read(mapper.write(encoded)));
+
+    /*    xml = mapper.write(tested, serializationContext);
+    System.out.println("RESULT \n" + xml);
+    encoded = mapper.read(xml, deserializationContext);
+    assertEquals(tested, encoded);
+    assertEquals(xml, mapper.write(encoded, serializationContext));*/
   }
 
   @Test
   public void testUnwrappedCollections() throws XMLStreamException {
-    XMLSerializationContext serializationContext =
-        DefaultXMLSerializationContext.builder().wrapCollections(false).build();
-
-    XMLDeserializationContext deserializationContext =
-        DefaultXMLDeserializationContext.builder().wrapCollections(false).build();
-
     Definitions definition = new Definitions();
 
     List<ItemDefinition> itemDefinitionList = new ArrayList<>();
@@ -141,19 +166,10 @@ public class BPMNTest {
     definition.getItemDefinitions().add(itemDefinition);
 
     Definitions_MapperImpl mapper = new Definitions_MapperImpl();
-    String xml = mapper.write(definition, serializationContext);
-    Definitions result =
-        mapper.read(mapper.write(definition, serializationContext), deserializationContext);
+    String xml = mapper.write(definition);
+    Definitions result = mapper.read(mapper.write(definition));
     assertEquals(definition, result);
-    assertEquals(
-        xml,
-        mapper.write(
-            mapper.read(mapper.write(result, serializationContext), deserializationContext),
-            serializationContext));
-    assertEquals(
-        xml,
-        mapper.write(
-            mapper.read(mapper.write(result, serializationContext), deserializationContext),
-            serializationContext));
+    assertEquals(xml, mapper.write(mapper.read(mapper.write(result))));
+    assertEquals(xml, mapper.write(mapper.read(mapper.write(result))));
   }
 }

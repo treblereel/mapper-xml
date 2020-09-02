@@ -69,13 +69,6 @@ public interface XMLSerializationContext extends XMLMappingContext {
   boolean isOrderMapEntriesByKeys();
 
   /**
-   * isWrapCollections.
-   *
-   * @return a boolean.
-   */
-  boolean isWrapCollections();
-
-  /**
    * newXMLWriter.
    *
    * @return a {@link XMLWriter} object.

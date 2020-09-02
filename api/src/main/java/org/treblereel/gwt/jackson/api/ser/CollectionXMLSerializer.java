@@ -22,6 +22,7 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
+import org.treblereel.gwt.jackson.api.ser.array.BasicArrayXMLSerializer;
 import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /**
@@ -31,7 +32,8 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  * @author Nicolas Morel
  * @version $Id: $
  */
-public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSerializer<C> {
+public class CollectionXMLSerializer<C extends Collection<T>, T>
+    extends BasicArrayXMLSerializer<C> {
 
   private final Function<Class, XMLSerializer<T>> serializer;
 
@@ -80,18 +82,17 @@ public class CollectionXMLSerializer<C extends Collection<T>, T> extends XMLSeri
       }
       return;
     }
-    if (ctx.isWrapCollections()) {
+    if (isWrapCollections) {
       writer.beginObject(propertyName);
     }
-
     for (T value : values) {
       serializer
           .apply(value.getClass())
-          .setParent(this)
+          .setParent(parent)
           .setPropertyName(propertyName)
           .serialize(writer, value, ctx, params);
     }
-    if (ctx.isWrapCollections()) {
+    if (isWrapCollections) {
       writer.endObject();
     }
   }

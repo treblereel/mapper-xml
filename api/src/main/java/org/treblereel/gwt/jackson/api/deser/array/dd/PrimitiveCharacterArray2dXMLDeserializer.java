@@ -33,9 +33,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 public class PrimitiveCharacterArray2dXMLDeserializer
     extends AbstractArray2dXMLDeserializer<char[][]> {
 
-  private static final PrimitiveCharacterArray2dXMLDeserializer INSTANCE =
-      new PrimitiveCharacterArray2dXMLDeserializer();
-
   private PrimitiveCharacterArray2dXMLDeserializer() {}
 
   /**
@@ -44,7 +41,7 @@ public class PrimitiveCharacterArray2dXMLDeserializer
    * @return an instance of {@link PrimitiveCharacterArray2dXMLDeserializer}
    */
   public static PrimitiveCharacterArray2dXMLDeserializer getInstance() {
-    return INSTANCE;
+    return new PrimitiveCharacterArray2dXMLDeserializer();
   }
 
   /** {@inheritDoc} */

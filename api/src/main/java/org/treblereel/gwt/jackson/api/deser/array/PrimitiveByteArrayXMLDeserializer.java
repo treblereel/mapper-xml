@@ -33,9 +33,6 @@ import org.treblereel.gwt.jackson.api.utils.Base64Utils;
  */
 public class PrimitiveByteArrayXMLDeserializer extends AbstractArrayXMLDeserializer<byte[]> {
 
-  private static final PrimitiveByteArrayXMLDeserializer INSTANCE =
-      new PrimitiveByteArrayXMLDeserializer();
-
   private PrimitiveByteArrayXMLDeserializer() {}
 
   /**
@@ -44,7 +41,7 @@ public class PrimitiveByteArrayXMLDeserializer extends AbstractArrayXMLDeseriali
    * @return an instance of {@link PrimitiveByteArrayXMLDeserializer}
    */
   public static PrimitiveByteArrayXMLDeserializer getInstance() {
-    return INSTANCE;
+    return new PrimitiveByteArrayXMLDeserializer();
   }
 
   /** {@inheritDoc} */

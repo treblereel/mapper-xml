@@ -33,7 +33,7 @@ public class BeanTest {
   @Test
   public void test() throws XMLStreamException {
     Bean test = new Bean();
-    test.setId(new Id("d80b09e6-9a00-11ea-bb37-0242ac130002"));
+    test.setId(new Bean.Id("d80b09e6-9a00-11ea-bb37-0242ac130002"));
     MyBean bean = new MyBean();
     bean.setValue("BeanTest");
     bean.setValue2("BeanTest2");

@@ -13,34 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.treblereel.gwt.jackson.client.tests.beans.collection;
 
 import java.util.Arrays;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
+import org.treblereel.gwt.jackson.api.annotation.XmlUnwrappedCollection;
 
-/** @author Dmitrii Tikhomirov Created by treblereel 3/27/20 */
+/** @author Dmitrii Tikhomirov Created by treblereel 9/2/20 */
 @XMLMapper
-public class PrimitiveArrays {
+public class PrimitiveArraysUnwrapped {
 
-  private String[] strings;
+  @XmlUnwrappedCollection private boolean[] booleans;
 
-  private boolean[] booleans;
+  @XmlUnwrappedCollection private String[] strings;
 
-  private char[] chars;
+  @XmlUnwrappedCollection private char[] chars;
 
-  private byte[] bytes;
+  @XmlUnwrappedCollection private byte[] bytes;
 
-  private double[] doubles;
+  @XmlUnwrappedCollection private double[] doubles;
 
-  private int[] ints;
+  @XmlUnwrappedCollection private int[] ints;
 
-  private long[] longs;
+  @XmlUnwrappedCollection private long[] longs;
 
-  private short[] shorts;
+  @XmlUnwrappedCollection private short[] shorts;
 
-  public PrimitiveArrays() {}
+  public PrimitiveArraysUnwrapped() {}
 
-  public PrimitiveArrays(
+  public PrimitiveArraysUnwrapped(
       String[] strings,
       boolean[] booleans,
       char[] chars,
@@ -126,9 +128,9 @@ public class PrimitiveArrays {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof PrimitiveArrays)) return false;
+    if (!(o instanceof PrimitiveArraysUnwrapped)) return false;
 
-    PrimitiveArrays that = (PrimitiveArrays) o;
+    PrimitiveArraysUnwrapped that = (PrimitiveArraysUnwrapped) o;
 
     // Probably incorrect - comparing Object[] arrays with Arrays.equals
     if (!Arrays.equals(getStrings(), that.getStrings())) return false;
@@ -156,7 +158,7 @@ public class PrimitiveArrays {
 
   @Override
   public String toString() {
-    return "PrimitiveArrays{"
+    return "PrimitiveArraysUnwrapped{"
         + "\nstrings="
         + Arrays.toString(strings)
         + ",\n booleans="

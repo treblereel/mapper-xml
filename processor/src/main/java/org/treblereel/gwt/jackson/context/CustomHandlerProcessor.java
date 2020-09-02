@@ -69,9 +69,6 @@ public class CustomHandlerProcessor {
     if (!type.getModifiers().contains(Modifier.PUBLIC)) {
       throw new GenerationException(type + " must be PUBLIC");
     }
-    if (type.getModifiers().contains(Modifier.STATIC)) {
-      throw new GenerationException(type + " must not be STATIC");
-    }
     if (type.getModifiers().contains(Modifier.ABSTRACT)) {
       throw new GenerationException(type + " must not be ABSTRACT");
     }

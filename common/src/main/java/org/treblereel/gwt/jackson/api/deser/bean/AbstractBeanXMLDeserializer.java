@@ -107,7 +107,7 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T>
   private BeanPropertyDeserializer<T, ?> getPropertyDeserializer(
       String propertyName, XMLDeserializationContext ctx) throws XMLStreamException {
     BeanPropertyDeserializer<T, ?> property = deserializers.get(propertyName);
-    if (null == property) {
+    if (null == property && ctx.isFailOnUnknownProperties()) {
       throw ctx.traceError(
           "Unknown property '"
               + propertyName

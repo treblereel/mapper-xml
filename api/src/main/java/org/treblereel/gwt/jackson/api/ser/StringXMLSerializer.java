@@ -17,6 +17,7 @@
 package org.treblereel.gwt.jackson.api.ser;
 
 import javax.xml.stream.XMLStreamException;
+import org.treblereel.gwt.jackson.api.PropertyType;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -54,11 +55,14 @@ public class StringXMLSerializer extends XMLSerializer<String> {
   public void doSerialize(
       XMLWriter writer, String value, XMLSerializationContext ctx, XMLSerializerParameters params)
       throws XMLStreamException {
-    if (cdata) {
+    if (type.equals(PropertyType.CDATA)) {
       writer.beginObject(propertyName);
       writer.writeCData(value);
       writer.endObject();
-      cdata = false;
+      type = PropertyType.COMMON;
+    } else if (type.equals(PropertyType.CDATA_INLINE)) {
+      writer.writeCData(value);
+      type = PropertyType.COMMON;
     } else if (isAttribute) {
       writer.writeAttribute(propertyName, value);
       isAttribute = false;

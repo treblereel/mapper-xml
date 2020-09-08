@@ -17,6 +17,7 @@
 package org.treblereel.gwt.jackson.api.deser;
 
 import javax.xml.stream.XMLStreamException;
+import org.treblereel.gwt.jackson.api.PropertyType;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.XMLDeserializerParameters;
@@ -33,7 +34,7 @@ public class StringXMLDeserializer extends XMLDeserializer<String> {
 
   private static final StringXMLDeserializer INSTANCE = new StringXMLDeserializer();
 
-  private boolean cdata = false;
+  private PropertyType propertyType = PropertyType.COMMON;
 
   private StringXMLDeserializer() {}
 
@@ -51,8 +52,8 @@ public class StringXMLDeserializer extends XMLDeserializer<String> {
   public String doDeserialize(
       XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
       throws XMLStreamException {
-    if (cdata) {
-      this.cdata = false;
+    if (propertyType.equals(PropertyType.CDATA) || propertyType.equals(PropertyType.CDATA_INLINE)) {
+      this.propertyType = PropertyType.COMMON;
       reader.next();
       return reader.nextValue();
     }
@@ -67,8 +68,8 @@ public class StringXMLDeserializer extends XMLDeserializer<String> {
     return value;
   }
 
-  public StringXMLDeserializer setCdata(boolean cdata) {
-    this.cdata = cdata;
+  public StringXMLDeserializer setPropertyType(PropertyType propertyType) {
+    this.propertyType = propertyType;
     return this;
   }
 }

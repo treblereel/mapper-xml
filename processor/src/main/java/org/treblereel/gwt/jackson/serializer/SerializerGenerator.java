@@ -46,6 +46,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.treblereel.gwt.jackson.TypeUtils;
+import org.treblereel.gwt.jackson.api.PropertyType;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.XmlElementWrapperSerializer;
@@ -266,7 +267,11 @@ public class SerializerGenerator extends AbstractGenerator {
     beanProperty.setType(beanType);
     beanProperty.addArgument(new StringLiteralExpr(variableElement.getPropertyName()));
     if (variableElement.isCData()) {
-      beanProperty.addArgument(new BooleanLiteralExpr(true));
+      String value =
+          PropertyType.class.getCanonicalName()
+              + "."
+              + (variableElement.getCData().value() ? "CDATA" : "CDATA_INLINE");
+      beanProperty.addArgument(new NameExpr(value));
     }
     setTypeParams(beanDefinition, variableElement, beanType);
 

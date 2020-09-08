@@ -16,9 +16,9 @@
 package org.treblereel.gwt.jackson.definition;
 
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.expr.BooleanLiteralExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.expr.NameExpr;
 import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
 import java.util.Map;
@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlSchema;
 import org.treblereel.gwt.jackson.TypeUtils;
+import org.treblereel.gwt.jackson.api.PropertyType;
 import org.treblereel.gwt.jackson.api.annotation.XmlTypeAdapter;
 import org.treblereel.gwt.jackson.api.annotation.XmlUnwrappedCollection;
 import org.treblereel.gwt.jackson.api.utils.Pair;
@@ -55,15 +56,22 @@ public class PropertyDefinition extends Definition {
     FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(getBean());
     Expression result = fieldDefinition.getFieldDeserializer(this, cu);
     if (isCData()) {
-      result = new MethodCallExpr(result, "setCdata").addArgument(new BooleanLiteralExpr(true));
+      String value =
+          PropertyType.class.getCanonicalName()
+              + "."
+              + (getCData().value() ? "CDATA" : "CDATA_INLINE");
+      result = new MethodCallExpr(result, "setPropertyType").addArgument(new NameExpr(value));
     }
     return result;
   }
 
   public boolean isCData() {
     return bean.toString().equals(String.class.getCanonicalName())
-        && property.getAnnotation(XmlCData.class) != null
-        && property.getAnnotation(XmlCData.class).value();
+        && property.getAnnotation(XmlCData.class) != null;
+  }
+
+  public XmlCData getCData() {
+    return property.getAnnotation(XmlCData.class);
   }
 
   @Override

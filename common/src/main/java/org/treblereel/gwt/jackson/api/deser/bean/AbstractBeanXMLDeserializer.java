@@ -86,6 +86,83 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T>
     return JacksonContextProvider.get().mapLikeFactory().make();
   }
 
+  /** {@inheritDoc} */
+  @Override
+  public T deserializeWrapped(
+      XMLReader reader,
+      XMLDeserializationContext ctx,
+      XMLDeserializerParameters params,
+      IdentityDeserializationInfo identityInfo,
+      TypeDeserializationInfo typeInfo,
+      String typeInformation)
+      throws XMLStreamException {
+    return deserializeInline(reader, ctx, params, identityInfo, typeInfo, typeInformation, null);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>Deserializes all the properties of the bean. The {@link XMLReader} must be in a json object.
+   */
+  @Override
+  public final T deserializeInline(
+      final XMLReader reader,
+      final XMLDeserializationContext ctx,
+      XMLDeserializerParameters params,
+      IdentityDeserializationInfo identityInfo,
+      TypeDeserializationInfo typeInfo,
+      String type,
+      Map<String, String> bufferedProperties)
+      throws XMLStreamException {
+    boolean processed = false;
+    if (reader.peek() == XMLStreamConstants.START_DOCUMENT) {
+      reader.next();
+    }
+    T instance = instanceBuilder.newInstance(reader, ctx, params, null, null).getInstance();
+
+    if (reader.getAttributeCount() > 0) {
+      for (int i = 0; i < reader.getAttributeCount(); i++) {
+        BeanPropertyDeserializer<T, ?> property =
+            deserializers.get(getPropertyName(reader.getAttributeName(i)));
+        if (property != null) {
+          processed = true;
+          if (reader.getAttributeValue(i) != null)
+            property.deserialize(reader.getAttributeValue(i), instance, ctx);
+        }
+      }
+    }
+    T result = null;
+
+    if (deserializers.get("$CDATA") != null) {
+      deserializers.get("$CDATA").deserialize(reader, instance, ctx);
+      processed = true;
+      // Following properties could be skipped
+    } else {
+      result =
+          ctx.iterator()
+              .iterateOverBean(
+                  reader,
+                  (reader1, propertyName, ctx1, bean) -> {
+                    if (!propertyName.getLocalPart().equals(getRootNodeName())) {
+                      BeanPropertyDeserializer<T, ?> property =
+                          getPropertyDeserializer(propertyName.getLocalPart(), ctx1);
+                      if (property != null) {
+                        property.deserialize(reader1, bean, ctx1);
+                      }
+                    }
+                    return bean;
+                  },
+                  instance,
+                  ctx,
+                  params);
+    }
+    if (result == null && processed) {
+      return instance;
+    }
+
+    return result;
+  }
+
   private String getPropertyName(QName property) {
     StringBuffer attrName = new StringBuffer();
     if (!property.getPrefix().isEmpty()) {
@@ -104,6 +181,15 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T>
     }
   }
 
+  protected abstract String getXmlRootElement();
+
+  /**
+   * getDeserializedType
+   *
+   * @return a {@link Class} object.
+   */
+  public abstract Class getDeserializedType();
+
   private BeanPropertyDeserializer<T, ?> getPropertyDeserializer(
       String propertyName, XMLDeserializationContext ctx) throws XMLStreamException {
     BeanPropertyDeserializer<T, ?> property = deserializers.get(propertyName);
@@ -117,89 +203,9 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T>
     return property;
   }
 
-  protected abstract String getXmlRootElement();
-
-  /**
-   * getDeserializedType
-   *
-   * @return a {@link Class} object.
-   */
-  public abstract Class getDeserializedType();
-
   /** {@inheritDoc} */
   @Override
   public AbstractBeanXMLDeserializer<T> getDeserializer() {
     return this;
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>Deserializes all the properties of the bean. The {@link XMLReader} must be in a json object.
-   */
-  @Override
-  public final T deserializeInline(
-      final XMLReader reader,
-      final XMLDeserializationContext ctx,
-      XMLDeserializerParameters params,
-      IdentityDeserializationInfo identityInfo,
-      TypeDeserializationInfo typeInfo,
-      String type,
-      Map<String, String> bufferedProperties)
-      throws XMLStreamException {
-    boolean attrNode = false;
-    if (reader.peek() == XMLStreamConstants.START_DOCUMENT) {
-      reader.next();
-    }
-    T instance = instanceBuilder.newInstance(reader, ctx, params, null, null).getInstance();
-
-    if (reader.getAttributeCount() > 0) {
-      for (int i = 0; i < reader.getAttributeCount(); i++) {
-        BeanPropertyDeserializer<T, ?> property =
-            deserializers.get(getPropertyName(reader.getAttributeName(i)));
-        if (property != null) {
-          attrNode = true;
-          if (reader.getAttributeValue(i) != null)
-            property.deserialize(reader.getAttributeValue(i), instance, ctx);
-        }
-      }
-    }
-
-    T result =
-        ctx.iterator()
-            .iterateOverBean(
-                reader,
-                (reader1, propertyName, ctx1, bean) -> {
-                  if (!propertyName.getLocalPart().equals(getRootNodeName())) {
-                    BeanPropertyDeserializer<T, ?> property =
-                        getPropertyDeserializer(propertyName.getLocalPart(), ctx1);
-                    if (property != null) {
-                      property.deserialize(reader1, bean, ctx1);
-                    }
-                  }
-                  return bean;
-                },
-                instance,
-                ctx,
-                params);
-
-    if (result == null && attrNode) {
-      return instance;
-    }
-
-    return result;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public T deserializeWrapped(
-      XMLReader reader,
-      XMLDeserializationContext ctx,
-      XMLDeserializerParameters params,
-      IdentityDeserializationInfo identityInfo,
-      TypeDeserializationInfo typeInfo,
-      String typeInformation)
-      throws XMLStreamException {
-    return deserializeInline(reader, ctx, params, identityInfo, typeInfo, typeInformation, null);
   }
 }

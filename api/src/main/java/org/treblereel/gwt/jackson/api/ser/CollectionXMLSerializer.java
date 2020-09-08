@@ -83,7 +83,14 @@ public class CollectionXMLSerializer<C extends Collection<T>, T>
       return;
     }
     if (isWrapCollections) {
-      writer.beginObject(propertyName);
+      if (namespace != null) {
+        String prefix = getPrefix(namespace);
+        if (prefix != null) {
+          writer.beginObject(prefix, namespace, propertyName);
+        } else writer.beginObject(namespace, propertyName);
+      } else {
+        writer.beginObject(propertyName);
+      }
     }
     for (T value : values) {
       serializer

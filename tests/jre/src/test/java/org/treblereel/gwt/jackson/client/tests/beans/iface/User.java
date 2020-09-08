@@ -63,6 +63,14 @@ public class User implements IUser {
     @XmlElementRef(name = "_Address2", type = Address2.class),
     @XmlElementRef(name = "_Address3", type = Address3.class)
   })
+  @XmlElement(name = "wrapped", namespace = "namespace")
+  private List<IAddress> iAddressListRef3;
+
+  @XmlElementRefs({
+    @XmlElementRef(name = "_Address1", type = Address.class),
+    @XmlElementRef(name = "_Address2", type = Address2.class),
+    @XmlElementRef(name = "_Address3", type = Address3.class)
+  })
   private IAddress iAddressRef;
 
   @XmlElementRefs({@XmlElementRef(name = "_Address3", type = Address3.class)})
@@ -70,6 +78,52 @@ public class User implements IUser {
 
   @XmlElements({@XmlElement(name = "_Address3", type = Address3.class)})
   private List<IAddress> iAddress2OneElm;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof User)) return false;
+
+    User user1 = (User) o;
+
+    if (getUser() != null ? !getUser().equals(user1.getUser()) : user1.getUser() != null)
+      return false;
+    if (iAddress != null ? !iAddress.equals(user1.iAddress) : user1.iAddress != null) return false;
+    if (iAddressList != null
+        ? !iAddressList.equals(user1.iAddressList)
+        : user1.iAddressList != null) return false;
+    if (iAddressListRef != null
+        ? !iAddressListRef.equals(user1.iAddressListRef)
+        : user1.iAddressListRef != null) return false;
+    if (iAddressListRef2 != null
+        ? !iAddressListRef2.equals(user1.iAddressListRef2)
+        : user1.iAddressListRef2 != null) return false;
+    if (getIAddressListRef3() != null
+        ? !getIAddressListRef3().equals(user1.getIAddressListRef3())
+        : user1.getIAddressListRef3() != null) return false;
+    if (iAddressRef != null ? !iAddressRef.equals(user1.iAddressRef) : user1.iAddressRef != null)
+      return false;
+    if (iAddressOneElm != null
+        ? !iAddressOneElm.equals(user1.iAddressOneElm)
+        : user1.iAddressOneElm != null) return false;
+    return iAddress2OneElm != null
+        ? iAddress2OneElm.equals(user1.iAddress2OneElm)
+        : user1.iAddress2OneElm == null;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = getUser() != null ? getUser().hashCode() : 0;
+    result = 31 * result + (iAddress != null ? iAddress.hashCode() : 0);
+    result = 31 * result + (iAddressList != null ? iAddressList.hashCode() : 0);
+    result = 31 * result + (iAddressListRef != null ? iAddressListRef.hashCode() : 0);
+    result = 31 * result + (iAddressListRef2 != null ? iAddressListRef2.hashCode() : 0);
+    result = 31 * result + (iAddressListRef3 != null ? iAddressListRef3.hashCode() : 0);
+    result = 31 * result + (iAddressRef != null ? iAddressRef.hashCode() : 0);
+    result = 31 * result + (iAddressOneElm != null ? iAddressOneElm.hashCode() : 0);
+    result = 31 * result + (iAddress2OneElm != null ? iAddress2OneElm.hashCode() : 0);
+    return result;
+  }
 
   public IAddress getIAddressRef() {
     return iAddressRef;
@@ -139,45 +193,11 @@ public class User implements IUser {
     this.iAddressListRef2 = iAddressListRef2;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof User)) return false;
-
-    User user1 = (User) o;
-
-    if (getUser() != null ? !getUser().equals(user1.getUser()) : user1.getUser() != null)
-      return false;
-    if (iAddress != null ? !iAddress.equals(user1.iAddress) : user1.iAddress != null) return false;
-    if (iAddressList != null
-        ? !iAddressList.equals(user1.iAddressList)
-        : user1.iAddressList != null) return false;
-    if (iAddressListRef != null
-        ? !iAddressListRef.equals(user1.iAddressListRef)
-        : user1.iAddressListRef != null) return false;
-    if (iAddressListRef2 != null
-        ? !iAddressListRef2.equals(user1.iAddressListRef2)
-        : user1.iAddressListRef2 != null) return false;
-    if (iAddressRef != null ? !iAddressRef.equals(user1.iAddressRef) : user1.iAddressRef != null)
-      return false;
-    if (iAddressOneElm != null
-        ? !iAddressOneElm.equals(user1.iAddressOneElm)
-        : user1.iAddressOneElm != null) return false;
-    return iAddress2OneElm != null
-        ? iAddress2OneElm.equals(user1.iAddress2OneElm)
-        : user1.iAddress2OneElm == null;
+  public List<IAddress> getIAddressListRef3() {
+    return iAddressListRef3;
   }
 
-  @Override
-  public int hashCode() {
-    int result = getUser() != null ? getUser().hashCode() : 0;
-    result = 31 * result + (iAddress != null ? iAddress.hashCode() : 0);
-    result = 31 * result + (iAddressList != null ? iAddressList.hashCode() : 0);
-    result = 31 * result + (iAddressListRef != null ? iAddressListRef.hashCode() : 0);
-    result = 31 * result + (iAddressListRef2 != null ? iAddressListRef2.hashCode() : 0);
-    result = 31 * result + (iAddressRef != null ? iAddressRef.hashCode() : 0);
-    result = 31 * result + (iAddressOneElm != null ? iAddressOneElm.hashCode() : 0);
-    result = 31 * result + (iAddress2OneElm != null ? iAddress2OneElm.hashCode() : 0);
-    return result;
+  public void setIAddressListRef3(List<IAddress> iAddressListRef3) {
+    this.iAddressListRef3 = iAddressListRef3;
   }
 }

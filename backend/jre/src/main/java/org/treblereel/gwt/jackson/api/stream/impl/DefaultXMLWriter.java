@@ -275,6 +275,11 @@ public class DefaultXMLWriter implements XMLWriter {
   }
 
   @Override
+  public void writeCharacters(String value) throws XMLStreamException {
+    out.writeCharacters(value);
+  }
+
+  @Override
   public void writeAttribute(String propertyName, String value) throws XMLStreamException {
     if (propertyName != null && value != null) {
       out.writeAttribute(propertyName, value);

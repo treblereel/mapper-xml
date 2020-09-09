@@ -172,6 +172,8 @@ public interface XMLWriter {
 
   void writeCData(String value) throws XMLStreamException;
 
+  void writeCharacters(String value) throws XMLStreamException;
+
   void writeAttribute(String propertyName, String value) throws XMLStreamException;
 
   void writeSchemaLocation(String s, String schemaLocation) throws XMLStreamException;

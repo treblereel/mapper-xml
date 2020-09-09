@@ -30,8 +30,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public class BooleanXMLSerializer extends XMLSerializer<Boolean> {
 
-  private static final BooleanXMLSerializer INSTANCE = new BooleanXMLSerializer();
-
   private BooleanXMLSerializer() {}
 
   /**
@@ -40,7 +38,7 @@ public class BooleanXMLSerializer extends XMLSerializer<Boolean> {
    * @return an instance of {@link XMLSerializer}
    */
   public static BooleanXMLSerializer getInstance() {
-    return INSTANCE;
+    return new BooleanXMLSerializer();
   }
 
   /** {@inheritDoc} */

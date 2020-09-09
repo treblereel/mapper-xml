@@ -87,7 +87,9 @@ public class CollectionXMLSerializer<C extends Collection<T>, T>
         String prefix = getPrefix(namespace);
         if (prefix != null) {
           writer.beginObject(prefix, namespace, propertyName);
-        } else writer.beginObject(namespace, propertyName);
+        } else {
+          writer.beginObject(namespace, propertyName);
+        }
       } else {
         writer.beginObject(propertyName);
       }

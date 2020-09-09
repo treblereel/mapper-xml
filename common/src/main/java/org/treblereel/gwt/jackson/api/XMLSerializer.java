@@ -37,7 +37,7 @@ public abstract class XMLSerializer<T> {
 
   protected String propertyName;
 
-  protected PropertyType type;
+  protected PropertyType type = PropertyType.COMMON;
 
   protected boolean isAttribute = false;
 

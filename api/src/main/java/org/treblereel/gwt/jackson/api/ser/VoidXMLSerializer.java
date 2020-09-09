@@ -30,15 +30,13 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public class VoidXMLSerializer extends XMLSerializer<Void> {
 
-  private static final VoidXMLSerializer INSTANCE = new VoidXMLSerializer();
-
   /**
    * getInstance
    *
    * @return an instance of {@link VoidXMLSerializer}
    */
   public static VoidXMLSerializer getInstance() {
-    return INSTANCE;
+    return new VoidXMLSerializer();
   }
 
   private VoidXMLSerializer() {}

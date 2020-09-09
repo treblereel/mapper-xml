@@ -30,8 +30,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public class EnumXMLSerializer<E extends Enum<E>> extends XMLSerializer<E> {
 
-  private static final EnumXMLSerializer<?> INSTANCE = new EnumXMLSerializer();
-
   /**
    * getInstance
    *
@@ -39,7 +37,7 @@ public class EnumXMLSerializer<E extends Enum<E>> extends XMLSerializer<E> {
    */
   @SuppressWarnings("unchecked")
   public static XMLSerializer getInstance() {
-    return INSTANCE;
+    return new EnumXMLSerializer();
   }
 
   private EnumXMLSerializer() {}

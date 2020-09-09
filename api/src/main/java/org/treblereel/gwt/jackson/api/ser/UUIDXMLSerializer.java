@@ -31,8 +31,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public class UUIDXMLSerializer extends XMLSerializer<UUID> {
 
-  private static final UUIDXMLSerializer INSTANCE = new UUIDXMLSerializer();
-
   private UUIDXMLSerializer() {}
 
   /**
@@ -41,7 +39,7 @@ public class UUIDXMLSerializer extends XMLSerializer<UUID> {
    * @return an instance of {@link UUIDXMLSerializer}
    */
   public static UUIDXMLSerializer getInstance() {
-    return INSTANCE;
+    return new UUIDXMLSerializer();
   }
 
   /** {@inheritDoc} */

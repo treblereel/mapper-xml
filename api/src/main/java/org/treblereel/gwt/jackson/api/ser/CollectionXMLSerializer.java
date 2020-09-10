@@ -73,12 +73,10 @@ public class CollectionXMLSerializer<C extends Collection<T>, T>
   public void doSerialize(
       XMLWriter writer, C values, XMLSerializationContext ctx, XMLSerializerParameters params)
       throws XMLStreamException {
-    if (values.isEmpty()) {
+    if (isEmpty(values)) {
       if (ctx.isWriteEmptyXMLArrays()) {
         writer.beginArray();
         writer.endArray();
-      } else {
-        writer.nullValue();
       }
       return;
     }

@@ -16,6 +16,7 @@
 
 package org.treblereel.gwt.jackson.api.deser;
 
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.PropertyType;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
@@ -55,6 +56,9 @@ public class StringXMLDeserializer extends XMLDeserializer<String> {
     if (propertyType.equals(PropertyType.CDATA) || propertyType.equals(PropertyType.CDATA_INLINE)) {
       this.propertyType = PropertyType.COMMON;
       reader.next();
+      if (reader.peek() == XMLStreamConstants.END_ELEMENT) {
+        return null;
+      }
       return reader.nextValue();
     }
 

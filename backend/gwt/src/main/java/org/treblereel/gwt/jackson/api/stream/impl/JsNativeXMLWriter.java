@@ -217,6 +217,11 @@ public class JsNativeXMLWriter implements XMLWriter {
   }
 
   @Override
+  public void writeCharacters(String value) {
+    stack.getFirst().textContent = value;
+  }
+
+  @Override
   public void writeAttribute(String propertyName, String value) {
     if (propertyName != null && value != null) {
       ((Element) stack.getFirst()).setAttribute(propertyName, value);

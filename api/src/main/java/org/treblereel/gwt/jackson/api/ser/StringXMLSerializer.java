@@ -17,6 +17,7 @@
 package org.treblereel.gwt.jackson.api.ser;
 
 import javax.xml.stream.XMLStreamException;
+import org.treblereel.gwt.jackson.api.PropertyType;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -30,8 +31,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public class StringXMLSerializer extends XMLSerializer<String> {
 
-  private static final StringXMLSerializer INSTANCE = new StringXMLSerializer();
-
   private StringXMLSerializer() {}
 
   /**
@@ -40,13 +39,7 @@ public class StringXMLSerializer extends XMLSerializer<String> {
    * @return an instance of {@link StringXMLSerializer}
    */
   public static StringXMLSerializer getInstance() {
-    return INSTANCE;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  protected boolean isEmpty(String value) {
-    return null == value || value.length() == 0;
+    return new StringXMLSerializer();
   }
 
   /** {@inheritDoc} */
@@ -54,16 +47,24 @@ public class StringXMLSerializer extends XMLSerializer<String> {
   public void doSerialize(
       XMLWriter writer, String value, XMLSerializationContext ctx, XMLSerializerParameters params)
       throws XMLStreamException {
-    if (cdata) {
-      writer.beginObject(propertyName);
-      writer.writeCData(value);
-      writer.endObject();
-      cdata = false;
-    } else if (isAttribute) {
-      writer.writeAttribute(propertyName, value);
-      isAttribute = false;
-    } else {
-      writer.value(value);
+    if (ctx.isSerializeNulls() || !isEmpty(value)) {
+      if (type.equals(PropertyType.CDATA)) {
+        writer.beginObject(propertyName);
+        writer.writeCData(value);
+        writer.endObject();
+      } else if (type.equals(PropertyType.CDATA_INLINE)) {
+        writer.writeCData(value);
+      } else if (isAttribute) {
+        writer.writeAttribute(propertyName, value);
+      } else {
+        writer.value(value);
+      }
     }
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  protected boolean isEmpty(String value) {
+    return null == value || value.length() == 0;
   }
 }

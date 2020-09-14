@@ -33,10 +33,10 @@ import org.treblereel.gwt.jackson.api.stream.XMLReader;
 /** @author Dmitrii Tikhomirov Created by treblereel 4/19/20 */
 public class JsNativeXMLReader implements XMLReader {
 
-  Document doc;
+  private Document doc;
 
-  Iterator<NodeWrapper> iterator;
-  NodeWrapper current;
+  private Iterator<NodeWrapper> iterator;
+  private NodeWrapper current;
 
   public JsNativeXMLReader(String input) {
     doc = new DOMParser().parseFromString(input, "text/xml");

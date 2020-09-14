@@ -18,6 +18,7 @@ package org.treblereel.gwt.jackson.api.ser.bean;
 
 import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.JacksonContextProvider;
+import org.treblereel.gwt.jackson.api.PropertyType;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.XMLSerializerParameters;
@@ -32,10 +33,9 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLSerializer<V>> {
 
   protected String propertyName;
-  protected boolean cdata = false;
-
   private XMLSerializerParameters parameters = newParameters();
   private XMLSerializer parent;
+  private PropertyType type = PropertyType.COMMON;
 
   /**
    * Constructor for BeanPropertySerializer.
@@ -43,12 +43,12 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
    * @param propertyName a {@link String} object.
    */
   protected BeanPropertySerializer(String propertyName) {
-    this(propertyName, false);
+    this.propertyName = propertyName;
   }
 
-  protected BeanPropertySerializer(String propertyName, boolean cdata) {
+  protected BeanPropertySerializer(String propertyName, PropertyType type) {
     this.propertyName = propertyName;
-    this.cdata = cdata;
+    this.type = type;
   }
 
   /**
@@ -81,7 +81,7 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
     writer.unescapeName(propertyName);
     getSerializer(getValue(bean, ctx) != null ? getValue(bean, ctx).getClass() : null)
         .setPropertyName(propertyName)
-        .setCdata(cdata)
+        .setPropertyType(type)
         .setNamespace(getNamespace())
         .setPrefix(getPrefix())
         .setParent(parent)

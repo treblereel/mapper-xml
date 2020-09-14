@@ -30,8 +30,6 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public class CharacterXMLSerializer extends XMLSerializer<Character> {
 
-  private static final CharacterXMLSerializer INSTANCE = new CharacterXMLSerializer();
-
   private CharacterXMLSerializer() {}
 
   /**
@@ -40,7 +38,7 @@ public class CharacterXMLSerializer extends XMLSerializer<Character> {
    * @return an instance of {@link CharacterXMLSerializer}
    */
   public static CharacterXMLSerializer getInstance() {
-    return INSTANCE;
+    return new CharacterXMLSerializer();
   }
 
   /** {@inheritDoc} */

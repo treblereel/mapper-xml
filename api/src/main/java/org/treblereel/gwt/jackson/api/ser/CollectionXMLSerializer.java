@@ -73,17 +73,24 @@ public class CollectionXMLSerializer<C extends Collection<T>, T>
   public void doSerialize(
       XMLWriter writer, C values, XMLSerializationContext ctx, XMLSerializerParameters params)
       throws XMLStreamException {
-    if (values.isEmpty()) {
+    if (isEmpty(values)) {
       if (ctx.isWriteEmptyXMLArrays()) {
         writer.beginArray();
         writer.endArray();
-      } else {
-        writer.nullValue();
       }
       return;
     }
     if (isWrapCollections) {
-      writer.beginObject(propertyName);
+      if (namespace != null) {
+        String prefix = getPrefix(namespace);
+        if (prefix != null) {
+          writer.beginObject(prefix, namespace, propertyName);
+        } else {
+          writer.beginObject(namespace, propertyName);
+        }
+      } else {
+        writer.beginObject(propertyName);
+      }
     }
     for (T value : values) {
       serializer

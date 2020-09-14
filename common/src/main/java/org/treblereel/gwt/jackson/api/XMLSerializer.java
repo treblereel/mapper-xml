@@ -37,7 +37,7 @@ public abstract class XMLSerializer<T> {
 
   protected String propertyName;
 
-  protected boolean cdata = false;
+  protected PropertyType type = PropertyType.COMMON;
 
   protected boolean isAttribute = false;
 
@@ -60,8 +60,8 @@ public abstract class XMLSerializer<T> {
     return this;
   }
 
-  public XMLSerializer<T> setCdata(boolean cdata) {
-    this.cdata = cdata;
+  public XMLSerializer<T> setPropertyType(PropertyType type) {
+    this.type = type;
     return this;
   }
 

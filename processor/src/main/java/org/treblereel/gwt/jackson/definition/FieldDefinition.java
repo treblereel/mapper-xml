@@ -130,7 +130,11 @@ public abstract class FieldDefinition extends Definition {
         ClassOrInterfaceType instanceBuilderType =
             new ClassOrInterfaceType().setName(Error.class.getSimpleName());
         expression =
-            new ThrowStmt().setExpression(new ObjectCreationExpr().setType(instanceBuilderType));
+            new ThrowStmt()
+                .setExpression(
+                    new ObjectCreationExpr()
+                        .setType(instanceBuilderType)
+                        .addArgument(new NameExpr("value")));
       }
     } else {
       expression =

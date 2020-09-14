@@ -241,12 +241,10 @@ public class DeserializerGenerator extends AbstractGenerator {
         new ClassOrInterfaceType().setName(BeanPropertyDeserializer.class.getSimpleName());
     beanPropertyDeserializer.setTypeArguments(
         new ClassOrInterfaceType().setName(type.getSimpleName().toString()), typeArg);
-
+    Expression mapPropertyName = getMapPropertyName(field);
     body.addStatement(
         new MethodCallExpr(new NameExpr("map"), "put")
-            .addArgument(
-                new StringLiteralExpr(
-                    field.isWrapped() ? field.getWrapped().key : field.getPropertyName()))
+            .addArgument(mapPropertyName)
             .addArgument(
                 new ObjectCreationExpr()
                     .setType(beanPropertyDeserializer)
@@ -254,6 +252,14 @@ public class DeserializerGenerator extends AbstractGenerator {
     addNewDeserializer(field, anonymousClassBody);
     setValue(type, typeArg, field, anonymousClassBody);
     isAttribute(anonymousClassBody, field);
+  }
+
+  private StringLiteralExpr getMapPropertyName(PropertyDefinition field) {
+    if (field.isCData() && !field.getCData().value()) {
+      return new StringLiteralExpr("$CDATA");
+    }
+    return new StringLiteralExpr(
+        field.isWrapped() ? field.getWrapped().key : field.getPropertyName());
   }
 
   private ClassOrInterfaceType getWrappedType(PropertyDefinition field) {

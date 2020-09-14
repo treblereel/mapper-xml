@@ -29,7 +29,6 @@ import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NameExpr;
-import com.github.javaparser.ast.expr.NullLiteralExpr;
 import com.github.javaparser.ast.expr.ObjectCreationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
@@ -46,6 +45,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.treblereel.gwt.jackson.TypeUtils;
+import org.treblereel.gwt.jackson.api.PropertyType;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
 import org.treblereel.gwt.jackson.api.ser.XmlElementWrapperSerializer;
@@ -176,32 +176,30 @@ public class SerializerGenerator extends AbstractGenerator {
     }
   }
 
-  // TODO
   private void getTargetNamespace(BeanDefinition type) {
-    cu.addImport(Pair.class);
     Pair<String, String> targetNamespace = type.getTargetNamespace();
-    Expression result;
-    ClassOrInterfaceType pair =
-        new ClassOrInterfaceType()
-            .setName("Pair")
-            .setTypeArguments(
-                new ClassOrInterfaceType().setName(STRING),
-                new ClassOrInterfaceType().setName(STRING));
-    if (targetNamespace == null) {
-      result = new NullLiteralExpr();
-    } else {
-      result =
-          new ObjectCreationExpr()
-              .setType(pair)
-              .addArgument(new StringLiteralExpr(targetNamespace.key))
-              .addArgument(new StringLiteralExpr(targetNamespace.value));
+    if (targetNamespace != null) {
+      cu.addImport(Pair.class);
+      ClassOrInterfaceType pair =
+          new ClassOrInterfaceType()
+              .setName("Pair")
+              .setTypeArguments(
+                  new ClassOrInterfaceType().setName(STRING),
+                  new ClassOrInterfaceType().setName(STRING));
+      declaration
+          .addMethod("getTargetNamespace", Modifier.Keyword.PROTECTED)
+          .addAnnotation(Override.class)
+          .setType(pair)
+          .getBody()
+          .ifPresent(
+              body ->
+                  body.addStatement(
+                      new ReturnStmt(
+                          new ObjectCreationExpr()
+                              .setType(pair)
+                              .addArgument(new StringLiteralExpr(targetNamespace.key))
+                              .addArgument(new StringLiteralExpr(targetNamespace.value)))));
     }
-    declaration
-        .addMethod("getTargetNamespace", Modifier.Keyword.PROTECTED)
-        .addAnnotation(Override.class)
-        .setType(pair)
-        .getBody()
-        .ifPresent(body -> body.addStatement(new ReturnStmt(result)));
   }
 
   private void getXsiType(BeanDefinition type) {
@@ -266,7 +264,11 @@ public class SerializerGenerator extends AbstractGenerator {
     beanProperty.setType(beanType);
     beanProperty.addArgument(new StringLiteralExpr(variableElement.getPropertyName()));
     if (variableElement.isCData()) {
-      beanProperty.addArgument(new BooleanLiteralExpr(true));
+      String value =
+          PropertyType.class.getCanonicalName()
+              + "."
+              + (variableElement.getCData().value() ? "CDATA" : "CDATA_INLINE");
+      beanProperty.addArgument(new NameExpr(value));
     }
     setTypeParams(beanDefinition, variableElement, beanType);
 

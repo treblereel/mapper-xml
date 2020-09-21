@@ -3,7 +3,7 @@
     "http://gwtproject.org/doctype/2.8.2/gwt-module.dtd">
 <module>
   <inherits name="com.google.gwt.user.User"/>
-  <inherits name="java.util.Util"/>
+  <inherits name="java.Util"/>
   <inherits name="javax.xml.Xml"/>
   <inherits name='elemental2.dom.Dom'/>
   <source path="api" />

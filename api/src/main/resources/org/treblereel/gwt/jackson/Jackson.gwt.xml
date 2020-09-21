@@ -3,9 +3,8 @@
     "http://gwtproject.org/doctype/2.8.2/gwt-module.dtd">
 <module>
   <inherits name="com.google.gwt.user.User"/>
-  <inherits name="org.treblereel.gwt.jackson.Gwt"/>
   <inherits name="org.treblereel.gwt.jackson.Common"/>
-  <inherits name="java.util.Util"/>
+  <inherits name="org.treblereel.gwt.jackson.Gwt"/>
   <inherits name='elemental2.dom.Dom'/>
   <source path="api" />
 </module>

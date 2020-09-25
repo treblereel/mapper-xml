@@ -27,7 +27,7 @@ import org.treblereel.gwt.jackson.api.DefaultXMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLDeserializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.client.tests.beans.date.DateBean;
-import org.treblereel.gwt.jackson.client.tests.beans.date.DateBean_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.beans.date.DateBean_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/27/20 */
 @J2clTestInput(DateTest.class)
@@ -42,7 +42,7 @@ public class DateTest {
   private static final String XML_ISO_NULL =
       "<?xml version='1.0' encoding='UTF-8'?><DateBean val2=\"\"><val/></DateBean>";
 
-  private final DateBean_MapperImpl mapper = DateBean_MapperImpl.INSTANCE;
+  private final DateBean_XMLMapperImpl mapper = DateBean_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testDatesAsTimestampsValue() throws XMLStreamException {

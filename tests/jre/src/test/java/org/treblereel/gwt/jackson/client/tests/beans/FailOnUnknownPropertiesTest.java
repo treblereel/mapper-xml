@@ -31,8 +31,8 @@ public class FailOnUnknownPropertiesTest {
   private static final String XML =
       "<?xml version='1.0' encoding='UTF-8'?><Bean><value>BEAN</value><value2>BEAN</value2></Bean>";
 
-  FailOnUnknownPropertiesTest_Bean_MapperImpl mapper =
-      FailOnUnknownPropertiesTest_Bean_MapperImpl.INSTANCE;
+  FailOnUnknownPropertiesTest_Bean_XMLMapperImpl mapper =
+      FailOnUnknownPropertiesTest_Bean_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testDoNotFail() throws XMLStreamException {

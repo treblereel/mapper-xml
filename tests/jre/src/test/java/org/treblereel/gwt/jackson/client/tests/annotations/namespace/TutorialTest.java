@@ -23,13 +23,13 @@ import java.util.List;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.client.tests.annotations.namespace.ci.Tutorial;
-import org.treblereel.gwt.jackson.client.tests.annotations.namespace.ci.Tutorial_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.annotations.namespace.ci.Tutorial_XMLMapperImpl;
 import org.treblereel.gwt.jackson.client.tests.annotations.namespace.cl.Name;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/28/20 */
 @J2clTestInput(TutorialTest.class)
 public class TutorialTest {
-  Tutorial_MapperImpl mapper = Tutorial_MapperImpl.INSTANCE;
+  Tutorial_XMLMapperImpl mapper = Tutorial_XMLMapperImpl.INSTANCE;
 
   private static final String XML =
       "<?xml version='1.0' encoding='UTF-8'?><_tutorial xmlns=\"http://ns\" xmlns:ci=\"http://www.ci\" xmlns:cl=\"http://www.cl\"><id>0</id><names><cl:names><name>NAME</name></cl:names></names></_tutorial>";

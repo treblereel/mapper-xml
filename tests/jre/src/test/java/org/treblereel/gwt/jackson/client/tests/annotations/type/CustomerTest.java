@@ -25,7 +25,7 @@ import org.junit.Test;
 @J2clTestInput(CustomerTest.class)
 public class CustomerTest {
 
-  Customer_MapperImpl mapper = Customer_MapperImpl.INSTANCE;
+  Customer_XMLMapperImpl mapper = Customer_XMLMapperImpl.INSTANCE;
 
   private static final String xml =
       "<?xml version='1.0' encoding='UTF-8'?><Customer xmlns=\"http://www.omg.org/bpmn20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><id>1112</id><firstName>setFirstName</firstName><lastName>setLastName</lastName><notInPropOrder>setNotInPropOrder</notInPropOrder></Customer>";

@@ -25,7 +25,7 @@ import org.treblereel.gwt.jackson.api.DefaultXMLDeserializationContext;
 /** @author Dmitrii Tikhomirov Created by treblereel 3/26/20 */
 @J2clTestInput(EnumTest.class)
 public class EnumTest {
-  EnumBean_MapperImpl mapper = EnumBean_MapperImpl.INSTANCE;
+  EnumBean_XMLMapperImpl mapper = EnumBean_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {

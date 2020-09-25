@@ -32,7 +32,7 @@ import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 @J2clTestInput(WrapperTest.class)
 public class WrapperTest {
 
-  WrapperTest_Foo_MapperImpl mapper = WrapperTest_Foo_MapperImpl.INSTANCE;
+  WrapperTest_Foo_XMLMapperImpl mapper = WrapperTest_Foo_XMLMapperImpl.INSTANCE;
 
   private static final String XML =
       "<?xml version='1.0' encoding='UTF-8'?><my-foo><ZZZ><stuff><stuff><name>AAAA</name></stuff><stuff><name>BBBB</name></stuff><stuff><name>CCCC</name></stuff></stuff></ZZZ><wrapper><stuff2><stuff2><name>AAAA</name></stuff2><stuff2><name>BBBB</name></stuff2><stuff2><name>CCCC</name></stuff2></stuff2></wrapper><wrapper_root><Root xmlns=\"ololo.org\"><test>ROOT</test></Root></wrapper_root></my-foo>";

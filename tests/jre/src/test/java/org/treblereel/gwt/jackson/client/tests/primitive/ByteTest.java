@@ -34,7 +34,7 @@ public class ByteTest {
   private static final String XML_22 =
       "<?xml version='1.0' encoding='UTF-8'?><ByteType><check>-22</check></ByteType>";
 
-  private ByteTest_ByteType_MapperImpl mapper = ByteTest_ByteType_MapperImpl.INSTANCE;
+  private ByteTest_ByteType_XMLMapperImpl mapper = ByteTest_ByteType_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testSerializeValue() throws XMLStreamException {

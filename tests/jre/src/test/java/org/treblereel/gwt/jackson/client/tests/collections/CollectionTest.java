@@ -22,7 +22,7 @@ import java.util.Arrays;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.client.tests.beans.collection.PrimitiveArrays;
-import org.treblereel.gwt.jackson.client.tests.beans.collection.PrimitiveArrays_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.beans.collection.PrimitiveArrays_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/27/20 */
 @J2clTestInput(CollectionTest.class)
@@ -36,7 +36,7 @@ public class CollectionTest {
     test.setStrings(strings);
 
     String[] result =
-        PrimitiveArrays_MapperImpl.INSTANCE
+        PrimitiveArrays_XMLMapperImpl.INSTANCE
             .read(
                 "<?xml version='1.0' encoding='UTF-8'?><PrimitiveArrays><strings><strings>Hello</strings><strings>\" \"</strings><strings>World</strings><strings>!</strings></strings></PrimitiveArrays>")
             .getStrings();

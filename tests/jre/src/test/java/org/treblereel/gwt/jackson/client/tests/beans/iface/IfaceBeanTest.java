@@ -28,7 +28,7 @@ import org.junit.Test;
 @J2clTestInput(IfaceBeanTest.class)
 public class IfaceBeanTest {
 
-  User_MapperImpl userMapper = User_MapperImpl.INSTANCE;
+  User_XMLMapperImpl userMapper = User_XMLMapperImpl.INSTANCE;
 
   @Test
   public void test() throws XMLStreamException {

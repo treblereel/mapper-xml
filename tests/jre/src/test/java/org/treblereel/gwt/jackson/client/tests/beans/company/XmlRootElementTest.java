@@ -27,9 +27,9 @@ import org.junit.Test;
 @J2clTestInput(XmlRootElementTest.class)
 public class XmlRootElementTest {
 
-  Employee_MapperImpl mapperEmployee = Employee_MapperImpl.INSTANCE;
-  Company_MapperImpl mapperCompany = Company_MapperImpl.INSTANCE;
-  Department_MapperImpl mapperDepartment = Department_MapperImpl.INSTANCE;
+  Employee_XMLMapperImpl mapperEmployee = Employee_XMLMapperImpl.INSTANCE;
+  Company_XMLMapperImpl mapperCompany = Company_XMLMapperImpl.INSTANCE;
+  Department_XMLMapperImpl mapperDepartment = Department_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testDeserializeMapperEmployee() throws XMLStreamException {

@@ -21,7 +21,7 @@ import com.google.j2cl.junit.apt.J2clTestInput;
 import java.sql.Date;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
-import org.treblereel.gwt.jackson.client.tests.beans.date.SQLDateBean_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.beans.date.SQLDateBean_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/27/20 */
 @J2clTestInput(SqlDateTest.class)
@@ -31,17 +31,17 @@ public class SqlDateTest {
   public void testDeserializeValue() throws XMLStreamException {
     assertEquals(
         new Date(0),
-        SQLDateBean_MapperImpl.INSTANCE
+        SQLDateBean_XMLMapperImpl.INSTANCE
             .read("<?xml version='1.0' encoding='UTF-8'?><SQLDateBean><val/></SQLDateBean>")
             .getVal());
     assertEquals(
         new Date(0),
-        SQLDateBean_MapperImpl.INSTANCE
+        SQLDateBean_XMLMapperImpl.INSTANCE
             .read("<?xml version='1.0' encoding='UTF-8'?><SQLDateBean><val/></SQLDateBean>")
             .getVal());
     assertEquals(
         new Date(1377543971773l),
-        SQLDateBean_MapperImpl.INSTANCE
+        SQLDateBean_XMLMapperImpl.INSTANCE
             .read(
                 "<?xml version='1.0' encoding='UTF-8'?><SQLDateBean><val>1377543971773</val></SQLDateBean>")
             .getVal());

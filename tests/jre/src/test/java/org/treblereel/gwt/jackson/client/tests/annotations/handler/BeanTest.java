@@ -28,7 +28,7 @@ public class BeanTest {
   private static final String XML =
       "<?xml version='1.0' encoding='UTF-8'?><Bean id=\"d80b09e6-9a00-11ea-bb37-0242ac130002\"><myBean>BeanTest+BeanTest2</myBean></Bean>";
 
-  Bean_MapperImpl mapper = Bean_MapperImpl.INSTANCE;
+  Bean_XMLMapperImpl mapper = Bean_XMLMapperImpl.INSTANCE;
 
   @Test
   public void test() throws XMLStreamException {

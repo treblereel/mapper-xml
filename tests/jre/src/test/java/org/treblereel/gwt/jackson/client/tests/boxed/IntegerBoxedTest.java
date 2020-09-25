@@ -36,7 +36,8 @@ public class IntegerBoxedTest {
   private static final String XML__17222 =
       "<?xml version='1.0' encoding='UTF-8'?><IntType><value>-17222</value></IntType>";
 
-  private IntegerBoxedTest_IntType_MapperImpl mapper = IntegerBoxedTest_IntType_MapperImpl.INSTANCE;
+  private IntegerBoxedTest_IntType_XMLMapperImpl mapper =
+      IntegerBoxedTest_IntType_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testSerializeValue() throws XMLStreamException {

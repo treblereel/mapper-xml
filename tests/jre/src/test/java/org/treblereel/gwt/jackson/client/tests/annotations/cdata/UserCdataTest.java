@@ -26,7 +26,7 @@ import org.junit.Test;
 @J2clTestInput(UserCdataTest.class)
 public class UserCdataTest {
 
-  User_MapperImpl mapperEmployee = User_MapperImpl.INSTANCE;
+  User_XMLMapperImpl mapperEmployee = User_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testUserCdataTest() throws XMLStreamException {

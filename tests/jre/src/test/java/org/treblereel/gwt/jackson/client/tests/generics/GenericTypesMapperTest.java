@@ -40,16 +40,18 @@ public class GenericTypesMapperTest {
       "<?xml version='1.0' encoding='UTF-8'?><ChildOfGenericMapper><subField>field in child class</subField><intField>201</intField><typeField>generic type field</typeField><str>string field</str></ChildOfGenericMapper>";
   private static final String GENERICHILDOFGENERICOBJECTMAPPER_XML =
       "<?xml version='1.0' encoding='UTF-8'?><GenericChildOfGenericMapper><subField>generic child field</subField><genericMap><entry><key>key</key><value><value>1</value><value>2</value><value>3</value></value></entry></genericMap><intField>11</intField><typeField>2012</typeField><str>string field</str></GenericChildOfGenericMapper>";
-  GenericTypesMapperTest_GenericMapperWithString_MapperImpl GENERICMAPPERWITHSTRING =
-      GenericTypesMapperTest_GenericMapperWithString_MapperImpl.INSTANCE;
-  GenericTypesMapperTest_GenericMapperWithInteger_MapperImpl GENERICMAPPERWITHINTEGER =
-      GenericTypesMapperTest_GenericMapperWithInteger_MapperImpl.INSTANCE;
-  GenericTypesMapperTest_GenericMapperWithListOfInteger_MapperImpl GENERICMAPPERWITHLISTOFINTEGER =
-      GenericTypesMapperTest_GenericMapperWithListOfInteger_MapperImpl.INSTANCE;
-  GenericTypesMapperTest_ChildOfGenericMapper_MapperImpl CHILDOFGENERICMAPPER =
-      GenericTypesMapperTest_ChildOfGenericMapper_MapperImpl.INSTANCE;
-  GenericTypesMapperTest_GenericChildOfGenericMapper_MapperImpl GENERICHILDOFGENERICOBJECTMAPPER =
-      GenericTypesMapperTest_GenericChildOfGenericMapper_MapperImpl.INSTANCE;
+  GenericTypesMapperTest_GenericMapperWithString_XMLMapperImpl GENERICMAPPERWITHSTRING =
+      GenericTypesMapperTest_GenericMapperWithString_XMLMapperImpl.INSTANCE;
+  GenericTypesMapperTest_GenericMapperWithInteger_XMLMapperImpl GENERICMAPPERWITHINTEGER =
+      GenericTypesMapperTest_GenericMapperWithInteger_XMLMapperImpl.INSTANCE;
+  GenericTypesMapperTest_GenericMapperWithListOfInteger_XMLMapperImpl
+      GENERICMAPPERWITHLISTOFINTEGER =
+          GenericTypesMapperTest_GenericMapperWithListOfInteger_XMLMapperImpl.INSTANCE;
+  GenericTypesMapperTest_ChildOfGenericMapper_XMLMapperImpl CHILDOFGENERICMAPPER =
+      GenericTypesMapperTest_ChildOfGenericMapper_XMLMapperImpl.INSTANCE;
+  GenericTypesMapperTest_GenericChildOfGenericMapper_XMLMapperImpl
+      GENERICHILDOFGENERICOBJECTMAPPER =
+          GenericTypesMapperTest_GenericChildOfGenericMapper_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testGenericObject() throws XMLStreamException {

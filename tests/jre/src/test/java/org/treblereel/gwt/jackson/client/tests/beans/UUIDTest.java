@@ -28,7 +28,7 @@ import org.junit.Test;
 public class UUIDTest {
 
   private static String uuid = "550e8400-e29b-41d4-a716-446655440000";
-  UUIDBean_MapperImpl mapper = UUIDBean_MapperImpl.INSTANCE;
+  UUIDBean_XMLMapperImpl mapper = UUIDBean_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {

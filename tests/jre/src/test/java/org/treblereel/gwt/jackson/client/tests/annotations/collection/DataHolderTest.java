@@ -25,7 +25,7 @@ import org.junit.Test;
 @J2clTestInput(DataHolderTest.class)
 public class DataHolderTest {
 
-  DataHolder_MapperImpl mapperEmployee = DataHolder_MapperImpl.INSTANCE;
+  DataHolder_XMLMapperImpl mapperEmployee = DataHolder_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testDataHolder() throws XMLStreamException {

@@ -31,7 +31,7 @@ public class XsiTypeTest {
   private static final String xml =
       "<?xml version='1.0' encoding='UTF-8'?><XsiType xmlns=\"http://www.omg.org/bpmn20\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"validation\"><value>value</value><child xsi:type=\"validation\"/></XsiType>";
 
-  XsiTypeTest_XsiType_MapperImpl mapper = XsiTypeTest_XsiType_MapperImpl.INSTANCE;
+  XsiTypeTest_XsiType_XMLMapperImpl mapper = XsiTypeTest_XsiType_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testSerializeValue() throws XMLStreamException {

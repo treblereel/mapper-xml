@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 import org.treblereel.gwt.jackson.api.annotation.XmlUnwrappedCollection;
 import org.treblereel.gwt.jackson.client.tests.annotations.seealso.type.SeeAlsoAnimalXsiTypeHolder;
-import org.treblereel.gwt.jackson.client.tests.annotations.seealso.type.SeeAlsoAnimalXsiTypeHolder_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.annotations.seealso.type.SeeAlsoAnimalXsiTypeHolder_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 7/1/20 */
 @J2clTestInput(SeeAlsoTest.class)
@@ -50,8 +50,8 @@ public class SeeAlsoTest {
 
   @Test
   public void testFoo() throws XMLStreamException {
-    final SeeAlsoTest_SeeAlsoHolder_MapperImpl mapper =
-        SeeAlsoTest_SeeAlsoHolder_MapperImpl.INSTANCE;
+    final SeeAlsoTest_SeeAlsoHolder_XMLMapperImpl mapper =
+        SeeAlsoTest_SeeAlsoHolder_XMLMapperImpl.INSTANCE;
 
     First first = new First();
     first.setTest1("first");
@@ -72,9 +72,9 @@ public class SeeAlsoTest {
 
   @Test
   public void testAnimal() throws XMLStreamException {
-    final SeeAlsoTest_SeeAlsoAnimalHolder_MapperImpl mapper =
-        SeeAlsoTest_SeeAlsoAnimalHolder_MapperImpl.INSTANCE;
-    final Animal_MapperImpl mapperAnimal = Animal_MapperImpl.INSTANCE;
+    final SeeAlsoTest_SeeAlsoAnimalHolder_XMLMapperImpl mapper =
+        SeeAlsoTest_SeeAlsoAnimalHolder_XMLMapperImpl.INSTANCE;
+    final Animal_XMLMapperImpl mapperAnimal = Animal_XMLMapperImpl.INSTANCE;
 
     Animal animal = new Animal();
     animal.setName("Animal");
@@ -101,8 +101,8 @@ public class SeeAlsoTest {
 
   @Test
   public void testAnimalCollection() throws XMLStreamException {
-    SeeAlsoTest_SeeAlsoAnimalCollection_MapperImpl mapper =
-        SeeAlsoTest_SeeAlsoAnimalCollection_MapperImpl.INSTANCE;
+    SeeAlsoTest_SeeAlsoAnimalCollection_XMLMapperImpl mapper =
+        SeeAlsoTest_SeeAlsoAnimalCollection_XMLMapperImpl.INSTANCE;
 
     SeeAlsoAnimalCollection collection = getSeeAlsoAnimalCollection();
     assertEquals(collection, mapper.read(mapper.write(collection)));
@@ -153,8 +153,8 @@ public class SeeAlsoTest {
 
   @Test
   public void testSeeAlsoAnimalXsiTypeHolder() throws XMLStreamException {
-    final SeeAlsoAnimalXsiTypeHolder_MapperImpl mapper =
-        SeeAlsoAnimalXsiTypeHolder_MapperImpl.INSTANCE;
+    final SeeAlsoAnimalXsiTypeHolder_XMLMapperImpl mapper =
+        SeeAlsoAnimalXsiTypeHolder_XMLMapperImpl.INSTANCE;
 
     Animal animal = new Animal();
     animal.setName("Animal");

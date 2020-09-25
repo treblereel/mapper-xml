@@ -25,7 +25,7 @@ import org.junit.Test;
 @J2clTestInput(InheritanceTest.class)
 public class InheritanceTest {
 
-  Child_MapperImpl mapper = Child_MapperImpl.INSTANCE;
+  Child_XMLMapperImpl mapper = Child_XMLMapperImpl.INSTANCE;
   String xml =
       "<?xml version='1.0' encoding='UTF-8'?><Child type=\"Simple\"><name>InheritanceTest</name><id>1</id></Child>";
 

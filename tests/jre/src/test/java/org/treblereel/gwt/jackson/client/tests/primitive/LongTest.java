@@ -38,7 +38,7 @@ public class LongTest {
   private static final String XML__17222 =
       "<?xml version='1.0' encoding='UTF-8'?><LongType><value>-17222</value></LongType>";
 
-  private LongTest_LongType_MapperImpl mapper = LongTest_LongType_MapperImpl.INSTANCE;
+  private LongTest_LongType_XMLMapperImpl mapper = LongTest_LongType_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testSerializeValue() throws XMLStreamException {

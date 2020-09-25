@@ -23,13 +23,13 @@ import java.util.List;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.client.tests.beans.collection.BoxedLists;
-import org.treblereel.gwt.jackson.client.tests.beans.collection.BoxedLists_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.beans.collection.BoxedLists_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/29/20 */
 @J2clTestInput(BoxedListsTest.class)
 public class BoxedListsTest {
 
-  BoxedLists_MapperImpl mapper = BoxedLists_MapperImpl.INSTANCE;
+  BoxedLists_XMLMapperImpl mapper = BoxedLists_XMLMapperImpl.INSTANCE;
 
   private List<String> strings = Arrays.asList("A", "B", "C", "D");
   private List<Boolean> booleans = Arrays.asList(true, true, false, false);

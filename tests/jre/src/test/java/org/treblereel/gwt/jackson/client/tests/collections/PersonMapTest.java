@@ -34,7 +34,7 @@ public class PersonMapTest {
 
   private static final String XML =
       "<?xml version='1.0' encoding='UTF-8'?><PersonMap><map><entry><key><firstName>setFirstName</firstName><lastName>setLastName</lastName><birthday>1</birthday><alive>1</alive></key><value><value><firstName>setFirstName</firstName><lastName>setLastName</lastName><birthday>1</birthday><alive>1</alive></value></value></entry></map></PersonMap>";
-  PersonMap_MapperImpl mapper = PersonMap_MapperImpl.INSTANCE;
+  PersonMap_XMLMapperImpl mapper = PersonMap_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {

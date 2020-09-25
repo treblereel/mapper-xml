@@ -22,8 +22,8 @@ import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.client.tests.beans.collection.PrimitiveArrays;
 import org.treblereel.gwt.jackson.client.tests.beans.collection.PrimitiveArraysUnwrapped;
-import org.treblereel.gwt.jackson.client.tests.beans.collection.PrimitiveArraysUnwrapped_MapperImpl;
-import org.treblereel.gwt.jackson.client.tests.beans.collection.PrimitiveArrays_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.beans.collection.PrimitiveArraysUnwrapped_XMLMapperImpl;
+import org.treblereel.gwt.jackson.client.tests.beans.collection.PrimitiveArrays_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/28/20 */
 @J2clTestInput(PrimitiveArraysTest.class)
@@ -43,7 +43,7 @@ public class PrimitiveArraysTest {
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {
-    PrimitiveArrays_MapperImpl mapper = PrimitiveArrays_MapperImpl.INSTANCE;
+    PrimitiveArrays_XMLMapperImpl mapper = PrimitiveArrays_XMLMapperImpl.INSTANCE;
 
     PrimitiveArrays test =
         new PrimitiveArrays(strings, booleans, chars, bytes, doubles, ints, longs, shorts);
@@ -56,7 +56,7 @@ public class PrimitiveArraysTest {
 
   @Test
   public void testDeserializeValueUnwrapped() throws XMLStreamException {
-    PrimitiveArraysUnwrapped_MapperImpl mapper = PrimitiveArraysUnwrapped_MapperImpl.INSTANCE;
+    PrimitiveArraysUnwrapped_XMLMapperImpl mapper = PrimitiveArraysUnwrapped_XMLMapperImpl.INSTANCE;
 
     PrimitiveArraysUnwrapped test =
         new PrimitiveArraysUnwrapped(strings, booleans, chars, bytes, doubles, ints, longs, shorts);

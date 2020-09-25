@@ -38,8 +38,8 @@ public class BigDecimalTest {
           + value
           + "</value></BigDecimalBean>";
 
-  private BigDecimalTest_BigDecimalBean_MapperImpl mapper =
-      BigDecimalTest_BigDecimalBean_MapperImpl.INSTANCE;
+  private BigDecimalTest_BigDecimalBean_XMLMapperImpl mapper =
+      BigDecimalTest_BigDecimalBean_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testSerializeValue() throws XMLStreamException {

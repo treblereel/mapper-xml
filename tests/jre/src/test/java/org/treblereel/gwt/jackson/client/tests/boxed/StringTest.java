@@ -22,7 +22,7 @@ import com.google.j2cl.junit.apt.J2clTestInput;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.client.tests.beans.StringBean;
-import org.treblereel.gwt.jackson.client.tests.beans.StringBean_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.beans.StringBean_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/26/20 */
 @J2clTestInput(StringTest.class)
@@ -32,18 +32,18 @@ public class StringTest {
   public void testDeserializeValue() throws XMLStreamException {
     assertEquals(
         "XML",
-        StringBean_MapperImpl.INSTANCE
+        StringBean_XMLMapperImpl.INSTANCE
             .read("<?xml version='1.0' encoding='UTF-8'?><StringBean><val>XML</val></StringBean>")
             .getVal());
     assertNull(
-        StringBean_MapperImpl.INSTANCE
+        StringBean_XMLMapperImpl.INSTANCE
             .read("<?xml version='1.0' encoding='UTF-8'?><StringBean><val></val></StringBean>")
             .getVal());
   }
 
   @Test
   public void testSerializeValue() throws XMLStreamException {
-    StringBean_MapperImpl mapper = StringBean_MapperImpl.INSTANCE;
+    StringBean_XMLMapperImpl mapper = StringBean_XMLMapperImpl.INSTANCE;
 
     StringBean test = new StringBean();
     assertEquals("<?xml version='1.0' encoding='UTF-8'?><StringBean/>", mapper.write(test));

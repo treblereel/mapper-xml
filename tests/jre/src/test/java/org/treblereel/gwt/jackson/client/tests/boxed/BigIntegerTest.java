@@ -36,8 +36,8 @@ public class BigIntegerTest {
           + value
           + "</value></BigIntegerBean>";
 
-  private BigIntegerTest_BigIntegerBean_MapperImpl mapper =
-      BigIntegerTest_BigIntegerBean_MapperImpl.INSTANCE;
+  private BigIntegerTest_BigIntegerBean_XMLMapperImpl mapper =
+      BigIntegerTest_BigIntegerBean_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testSerializeValue() throws XMLStreamException {

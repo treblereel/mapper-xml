@@ -21,14 +21,14 @@ import com.google.j2cl.junit.apt.J2clTestInput;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.client.tests.beans.collection.StringArray2d;
-import org.treblereel.gwt.jackson.client.tests.beans.collection.StringArray2d_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.beans.collection.StringArray2d_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/29/20 */
 @J2clTestInput(StringArray2dTest.class)
 public class StringArray2dTest {
 
   StringArray2d test = new StringArray2d();
-  StringArray2d_MapperImpl mapper = StringArray2d_MapperImpl.INSTANCE;
+  StringArray2d_XMLMapperImpl mapper = StringArray2d_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {

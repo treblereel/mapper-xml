@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 import com.google.j2cl.junit.apt.J2clTestInput;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
-import org.treblereel.gwt.jackson.client.tests.beans.BooleanBean_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.beans.BooleanBean_XMLMapperImpl;
 
 @J2clTestInput(BooleanTest.class)
 public class BooleanTest {
@@ -29,12 +29,12 @@ public class BooleanTest {
   @Test
   public void testDeserializeValue() throws XMLStreamException {
     assertTrue(
-        BooleanBean_MapperImpl.INSTANCE
+        BooleanBean_XMLMapperImpl.INSTANCE
             .read(
                 "<?xml version='1.0' encoding='UTF-8'?><BooleanBean><check>true</check></BooleanBean>")
             .getCheck());
     assertFalse(
-        BooleanBean_MapperImpl.INSTANCE
+        BooleanBean_XMLMapperImpl.INSTANCE
             .read(
                 "<?xml version='1.0' encoding='UTF-8'?><BooleanBean><check>false</check></BooleanBean>")
             .getCheck());

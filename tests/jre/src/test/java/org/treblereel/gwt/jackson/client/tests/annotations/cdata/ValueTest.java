@@ -26,7 +26,7 @@ import org.junit.Test;
 @J2clTestInput(UserCdataTest.class)
 public class ValueTest {
 
-  private final Value_MapperImpl mapper = Value_MapperImpl.INSTANCE;
+  private final Value_XMLMapperImpl mapper = Value_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testValueTest() throws XMLStreamException {

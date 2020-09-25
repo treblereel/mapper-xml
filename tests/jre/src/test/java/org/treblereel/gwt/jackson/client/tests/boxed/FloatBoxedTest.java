@@ -38,7 +38,8 @@ public class FloatBoxedTest {
   private static final String XML__17222 =
       "<?xml version='1.0' encoding='UTF-8'?><FloatType><value>-17222.01</value></FloatType>";
 
-  private FloatBoxedTest_FloatType_MapperImpl mapper = FloatBoxedTest_FloatType_MapperImpl.INSTANCE;
+  private FloatBoxedTest_FloatType_XMLMapperImpl mapper =
+      FloatBoxedTest_FloatType_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testSerializeValue() throws XMLStreamException {

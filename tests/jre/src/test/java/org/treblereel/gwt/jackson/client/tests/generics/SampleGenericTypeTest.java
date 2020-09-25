@@ -27,7 +27,7 @@ import org.junit.Test;
 public class SampleGenericTypeTest {
   private static final String XML =
       "<?xml version='1.0' encoding='UTF-8'?><SampleGenericType><field3>setField3</field3><field1>setField1</field1><field2>1</field2></SampleGenericType>";
-  SampleGenericType_MapperImpl mapper = SampleGenericType_MapperImpl.INSTANCE;
+  SampleGenericType_XMLMapperImpl mapper = SampleGenericType_XMLMapperImpl.INSTANCE;
 
   @Test
   public void test() throws XMLStreamException {

@@ -21,13 +21,13 @@ import com.google.j2cl.junit.apt.J2clTestInput;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.client.tests.beans.collection.BoxedArrays;
-import org.treblereel.gwt.jackson.client.tests.beans.collection.BoxedArrays_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.beans.collection.BoxedArrays_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/28/20 */
 @J2clTestInput(BoxedArraysTest.class)
 public class BoxedArraysTest {
 
-  BoxedArrays_MapperImpl mapper = BoxedArrays_MapperImpl.INSTANCE;
+  BoxedArrays_XMLMapperImpl mapper = BoxedArrays_XMLMapperImpl.INSTANCE;
 
   String[] strings = new String[] {"AAA", "ZZZ", "1111"};
   Boolean[] booleans = new Boolean[] {true, true, false, false};

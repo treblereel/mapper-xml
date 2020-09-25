@@ -21,19 +21,19 @@ import com.google.j2cl.junit.apt.J2clTestInput;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.client.tests.beans.CharacterBean;
-import org.treblereel.gwt.jackson.client.tests.beans.CharacterBean_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.beans.CharacterBean_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/26/20 */
 @J2clTestInput(CharacterTest.class)
 public class CharacterTest {
 
-  CharacterBean_MapperImpl mapper = CharacterBean_MapperImpl.INSTANCE;
+  CharacterBean_XMLMapperImpl mapper = CharacterBean_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {
     assertEquals(
         'e',
-        CharacterBean_MapperImpl.INSTANCE
+        CharacterBean_XMLMapperImpl.INSTANCE
             .read(
                 "<?xml version='1.0' encoding='UTF-8'?><CharacterBean><charVal>e</charVal></CharacterBean>")
             .getCharVal());

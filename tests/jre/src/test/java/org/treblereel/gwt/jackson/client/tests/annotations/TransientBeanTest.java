@@ -22,13 +22,13 @@ import com.google.j2cl.junit.apt.J2clTestInput;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.client.tests.beans.TransientBean;
-import org.treblereel.gwt.jackson.client.tests.beans.TransientBean_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.beans.TransientBean_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/29/20 */
 @J2clTestInput(TransientBeanTest.class)
 public class TransientBeanTest {
 
-  TransientBean_MapperImpl mapper = TransientBean_MapperImpl.INSTANCE;
+  TransientBean_XMLMapperImpl mapper = TransientBean_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {

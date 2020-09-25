@@ -35,7 +35,8 @@ public class ShortBoxedTest {
   private static final String XML__17222 =
       "<?xml version='1.0' encoding='UTF-8'?><ShortType><check>-17222</check></ShortType>";
 
-  private ShortBoxedTest_ShortType_MapperImpl mapper = ShortBoxedTest_ShortType_MapperImpl.INSTANCE;
+  private ShortBoxedTest_ShortType_XMLMapperImpl mapper =
+      ShortBoxedTest_ShortType_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testSerializeValue() throws XMLStreamException {

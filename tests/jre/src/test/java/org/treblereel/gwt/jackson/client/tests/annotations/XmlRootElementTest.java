@@ -24,19 +24,19 @@ import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.client.tests.annotations.beans.address.Address;
 import org.treblereel.gwt.jackson.client.tests.annotations.beans.company.Company;
-import org.treblereel.gwt.jackson.client.tests.annotations.beans.company.Company_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.annotations.beans.company.Company_XMLMapperImpl;
 import org.treblereel.gwt.jackson.client.tests.annotations.beans.company.Department;
-import org.treblereel.gwt.jackson.client.tests.annotations.beans.company.Department_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.annotations.beans.company.Department_XMLMapperImpl;
 import org.treblereel.gwt.jackson.client.tests.annotations.beans.company.Employee;
-import org.treblereel.gwt.jackson.client.tests.annotations.beans.company.Employee_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.annotations.beans.company.Employee_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/1/20 */
 @J2clTestInput(XmlRootElementTest.class)
 public class XmlRootElementTest {
 
-  Employee_MapperImpl mapperEmployee = Employee_MapperImpl.INSTANCE;
-  Company_MapperImpl mapperCompany = Company_MapperImpl.INSTANCE;
-  Department_MapperImpl mapperDepartment = Department_MapperImpl.INSTANCE;
+  Employee_XMLMapperImpl mapperEmployee = Employee_XMLMapperImpl.INSTANCE;
+  Company_XMLMapperImpl mapperCompany = Company_XMLMapperImpl.INSTANCE;
+  Department_XMLMapperImpl mapperDepartment = Department_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testDeserializeMapperEmployee() throws XMLStreamException {

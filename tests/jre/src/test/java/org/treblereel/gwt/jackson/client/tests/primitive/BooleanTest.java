@@ -24,7 +24,7 @@ import com.google.j2cl.junit.apt.J2clTestInput;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.client.tests.beans.BooleanBean;
-import org.treblereel.gwt.jackson.client.tests.beans.BooleanBean_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.beans.BooleanBean_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/22/20 */
 @J2clTestInput(BooleanTest.class)
@@ -35,7 +35,7 @@ public class BooleanTest extends GWTTestCase {
   private static final String XML_FALSE =
       "<?xml version='1.0' encoding='UTF-8'?><BooleanBean><check>false</check></BooleanBean>";
 
-  private BooleanBean_MapperImpl mapper = BooleanBean_MapperImpl.INSTANCE;
+  private BooleanBean_XMLMapperImpl mapper = BooleanBean_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testSerializeValue() throws XMLStreamException {

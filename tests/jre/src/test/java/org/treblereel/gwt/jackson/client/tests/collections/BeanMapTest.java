@@ -26,13 +26,13 @@ import org.junit.Test;
 import org.treblereel.gwt.jackson.client.tests.beans.Address;
 import org.treblereel.gwt.jackson.client.tests.beans.Person;
 import org.treblereel.gwt.jackson.client.tests.beans.collection.Users;
-import org.treblereel.gwt.jackson.client.tests.beans.collection.Users_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.beans.collection.Users_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/30/20 */
 @J2clTestInput(BeanMapTest.class)
 public class BeanMapTest {
 
-  Users_MapperImpl mapper = Users_MapperImpl.INSTANCE;
+  Users_XMLMapperImpl mapper = Users_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testStringPersonMap() throws XMLStreamException {

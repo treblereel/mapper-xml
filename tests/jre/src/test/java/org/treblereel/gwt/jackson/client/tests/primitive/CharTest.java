@@ -32,7 +32,7 @@ public class CharTest {
   private static final String XML_C =
       "<?xml version='1.0' encoding='UTF-8'?><CharType><value>c</value></CharType>";
 
-  private CharTest_CharType_MapperImpl mapper = CharTest_CharType_MapperImpl.INSTANCE;
+  private CharTest_CharType_XMLMapperImpl mapper = CharTest_CharType_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testSerializeValue() throws XMLStreamException {

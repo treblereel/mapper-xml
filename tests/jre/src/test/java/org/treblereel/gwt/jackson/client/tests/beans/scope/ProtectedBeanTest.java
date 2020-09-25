@@ -22,7 +22,7 @@ import org.junit.Test;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 5/13/20 */
 public class ProtectedBeanTest {
-  ProtectedBean_MapperImpl mapper = ProtectedBean_MapperImpl.INSTANCE;
+  ProtectedBean_XMLMapperImpl mapper = ProtectedBean_XMLMapperImpl.INSTANCE;
 
   @Test
   public void test() throws XMLStreamException {

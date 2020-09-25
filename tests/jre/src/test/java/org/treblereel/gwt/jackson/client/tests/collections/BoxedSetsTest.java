@@ -24,13 +24,13 @@ import java.util.stream.Collectors;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.client.tests.beans.collection.BoxedSets;
-import org.treblereel.gwt.jackson.client.tests.beans.collection.BoxedSets_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.beans.collection.BoxedSets_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/29/20 */
 @J2clTestInput(BoxedSetsTest.class)
 public class BoxedSetsTest {
 
-  BoxedSets_MapperImpl mapper = BoxedSets_MapperImpl.INSTANCE;
+  BoxedSets_XMLMapperImpl mapper = BoxedSets_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {

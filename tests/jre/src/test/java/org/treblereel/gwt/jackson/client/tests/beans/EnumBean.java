@@ -16,6 +16,7 @@
 package org.treblereel.gwt.jackson.client.tests.beans;
 
 import java.util.Objects;
+import javax.xml.bind.annotation.XmlEnumValue;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/27/20 */
@@ -33,8 +34,10 @@ public class EnumBean {
   }
 
   public enum Enums {
+    @XmlEnumValue("1")
     ONE,
     TWO,
+    @XmlEnumValue("_three")
     THREE,
     FOUR
   }

@@ -38,7 +38,7 @@ public class DoubleTest {
   private static final String XML__17222 =
       "<?xml version='1.0' encoding='UTF-8'?><DoubleType><value>-17222.0</value></DoubleType>";
 
-  private DoubleTest_DoubleType_MapperImpl mapper = DoubleTest_DoubleType_MapperImpl.INSTANCE;
+  private DoubleTest_DoubleType_XMLMapperImpl mapper = DoubleTest_DoubleType_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testSerializeValue() throws XMLStreamException {

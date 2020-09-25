@@ -32,7 +32,7 @@ import org.treblereel.gwt.jackson.client.tests.bpmn.drools.MetaData;
 @J2clTestInput(BPMNTest.class)
 public class BPMNTest {
 
-  private static final Definitions_MapperImpl mapper = Definitions_MapperImpl.INSTANCE;
+  private static final Definitions_XMLMapperImpl mapper = Definitions_XMLMapperImpl.INSTANCE;
 
   @Test
   public void test() throws XMLStreamException {
@@ -165,7 +165,7 @@ public class BPMNTest {
     itemDefinition.setStructureRef("String_1");
     definition.getItemDefinitions().add(itemDefinition);
 
-    Definitions_MapperImpl mapper = new Definitions_MapperImpl();
+    Definitions_XMLMapperImpl mapper = new Definitions_XMLMapperImpl();
     String xml = mapper.write(definition);
     Definitions result = mapper.read(mapper.write(definition));
     assertEquals(definition, result);

@@ -43,7 +43,7 @@ import org.treblereel.gwt.jackson.serializer.SerializerGenerator;
 /** @author Dmitrii Tikhomirov Created by treblereel 3/20/20 */
 public class MapperGenerator extends AbstractGenerator {
 
-  private static final String MAPPER_IMPL = "_MapperImpl";
+  private static final String MAPPER_IMPL = "_XMLMapperImpl";
 
   private final DeserializerGenerator deserializerGenerator;
   private final SerializerGenerator serializerGenerator;

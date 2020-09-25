@@ -94,7 +94,7 @@ The annotation processor will generate the XML mapper for the `Person` class.
 Example of serializing `Person` to `XML`:
 
 ```xml
-  Person_MapperImpl mapper = Person_MapperImpl.INSTANCE;
+  Person_XMLMapperImpl mapper = Person_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {

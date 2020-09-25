@@ -36,7 +36,7 @@ public class FloatTest {
   private static final String XML__17222 =
       "<?xml version='1.0' encoding='UTF-8'?><FloatType><value>-17222.01</value></FloatType>";
 
-  private FloatTest_FloatType_MapperImpl mapper = FloatTest_FloatType_MapperImpl.INSTANCE;
+  private FloatTest_FloatType_XMLMapperImpl mapper = FloatTest_FloatType_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testSerializeValue() throws XMLStreamException {

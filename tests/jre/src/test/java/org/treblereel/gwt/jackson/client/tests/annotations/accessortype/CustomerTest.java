@@ -25,7 +25,7 @@ import org.junit.Test;
 @J2clTestInput(CustomerTest.class)
 public class CustomerTest {
 
-  Customer_MapperImpl mapper = Customer_MapperImpl.INSTANCE;
+  Customer_XMLMapperImpl mapper = Customer_XMLMapperImpl.INSTANCE;
 
   private static final String xml =
       "<?xml version='1.0' encoding='UTF-8'?><Customer id=\"1112\"><firstName><![CDATA[setFirstName]]></firstName><lastName>setLastName</lastName></Customer>";

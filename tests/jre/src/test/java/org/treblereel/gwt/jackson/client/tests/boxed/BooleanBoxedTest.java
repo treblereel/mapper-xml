@@ -35,8 +35,8 @@ public class BooleanBoxedTest {
   private static final String XML_FALSE =
       "<?xml version='1.0' encoding='UTF-8'?><BooleanBean><check>false</check></BooleanBean>";
 
-  private BooleanBoxedTest_BooleanBean_MapperImpl mapper =
-      BooleanBoxedTest_BooleanBean_MapperImpl.INSTANCE;
+  private BooleanBoxedTest_BooleanBean_XMLMapperImpl mapper =
+      BooleanBoxedTest_BooleanBean_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testSerializeValue() throws XMLStreamException {

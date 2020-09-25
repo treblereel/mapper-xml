@@ -34,7 +34,7 @@ public class ShortTest {
   private static final String XML__17222 =
       "<?xml version='1.0' encoding='UTF-8'?><ShortType><check>-17222</check></ShortType>";
 
-  private ShortTest_ShortType_MapperImpl mapper = ShortTest_ShortType_MapperImpl.INSTANCE;
+  private ShortTest_ShortType_XMLMapperImpl mapper = ShortTest_ShortType_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testSerializeValue() throws XMLStreamException {

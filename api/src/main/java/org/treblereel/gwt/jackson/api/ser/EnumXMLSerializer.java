@@ -16,6 +16,7 @@
 
 package org.treblereel.gwt.jackson.api.ser;
 
+import java.util.function.Function;
 import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLSerializationContext;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
@@ -30,28 +31,34 @@ import org.treblereel.gwt.jackson.api.stream.XMLWriter;
  */
 public class EnumXMLSerializer<E extends Enum<E>> extends XMLSerializer<E> {
 
+  private Function<Enum<E>, String> func;
+
+  private EnumXMLSerializer(Function<Enum<E>, String> func) {
+    this.func = func;
+  }
+
   /**
    * getInstance
    *
    * @return an instance of {@link EnumXMLSerializer}
+   * @param func
    */
   @SuppressWarnings("unchecked")
-  public static XMLSerializer getInstance() {
-    return new EnumXMLSerializer();
+  public static <E extends Enum<E>> XMLSerializer getInstance(Function<E, String> func) {
+    return new EnumXMLSerializer(func);
   }
-
-  private EnumXMLSerializer() {}
 
   /** {@inheritDoc} */
   @Override
   public void doSerialize(
       XMLWriter writer, E value, XMLSerializationContext ctx, XMLSerializerParameters params)
       throws XMLStreamException {
+    String name = func.apply(value);
     if (isAttribute) {
-      writer.writeAttribute(propertyName, value.toString());
+      writer.writeAttribute(propertyName, name);
       isAttribute = false;
     } else {
-      writer.value(value.name());
+      writer.value(name);
     }
   }
 }

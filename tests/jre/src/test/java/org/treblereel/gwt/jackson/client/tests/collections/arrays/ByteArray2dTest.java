@@ -24,13 +24,13 @@ import java.util.Arrays;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 import org.treblereel.gwt.jackson.client.tests.beans.collection.ByteArray2d;
-import org.treblereel.gwt.jackson.client.tests.beans.collection.ByteArray2d_MapperImpl;
+import org.treblereel.gwt.jackson.client.tests.beans.collection.ByteArray2d_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/29/20 */
 @J2clTestInput(ByteArray2dTest.class)
 public class ByteArray2dTest {
 
-  ByteArray2d_MapperImpl mapper = ByteArray2d_MapperImpl.INSTANCE;
+  ByteArray2d_XMLMapperImpl mapper = ByteArray2d_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {

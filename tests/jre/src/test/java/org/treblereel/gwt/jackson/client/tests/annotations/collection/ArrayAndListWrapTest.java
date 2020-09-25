@@ -54,7 +54,8 @@ public class ArrayAndListWrapTest {
     demo.setArray1(arr2);
     demo.setList(list);
 
-    ArrayAndListWrapTest_Demo_MapperImpl mapper = ArrayAndListWrapTest_Demo_MapperImpl.INSTANCE;
+    ArrayAndListWrapTest_Demo_XMLMapperImpl mapper =
+        ArrayAndListWrapTest_Demo_XMLMapperImpl.INSTANCE;
 
     assertTrue(demo.equals(mapper.read(mapper.write(demo))));
     assertTrue(demo.equals(mapper.read(mapper.write(demo))));

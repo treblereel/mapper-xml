@@ -32,7 +32,7 @@ public class EnumTest {
     assertEquals(
         EnumBean.Enums.ONE,
         mapper
-            .read("<?xml version='1.0' encoding='UTF-8'?><EnumBean><val>ONE</val></EnumBean>")
+            .read("<?xml version='1.0' encoding='UTF-8'?><EnumBean><val>1</val></EnumBean>")
             .getVal());
     assertEquals(
         null,
@@ -51,7 +51,19 @@ public class EnumTest {
     EnumBean test = new EnumBean();
     test.setVal(EnumBean.Enums.ONE);
     assertEquals(
-        "<?xml version='1.0' encoding='UTF-8'?><EnumBean><val>ONE</val></EnumBean>",
+        "<?xml version='1.0' encoding='UTF-8'?><EnumBean><val>1</val></EnumBean>",
+        mapper.write(test));
+    assertEquals(test, mapper.read(mapper.write(test)));
+
+    test.setVal(EnumBean.Enums.TWO);
+    assertEquals(
+        "<?xml version='1.0' encoding='UTF-8'?><EnumBean><val>TWO</val></EnumBean>",
+        mapper.write(test));
+    assertEquals(test, mapper.read(mapper.write(test)));
+
+    test.setVal(EnumBean.Enums.THREE);
+    assertEquals(
+        "<?xml version='1.0' encoding='UTF-8'?><EnumBean><val>_three</val></EnumBean>",
         mapper.write(test));
     assertEquals(test, mapper.read(mapper.write(test)));
   }

@@ -31,15 +31,14 @@ import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
 import com.google.auto.common.MoreTypes;
-import org.treblereel.gwt.jackson.api.deser.EnumXMLDeserializer;
-import org.treblereel.gwt.jackson.api.ser.EnumXMLSerializer;
-import org.treblereel.gwt.jackson.context.GenerationContext;
-
+import java.util.function.Function;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeMirror;
 import javax.xml.bind.annotation.XmlEnumValue;
-import java.util.function.Function;
+import org.treblereel.gwt.jackson.api.deser.EnumXMLDeserializer;
+import org.treblereel.gwt.jackson.api.ser.EnumXMLSerializer;
+import org.treblereel.gwt.jackson.context.GenerationContext;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/1/20 */
 public class EnumBeanFieldDefinition extends FieldDefinition {

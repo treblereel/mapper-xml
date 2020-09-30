@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeMirror;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 
@@ -33,6 +34,13 @@ public class FieldDefinitionFactory {
   FieldDefinitionFactory(GenerationContext context) {
     this.context = context;
     this.typeUtils = context.getTypeUtils();
+  }
+
+  FieldDefinition getFieldDefinition(PropertyDefinition propertyDefinition) {
+    if (propertyDefinition.getProperty().getAnnotation(XmlJavaTypeAdapter.class) != null) {
+      return new XmlJavaTypeAdapterFieldDefinition(propertyDefinition, context);
+    }
+    return getFieldDefinition(propertyDefinition.getBean());
   }
 
   FieldDefinition getFieldDefinition(TypeMirror type) {

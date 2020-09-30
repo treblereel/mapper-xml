@@ -53,7 +53,7 @@ public class PropertyDefinition extends Definition {
   }
 
   public Expression getFieldDeserializer(CompilationUnit cu) {
-    FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(getBean());
+    FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(this);
     Expression result = fieldDefinition.getFieldDeserializer(this, cu);
     if (isCData()) {
       String value =
@@ -80,8 +80,7 @@ public class PropertyDefinition extends Definition {
   }
 
   public Expression getFieldSerializer(CompilationUnit cu) {
-    FieldDefinition fieldDefinition =
-        propertyDefinitionFactory.getFieldDefinition(bean != null ? bean : getBean());
+    FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(this);
     return fieldDefinition.getFieldSerializer(this, cu);
   }
 

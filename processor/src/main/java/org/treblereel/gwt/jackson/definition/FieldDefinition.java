@@ -46,6 +46,7 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.api.Inheritance;
+import org.treblereel.gwt.jackson.api.XMLDeserializer;
 import org.treblereel.gwt.jackson.api.stream.XMLReader;
 import org.treblereel.gwt.jackson.api.utils.Pair;
 import org.treblereel.gwt.jackson.context.GenerationContext;
@@ -79,10 +80,10 @@ public abstract class FieldDefinition extends Definition {
     typeArguments.add(new ClassOrInterfaceType().setName("String"));
     typeArguments.add(
         new ClassOrInterfaceType()
-            .setName("XMLDeserializer")
+            .setName(XMLDeserializer.class.getSimpleName())
             .setTypeArguments(new TypeParameter().setName(typeArg)));
 
-    ClassOrInterfaceType iface = new ClassOrInterfaceType().setName("Function");
+    ClassOrInterfaceType iface = new ClassOrInterfaceType().setName(Function.class.getSimpleName());
     iface.setTypeArguments(typeArguments);
 
     ObjectCreationExpr func = new ObjectCreationExpr().setType(iface);
@@ -92,7 +93,7 @@ public abstract class FieldDefinition extends Definition {
     method.setModifiers(Modifier.Keyword.PUBLIC);
     method.addAnnotation(Override.class);
     method.setName("apply");
-    method.setType(new ClassOrInterfaceType().setName("XMLDeserializer"));
+    method.setType(new ClassOrInterfaceType().setName(XMLDeserializer.class.getSimpleName()));
     method.addParameter("String", "value");
     for (Map.Entry<String, TypeMirror> typeElement : maybePolymorphicType.value.entrySet()) {
       method

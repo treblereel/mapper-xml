@@ -30,6 +30,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 import org.treblereel.gwt.jackson.exception.GenerationException;
@@ -113,6 +114,7 @@ public class BeanProcessor {
     if (field.getModifiers().contains(Modifier.STATIC)
         || field.getModifiers().contains(Modifier.TRANSIENT)
         || field.getAnnotation(XmlTransient.class) != null
+        || field.getAnnotation(XmlJavaTypeAdapter.class) != null
         || field.getModifiers().contains(Modifier.FINAL)) {
       return false;
     }

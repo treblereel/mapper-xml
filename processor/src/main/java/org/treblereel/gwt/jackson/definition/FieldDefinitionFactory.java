@@ -19,6 +19,7 @@ import com.google.auto.common.MoreTypes;
 import java.util.HashMap;
 import java.util.Map;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.treblereel.gwt.jackson.TypeUtils;
@@ -48,6 +49,8 @@ public class FieldDefinitionFactory {
     FieldDefinition result;
     if (holder.containsKey(property)) {
       result = holder.get(property);
+    } else if (isXmlJavaTypeAdapter(type)) {
+      result = new XmlJavaTypeAdapterFieldDefinition(type, context);
     } else if (typeUtils.isSimpleType(property)) {
       result = new BasicTypeFieldDefinition(property, context);
     } else if (context.getTypeUtils().isIterable(property)) {
@@ -63,5 +66,12 @@ public class FieldDefinitionFactory {
     }
     holder.put(property, result);
     return result;
+  }
+
+  private boolean isXmlJavaTypeAdapter(TypeMirror type) {
+    if (!type.getKind().isPrimitive() && !type.getKind().equals(TypeKind.ARRAY)) {
+      return MoreTypes.asTypeElement(type).getAnnotation(XmlJavaTypeAdapter.class) != null;
+    }
+    return false;
   }
 }

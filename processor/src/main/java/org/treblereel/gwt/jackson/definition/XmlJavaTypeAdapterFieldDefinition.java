@@ -53,16 +53,27 @@ public class XmlJavaTypeAdapterFieldDefinition extends FieldDefinition {
 
   XmlJavaTypeAdapterFieldDefinition(
       PropertyDefinition propertyDefinition, GenerationContext context) {
-    super(propertyDefinition.bean, context);
+    this(
+        propertyDefinition.bean,
+        context,
+        propertyDefinition.getProperty().getAnnotation(XmlJavaTypeAdapter.class));
+  }
 
-    this.typeAdapter = propertyDefinition.getProperty().getAnnotation(XmlJavaTypeAdapter.class);
+  XmlJavaTypeAdapterFieldDefinition(TypeMirror type, GenerationContext context) {
+    this(type, context, MoreTypes.asTypeElement(type).getAnnotation(XmlJavaTypeAdapter.class));
+  }
+
+  private XmlJavaTypeAdapterFieldDefinition(
+      TypeMirror type, GenerationContext context, XmlJavaTypeAdapter typeAdapter) {
+    super(type, context);
+    this.typeAdapter = typeAdapter;
+
     ExecutableElement decl = getUnmarshal();
     VariableElement parameterElement = decl.getParameters().get(0);
+    fieldDefinition = propertyDefinitionFactory.getFieldDefinition(parameterElement.asType());
 
-    this.marshal = parameterElement.asType();
-    this.umarshal = decl.getReturnType();
-
-    this.fieldDefinition = propertyDefinitionFactory.getFieldDefinition(parameterElement.asType());
+    marshal = parameterElement.asType();
+    umarshal = decl.getReturnType();
   }
 
   private ExecutableElement getUnmarshal() {

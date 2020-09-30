@@ -26,9 +26,22 @@ public class MyTestBean {
   @XmlJavaTypeAdapter(MyTestBeanValueAdapter.class)
   private MyCustomBean value;
 
-  @Override
-  public int hashCode() {
-    return getValue() != null ? getValue().hashCode() : 0;
+  private MyCustomBean2 value2;
+
+  public MyCustomBean getValue() {
+    return value;
+  }
+
+  public void setValue(MyCustomBean value) {
+    this.value = value;
+  }
+
+  public MyCustomBean2 getValue2() {
+    return value2;
+  }
+
+  public void setValue2(MyCustomBean2 value2) {
+    this.value2 = value2;
   }
 
   @Override
@@ -38,14 +51,15 @@ public class MyTestBean {
 
     MyTestBean that = (MyTestBean) o;
 
-    return getValue() != null ? getValue().equals(that.getValue()) : that.getValue() == null;
+    if (getValue() != null ? !getValue().equals(that.getValue()) : that.getValue() != null)
+      return false;
+    return getValue2() != null ? getValue2().equals(that.getValue2()) : that.getValue2() == null;
   }
 
-  public MyCustomBean getValue() {
-    return value;
-  }
-
-  public void setValue(MyCustomBean value) {
-    this.value = value;
+  @Override
+  public int hashCode() {
+    int result = getValue() != null ? getValue().hashCode() : 0;
+    result = 31 * result + (getValue2() != null ? getValue2().hashCode() : 0);
+    return result;
   }
 }

@@ -16,11 +16,9 @@
 
 package org.treblereel.gwt.jackson.context;
 
-import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
 import java.util.Set;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.MirroredTypeException;
@@ -38,13 +36,10 @@ public class XmlJavaTypeAdapterProcessor {
   }
 
   void process(Set<? extends Element> elements) {
-    elements.stream()
-        .filter(elm -> elm.getKind().equals(ElementKind.FIELD))
-        .map(MoreElements::asVariable)
-        .forEach(this::process);
+    elements.stream().forEach(this::process);
   }
 
-  private void process(VariableElement typeElement) {
+  private void process(Element typeElement) {
     ExecutableElement decl = getUnmarshal(typeElement.getAnnotation(XmlJavaTypeAdapter.class));
     VariableElement parameterElement = decl.getParameters().get(0);
     context.addBeanDefinition(MoreTypes.asTypeElement(parameterElement.asType()));

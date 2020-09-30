@@ -27,7 +27,7 @@ import org.junit.Test;
 public class MyTestBeanTest {
 
   private static final String XML =
-      "<?xml version='1.0' encoding='UTF-8'?><MyTestBean><value><value>TEST</value></value></MyTestBean>";
+      "<?xml version='1.0' encoding='UTF-8'?><MyTestBean><value><value>TEST</value></value><value2 value=\"TEST2\"/></MyTestBean>";
 
   MyTestBean_XMLMapperImpl mapper = MyTestBean_XMLMapperImpl.INSTANCE;
 
@@ -35,6 +35,7 @@ public class MyTestBeanTest {
   public void testSerializeValue() throws XMLStreamException {
     MyTestBean test = new MyTestBean();
     test.setValue(new MyCustomBean("TEST"));
+    test.setValue2(new MyCustomBean2("TEST2"));
     assertEquals(XML, mapper.write(test));
   }
 
@@ -42,6 +43,9 @@ public class MyTestBeanTest {
   public void testDeserializeValue() throws XMLStreamException {
     MyTestBean test = new MyTestBean();
     test.setValue(new MyCustomBean("TEST"));
+    test.setValue2(new MyCustomBean2("TEST2"));
+    assertEquals("TEST2", mapper.read(XML).getValue2().getValue());
+    assertEquals(test.getValue2(), mapper.read(XML).getValue2());
     assertEquals(test, mapper.read(XML));
   }
 }

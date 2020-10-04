@@ -75,23 +75,12 @@ public class CollectionXMLSerializer<C extends Collection<T>, T>
       throws XMLStreamException {
     if (isEmpty(values)) {
       if (ctx.isWriteEmptyXMLArrays()) {
-        writer.beginArray();
-        writer.endArray();
+        beginObject(writer, true);
+        endObject(writer, true);
       }
       return;
     }
-    if (isWrapCollections) {
-      if (namespace != null) {
-        String prefix = getPrefix(namespace);
-        if (prefix != null) {
-          writer.beginObject(prefix, namespace, propertyName);
-        } else {
-          writer.beginObject(namespace, propertyName);
-        }
-      } else {
-        writer.beginObject(propertyName);
-      }
-    }
+    beginObject(writer, isWrapCollections);
     for (T value : values) {
       serializer
           .apply(value.getClass())
@@ -99,9 +88,7 @@ public class CollectionXMLSerializer<C extends Collection<T>, T>
           .setPropertyName(propertyName)
           .serialize(writer, value, ctx, params);
     }
-    if (isWrapCollections) {
-      writer.endObject();
-    }
+    endObject(writer, isWrapCollections);
   }
 
   /** {@inheritDoc} */

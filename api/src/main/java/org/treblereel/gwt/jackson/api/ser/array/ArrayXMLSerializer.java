@@ -64,12 +64,6 @@ public class ArrayXMLSerializer<T> extends BasicArrayXMLSerializer<T[]> {
 
   /** {@inheritDoc} */
   @Override
-  protected boolean isEmpty(T[] value) {
-    return null == value || value.length == 0;
-  }
-
-  /** {@inheritDoc} */
-  @Override
   public void doSerialize(
       XMLWriter writer, T[] values, XMLSerializationContext ctx, XMLSerializerParameters params)
       throws XMLStreamException {
@@ -78,14 +72,16 @@ public class ArrayXMLSerializer<T> extends BasicArrayXMLSerializer<T[]> {
       return;
     }
 
-    if (isWrapCollections) {
-      writer.beginObject(propertyName);
-    }
+    beginObject(writer, isWrapCollections);
     for (T value : values) {
       serializer.apply(value.getClass()).setParent(this).serialize(writer, value, ctx, params);
     }
-    if (isWrapCollections) {
-      writer.endObject();
-    }
+    endObject(writer, isWrapCollections);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  protected boolean isEmpty(T[] value) {
+    return null == value || value.length == 0;
   }
 }

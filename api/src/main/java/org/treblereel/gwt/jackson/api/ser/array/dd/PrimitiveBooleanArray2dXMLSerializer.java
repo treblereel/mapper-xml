@@ -65,10 +65,10 @@ public class PrimitiveBooleanArray2dXMLSerializer extends BasicArrayXMLSerialize
     BasicArrayXMLSerializer serializer =
         PrimitiveBooleanArrayXMLSerializer.getInstance(propertyName);
 
-    writer.beginObject(propertyName);
+    beginObject(writer, true);
     for (boolean[] value : values) {
       serializer.serialize(writer, value, ctx, params);
     }
-    writer.endObject();
+    endObject(writer, true);
   }
 }

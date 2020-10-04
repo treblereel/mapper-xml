@@ -21,7 +21,7 @@
       @XmlNs(prefix = "ci", namespaceURI = "http://www.ci"),
       @XmlNs(prefix = "cl", namespaceURI = "http://www.cl")
     })
-package org.treblereel.gwt.jackson.client.tests.annotations.namespace.ci;
+package org.treblereel.gwt.jackson.client.tests.annotations.namespace.test1.ci;
 
 import javax.xml.bind.annotation.XmlNs;
 import javax.xml.bind.annotation.XmlNsForm;

@@ -13,45 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.treblereel.gwt.jackson.client.tests.annotations.namespace.cl;
 
-import java.util.Objects;
-import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
+package org.treblereel.gwt.jackson.client.tests.annotations.namespace.test2;
 
-/** @author Dmitrii Tikhomirov Created by treblereel 4/28/20 */
-@XMLMapper
-public class Name {
+import javax.xml.bind.annotation.XmlRootElement;
 
-  private String name;
+/** @author Dmitrii Tikhomirov Created by treblereel 10/4/20 */
+@XmlRootElement(namespace = "http://www.ci")
+public class NSTest2 {
 
-  public Name() {}
+  private String value2;
 
-  public Name(String name) {
-    this.name = name;
+  public String getValue2() {
+    return value2;
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
+  public void setValue2(String value2) {
+    this.value2 = value2;
   }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof Name)) {
-      return false;
-    }
-    Name name1 = (Name) o;
-    return Objects.equals(getName(), name1.getName());
+    if (this == o) return true;
+    if (!(o instanceof NSTest2)) return false;
+
+    NSTest2 nsTest2 = (NSTest2) o;
+
+    return getValue2() != null
+        ? getValue2().equals(nsTest2.getValue2())
+        : nsTest2.getValue2() == null;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getName());
+    return getValue2() != null ? getValue2().hashCode() : 0;
   }
 }

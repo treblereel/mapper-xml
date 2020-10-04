@@ -13,31 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.treblereel.gwt.jackson.client.tests.annotations.namespace.ci;
+package org.treblereel.gwt.jackson.client.tests.annotations.namespace.test1.cl;
 
-import java.util.List;
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlRootElement;
 import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
-import org.treblereel.gwt.jackson.client.tests.annotations.namespace.cl.Name;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/28/20 */
 @XMLMapper
-@XmlRootElement(name = "_tutorial", namespace = "http://ns")
-public class Tutorial {
+public class Name {
 
-  private int id;
-  private List<Name> names;
+  private String name;
 
-  public Tutorial() {}
+  public Name() {}
 
-  public Tutorial(int id) {
-    this.id = id;
+  public Name(String name) {
+    this.name = name;
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(getId(), getNames());
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   @Override
@@ -45,26 +43,15 @@ public class Tutorial {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof Tutorial)) {
+    if (!(o instanceof Name)) {
       return false;
     }
-    Tutorial tutorial = (Tutorial) o;
-    return getId() == tutorial.getId() && Objects.equals(getNames(), tutorial.getNames());
+    Name name1 = (Name) o;
+    return Objects.equals(getName(), name1.getName());
   }
 
-  public int getId() {
-    return id;
-  }
-
-  public List<Name> getNames() {
-    return names;
-  }
-
-  public void setNames(List<Name> names) {
-    this.names = names;
-  }
-
-  public void setId(int id) {
-    this.id = id;
+  @Override
+  public int hashCode() {
+    return Objects.hash(getName());
   }
 }

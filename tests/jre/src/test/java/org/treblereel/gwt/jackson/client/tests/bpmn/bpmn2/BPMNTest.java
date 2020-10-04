@@ -136,7 +136,7 @@ public class BPMNTest {
     shape.setBounds(bounds);
 
     String xml = mapper.write(tested);
-    // System.out.println("RESULT \n" + xml);
+    System.out.println("RESULT \n" + xml);
     Definitions encoded = mapper.read(xml);
     assertEquals(tested, encoded);
     assertEquals(xml, mapper.write(encoded));

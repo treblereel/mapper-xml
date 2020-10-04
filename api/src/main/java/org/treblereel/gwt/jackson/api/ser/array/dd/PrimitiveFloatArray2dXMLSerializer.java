@@ -64,10 +64,10 @@ public class PrimitiveFloatArray2dXMLSerializer extends BasicArrayXMLSerializer<
 
     BasicArrayXMLSerializer serializer = PrimitiveFloatArrayXMLSerializer.getInstance(propertyName);
 
-    writer.beginObject(propertyName);
+    beginObject(writer, true);
     for (float[] value : values) {
       serializer.serialize(writer, value, ctx, params);
     }
-    writer.endObject();
+    endObject(writer, true);
   }
 }

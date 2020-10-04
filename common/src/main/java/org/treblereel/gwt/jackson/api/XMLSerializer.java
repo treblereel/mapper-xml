@@ -194,7 +194,7 @@ public abstract class XMLSerializer<T> {
     return Optional.empty();
   }
 
-  protected String getNamespace() {
+  public String getNamespace() {
     return null;
   }
 

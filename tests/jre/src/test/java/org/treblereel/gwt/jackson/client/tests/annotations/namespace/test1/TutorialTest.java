@@ -50,7 +50,7 @@ public class TutorialTest {
     tutorial.setArrays(arr);
 
     String xml = mapper.write(tutorial);
-    //System.out.println("TutorialTest \n " + xml);
+    // System.out.println("TutorialTest \n " + xml);
     assertEquals(XML, xml);
     Assert.assertEquals(tutorial, mapper.read(xml));
   }

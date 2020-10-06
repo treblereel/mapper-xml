@@ -106,7 +106,7 @@ public class PropertyDefinition extends Definition {
     }
 
     XmlRootElement parent = property.getEnclosingElement().getAnnotation(XmlRootElement.class);
-    if (parent != null && parent.namespace() != null && !parent.namespace().equals("##default")) {
+    if (parent != null && parent.namespace() != null && !parent.namespace().equals(DEFAULT)) {
       return parent.namespace();
     }
 

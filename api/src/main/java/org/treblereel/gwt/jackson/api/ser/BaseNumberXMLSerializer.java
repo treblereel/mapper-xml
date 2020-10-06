@@ -38,10 +38,10 @@ public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSeria
       XMLWriter writer, N value, XMLSerializationContext ctx, XMLSerializerParameters params)
       throws XMLStreamException {
     if (isAttribute) {
-      writer.writeAttribute(propertyName, value + "");
+      writeAttribute(writer, value.toString());
       isAttribute = false;
     } else {
-      writer.value(value);
+      writeValue(writer, value.toString());
     }
   }
 
@@ -94,10 +94,10 @@ public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSeria
         throws XMLStreamException {
       // writer has a special method to write double, let's use instead of default Number method.
       if (isAttribute) {
-        writer.writeAttribute(propertyName, params.doubleValue(value));
+        writeAttribute(writer, params.doubleValue(value));
         isAttribute = false;
       } else {
-        writer.value(value.doubleValue());
+        writeValue(writer, value.toString());
       }
     }
   }
@@ -140,10 +140,10 @@ public abstract class BaseNumberXMLSerializer<N extends Number> extends XMLSeria
         throws XMLStreamException {
       // writer has a special method to write long, let's use instead of default Number method.
       if (isAttribute) {
-        writer.writeAttribute(propertyName, value.longValue() + "");
+        writeAttribute(writer, value.toString());
         isAttribute = false;
       } else {
-        writer.value(value.longValue());
+        writeValue(writer, value.toString());
       }
     }
   }

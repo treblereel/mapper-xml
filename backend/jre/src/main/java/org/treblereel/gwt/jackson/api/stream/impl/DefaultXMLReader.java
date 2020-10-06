@@ -45,7 +45,7 @@ public class DefaultXMLReader implements XMLReader {
 
   private final XMLStreamReader reader;
 
-  private final String in;
+  private final String input;
 
   /**
    * Creates a new instance that reads a JSON-encoded stream from {@code in}.
@@ -56,13 +56,13 @@ public class DefaultXMLReader implements XMLReader {
     if (in == null) {
       throw new NullPointerException("in == null");
     }
-    this.in = in;
+    this.input = in.replaceAll("(?!>\\s+</)(>\\s+<)", "><");
 
     if (xmlInputFactory == null) {
       throw new NullPointerException("xmlInputFactory == null");
     }
 
-    InputStream byteArrayInputStream = new ByteArrayInputStream(in.getBytes());
+    InputStream byteArrayInputStream = new ByteArrayInputStream(input.getBytes());
     reader = xmlInputFactory.createXMLStreamReader(byteArrayInputStream);
   }
 
@@ -157,7 +157,7 @@ public class DefaultXMLReader implements XMLReader {
   /** {@inheritDoc} */
   @Override
   public String getInput() throws XMLStreamException {
-    return in;
+    return input;
   }
 
   /** {@inheritDoc} */

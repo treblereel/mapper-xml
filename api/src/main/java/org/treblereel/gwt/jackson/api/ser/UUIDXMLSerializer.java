@@ -48,10 +48,10 @@ public class UUIDXMLSerializer extends XMLSerializer<UUID> {
       XMLWriter writer, UUID value, XMLSerializationContext ctx, XMLSerializerParameters params)
       throws XMLStreamException {
     if (isAttribute) {
-      writer.writeAttribute(propertyName, value.toString());
+      writeAttribute(writer, value.toString());
       isAttribute = false;
     } else {
-      writer.value(value.toString());
+      writeValue(writer, value.toString());
     }
   }
 }

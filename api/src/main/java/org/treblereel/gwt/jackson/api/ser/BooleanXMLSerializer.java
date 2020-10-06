@@ -47,10 +47,10 @@ public class BooleanXMLSerializer extends XMLSerializer<Boolean> {
       XMLWriter writer, Boolean value, XMLSerializationContext ctx, XMLSerializerParameters params)
       throws XMLStreamException {
     if (isAttribute) {
-      writer.writeAttribute(propertyName, value.toString());
+      writeAttribute(writer, value.toString());
       isAttribute = false;
     } else {
-      writer.value(value);
+      writeValue(writer, value.toString());
     }
   }
 }

@@ -299,6 +299,51 @@ public abstract class XMLSerializer<T> {
     return this;
   }
 
+  protected void writeAttribute(XMLWriter writer, String value) throws XMLStreamException {
+    if (namespace != null && !namespace.equals(parent.getNamespace())) {
+      String prefix = getPrefix(namespace);
+      if (prefix == null) {
+        throw new XMLStreamException(
+            "Unable to process property "
+                + propertyName
+                + " with namespace "
+                + namespace
+                + ", set namespace prefix in @XmlSchema");
+      }
+      writer.writeAttribute(prefix + ":" + propertyName, value);
+    } else {
+      writer.writeAttribute(propertyName, value);
+    }
+  }
+
+  protected void beginObject(XMLWriter writer) throws XMLStreamException {
+    if (namespace != null && !namespace.equals(parent.getNamespace())) {
+      String prefix = getPrefix(namespace);
+      if (prefix != null) {
+        writer.beginObject(prefix, namespace, propertyName);
+      } else {
+        writer.beginObject(namespace, propertyName);
+      }
+    } else {
+      writer.beginObject(propertyName);
+    }
+  }
+
+  protected void writeValue(XMLWriter writer, String value) throws XMLStreamException {
+    if (namespace != null && !namespace.equals(parent.getNamespace())) {
+      String prefix = getPrefix(namespace);
+      if (prefix == null) {
+        writer.beginObject(namespace, propertyName);
+      } else {
+        writer.beginObject(prefix, namespace, propertyName);
+      }
+      writer.writeCharacters(value);
+      writer.endObject();
+    } else {
+      writer.value(value);
+    }
+  }
+
   /**
    * isEmpty.
    *

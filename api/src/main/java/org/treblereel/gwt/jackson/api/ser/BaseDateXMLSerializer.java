@@ -65,10 +65,10 @@ public abstract class BaseDateXMLSerializer<D extends Date> extends XMLSerialize
       }
 
       if (isAttribute) {
-        writer.writeAttribute(propertyName, date);
+        writeAttribute(writer, date);
         isAttribute = false;
       } else {
-        writer.value(date);
+        writeValue(writer, date);
       }
     }
   }

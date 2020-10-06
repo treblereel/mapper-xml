@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.treblereel.gwt.jackson.client.tests.annotations.namespace.test3;
+package org.treblereel.gwt.jackson.client.tests.annotations.namespace.test4;
 
 import static org.junit.Assert.assertEquals;
 
@@ -29,7 +29,7 @@ public class NamespaceTest {
   NSTest_XMLMapperImpl mapper = NSTest_XMLMapperImpl.INSTANCE;
 
   private static final String XML =
-      "<?xml version='1.0' encoding='UTF-8'?><NSTest xmlns=\"http://www.omg.org/bpmn20\"><value>ZZZ</value><value2><value2>XXX</value2></value2></NSTest>";
+      "<?xml version='1.0' encoding='UTF-8'?><NSTest xmlns=\"http://www.omg.org/bpmn20\" xmlns:bpmn40=\"http://www.omg.org/bpmn40\"><value>ZZZ</value><value2 xmlns=\"http://www.omg.org/bpmn30\" value3=\"XXX3\" bpmn40:value4=\"XXX4\"><value2>XXX2</value2><bpmn40:value5>XXX5</bpmn40:value5><value6 xmlns=\"http://www.omg.org/bpmn20\">XXX6</value6></value2></NSTest>";
 
   @Test
   public void test() throws XMLStreamException {
@@ -37,13 +37,20 @@ public class NamespaceTest {
     test1.setValue("ZZZ");
 
     NSTest2 nsTest2 = new NSTest2();
-    nsTest2.setValue2("XXX");
+    nsTest2.setValue2("XXX2");
+    nsTest2.setValue3("XXX3");
+    nsTest2.setValue4("XXX4");
+    nsTest2.setValue5("XXX5");
+    nsTest2.setValue6("XXX6");
     test1.setValue2(nsTest2);
 
     String xml = mapper.write(test1);
 
     // System.out.println("NamespaceTest 2 " + xml);
     assertEquals(XML, xml);
+    NSTest tested = mapper.read(xml);
+    NSTest2 tested1 = tested.getValue2();
+
     Assert.assertEquals(test1, mapper.read(xml));
   }
 }

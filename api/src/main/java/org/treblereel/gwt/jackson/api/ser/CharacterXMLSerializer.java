@@ -57,10 +57,10 @@ public class CharacterXMLSerializer extends XMLSerializer<Character> {
     }
 
     if (isAttribute) {
-      writer.writeAttribute(propertyName, _value);
+      writeAttribute(writer, _value);
       isAttribute = false;
     } else {
-      writer.value(_value);
+      writeValue(writer, _value);
     }
   }
 }

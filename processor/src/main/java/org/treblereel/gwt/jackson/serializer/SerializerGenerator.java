@@ -168,7 +168,7 @@ public class SerializerGenerator extends AbstractGenerator {
     String namespace = type.getNamespace();
     if (namespace != null) {
       declaration
-          .addMethod("getNamespace", Modifier.Keyword.PROTECTED)
+          .addMethod("getNamespace", Modifier.Keyword.PUBLIC)
           .addAnnotation(Override.class)
           .setType(String.class)
           .getBody()
@@ -423,7 +423,7 @@ public class SerializerGenerator extends AbstractGenerator {
       NodeList<BodyDeclaration<?>> anonymousClassBody, PropertyDefinition field) {
     if (field.getNamespace() != null) {
       MethodDeclaration method = new MethodDeclaration();
-      method.setModifiers(Modifier.Keyword.PROTECTED);
+      method.setModifiers(Modifier.Keyword.PUBLIC);
       method.addAnnotation(Override.class);
       method.setName("getNamespace");
       method.setType(new ClassOrInterfaceType().setName(STRING));

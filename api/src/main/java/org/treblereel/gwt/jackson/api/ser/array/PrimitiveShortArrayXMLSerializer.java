@@ -60,14 +60,10 @@ public class PrimitiveShortArrayXMLSerializer extends BasicArrayXMLSerializer<sh
       return;
     }
 
-    if (isWrapCollections) {
-      writer.beginObject(propertyName);
-    }
+    beginObject(writer, isWrapCollections);
     for (short value : values) {
       serializer.doSerialize(writer, value, ctx, params);
     }
-    if (isWrapCollections) {
-      writer.endObject();
-    }
+    endObject(writer, isWrapCollections);
   }
 }

@@ -164,13 +164,7 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T>
   }
 
   private String getPropertyName(QName property) {
-    StringBuffer attrName = new StringBuffer();
-    if (!property.getPrefix().isEmpty()) {
-      attrName.append(property.getPrefix());
-      attrName.append(":");
-    }
-    attrName.append(property.getLocalPart());
-    return attrName.toString();
+    return property.getLocalPart();
   }
 
   private String getRootNodeName() {

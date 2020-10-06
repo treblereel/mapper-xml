@@ -84,7 +84,12 @@ public class IterableBeanFieldDefinition extends FieldDefinition {
     }
     method.addArgument(new StringLiteralExpr(field.getPropertyName()));
     if (field.getProperty().getAnnotation(XmlUnwrappedCollection.class) != null) {
-      return new MethodCallExpr(method, "setUnWrapCollections");
+      method = new MethodCallExpr(method, "setUnWrapCollections");
+    }
+    if (field.getNamespace() != null) {
+      method =
+          new MethodCallExpr(method, "setNamespace")
+              .addArgument(new StringLiteralExpr(field.getNamespace()));
     }
     return method;
   }

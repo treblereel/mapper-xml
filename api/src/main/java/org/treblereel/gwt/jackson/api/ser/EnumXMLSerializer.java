@@ -55,10 +55,10 @@ public class EnumXMLSerializer<E extends Enum<E>> extends XMLSerializer<E> {
       throws XMLStreamException {
     String name = func.apply(value);
     if (isAttribute) {
-      writer.writeAttribute(propertyName, name);
+      writeAttribute(writer, name);
       isAttribute = false;
     } else {
-      writer.value(name);
+      writeValue(writer, name);
     }
   }
 }

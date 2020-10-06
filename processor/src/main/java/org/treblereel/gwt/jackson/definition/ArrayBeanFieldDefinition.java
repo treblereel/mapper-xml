@@ -135,11 +135,22 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
       serializer = ArrayXMLSerializer.class.getSimpleName();
       type = array.getComponentType();
     }
-    return maybeXmlUnwrappedCollection(
-        field.getProperty(),
-        new MethodCallExpr(new NameExpr(serializer), "getInstance")
-            .addArgument(generateXMLSerializerFactory(field, type, type.toString(), cu))
-            .addArgument(new StringLiteralExpr(field.getPropertyName())));
+    return maybeHasNamespacePrefix(
+        field,
+        maybeXmlUnwrappedCollection(
+            field.getProperty(),
+            new MethodCallExpr(new NameExpr(serializer), "getInstance")
+                .addArgument(generateXMLSerializerFactory(field, type, type.toString(), cu))
+                .addArgument(new StringLiteralExpr(field.getPropertyName()))));
+  }
+
+  private Expression maybeHasNamespacePrefix(PropertyDefinition field, Expression method) {
+    if (field.getNamespace() != null) {
+      method =
+          new MethodCallExpr(method, "setNamespace")
+              .addArgument(new StringLiteralExpr(field.getNamespace()));
+    }
+    return method;
   }
 
   private Expression maybeXmlUnwrappedCollection(VariableElement element, Expression expression) {

@@ -63,14 +63,10 @@ public class PrimitiveDoubleArrayXMLSerializer extends BasicArrayXMLSerializer<d
       return;
     }
 
-    if (isWrapCollections) {
-      writer.beginObject(propertyName);
-    }
+    beginObject(writer, isWrapCollections);
     for (double value : values) {
       serializer.doSerialize(writer, value, ctx, params);
     }
-    if (isWrapCollections) {
-      writer.endObject();
-    }
+    endObject(writer, isWrapCollections);
   }
 }

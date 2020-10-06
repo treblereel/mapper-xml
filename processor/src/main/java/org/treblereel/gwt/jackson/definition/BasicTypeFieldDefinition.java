@@ -64,6 +64,15 @@ public class BasicTypeFieldDefinition extends FieldDefinition {
         method = new MethodCallExpr(method, "setUnWrapCollections");
       }
     }
+    return maybeHasNamespace(field, method);
+  }
+
+  private Expression maybeHasNamespace(PropertyDefinition field, Expression method) {
+    if (field != null && field.getNamespace() != null) {
+      method =
+          new MethodCallExpr(method, "setNamespace")
+              .addArgument(new StringLiteralExpr(field.getNamespace()));
+    }
     return method;
   }
 

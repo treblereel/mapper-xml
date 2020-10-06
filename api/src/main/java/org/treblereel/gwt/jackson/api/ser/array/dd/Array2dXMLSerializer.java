@@ -67,12 +67,6 @@ public class Array2dXMLSerializer<T> extends BasicArrayXMLSerializer<T[][]> {
 
   /** {@inheritDoc} */
   @Override
-  protected boolean isEmpty(T[][] value) {
-    return null == value || value.length == 0;
-  }
-
-  /** {@inheritDoc} */
-  @Override
   public void doSerialize(
       XMLWriter writer, T[][] values, XMLSerializationContext ctx, XMLSerializerParameters params)
       throws XMLStreamException {
@@ -81,14 +75,20 @@ public class Array2dXMLSerializer<T> extends BasicArrayXMLSerializer<T[][]> {
       return;
     }
 
-    writer.beginObject(propertyName);
+    beginObject(writer, true);
     for (T[] array : values) {
-      writer.beginObject(propertyName);
+      beginObject(writer, true);
       for (T value : array) {
         serializer.apply(value.getClass()).setParent(this).serialize(writer, value, ctx, params);
       }
-      writer.endObject();
+      endObject(writer, true);
     }
-    writer.endObject();
+    endObject(writer, true);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  protected boolean isEmpty(T[][] value) {
+    return null == value || value.length == 0;
   }
 }

@@ -64,10 +64,10 @@ public class PrimitiveLongArray2dXMLSerializer extends BasicArrayXMLSerializer<l
 
     BasicArrayXMLSerializer serializer = PrimitiveLongArrayXMLSerializer.getInstance(propertyName);
 
-    writer.beginObject(propertyName);
+    beginObject(writer, true);
     for (long[] value : values) {
       serializer.serialize(writer, value, ctx, params);
     }
-    writer.endObject();
+    endObject(writer, true);
   }
 }

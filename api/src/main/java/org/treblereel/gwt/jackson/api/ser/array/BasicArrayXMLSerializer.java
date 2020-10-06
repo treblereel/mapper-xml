@@ -15,7 +15,9 @@
  */
 package org.treblereel.gwt.jackson.api.ser.array;
 
+import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.jackson.api.XMLSerializer;
+import org.treblereel.gwt.jackson.api.stream.XMLWriter;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/28/20 */
 public abstract class BasicArrayXMLSerializer<T> extends XMLSerializer<T> {
@@ -30,5 +32,27 @@ public abstract class BasicArrayXMLSerializer<T> extends XMLSerializer<T> {
   public BasicArrayXMLSerializer<T> setUnWrapCollections() {
     isWrapCollections = false;
     return this;
+  }
+
+  protected void beginObject(XMLWriter writer, boolean isWrapCollections)
+      throws XMLStreamException {
+    if (isWrapCollections) {
+      if (namespace != null && !namespace.equals(parent.getNamespace())) {
+        String prefix = getPrefix(namespace);
+        if (prefix != null) {
+          writer.beginObject(prefix, namespace, propertyName);
+        } else {
+          writer.beginObject(namespace, propertyName);
+        }
+      } else {
+        writer.beginObject(propertyName);
+      }
+    }
+  }
+
+  protected void endObject(XMLWriter writer, boolean isWrapCollections) throws XMLStreamException {
+    if (isWrapCollections) {
+      writer.endObject();
+    }
   }
 }

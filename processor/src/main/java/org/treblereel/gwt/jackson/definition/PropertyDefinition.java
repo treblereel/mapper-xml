@@ -32,6 +32,7 @@ import javax.xml.bind.annotation.XmlCData;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchema;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.api.PropertyType;
@@ -74,11 +75,6 @@ public class PropertyDefinition extends Definition {
     return property.getAnnotation(XmlCData.class);
   }
 
-  @Override
-  public TypeMirror getBean() {
-    return bean;
-  }
-
   public Expression getFieldSerializer(CompilationUnit cu) {
     FieldDefinition fieldDefinition = propertyDefinitionFactory.getFieldDefinition(this);
     return fieldDefinition.getFieldSerializer(this, cu);
@@ -107,6 +103,11 @@ public class PropertyDefinition extends Definition {
     if (property.getAnnotation(XmlAttribute.class) != null
         && !property.getAnnotation(XmlAttribute.class).namespace().equals(DEFAULT)) {
       return property.getAnnotation(XmlAttribute.class).namespace();
+    }
+
+    XmlRootElement parent = property.getEnclosingElement().getAnnotation(XmlRootElement.class);
+    if (parent != null && parent.namespace() != null && !parent.namespace().equals(DEFAULT)) {
+      return parent.namespace();
     }
 
     XmlSchema schema = null;
@@ -138,6 +139,11 @@ public class PropertyDefinition extends Definition {
     }
 
     return property.getAnnotation(XmlAttribute.class) != null;
+  }
+
+  @Override
+  public TypeMirror getBean() {
+    return bean;
   }
 
   public boolean isWrapped() {

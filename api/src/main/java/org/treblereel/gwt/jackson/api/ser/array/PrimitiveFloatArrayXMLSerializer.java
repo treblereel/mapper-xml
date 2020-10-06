@@ -60,14 +60,10 @@ public class PrimitiveFloatArrayXMLSerializer extends BasicArrayXMLSerializer<fl
       return;
     }
 
-    if (isWrapCollections) {
-      writer.beginObject(propertyName);
-    }
+    beginObject(writer, isWrapCollections);
     for (float value : values) {
       serializer.doSerialize(writer, value, ctx, params);
     }
-    if (isWrapCollections) {
-      writer.endObject();
-    }
+    endObject(writer, isWrapCollections);
   }
 }

@@ -60,14 +60,10 @@ public class PrimitiveLongArrayXMLSerializer extends BasicArrayXMLSerializer<lon
       return;
     }
 
-    if (isWrapCollections) {
-      writer.beginObject(propertyName);
-    }
+    beginObject(writer, isWrapCollections);
     for (long value : values) {
       serializer.doSerialize(writer, value, ctx, params);
     }
-    if (isWrapCollections) {
-      writer.endObject();
-    }
+    endObject(writer, isWrapCollections);
   }
 }

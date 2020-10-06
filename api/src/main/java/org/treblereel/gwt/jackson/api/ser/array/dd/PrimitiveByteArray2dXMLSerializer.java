@@ -73,10 +73,10 @@ public class PrimitiveByteArray2dXMLSerializer extends BasicArrayXMLSerializer<b
       return;
     }
     BasicArrayXMLSerializer serializer = PrimitiveByteArrayXMLSerializer.getInstance(propertyName);
-    writer.beginObject(propertyName);
+    beginObject(writer, true);
     for (byte[] value : values) {
       serializer.serialize(writer, value, ctx, params);
     }
-    writer.endObject();
+    endObject(writer, true);
   }
 }

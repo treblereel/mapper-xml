@@ -60,14 +60,10 @@ public class PrimitiveIntegerArrayXMLSerializer extends BasicArrayXMLSerializer<
       return;
     }
 
-    if (isWrapCollections) {
-      writer.beginObject(propertyName);
-    }
+    beginObject(writer, isWrapCollections);
     for (int value : values) {
       serializer.doSerialize(writer, value, ctx, params);
     }
-    if (isWrapCollections) {
-      writer.endObject();
-    }
+    endObject(writer, isWrapCollections);
   }
 }

@@ -34,13 +34,13 @@ public class Process {
   @XmlAttribute(name = "isExecutable")
   private boolean executable;
 
-  @XmlAttribute(name = "drools:packageName")
+  @XmlAttribute(name = "packageName", namespace = "http://www.jboss.org/drools")
   private String packageName;
 
-  @XmlAttribute(name = "drools:version")
-  private String version;
+  @XmlAttribute(name = "version", namespace = "http://www.jboss.org/drools")
+  private double version;
 
-  @XmlAttribute(name = "drools:adHoc")
+  @XmlAttribute(name = "adHoc", namespace = "http://www.jboss.org/drools")
   private boolean adHoc;
 
   @XmlElementRefs({
@@ -141,7 +141,7 @@ public class Process {
     this.packageName = packageName;
   }
 
-  public String getVersion() {
+  public double getVersion() {
     return version;
   }
 
@@ -177,7 +177,7 @@ public class Process {
     this.adHoc = adHoc;
   }
 
-  public void setVersion(String version) {
+  public void setVersion(double version) {
     this.version = version;
   }
 

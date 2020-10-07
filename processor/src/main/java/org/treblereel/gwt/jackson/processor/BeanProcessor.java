@@ -15,6 +15,7 @@
  */
 package org.treblereel.gwt.jackson.processor;
 
+import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
 import java.util.HashSet;
 import java.util.List;
@@ -26,11 +27,13 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapters;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 import org.treblereel.gwt.jackson.exception.GenerationException;
@@ -114,7 +117,7 @@ public class BeanProcessor {
     if (field.getModifiers().contains(Modifier.STATIC)
         || field.getModifiers().contains(Modifier.TRANSIENT)
         || field.getAnnotation(XmlTransient.class) != null
-        || field.getAnnotation(XmlJavaTypeAdapter.class) != null
+        || hasXmlAdapter(field)
         || field.getModifiers().contains(Modifier.FINAL)) {
       return false;
     }
@@ -140,6 +143,27 @@ public class BeanProcessor {
     throw new GenerationException(
         String.format(
             "Unable to process [%s] in [%s]", field.getSimpleName(), field.getEnclosingElement()));
+  }
+
+  private boolean hasXmlAdapter(VariableElement field) {
+    if (field.getAnnotation(XmlJavaTypeAdapter.class) != null) {
+      return true;
+    }
+
+    if (MoreElements.getPackage(field).getAnnotation(XmlJavaTypeAdapters.class) != null) {
+      for (XmlJavaTypeAdapter typeAdapter :
+          MoreElements.getPackage(field).getAnnotation(XmlJavaTypeAdapters.class).value()) {
+        try {
+          typeAdapter.type();
+        } catch (MirroredTypeException e) {
+          return context
+              .getProcessingEnv()
+              .getTypeUtils()
+              .isSameType(e.getTypeMirror(), field.asType());
+        }
+      }
+    }
+    return false;
   }
 
   private TypeElement checkBean(TypeElement type) {

@@ -17,7 +17,8 @@
 package org.treblereel.gwt.jackson.context;
 
 import com.google.auto.common.MoreTypes;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.Objects;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
@@ -25,6 +26,7 @@ import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapters;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 9/29/20 */
 public class XmlJavaTypeAdapterProcessor {
@@ -35,19 +37,35 @@ public class XmlJavaTypeAdapterProcessor {
     this.context = context;
   }
 
-  void process(Set<? extends Element> elements) {
-    elements.stream().forEach(this::process);
+  void process() {
+    context
+        .getRoundEnvironment()
+        .getElementsAnnotatedWith(XmlJavaTypeAdapter.class)
+        .forEach(this::process);
+
+    context.getRoundEnvironment().getElementsAnnotatedWith(XmlJavaTypeAdapters.class).stream()
+        .map(anno -> anno.getAnnotation(XmlJavaTypeAdapters.class))
+        .map(XmlJavaTypeAdapters::value)
+        .forEach(a -> Arrays.stream(a).forEach(this::process));
   }
 
   private void process(Element typeElement) {
-    ExecutableElement decl = getUnmarshal(typeElement.getAnnotation(XmlJavaTypeAdapter.class));
+    process(typeElement.getAnnotation(XmlJavaTypeAdapter.class));
+  }
+
+  private void process(XmlJavaTypeAdapter typeAdapter) {
+    process(getUnmarshal(typeAdapter));
+  }
+
+  private void process(ExecutableElement decl) {
     VariableElement parameterElement = decl.getParameters().get(0);
     context.addBeanDefinition(MoreTypes.asTypeElement(parameterElement.asType()));
   }
 
   private ExecutableElement getUnmarshal(XmlJavaTypeAdapter typeAdapter) {
     return ElementFilter.methodsIn(
-            MoreTypes.asTypeElement(getAnnotation(typeAdapter)).getEnclosedElements())
+            MoreTypes.asTypeElement(Objects.requireNonNull(getAnnotation(typeAdapter)))
+                .getEnclosedElements())
         .stream()
         .filter(field -> field.getSimpleName().toString().equals("unmarshal"))
         .findFirst()

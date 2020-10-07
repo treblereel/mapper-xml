@@ -15,13 +15,16 @@
  */
 package org.treblereel.gwt.jackson.definition;
 
+import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
 import java.util.HashMap;
 import java.util.Map;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapters;
 import org.treblereel.gwt.jackson.TypeUtils;
 import org.treblereel.gwt.jackson.context.GenerationContext;
 
@@ -40,6 +43,30 @@ public class FieldDefinitionFactory {
   FieldDefinition getFieldDefinition(PropertyDefinition propertyDefinition) {
     if (propertyDefinition.getProperty().getAnnotation(XmlJavaTypeAdapter.class) != null) {
       return new XmlJavaTypeAdapterFieldDefinition(propertyDefinition, context);
+    }
+    if (MoreElements.getPackage(propertyDefinition.getProperty())
+            .getAnnotation(XmlJavaTypeAdapters.class)
+        != null) {
+
+      if (MoreElements.getPackage(propertyDefinition.getProperty())
+              .getAnnotation(XmlJavaTypeAdapters.class)
+          != null) {
+        for (XmlJavaTypeAdapter typeAdapter :
+            MoreElements.getPackage(propertyDefinition.getProperty())
+                .getAnnotation(XmlJavaTypeAdapters.class)
+                .value()) {
+          try {
+            typeAdapter.type();
+          } catch (MirroredTypeException e) {
+            if (context
+                .getProcessingEnv()
+                .getTypeUtils()
+                .isSameType(e.getTypeMirror(), propertyDefinition.getProperty().asType())) {
+              return new XmlJavaTypeAdapterFieldDefinition(e.getTypeMirror(), context, typeAdapter);
+            }
+          }
+        }
+      }
     }
     return getFieldDefinition(propertyDefinition.getBean());
   }

@@ -63,7 +63,7 @@ public class XmlJavaTypeAdapterFieldDefinition extends FieldDefinition {
     this(type, context, MoreTypes.asTypeElement(type).getAnnotation(XmlJavaTypeAdapter.class));
   }
 
-  private XmlJavaTypeAdapterFieldDefinition(
+  XmlJavaTypeAdapterFieldDefinition(
       TypeMirror type, GenerationContext context, XmlJavaTypeAdapter typeAdapter) {
     super(type, context);
     this.typeAdapter = typeAdapter;

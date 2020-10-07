@@ -33,7 +33,7 @@ public class TutorialTest {
   Tutorial_XMLMapperImpl mapper = Tutorial_XMLMapperImpl.INSTANCE;
 
   private static final String XML =
-      "<?xml version='1.0' encoding='UTF-8'?><_tutorial xmlns=\"http://ns\" xmlns:ci=\"http://www.ci\" xmlns:cl=\"http://www.cl\"><id>0</id><names><cl:names><name>NAME</name></cl:names></names><cl:types><cl:types><name>NAME</name></cl:types></cl:types><cl:arrays><cl:Name><name>F1</name></cl:Name><cl:Name><name>F2</name></cl:Name></cl:arrays></_tutorial>";
+      "<?xml version='1.0' encoding='UTF-8'?><_tutorial xmlns=\"http://ns\" xmlns:ci=\"http://www.ci\" xmlns:cl=\"http://www.cl\"><id xmlns=\"http://ns\">0</id><names xmlns=\"http://ns\"><cl:names><name>NAME</name></cl:names></names><cl:types><cl:types><name>NAME</name></cl:types></cl:types><cl:arrays><cl:Name><name>F1</name></cl:Name><cl:Name><name>F2</name></cl:Name></cl:arrays></_tutorial>";
 
   @Test
   public void test() throws XMLStreamException {

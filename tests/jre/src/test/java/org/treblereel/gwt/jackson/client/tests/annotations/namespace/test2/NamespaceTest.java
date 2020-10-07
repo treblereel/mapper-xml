@@ -29,7 +29,7 @@ public class NamespaceTest {
   NSTest_XMLMapperImpl mapper = NSTest_XMLMapperImpl.INSTANCE;
 
   private static final String XML =
-      "<?xml version='1.0' encoding='UTF-8'?><NSTest xmlns=\"http://www.ci\"><value>ZZZ</value><value2><value2>XXX</value2></value2></NSTest>";
+      "<?xml version='1.0' encoding='UTF-8'?><NSTest xmlns=\"http://www.ci\"><value xmlns=\"http://www.ci\">ZZZ</value><value2><value2 xmlns=\"http://www.ci\">XXX</value2></value2></NSTest>";
 
   @Test
   public void test() throws XMLStreamException {

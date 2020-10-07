@@ -37,7 +37,7 @@ public abstract class BasicArrayXMLSerializer<T> extends XMLSerializer<T> {
   protected void beginObject(XMLWriter writer, boolean isWrapCollections)
       throws XMLStreamException {
     if (isWrapCollections) {
-      if (namespace != null && !namespace.equals(parent.getNamespace())) {
+      if (namespace != null) {
         String prefix = getPrefix(namespace);
         if (prefix != null) {
           writer.beginObject(prefix, namespace, propertyName);

@@ -317,7 +317,7 @@ public abstract class XMLSerializer<T> {
   }
 
   protected void beginObject(XMLWriter writer) throws XMLStreamException {
-    if (namespace != null && !namespace.equals(parent.getNamespace())) {
+    if (namespace != null) {
       String prefix = getPrefix(namespace);
       if (prefix != null) {
         writer.beginObject(prefix, namespace, propertyName);
@@ -330,7 +330,7 @@ public abstract class XMLSerializer<T> {
   }
 
   protected void writeValue(XMLWriter writer, String value) throws XMLStreamException {
-    if (namespace != null && !namespace.equals(parent.getNamespace())) {
+    if (namespace != null) {
       String prefix = getPrefix(namespace);
       if (prefix == null) {
         writer.beginObject(namespace, propertyName);

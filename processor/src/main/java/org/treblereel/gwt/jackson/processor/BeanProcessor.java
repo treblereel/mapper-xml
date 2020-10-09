@@ -117,8 +117,8 @@ public class BeanProcessor {
     if (field.getModifiers().contains(Modifier.STATIC)
         || field.getModifiers().contains(Modifier.TRANSIENT)
         || field.getAnnotation(XmlTransient.class) != null
-        || hasXmlAdapter(field)
-        || field.getModifiers().contains(Modifier.FINAL)) {
+        || field.getModifiers().contains(Modifier.FINAL)
+        || hasXmlAdapter(field)) {
       return false;
     }
     if (!field.getModifiers().contains(Modifier.PRIVATE)

@@ -37,7 +37,7 @@ public class UserCdataTest {
     test.setTime(1111);
 
     assertEquals(
-        "<?xml version='1.0' encoding='UTF-8'?><User xmlns=\"http://www.omg.org/bpmn20\" id=\"FIRST\" _uuid=\"bc8a6b10-f493-4aaf-bd1e-8c4710afa326\" time=\"1111\"><username><![CDATA[ANY]]></username></User>",
+        "<?xml version='1.0' encoding='UTF-8'?><User xmlns=\"http://www.omg.org/bpmn20\" id=\"FIRST\" _uuid=\"bc8a6b10-f493-4aaf-bd1e-8c4710afa326\" time=\"1111\"><username xmlns=\"http://www.omg.org/bpmn20\"><![CDATA[ANY]]></username></User>",
         mapperEmployee.write(test));
     assertEquals(test, mapperEmployee.read(mapperEmployee.write(test)));
   }

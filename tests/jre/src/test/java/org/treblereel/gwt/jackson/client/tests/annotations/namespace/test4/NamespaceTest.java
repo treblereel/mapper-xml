@@ -29,7 +29,7 @@ public class NamespaceTest {
   NSTest_XMLMapperImpl mapper = NSTest_XMLMapperImpl.INSTANCE;
 
   private static final String XML =
-      "<?xml version='1.0' encoding='UTF-8'?><NSTest xmlns=\"http://www.omg.org/bpmn20\" xmlns:bpmn40=\"http://www.omg.org/bpmn40\"><value>ZZZ</value><value2 xmlns=\"http://www.omg.org/bpmn30\" value3=\"XXX3\" bpmn40:value4=\"XXX4\"><value2>XXX2</value2><bpmn40:value5>XXX5</bpmn40:value5><value6 xmlns=\"http://www.omg.org/bpmn20\">XXX6</value6></value2></NSTest>";
+      "<?xml version='1.0' encoding='UTF-8'?><NSTest xmlns=\"http://www.omg.org/bpmn20\" xmlns:bpmn40=\"http://www.omg.org/bpmn40\"><value>ZZZ</value><value2 xmlns=\"http://www.omg.org/bpmn30\" value3=\"XXX3\" bpmn40:value4=\"XXX4\"><value2 xmlns=\"http://www.omg.org/bpmn30\">XXX2</value2><bpmn40:value5>XXX5</bpmn40:value5><value6 xmlns=\"http://www.omg.org/bpmn20\">XXX6</value6></value2></NSTest>";
 
   @Test
   public void test() throws XMLStreamException {
@@ -46,7 +46,7 @@ public class NamespaceTest {
 
     String xml = mapper.write(test1);
 
-    // System.out.println("NamespaceTest 2 " + xml);
+    // System.out.println("NamespaceTest 4 " + xml);
     assertEquals(XML, xml);
     NSTest tested = mapper.read(xml);
     NSTest2 tested1 = tested.getValue2();

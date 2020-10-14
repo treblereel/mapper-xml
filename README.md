@@ -131,6 +131,8 @@ Supported `JAXB` annotations:
 * [@XmlElements](#xmlelements)
 * [@XmlElementRefs](#xmlelementrefs)
 * [@XmlElementRef](#xmlelementrefs)
+* [@XmlJavaTypeAdapter](#xmljavatypeadapter)
+* [@XmlEnumValue](#xmlenumvalue)
 * XmlNsForm
 * XmlAccessorType
 * XmlAccessType
@@ -493,3 +495,50 @@ XML:
     </_Address1>
   </iAddressListRef>
 ```
+
+### @XmlJavaTypeAdapter
+Use an adapter that implements XmlAdapter for custom marshaling.
+* field
+* type
+* package, from within XmlJavaTypeAdapters
+
+Java:
+```java
+  @XmlJavaTypeAdapter(MyTestBeanValueAdapter.class)
+  private MyCustomBean value;
+```
+
+```java
+public class MyTestBeanValueAdapter extends XmlAdapter<MyCustomBeanType, MyCustomBean> {
+
+  @Override
+  public MyCustomBean unmarshal(MyCustomBeanType v) throws Exception {
+    return new MyCustomBean(v);
+  }
+
+  @Override
+  public MyCustomBeanType marshal(MyCustomBean v) throws Exception {
+    return new MyCustomBeanType(v);
+  }
+}
+```
+
+### @XmlEnumValue
+Maps an enum constant in Enum type to XML representation.
+
+Java:
+```java
+  public enum Enums {
+    @XmlEnumValue("1")
+    ONE,
+    TWO,
+    @XmlEnumValue("_three")
+    THREE,
+    FOUR
+  }
+```
+XML:
+```xml
+<?xml version='1.0' encoding='UTF-8'?><EnumBean><val>_three</val></EnumBean>
+```
+    

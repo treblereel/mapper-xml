@@ -32,6 +32,12 @@
     <url>https://github.com/treblereel</url>
   </organization>
 
+  <scm>
+    <connection>scm:git:git://github.com/treblereel/mapper-xmll.git</connection>
+    <developerConnection>scm:git:ssh://github.com/treblereel/mapper-xml.git</developerConnection>
+    <url>https://github.com/treblereel/mapper-xml/tree/master</url>
+  </scm>
+
   <properties>
     <maven.compiler.source>8</maven.compiler.source>
     <maven.compiler.target>8</maven.compiler.target>
@@ -40,6 +46,10 @@
     <maven.fmt.plugin>2.9</maven.fmt.plugin>
     <maven.license.plugin>3.0</maven.license.plugin>
     <maven.shade.plugin>3.2.4</maven.shade.plugin>
+    <maven.deploy.plugin>3.0.0-M1</maven.deploy.plugin>
+    <maven.gpg.plugin>1.6</maven.gpg.plugin>
+    <maven.javadoc.plugin>3.2.0</maven.javadoc.plugin>
+    <maven.source.plugin>3.2.1</maven.source.plugin>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -150,6 +160,58 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <!-- release profile to create sources, javadoc, and sign all artifacts before uploading -->
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>${maven.source.plugin}</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${maven.javadoc.plugin}</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- see http://central.sonatype.org/pages/working-with-pgp-signatures.html for more detail -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>${maven.gpg.plugin}</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
   <!-- Specify that we will push snapshots and releases to sonatype's repos -->
   <distributionManagement>

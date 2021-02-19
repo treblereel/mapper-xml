@@ -2,7 +2,7 @@
 <module rename-to='App'>
   <inherits name='com.google.gwt.user.User'/>
 
-  <inherits name="org.treblereel.gwt.xmk.mapper.Mapper"/>
+  <inherits name="org.treblereel.gwt.xml.mapper.Mapper"/>
 
   <entry-point class='org.treblereel.gwt.xml.mapper.client.App'/>
   <source path='client'/>

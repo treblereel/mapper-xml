@@ -39,6 +39,7 @@
     <maven.source.version>3.0.1</maven.source.version>
     <maven.fmt.plugin>2.9</maven.fmt.plugin>
     <maven.license.plugin>3.0</maven.license.plugin>
+    <maven.shade.plugin>3.2.4</maven.shade.plugin>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

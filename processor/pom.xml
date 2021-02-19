@@ -90,6 +90,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
+        <version>${maven.shade.plugin}</version>
         <executions>
           <execution>
             <phase>package</phase>

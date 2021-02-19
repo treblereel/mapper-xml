@@ -53,8 +53,8 @@ Setting up **xml-mapper** includes cloning the repository, adding dependencies a
     > In case you use GWT2, add the `inherits` directive to your `gwt.xml` file:
 
     ```xml
-      <inherits name='org.treblereel.gwt.jackson.Gwt'/>
-      <inherits name="org.treblereel.gwt.jackson.Jackson"/>
+      <inherits name='org.treblereel.gwt.xml.mapper.Gwt'/>
+      <inherits name="org.treblereel.gwt.xml.mapper.Jackson"/>
     ```
 
 3. Annotate POJOs with the @XMLMapper annotation:
@@ -87,7 +87,7 @@ Setting up **xml-mapper** includes cloning the repository, adding dependencies a
     ```
 Setup is complete.
 
-## Using jackson-xml
+## Using XML mapper
 
 The annotation processor will generate the XML mapper for the `Person` class.
 

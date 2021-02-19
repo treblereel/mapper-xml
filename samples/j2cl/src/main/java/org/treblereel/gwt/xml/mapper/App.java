@@ -33,7 +33,7 @@ import org.treblereel.gwt.xml.mapper.bpmn.di.BPMNShape;
 import org.treblereel.gwt.xml.mapper.bpmn2.DataObject;
 import org.treblereel.gwt.xml.mapper.bpmn2.DataObjectReference;
 import org.treblereel.gwt.xml.mapper.bpmn2.Definitions;
-import org.treblereel.gwt.xml.mapper.bpmn2.Definitions_MapperImpl;
+import org.treblereel.gwt.xml.mapper.bpmn2.Definitions_XMLMapperImpl;
 import org.treblereel.gwt.xml.mapper.bpmn2.ItemDefinition;
 import org.treblereel.gwt.xml.mapper.bpmn2.Process;
 import org.treblereel.gwt.xml.mapper.bpmn2.SubProcess;
@@ -43,7 +43,7 @@ public class App implements EntryPoint {
 
     public static final String HELLO_WORLD = "Hello J2CL world!";
 
-    Definitions_MapperImpl mapper = Definitions_MapperImpl.INSTANCE;
+    Definitions_XMLMapperImpl mapper = Definitions_XMLMapperImpl.INSTANCE;
 
     private HTMLTextAreaElement generatedXML = (HTMLTextAreaElement) DomGlobal.document.createElement("textarea");
 

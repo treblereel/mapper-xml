@@ -20,7 +20,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.treblereel.gwt.jackson</groupId>
+  <groupId>org.treblereel.gwt.xml.mapper</groupId>
   <artifactId>j2cl-tests</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -31,7 +31,7 @@
     <developer>
       <id>treblereel</id>
       <name>Dmitrii Tikhomirov</name>
-      <email>chani@me.com</email>
+      <email>chani.liet@gmail.com</email>
     </developer>
   </developers>
 
@@ -57,7 +57,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
 
     <maven.compiler.plugin>3.8.1</maven.compiler.plugin>
-    <maven.j2cl.plugin>0.16-SNAPSHOT</maven.j2cl.plugin>
+    <maven.j2cl.plugin>0.17-SNAPSHOT</maven.j2cl.plugin>
     <maven.licence.plugin>3.0</maven.licence.plugin>
     <maven.surfire.plugin>3.0.0-M1</maven.surfire.plugin>
 
@@ -65,23 +65,23 @@
     <vertispan.j2cl.repo.url>https://repo.vertispan.com/j2cl/</vertispan.j2cl.repo.url>
     <google.snapshot.repo.url>https://oss.sonatype.org/content/repositories/google-snapshots/</google.snapshot.repo.url>
 
-    <j2cl.version>0.8-SNAPSHOT</j2cl.version>
+    <j2cl.version>0.9-SNAPSHOT</j2cl.version>
   </properties>
 
   <dependencies>
     <!-- test dependencies -->
     <dependency>
-      <groupId>org.treblereel.gwt.jackson</groupId>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.treblereel.gwt.jackson</groupId>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>gwt-backend</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.treblereel.gwt.jackson</groupId>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>processor</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
@@ -127,7 +127,7 @@
         <artifactId>j2cl-maven-plugin</artifactId>
         <version>${maven.j2cl.plugin}</version>
         <configuration>
-          <compilationLevel>ADVANCED</compilationLevel>
+          <compilationLevel>BUNDLE_JAR</compilationLevel>
         </configuration>
         <executions>
           <execution>

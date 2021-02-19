@@ -1,9 +1,9 @@
-# jackson-xml
-**jackson-xml** (temporary name) is an annotation-processor-based XML mapper that works both on the client side - GWT and J2CL - and on the JVM side.
+# xml-mapper
+**xml-mapper** is an annotation-processor-based XML mapper that works both on the client side - GWT and J2CL - and on the JVM side with "Code-first" approach.
 
-Setting up **jackson-xml** includes cloning the repository, adding dependencies and annotating POJOs.
+Setting up **xml-mapper** includes cloning the repository, adding dependencies and annotating POJOs.
 
-## Installing jackson-xml:
+## Installing xml-mapper:
 
 1. Clone the repository and install it:
 
@@ -19,7 +19,7 @@ Setting up **jackson-xml** includes cloning the repository, adding dependencies 
 
     ```xml
         <dependency>
-          <groupId>org.treblereel.gwt.jackson</groupId>
+          <groupId>org.treblereel.gwt.xml.mapper</groupId>
           <artifactId>jre-backend</artifactId>
           <version>0.1-SNAPSHOT</version>
         </dependency>
@@ -29,7 +29,7 @@ Setting up **jackson-xml** includes cloning the repository, adding dependencies 
 
     ```xml
         <dependency>
-          <groupId>org.treblereel.gwt.jackson</groupId>
+          <groupId>org.treblereel.gwt.xml.mapper</groupId>
           <artifactId>gwt-backend</artifactId>
           <version>0.1-SNAPSHOT</version>
         </dependency>
@@ -39,12 +39,12 @@ Setting up **jackson-xml** includes cloning the repository, adding dependencies 
     
     ```xml
         <dependency>
-          <groupId>org.treblereel.gwt.jackson</groupId>
+          <groupId>org.treblereel.gwt.xml.mapper</groupId>
           <artifactId>api</artifactId>
           <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-          <groupId>org.treblereel.gwt.jackson</groupId>
+          <groupId>org.treblereel.gwt.xml.mapper</groupId>
           <artifactId>processor</artifactId>
           <version>0.1-SNAPSHOT</version>
         </dependency>
@@ -53,14 +53,14 @@ Setting up **jackson-xml** includes cloning the repository, adding dependencies 
     > In case you use GWT2, add the `inherits` directive to your `gwt.xml` file:
 
     ```xml
-      <inherits name='org.treblereel.gwt.jackson.Gwt'/>
-      <inherits name="org.treblereel.gwt.jackson.Jackson"/>
+      <inherits name='org.treblereel.gwt.xml.mapper.Gwt'/>
+      <inherits name="org.treblereel.gwt.xml.mapper.Jackson"/>
     ```
 
 3. Annotate POJOs with the @XMLMapper annotation:
 
     ```xml
-    import org.treblereel.gwt.jackson.api.annotation.XMLMapper;
+    import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
     
     @XMLMapper
     public class Person {
@@ -87,7 +87,7 @@ Setting up **jackson-xml** includes cloning the repository, adding dependencies 
     ```
 Setup is complete.
 
-## Using jackson-xml
+## Using XML mapper
 
 The annotation processor will generate the XML mapper for the `Person` class.
 
@@ -371,12 +371,13 @@ XML:
 
 @XmlSchema is used on the package to set a default `namespace` attribute and specify that all elements in the package are qualified with the `namespace`. This information is specified in a special Java source file: `package-info.java`.
  
-Java:    
+Java:
+
 ```java
     @XmlSchema(namespace = "http://www.omg.org/bpmn20")
-    package org.treblereel.gwt.jackson.client.tests.beans.simple;
-     
-    import javax.xml.bind.annotation.XmlSchema;
+package org.treblereel.gwt.xml.mapper.client.tests.beans.simple;
+
+import javax.xml.bind.annotation.XmlSchema;
 ```
      
 XML:
@@ -387,19 +388,20 @@ XML:
 Sometimes it's necessary to add `xsi:schemaLocation` to the root element. An example:
 
 Java:
+
 ```java
      @XmlSchema(namespace = "http://www.omg.org/bpmn20",
-             xmlns = {
-                     @XmlNs(prefix = "xsi", namespaceURI = "http://www.w3.org/2001/XMLSchema-instance"),
-                     @XmlNs(prefix = "drools", namespaceURI = "http://www.jboss.org/drools")
-             },
-             location =
-                     "http://www.jboss.org/drools "
-     )
-     package org.treblereel.gwt.jackson.client.tests.beans.simple;
-     
-     import javax.xml.bind.annotation.XmlNs;
-     import javax.xml.bind.annotation.XmlSchema;
+        xmlns = {
+                @XmlNs(prefix = "xsi", namespaceURI = "http://www.w3.org/2001/XMLSchema-instance"),
+                @XmlNs(prefix = "drools", namespaceURI = "http://www.jboss.org/drools")
+        },
+        location =
+                "http://www.jboss.org/drools "
+)
+package org.treblereel.gwt.xml.mapper.client.tests.beans.simple;
+
+import javax.xml.bind.annotation.XmlNs;
+import javax.xml.bind.annotation.XmlSchema;
 ```
      
 XML:
@@ -416,17 +418,18 @@ XML:
 ### @XmlNs
 @XmlNs is used to add additional `namespace` declarations in @XmlSchema;
 
-Java: 
+Java:
+
 ```java
      @XmlSchema(namespace = "http://www.omg.org/bpmn20",
-             xmlns = {
-                     @XmlNs(prefix = "drools", namespaceURI = "http://www.jboss.org/drools")
-             }
-     )
-     package org.treblereel.gwt.jackson.client.tests.beans.simple;
-     
-     import javax.xml.bind.annotation.XmlNs;
-     import javax.xml.bind.annotation.XmlSchema;
+        xmlns = {
+                @XmlNs(prefix = "drools", namespaceURI = "http://www.jboss.org/drools")
+        }
+)
+package org.treblereel.gwt.xml.mapper.client.tests.beans.simple;
+
+import javax.xml.bind.annotation.XmlNs;
+import javax.xml.bind.annotation.XmlSchema;
 ```
      
 XML:

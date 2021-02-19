@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.treblereel.gwt.jackson</groupId>
+    <groupId>org.treblereel.gwt.xml.mapper</groupId>
     <artifactId>tests</artifactId>
     <version>0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
@@ -17,7 +17,7 @@
     <developer>
       <id>treblereel</id>
       <name>Dmitrii Tikhomirov</name>
-      <email>chani@me.com</email>
+      <email>chani.liet@gmail.com</email>
     </developer>
   </developers>
 
@@ -36,17 +36,22 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.treblereel.gwt.jackson</groupId>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
+      <version>1.3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.treblereel.gwt.jackson</groupId>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>jre-backend</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.treblereel.gwt.jackson</groupId>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>processor</artifactId>
       <version>${project.version}</version>
     </dependency>

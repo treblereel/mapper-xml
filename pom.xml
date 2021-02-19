@@ -42,7 +42,7 @@
     <maven.compiler.source>8</maven.compiler.source>
     <maven.compiler.target>8</maven.compiler.target>
     <maven.compiler.version>3.8.0</maven.compiler.version>
-    <maven.source.version>3.0.1</maven.source.version>
+    <maven.source.version>3.0.1-SNAPSHOT</maven.source.version>
     <maven.fmt.plugin>2.9</maven.fmt.plugin>
     <maven.license.plugin>3.0</maven.license.plugin>
     <maven.shade.plugin>3.2.4</maven.shade.plugin>
@@ -56,7 +56,7 @@
     <javaparser.core.version>3.13.1</javaparser.core.version>
     <junit.version>4.11</junit.version>
     <com.fasterxml.woodstox.version>6.2.1</com.fasterxml.woodstox.version>
-    <auto.common.version>0.10</auto.common.version>
+    <auto.common.version>0.1-SNAPSHOT0</auto.common.version>
     <auto.service.version>1.0-rc6</auto.service.version>
   </properties>
 

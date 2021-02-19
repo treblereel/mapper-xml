@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='App'>
+  <inherits name='com.google.gwt.user.User'/>
+
+  <inherits name="org.treblereel.gwt.xmk.mapper.Mapper"/>
+
+  <entry-point class='org.treblereel.gwt.xml.mapper.client.App'/>
+  <source path='client'/>
+  <source path='shared'/>
+</module>

@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.treblereel.gwt.jackson</groupId>
+  <groupId>org.treblereel.gwt.xml.mapper</groupId>
   <artifactId>j2cl-demo</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
@@ -52,19 +52,19 @@
     </dependency>
 
     <dependency>
-      <groupId>org.treblereel.gwt.jackson</groupId>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>gwt-backend</artifactId>
       <version>0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
-      <groupId>org.treblereel.gwt.jackson</groupId>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>api</artifactId>
       <version>0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
-      <groupId>org.treblereel.gwt.jackson</groupId>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>processor</artifactId>
       <version>0.1-SNAPSHOT</version>
       <scope>provided</scope>
@@ -173,7 +173,7 @@
         <configuration>
           <defaultWebappDirectory>${project.build.directory}/gwt/launcherDir</defaultWebappDirectory>
           <compilationLevel>ADVANCED</compilationLevel>
-          <entrypoint>org.treblereel.gwt.jackson.App</entrypoint>
+          <entrypoint>org.treblereel.gwt.xml.mapper.App</entrypoint>
         </configuration>
       </plugin>
       <plugin>

@@ -20,7 +20,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.treblereel.gwt.jackson</groupId>
+  <groupId>org.treblereel.gwt.xml.mapper</groupId>
   <artifactId>j2cl-tests</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -31,7 +31,7 @@
     <developer>
       <id>treblereel</id>
       <name>Dmitrii Tikhomirov</name>
-      <email>chani@me.com</email>
+      <email>chani.liet@gmail.com</email>
     </developer>
   </developers>
 
@@ -71,17 +71,17 @@
   <dependencies>
     <!-- test dependencies -->
     <dependency>
-      <groupId>org.treblereel.gwt.jackson</groupId>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.treblereel.gwt.jackson</groupId>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>gwt-backend</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.treblereel.gwt.jackson</groupId>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>processor</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>

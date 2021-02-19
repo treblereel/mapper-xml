@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.treblereel.gwt.jackson</groupId>
-  <artifactId>jackson-parent</artifactId>
+  <groupId>org.treblereel.gwt.xml.mapper</groupId>
+  <artifactId>mapper-parent</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>jackson-parent</name>
+  <name>mapper-parent</name>
   <description>XML marshallers</description>
   <url>https://github.com/treblereel</url>
 
@@ -15,7 +15,7 @@
     <developer>
       <id>treblereel</id>
       <name>Dmitrii Tikhomirov</name>
-      <email>chani@me.com</email>
+      <email>chani.liet@gmail.com</email>
     </developer>
   </developers>
 

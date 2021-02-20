@@ -52,7 +52,7 @@ public abstract class AbstractGenerator {
     cu.setPackageDeclaration(context.getTypeUtils().getPackage(type.getBean()));
     declaration = cu.addClass(getMapperName(type.getElement()));
 
-    addGeneratedAnnotation(declaration);
+    // addGeneratedAnnotation(declaration);
     configureClassType(type);
     addTypeParam(type, declaration);
     getType(type);

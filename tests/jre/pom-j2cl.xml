@@ -22,7 +22,7 @@
 
   <groupId>org.treblereel.gwt.xml.mapper</groupId>
   <artifactId>j2cl-tests</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.2-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <description>Test cases for the J2CL</description>
@@ -60,6 +60,7 @@
     <maven.j2cl.plugin>0.17-SNAPSHOT</maven.j2cl.plugin>
     <maven.licence.plugin>3.0</maven.licence.plugin>
     <maven.surfire.plugin>3.0.0-M1</maven.surfire.plugin>
+    <maven.deploy.plugin>3.0.0-M1</maven.deploy.plugin>
 
     <!-- CI -->
     <vertispan.j2cl.repo.url>https://repo.vertispan.com/j2cl/</vertispan.j2cl.repo.url>
@@ -144,6 +145,14 @@
         <version>${maven.surfire.plugin}</version>
         <configuration>
           <skipTests>true</skipTests>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>${maven.deploy.plugin}</version>
+        <configuration>
+          <skip>true</skip>
         </configuration>
       </plugin>
     </plugins>

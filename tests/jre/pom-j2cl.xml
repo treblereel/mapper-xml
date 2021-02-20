@@ -22,7 +22,7 @@
 
   <groupId>org.treblereel.gwt.xml.mapper</groupId>
   <artifactId>j2cl-tests</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.2-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <description>Test cases for the J2CL</description>

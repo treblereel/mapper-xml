@@ -4,7 +4,7 @@
 
   <groupId>org.treblereel.gwt.xml.mapper</groupId>
   <artifactId>mapper-parent</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>mapper-parent</name>
@@ -52,7 +52,7 @@
     <maven.javadoc.plugin>3.2.0</maven.javadoc.plugin>
     <maven.source.plugin>3.2.1</maven.source.plugin>
     <maven.release.plugin>2.5.3</maven.release.plugin>
-    <nexus.staging.maven.plugin>1.6.7</nexus.staging.maven.plugin>
+    <nexus.staging.maven.plugin>1.6.8</nexus.staging.maven.plugin>
     <maven.scm.provider.gitexe>2.5.3</maven.scm.provider.gitexe>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -69,9 +69,7 @@
     <module>backend</module>
     <module>api</module>
     <module>processor</module>
-<!--
     <module>tests</module>
--->
   </modules>
 
   <dependencyManagement>
@@ -211,6 +209,7 @@
         <configuration>
           <serverId>ossrh</serverId>
           <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <stagingProgressTimeoutMinutes>20</stagingProgressTimeoutMinutes>
           <autoReleaseAfterClose>true</autoReleaseAfterClose>
         </configuration>
       </plugin>
@@ -227,6 +226,9 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
             <version>${maven.javadoc.plugin}</version>
+              <configuration>
+                  <failOnError>false</failOnError>
+              </configuration>
             <executions>
               <execution>
                 <id>attach-javadocs</id>

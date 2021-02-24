@@ -3,6 +3,15 @@
 
 Setting up **xml-mapper** includes cloning the repository, adding dependencies and annotating POJOs.
 
+## Maven
+
+Artifacts are published to sonatype repo
+
+```xml
+    https://mvnrepository.com/artifact/org.treblereel.gwt.xml.mapper
+```
+
+
 ## Installing xml-mapper:
 
 1. Clone the repository and install it:

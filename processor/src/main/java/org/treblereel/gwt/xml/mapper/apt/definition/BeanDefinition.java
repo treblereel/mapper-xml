@@ -104,7 +104,7 @@ public class BeanDefinition extends Definition {
 
     Stream<PropertyDefinition> stream = getPropertyDefinitionAsStream(isAnnotated);
 
-    if (xmlType == null || xmlType.propOrder() == null) {
+    if (xmlType == null || Arrays.stream(xmlType.propOrder()).allMatch(p -> p.equals(""))) {
       stream.forEach(elm -> fields.add(elm));
     } else {
       Set<String> propOrder = new LinkedHashSet<>(Arrays.asList(xmlType.propOrder()));
@@ -113,6 +113,12 @@ public class BeanDefinition extends Definition {
       for (String s : propOrder) {
         if (temp.containsKey(s)) {
           fields.add(temp.get(s));
+        } else if (temp.values().stream()
+            .anyMatch(p -> p.getProperty().getSimpleName().toString().equals(s))) {
+          temp.entrySet().stream()
+              .filter(e -> e.getValue().getProperty().getSimpleName().toString().equals(s))
+              .findFirst()
+              .ifPresent(e -> fields.add(e.getValue()));
         } else {
           throw new GenerationException(
               "Property "

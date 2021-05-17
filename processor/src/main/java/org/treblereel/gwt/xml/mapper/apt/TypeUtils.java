@@ -443,11 +443,17 @@ public class TypeUtils {
                                             .toString()
                                             .equals("name")) {
                                           name = entry.getValue().getValue().toString();
-                                        } else {
+                                        } else if (entry
+                                            .getKey()
+                                            .getSimpleName()
+                                            .toString()
+                                            .equals("type")) {
                                           value = (TypeMirror) entry.getValue().getValue();
                                         }
                                       }
-                                      map.put(name, value);
+                                      if (name != null && value != null) {
+                                        map.put(name, value);
+                                      }
                                       return null;
                                     }
                                   }.visit(annotationValue, map);

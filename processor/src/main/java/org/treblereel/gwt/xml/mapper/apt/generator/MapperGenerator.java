@@ -17,22 +17,19 @@ package org.treblereel.gwt.xml.mapper.apt.generator;
 
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.expr.CastExpr;
-import com.github.javaparser.ast.expr.Expression;
-import com.github.javaparser.ast.expr.MethodCallExpr;
-import com.github.javaparser.ast.expr.ObjectCreationExpr;
-import com.github.javaparser.ast.expr.SimpleName;
-import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.TypeParameter;
 import com.google.auto.common.MoreElements;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.treblereel.gwt.xml.mapper.api.XMLDeserializer;
 import org.treblereel.gwt.xml.mapper.api.XMLSerializer;
+import org.treblereel.gwt.xml.mapper.api.annotation.Configuration;
 import org.treblereel.gwt.xml.mapper.api.stream.XMLReader;
 import org.treblereel.gwt.xml.mapper.apt.context.GenerationContext;
 import org.treblereel.gwt.xml.mapper.apt.definition.BeanDefinition;
@@ -65,6 +62,61 @@ public class MapperGenerator extends AbstractGenerator {
     }
 
     setExtendedType(type);
+    maybeAddAdditionalConfiguration(type);
+  }
+
+  private void maybeAddAdditionalConfiguration(BeanDefinition type) {
+    if (type.getElement().getAnnotation(Configuration.class) != null) {
+      Configuration configuration = type.getElement().getAnnotation(Configuration.class);
+      maybeAddAdditionalConfigurationAnnotation(configuration);
+    }
+  }
+
+  private void maybeAddAdditionalConfigurationAnnotation(Configuration configuration) {
+    if (configuration.additionalAnnotation().length > 0) {
+      for (Configuration.ConfigurationAnnotation configurationAnnotation :
+          configuration.additionalAnnotation()) {
+        NormalAnnotationExpr annotationExpr = new NormalAnnotationExpr();
+        TypeMirror annotationTypeMirror = getAnnotationTypeMirror(configurationAnnotation);
+        TypeElement annotationTypeElement =
+            context.getTypeUtils().toTypeElement(annotationTypeMirror);
+        annotationExpr.setName(new Name(annotationTypeMirror.toString()));
+        declaration.addAnnotation(annotationExpr);
+        for (Configuration.ConfigurationAnnotationParam param : configurationAnnotation.params()) {
+          MoreElements.getAllMethods(
+                  annotationTypeElement,
+                  context.getProcessingEnv().getTypeUtils(),
+                  context.getProcessingEnv().getElementUtils())
+              .stream()
+              .filter(elm -> elm.getSimpleName().toString().equals(param.key()))
+              .findFirst()
+              .ifPresent(
+                  executableElement -> {
+                    boolean isStringExpr =
+                        executableElement
+                            .getReturnType()
+                            .toString()
+                            .equals(String.class.getCanonicalName());
+
+                    annotationExpr.addPair(
+                        param.key(),
+                        isStringExpr
+                            ? new StringLiteralExpr(param.value()).toString()
+                            : param.value());
+                  });
+        }
+      }
+    }
+  }
+
+  private TypeMirror getAnnotationTypeMirror(
+      Configuration.ConfigurationAnnotation configurationAnnotation) {
+    try {
+      configurationAnnotation.value();
+    } catch (MirroredTypeException e) {
+      return e.getTypeMirror();
+    }
+    return null;
   }
 
   private void setExtendedType(BeanDefinition type) {

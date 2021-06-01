@@ -234,6 +234,15 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
+
+    <repository>
+      <id>sonatype</id>
+      <name>sonatype</name>
+      <url>https://repo1.maven.org/maven2/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </repository>
     <repository>
       <id>vertispan-releases</id>
       <name>Vertispan hosted artifacts-releases</name>

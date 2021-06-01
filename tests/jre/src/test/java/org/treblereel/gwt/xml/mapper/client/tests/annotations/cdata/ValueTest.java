@@ -23,7 +23,7 @@ import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 9/8/20 */
-@J2clTestInput(UserCdataTest.class)
+@J2clTestInput(ValueTest.class)
 public class ValueTest {
 
   private final Value_XMLMapperImpl mapper = Value_XMLMapperImpl.INSTANCE;

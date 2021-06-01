@@ -4,7 +4,7 @@
 
   <groupId>org.treblereel.gwt.xml.mapper</groupId>
   <artifactId>mapper-parent</artifactId>
-  <version>0.2</version>
+  <version>0.3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>mapper-parent</name>
@@ -36,7 +36,7 @@
     <url>https://github.com/treblereel/mapper-xmll</url>
     <developerConnection>scm:git:git@github.com:treblereel/mapper-xml.git</developerConnection>
     <connection>scm:git:git://github.com/treblereel/mapper-xml.git</connection>
-    <tag>mapper-parent-0.2</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <properties>

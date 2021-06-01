@@ -30,7 +30,7 @@ Artifacts are published to sonatype repo
         <dependency>
           <groupId>org.treblereel.gwt.xml.mapper</groupId>
           <artifactId>jre-backend</artifactId>
-          <version>0.1-SNAPSHOT</version>
+          <version>0.2</version>
         </dependency>
     ```
 
@@ -40,7 +40,7 @@ Artifacts are published to sonatype repo
         <dependency>
           <groupId>org.treblereel.gwt.xml.mapper</groupId>
           <artifactId>gwt-backend</artifactId>
-          <version>0.1-SNAPSHOT</version>
+          <version>0.2</version>
         </dependency>
     ```
 
@@ -50,12 +50,12 @@ Artifacts are published to sonatype repo
         <dependency>
           <groupId>org.treblereel.gwt.xml.mapper</groupId>
           <artifactId>api</artifactId>
-          <version>0.1-SNAPSHOT</version>
+          <version>0.2</version>
         </dependency>
         <dependency>
           <groupId>org.treblereel.gwt.xml.mapper</groupId>
           <artifactId>processor</artifactId>
-          <version>0.1-SNAPSHOT</version>
+          <version>0.2</version>
         </dependency>
     ```
     

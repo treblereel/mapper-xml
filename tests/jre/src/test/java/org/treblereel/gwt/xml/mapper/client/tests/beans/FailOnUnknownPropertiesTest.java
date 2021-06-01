@@ -25,7 +25,7 @@ import org.treblereel.gwt.xml.mapper.api.DefaultXMLDeserializationContext;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 9/3/20 */
-@J2clTestInput(EnumTest.class)
+@J2clTestInput(FailOnUnknownPropertiesTest.class)
 public class FailOnUnknownPropertiesTest {
 
   private static final String XML =

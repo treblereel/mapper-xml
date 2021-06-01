@@ -53,7 +53,7 @@
     <maven.source.plugin>3.2.1</maven.source.plugin>
     <maven.release.plugin>2.5.3</maven.release.plugin>
     <nexus.staging.maven.plugin>1.6.8</nexus.staging.maven.plugin>
-    <maven.scm.provider.gitexe>2.5.3</maven.scm.provider.gitexe>
+    <maven.scm.provider.gitexe>1.9.5</maven.scm.provider.gitexe>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

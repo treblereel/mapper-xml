@@ -23,13 +23,10 @@ import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import java.util.function.Function;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.xml.bind.annotation.XmlElementRefs;
-import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
 import org.treblereel.gwt.xml.mapper.api.deser.array.ArrayXMLDeserializer;
 import org.treblereel.gwt.xml.mapper.api.deser.array.dd.Array2dXMLDeserializer;
 import org.treblereel.gwt.xml.mapper.api.ser.array.ArrayXMLSerializer;
@@ -81,7 +78,7 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
                 .setTypeArguments(new ClassOrInterfaceType().setName(arrayType));
 
         return maybeXmlUnwrappedCollection(
-            field.getProperty(),
+            field,
             new MethodCallExpr(
                     new NameExpr(Array2dXMLDeserializer.class.getSimpleName()), "newInstance")
                 .addArgument(
@@ -105,7 +102,7 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
             .setTypeArguments(new ClassOrInterfaceType().setName(arrayType));
 
     return maybeXmlUnwrappedCollection(
-        field.getProperty(),
+        field,
         new MethodCallExpr(new NameExpr(ArrayXMLDeserializer.class.getSimpleName()), "newInstance")
             .addArgument(
                 generateXMLDeserializerFactory(
@@ -139,7 +136,7 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
     return maybeHasNamespacePrefix(
         field,
         maybeXmlUnwrappedCollection(
-            field.getProperty(),
+            field,
             new MethodCallExpr(new NameExpr(serializer), "getInstance")
                 .addArgument(generateXMLSerializerFactory(field, type, type.toString(), cu))
                 .addArgument(new StringLiteralExpr(field.getPropertyName()))));
@@ -154,9 +151,9 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
     return method;
   }
 
-  private Expression maybeXmlUnwrappedCollection(VariableElement element, Expression expression) {
-    if (element.getAnnotation(XmlUnwrappedCollection.class) != null
-        || element.getAnnotation(XmlElementRefs.class) != null) {
+  private Expression maybeXmlUnwrappedCollection(
+      PropertyDefinition element, Expression expression) {
+    if (element.isUnWrapped()) {
       return new MethodCallExpr(expression, "setUnWrapCollections");
     }
 

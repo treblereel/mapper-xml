@@ -151,7 +151,7 @@ public class PropertyDefinition extends Definition {
   }
 
   public boolean isUnWrapped() {
-    if (property.getAnnotation(XmlElementRefs.class) != null) {
+    if (property.getAnnotation(XmlElementRefs.class) != null && !isWrapped()) {
       return true;
     }
     if (property.getAnnotation(XmlUnwrappedCollection.class) != null) {

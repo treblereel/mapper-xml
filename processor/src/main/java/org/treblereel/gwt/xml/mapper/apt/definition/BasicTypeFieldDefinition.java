@@ -40,9 +40,7 @@ public class BasicTypeFieldDefinition extends FieldDefinition {
             new NameExpr(context.getTypeRegistry().getDeserializer(bean).toString()),
             "getInstance");
     if (getBean().getKind().equals(TypeKind.ARRAY)) {
-      if (field.getProperty() != null
-          && (field.getProperty().getAnnotation(XmlUnwrappedCollection.class) != null
-              || field.getProperty().getAnnotation(XmlElementRefs.class) != null)) {
+      if (field.isUnWrapped()) {
         method = new MethodCallExpr(method, "setUnWrapCollections");
       }
     }

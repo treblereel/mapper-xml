@@ -151,6 +151,9 @@ public class PropertyDefinition extends Definition {
   }
 
   public boolean isUnWrapped() {
+    if (property.getAnnotation(XmlElementRefs.class) != null) {
+      return true;
+    }
     if (property.getAnnotation(XmlUnwrappedCollection.class) != null) {
       if (getBean().getKind().equals(TypeKind.ARRAY)
           || context.getTypeUtils().isCollection(getBean())

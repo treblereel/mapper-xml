@@ -21,7 +21,6 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlElements;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
-import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 5/13/20 */
 @XMLMapper
@@ -44,36 +43,35 @@ public class User implements IUser {
   private List<IAddress> iAddressList;
 
   @XmlElementRefs({
-    @XmlElementRef(name = "_Address1", type = Address.class),
-    @XmlElementRef(name = "_Address2", type = Address2.class),
-    @XmlElementRef(name = "_Address3", type = Address3.class)
+    @XmlElementRef(name = "iAddressListRef_Address1", type = Address.class),
+    @XmlElementRef(name = "iAddressListRef_Address2", type = Address2.class),
+    @XmlElementRef(name = "iAddressListRef_Address3", type = Address3.class)
   })
   private List<IAddress> iAddressListRef;
 
   @XmlElementRefs({
-    @XmlElementRef(name = "_Address1", type = Address.class),
-    @XmlElementRef(name = "_Address2", type = Address2.class),
-    @XmlElementRef(name = "_Address3", type = Address3.class)
+    @XmlElementRef(name = "iAddressListRef2_Address1", type = Address.class),
+    @XmlElementRef(name = "iAddressListRef2_Address2", type = Address2.class),
+    @XmlElementRef(name = "iAddressListRef2_Address3", type = Address3.class)
   })
-  @XmlUnwrappedCollection
   private List<IAddress> iAddressListRef2;
 
   @XmlElementRefs({
-    @XmlElementRef(name = "_Address1", type = Address.class),
-    @XmlElementRef(name = "_Address2", type = Address2.class),
-    @XmlElementRef(name = "_Address3", type = Address3.class)
+    @XmlElementRef(name = "iAddressListRef3_Address1", type = Address.class),
+    @XmlElementRef(name = "iAddressListRef3_Address2", type = Address2.class),
+    @XmlElementRef(name = "iAddressListRef3_Address3", type = Address3.class)
   })
   @XmlElement(name = "wrapped", namespace = "namespace")
   private List<IAddress> iAddressListRef3;
 
   @XmlElementRefs({
-    @XmlElementRef(name = "_Address1", type = Address.class),
-    @XmlElementRef(name = "_Address2", type = Address2.class),
-    @XmlElementRef(name = "_Address3", type = Address3.class)
+    @XmlElementRef(name = "iAddressRef_Address1", type = Address.class),
+    @XmlElementRef(name = "iAddressRef_Address2", type = Address2.class),
+    @XmlElementRef(name = "iAddressRef_Address3", type = Address3.class)
   })
   private IAddress iAddressRef;
 
-  @XmlElementRefs({@XmlElementRef(name = "_Address3", type = Address3.class)})
+  @XmlElementRefs({@XmlElementRef(name = "iAddressOneElm_Address3", type = Address3.class)})
   private List<IAddress> iAddressOneElm;
 
   @XmlElements({@XmlElement(name = "_Address3", type = Address3.class)})

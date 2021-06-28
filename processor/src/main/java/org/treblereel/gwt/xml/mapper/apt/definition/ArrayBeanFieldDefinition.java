@@ -28,6 +28,7 @@ import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.xml.bind.annotation.XmlElementRefs;
 import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
 import org.treblereel.gwt.xml.mapper.api.deser.array.ArrayXMLDeserializer;
 import org.treblereel.gwt.xml.mapper.api.deser.array.dd.Array2dXMLDeserializer;
@@ -154,7 +155,8 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
   }
 
   private Expression maybeXmlUnwrappedCollection(VariableElement element, Expression expression) {
-    if (element.getAnnotation(XmlUnwrappedCollection.class) != null) {
+    if (element.getAnnotation(XmlUnwrappedCollection.class) != null
+        || element.getAnnotation(XmlElementRefs.class) != null) {
       return new MethodCallExpr(expression, "setUnWrapCollections");
     }
 

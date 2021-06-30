@@ -497,15 +497,15 @@ Java:
     @XmlElementRef(name = "_Address3", type = Address3.class)
     })
     private List<IAddress> iAddressListRef;
+
+    ... iAddressListRef.add(new Address("AAAA"))
 ```
     
 XML:
 ```xml
-  <iAddressListRef>
-    <_Address1>
-      <address>AAAAA</address>
-    </_Address1>
-  </iAddressListRef>
+  <_Address1>
+    <address>AAAAA</address>
+  </_Address1>
 ```
 
 ### @XmlJavaTypeAdapter

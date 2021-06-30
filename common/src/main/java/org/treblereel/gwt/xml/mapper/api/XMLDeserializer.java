@@ -35,6 +35,8 @@ public abstract class XMLDeserializer<T> {
   private final QName xsiType = new QName("http://www.w3.org/2001/XMLSchema-instance", "type");
   protected Function<XMLReader, String> xsiTypeChooser = this::getXsiType;
   protected Function<XMLReader, String> xsiTagChooser = this::getTag;
+  protected Function<XMLReader, XMLReader> nextTag = this::nextTag;
+
   private Inheritance type = Inheritance.NONE;
   protected boolean isWrapCollections = true;
   protected Supplier<Function<XMLReader, String>> inheritanceChooser =
@@ -101,11 +103,20 @@ public abstract class XMLDeserializer<T> {
     return "";
   }
 
+  private XMLReader nextTag(XMLReader xmlReader) {
+    try {
+      xmlReader.next();
+      return xmlReader;
+    } catch (XMLStreamException e) {
+      throw new XMLDeserializationException(e);
+    }
+  }
+
   protected String getTag(XMLReader reader) {
     try {
       return reader.peekNodeName().getLocalPart();
     } catch (XMLStreamException e) {
-      return null;
+      throw new XMLDeserializationException(e);
     }
   }
 

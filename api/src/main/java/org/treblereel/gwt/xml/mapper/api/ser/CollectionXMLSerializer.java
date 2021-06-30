@@ -74,7 +74,7 @@ public class CollectionXMLSerializer<C extends Collection<T>, T>
       XMLWriter writer, C values, XMLSerializationContext ctx, XMLSerializerParameters params)
       throws XMLStreamException {
     if (isEmpty(values)) {
-      if (ctx.isWriteEmptyXMLArrays()) {
+      if (ctx.isWriteEmptyXMLArrays() && isWrapCollections) {
         beginObject(writer, true);
         endObject(writer, true);
       }

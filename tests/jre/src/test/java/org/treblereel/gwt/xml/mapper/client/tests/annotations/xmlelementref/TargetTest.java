@@ -19,6 +19,7 @@ package org.treblereel.gwt.xml.mapper.client.tests.annotations.xmlelementref;
 import static org.junit.Assert.assertEquals;
 
 import com.google.j2cl.junit.apt.J2clTestInput;
+import java.util.ArrayList;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 
@@ -26,27 +27,87 @@ import org.junit.Test;
 @J2clTestInput(TargetTest.class)
 public class TargetTest {
 
-  private static final String XML =
-      "<?xml version='1.0' encoding='UTF-8'?><target><JarTask><firstName>setFirstName</firstName></JarTask><JavacTask><lastName>setLastName</lastName></JavacTask></target>";
-
   Target_XMLMapperImpl mapper = Target_XMLMapperImpl.INSTANCE;
 
   @Test
-  public void testDeserializeValue() throws XMLStreamException {}
+  public void testSerializeAndDeserializeValue() throws XMLStreamException {
+    final String XML =
+        "<?xml version='1.0' encoding='UTF-8'?><target><JarTask><firstName>setFirstName</firstName></JarTask></target>";
+
+    Target target = new Target();
+    JarTask jarTask = new JarTask();
+    jarTask.setFirstName("setFirstName");
+
+    target.setTasks(new ArrayList<>());
+    target.getTasks().add(jarTask);
+
+    String result = mapper.write(target);
+    assertEquals(XML, result);
+    assertEquals(result, mapper.write(mapper.read(mapper.write(target))));
+  }
 
   @Test
-  public void testSerializeValue() throws XMLStreamException {
+  public void testSerializeAndDeserializeValue1() throws XMLStreamException {
+    final String XML =
+        "<?xml version='1.0' encoding='UTF-8'?><target><JarTask><firstName>setFirstName</firstName></JarTask><JavacTask><lastName>setLastName</lastName></JavacTask><the_wrapper><JarTask2><firstName>setFirstName</firstName></JarTask2><JavacTask2><lastName>setLastName</lastName></JavacTask2></the_wrapper><task_JarTask><firstName>JarTask</firstName></task_JarTask><task2><_JarTask><firstName>JarTask</firstName></_JarTask></task2></target>";
+
     Target target = new Target();
     JarTask jarTask = new JarTask();
     jarTask.setFirstName("setFirstName");
 
     JavacTask javacTask = new JavacTask();
     javacTask.setLastName("setLastName");
-
+    target.setTasks(new ArrayList<>());
     target.getTasks().add(jarTask);
     target.getTasks().add(javacTask);
 
-    assertEquals(XML, mapper.write(target));
-    assertEquals(XML, mapper.write(mapper.read(mapper.write(target))));
+    JarTask jarTask2 = new JarTask();
+    jarTask2.setFirstName("JarTask");
+    target.setTask(jarTask2);
+
+    target.setTasksXmlElementWrapper(new ArrayList<>());
+
+    target.getTasksXmlElementWrapper().add(jarTask);
+    target.getTasksXmlElementWrapper().add(javacTask);
+    target.setTask2(jarTask2);
+
+    String result = mapper.write(target);
+    assertEquals(XML, result);
+    assertEquals(result, mapper.write(mapper.read(mapper.write(target))));
+  }
+
+  @Test
+  public void testSerializeAndDeserializeValue2() throws XMLStreamException {
+    final String XML =
+        "<?xml version='1.0' encoding='UTF-8'?><target><the_wrapper><JarTask2><firstName>setFirstName</firstName></JarTask2><JavacTask2><lastName>setLastName</lastName></JavacTask2></the_wrapper></target>";
+
+    Target target = new Target();
+
+    JarTask jarTask = new JarTask();
+    jarTask.setFirstName("setFirstName");
+
+    JavacTask javacTask = new JavacTask();
+    javacTask.setLastName("setLastName");
+
+    target.setTasksXmlElementWrapper(new ArrayList<>());
+    target.getTasksXmlElementWrapper().add(jarTask);
+    target.getTasksXmlElementWrapper().add(javacTask);
+
+    String result = mapper.write(target);
+    assertEquals(XML, result);
+    assertEquals(result, mapper.write(mapper.read(mapper.write(target))));
+  }
+
+  @Test
+  public void testSerializeAndDeserializeValue3() throws XMLStreamException {
+    final String XML = "<?xml version='1.0' encoding='UTF-8'?><target><the_wrapper/></target>";
+
+    Target target = new Target();
+    target.setTasks(new ArrayList<>());
+    target.setTasksXmlElementWrapper(new ArrayList<>());
+
+    String result = mapper.write(target);
+    assertEquals(XML, result);
+    assertEquals(result, mapper.write(mapper.read(mapper.write(target))));
   }
 }

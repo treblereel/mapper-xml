@@ -16,10 +16,10 @@
 
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.xmlelementref;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 
@@ -29,18 +29,30 @@ import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 public class Target {
 
   @XmlElementRefs({
-    @XmlElementRef(
-        name = "JarTask",
-        namespace = "http://www.dmg.org/PMML-4_4",
-        type = JarTask.class,
-        required = false),
-    @XmlElementRef(
-        name = "JavacTask",
-        namespace = "http://www.dmg.org/PMML-4_4",
-        type = JavacTask.class,
-        required = false),
+    @XmlElementRef(name = "JarTask", type = JarTask.class, required = false),
+    @XmlElementRef(name = "JavacTask", type = JavacTask.class, required = false),
   })
-  private List<Task> tasks = new ArrayList<>();
+  private List<Task> tasks;
+
+  @XmlElementRefs({
+    @XmlElementRef(name = "JarTask2", type = JarTask.class, required = false),
+    @XmlElementRef(name = "JavacTask2", type = JavacTask.class, required = false),
+  })
+  @XmlElementWrapper(name = "the_wrapper")
+  private List<Task> tasksXmlElementWrapper;
+
+  @XmlElementRefs({
+    @XmlElementRef(name = "task_JarTask", type = JarTask.class, required = false),
+    @XmlElementRef(name = "task_JavacTask", type = JavacTask.class, required = false),
+  })
+  private Task task;
+
+  @XmlElementWrapper
+  @XmlElementRefs({
+    @XmlElementRef(name = "_JarTask", type = JarTask.class, required = false),
+    @XmlElementRef(name = "_JavacTask", type = JavacTask.class, required = false),
+  })
+  private Task task2;
 
   public List<Task> getTasks() {
     return tasks;
@@ -48,5 +60,29 @@ public class Target {
 
   public void setTasks(List<Task> tasks) {
     this.tasks = tasks;
+  }
+
+  public Task getTask() {
+    return task;
+  }
+
+  public void setTask(Task task) {
+    this.task = task;
+  }
+
+  public Task getTask2() {
+    return task2;
+  }
+
+  public void setTask2(Task task2) {
+    this.task2 = task2;
+  }
+
+  public List<Task> getTasksXmlElementWrapper() {
+    return tasksXmlElementWrapper;
+  }
+
+  public void setTasksXmlElementWrapper(List<Task> tasksXmlElementWrapper) {
+    this.tasksXmlElementWrapper = tasksXmlElementWrapper;
   }
 }

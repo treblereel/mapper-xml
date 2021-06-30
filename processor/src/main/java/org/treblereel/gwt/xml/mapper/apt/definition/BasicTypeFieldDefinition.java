@@ -22,8 +22,6 @@ import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.xml.bind.annotation.XmlElementRefs;
-import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
 import org.treblereel.gwt.xml.mapper.apt.context.GenerationContext;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/1/20 */
@@ -59,9 +57,7 @@ public class BasicTypeFieldDefinition extends FieldDefinition {
             "getInstance");
     if (getBean().getKind().equals(TypeKind.ARRAY)) {
       method.addArgument(new StringLiteralExpr(field.getPropertyName()));
-      if (field.getProperty() != null
-          && (field.getProperty().getAnnotation(XmlUnwrappedCollection.class) != null
-              || field.getProperty().getAnnotation(XmlElementRefs.class) != null)) {
+      if (field.isUnWrapped()) {
         method = new MethodCallExpr(method, "setUnWrapCollections");
       }
     }

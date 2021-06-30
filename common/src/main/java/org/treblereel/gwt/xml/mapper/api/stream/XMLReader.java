@@ -40,7 +40,7 @@ public interface XMLReader {
    *
    * @return a {@link XMLStreamConstants} object.
    */
-  int peek() throws XMLStreamException;
+  int peek();
 
   /**
    * Returns the text value of the current token.

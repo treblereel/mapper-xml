@@ -81,6 +81,13 @@ public class PropertyDefinition extends Definition {
   }
 
   public String getPropertyName() {
+    if (property.getAnnotation(XmlElementWrapper.class) != null
+        && !property.getAnnotation(XmlElementWrapper.class).name().equals(DEFAULT)) {
+      if (property.getAnnotation(XmlElementRefs.class) != null) {
+        return property.getAnnotation(XmlElementWrapper.class).name();
+      }
+    }
+
     if (property.getAnnotation(XmlElement.class) != null
         && !property.getAnnotation(XmlElement.class).name().equals(DEFAULT)) {
       return property.getAnnotation(XmlElement.class).name();
@@ -147,13 +154,26 @@ public class PropertyDefinition extends Definition {
   }
 
   public boolean isWrapped() {
-    return property.getAnnotation(XmlElementWrapper.class) != null;
+    if (property.getAnnotation(XmlElementWrapper.class) != null) {
+      if ((context.getTypeUtils().isCollection(bean)
+              || context.getTypeUtils().isIterable(bean)
+              || TypeUtils.isArray(bean))
+          && property.getAnnotation(XmlElementRefs.class) != null) {
+        return false;
+      }
+      return true;
+    }
+    return false;
   }
 
   public boolean isUnWrapped() {
-    if (property.getAnnotation(XmlElementRefs.class) != null && !isWrapped()) {
+    if (property.getAnnotation(XmlElementRefs.class) != null) {
+      if (property.getAnnotation(XmlElementWrapper.class) != null) {
+        return false;
+      }
       return true;
     }
+
     if (property.getAnnotation(XmlUnwrappedCollection.class) != null) {
       if (getBean().getKind().equals(TypeKind.ARRAY)
           || context.getTypeUtils().isCollection(getBean())
@@ -219,7 +239,7 @@ public class PropertyDefinition extends Definition {
     String name =
         !property.getAnnotation(XmlElementWrapper.class).name().equals(DEFAULT)
             ? property.getAnnotation(XmlElementWrapper.class).name()
-            : property.getSimpleName().toString();
+            : getPropertyName();
     String namespace =
         !property.getAnnotation(XmlElementWrapper.class).namespace().equals(DEFAULT)
             ? property.getAnnotation(XmlElementWrapper.class).namespace()

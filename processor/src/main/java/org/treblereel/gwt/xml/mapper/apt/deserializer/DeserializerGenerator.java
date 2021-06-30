@@ -230,6 +230,12 @@ public class DeserializerGenerator extends AbstractGenerator {
                 .addArgument(field.getPropertyName()));
       }
     }
+    if (field.isWrapped()) {
+      body.addStatement(
+          new MethodCallExpr(new NameExpr("map"), "put")
+              .addArgument(new StringLiteralExpr(field.getWrapped().key))
+              .addArgument(field.getPropertyName()));
+    }
   }
 
   private void addBeanPropertyDeserializer(
@@ -292,9 +298,7 @@ public class DeserializerGenerator extends AbstractGenerator {
       ObjectCreationExpr beanProperty = new ObjectCreationExpr();
       beanProperty.setType(wrapper);
       expr =
-          beanProperty
-              .addArgument(expr)
-              .addArgument(new StringLiteralExpr(field.getPropertyName()));
+          beanProperty.addArgument(expr).addArgument(new StringLiteralExpr(field.getWrapped().key));
     }
     return expr;
   }

@@ -33,7 +33,6 @@ import org.treblereel.gwt.xml.mapper.api.stream.XMLWriter;
  */
 public class Array2dXMLSerializer<T> extends BasicArrayXMLSerializer<T[][]> {
 
-  protected final String propertyName;
   private final Function<Class, XMLSerializer<T>> serializer;
 
   /**
@@ -78,7 +77,11 @@ public class Array2dXMLSerializer<T> extends BasicArrayXMLSerializer<T[][]> {
     for (T[] array : values) {
       beginObject(writer, true);
       for (T value : array) {
-        serializer.apply(value.getClass()).setParent(this).serialize(writer, value, ctx, params);
+        serializer
+            .apply(value.getClass())
+            .setPropertyName(propertyName)
+            .setParent(this)
+            .serialize(writer, value, ctx, params);
       }
       endObject(writer, true);
     }

@@ -38,7 +38,7 @@ public class PrimitiveShortArray2dXMLDeserializer
    *
    * @return an instance of {@link PrimitiveShortArray2dXMLDeserializer}
    */
-  public static PrimitiveShortArray2dXMLDeserializer newInstance() {
+  public static PrimitiveShortArray2dXMLDeserializer getInstance() {
     return new PrimitiveShortArray2dXMLDeserializer();
   }
 

@@ -122,12 +122,13 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T>
 
     if (reader.getAttributeCount() > 0) {
       for (int i = 0; i < reader.getAttributeCount(); i++) {
-        BeanPropertyDeserializer<T, ?> property =
-            deserializers.get(getPropertyName(reader.getAttributeName(i)));
+        String propertyName = getPropertyName(reader.getAttributeName(i));
+        BeanPropertyDeserializer<T, ?> property = deserializers.get(propertyName);
         if (property != null) {
           processed = true;
           if (reader.getAttributeValue(i) != null)
-            property.deserialize(reader.getAttributeValue(i), instance, ctx);
+            ctx.defaultParameters().setTypeInfo(new TypeDeserializationInfo<T>(propertyName));
+          property.deserialize(reader.getAttributeValue(i), instance, ctx);
         }
       }
     }
@@ -147,6 +148,9 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T>
                       BeanPropertyDeserializer<T, ?> property =
                           getPropertyDeserializer(propertyName.getLocalPart(), ctx1);
                       if (property != null) {
+                        ctx1.defaultParameters()
+                            .setTypeInfo(
+                                new TypeDeserializationInfo<>(propertyName.getLocalPart()));
                         property.deserialize(reader1, bean, ctx1);
                       }
                     }

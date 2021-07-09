@@ -30,7 +30,7 @@ import org.treblereel.gwt.xml.mapper.client.tests.beans.collection.PrimitiveArra
 public class PrimitiveArraysTest {
 
   private static final String XML =
-      "<?xml version='1.0' encoding='UTF-8'?><PrimitiveArrays><strings><strings>AAA</strings><strings>ZZZ</strings><strings>1111</strings></strings><booleans><booleans>true</booleans><booleans>true</booleans><booleans>false</booleans><booleans>false</booleans></booleans><chars><chars>a</chars><chars>z</chars><chars>F</chars><chars>!</chars></chars><bytes>EQIhQg==</bytes><doubles><doubles>17222.01</doubles><doubles>2111.34</doubles><doubles>32223.34</doubles><doubles>6226.37</doubles></doubles><ints><ints>17222</ints><ints>2111</ints><ints>32223</ints><ints>6226</ints></ints><longs><longs>17222</longs><longs>2111</longs><longs>32223</longs><longs>6226</longs></longs><shorts><shorts>17222</shorts><shorts>2111</shorts><shorts>32223</shorts><shorts>6226</shorts></shorts></PrimitiveArrays>";
+      "<?xml version='1.0' encoding='UTF-8'?><PrimitiveArrays><strings>AAA</strings><strings>ZZZ</strings><strings>1111</strings><booleans>true</booleans><booleans>true</booleans><booleans>false</booleans><booleans>false</booleans><chars>a</chars><chars>z</chars><chars>F</chars><chars>!</chars><bytes>EQIhQg==</bytes><doubles>17222.01</doubles><doubles>2111.34</doubles><doubles>32223.34</doubles><doubles>6226.37</doubles><ints>17222</ints><ints>2111</ints><ints>32223</ints><ints>6226</ints><longs>17222</longs><longs>2111</longs><longs>32223</longs><longs>6226</longs><shorts>17222</shorts><shorts>2111</shorts><shorts>32223</shorts><shorts>6226</shorts></PrimitiveArrays>";
 
   String[] strings = new String[] {"AAA", "ZZZ", "1111"};
   boolean[] booleans = new boolean[] {true, true, false, false};

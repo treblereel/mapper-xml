@@ -21,7 +21,7 @@ import com.google.j2cl.junit.apt.J2clTestInput;
 import java.util.Arrays;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
-import org.treblereel.gwt.xml.mapper.client.tests.beans.collection.PrimitiveArrays;
+import org.treblereel.gwt.xml.mapper.client.tests.arrays.PrimitiveArrays;
 import org.treblereel.gwt.xml.mapper.client.tests.beans.collection.PrimitiveArrays_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/27/20 */
@@ -29,17 +29,15 @@ import org.treblereel.gwt.xml.mapper.client.tests.beans.collection.PrimitiveArra
 public class CollectionTest {
 
   String[] strings = new String[] {"Hello", "\" \"", "World", "!"};
+  private static final String XML =
+      "<?xml version='1.0' encoding='UTF-8'?><PrimitiveArrays><strings>Hello</strings><strings>\" \"</strings><strings>World</strings><strings>!</strings></PrimitiveArrays>";
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {
     PrimitiveArrays test = new PrimitiveArrays();
     test.setStrings(strings);
 
-    String[] result =
-        PrimitiveArrays_XMLMapperImpl.INSTANCE
-            .read(
-                "<?xml version='1.0' encoding='UTF-8'?><PrimitiveArrays><strings><strings>Hello</strings><strings>\" \"</strings><strings>World</strings><strings>!</strings></strings></PrimitiveArrays>")
-            .getStrings();
+    String[] result = PrimitiveArrays_XMLMapperImpl.INSTANCE.read(XML).getStrings();
     assertTrue(Arrays.equals(strings, result));
   }
 }

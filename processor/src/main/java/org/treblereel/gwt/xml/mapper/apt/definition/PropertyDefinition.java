@@ -154,16 +154,7 @@ public class PropertyDefinition extends Definition {
   }
 
   public boolean isWrapped() {
-    if (property.getAnnotation(XmlElementWrapper.class) != null) {
-      if ((context.getTypeUtils().isCollection(bean)
-              || context.getTypeUtils().isIterable(bean)
-              || TypeUtils.isArray(bean))
-          && property.getAnnotation(XmlElementRefs.class) != null) {
-        return false;
-      }
-      return true;
-    }
-    return false;
+    return property.getAnnotation(XmlElementWrapper.class) != null;
   }
 
   public boolean isUnWrapped() {

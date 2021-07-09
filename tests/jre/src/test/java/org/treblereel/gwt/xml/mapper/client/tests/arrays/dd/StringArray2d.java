@@ -20,19 +20,26 @@ import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/29/20 */
 @XMLMapper
-public class ByteArray2d {
+public class StringArray2d {
 
-  public static final String XML =
-      "<?xml version='1.0' encoding='UTF-8'?><ByteArray2d><array><array>AAsWIQ==</array><array>APXq3w==</array><array>AGScAA==</array><array>AAAAAA==</array></array></ByteArray2d>";
+  private String check1;
 
-  private byte[][] array;
+  private String[][] array = new String[][] {{"AAA", "BB"}, {"CCC", "DDD"}};
+  private String[][] array2 = new String[][] {{"AAA2", "BB2"}, {"CCC2", "DDD2"}};
 
-  public byte[][] getArray() {
+  private String check2;
+
+  public String[][] getArray() {
     return array;
   }
 
-  public void setArray(byte[][] array) {
+  public void setArray(String[][] array) {
     this.array = array;
+  }
+
+  @Override
+  public int hashCode() {
+    return Arrays.hashCode(getArray());
   }
 
   @Override
@@ -40,15 +47,39 @@ public class ByteArray2d {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof ByteArray2d)) {
+    if (!(o instanceof StringArray2d)) {
       return false;
     }
-    ByteArray2d that = (ByteArray2d) o;
-    return Arrays.equals(getArray(), that.getArray());
+    StringArray2d that = (StringArray2d) o;
+    return Arrays.deepEquals(getArray(), that.getArray());
   }
 
   @Override
-  public int hashCode() {
-    return Arrays.hashCode(getArray());
+  public String toString() {
+    return "StringArray2d{" + "array=" + Arrays.toString(array) + '}';
+  }
+
+  public String getCheck1() {
+    return check1;
+  }
+
+  public void setCheck1(String check1) {
+    this.check1 = check1;
+  }
+
+  public String getCheck2() {
+    return check2;
+  }
+
+  public void setCheck2(String check2) {
+    this.check2 = check2;
+  }
+
+  public String[][] getArray2() {
+    return array2;
+  }
+
+  public void setArray2(String[][] array2) {
+    this.array2 = array2;
   }
 }

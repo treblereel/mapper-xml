@@ -19,7 +19,6 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.j2cl.junit.apt.J2clTestInput;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,7 +27,6 @@ import java.util.Objects;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
-import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
 import org.treblereel.gwt.xml.mapper.client.tests.annotations.seealso.type.SeeAlsoAnimalXsiTypeHolder;
 import org.treblereel.gwt.xml.mapper.client.tests.annotations.seealso.type.SeeAlsoAnimalXsiTypeHolder_XMLMapperImpl;
 
@@ -138,16 +136,11 @@ public class SeeAlsoTest {
     map.put(animal, animal);
 
     collection.setList(list);
-    collection.setList2(list);
     collection.setMap(map);
-    collection.setAnimals(animals);
-    collection.setAnimals2(animals);
 
     Car car = new Car("CAR");
     List<Vehicle> list2 = new ArrayList<>();
     list2.add(car);
-    collection.setVehicles2(list2);
-    collection.setVehicle(car);
     return collection;
   }
 
@@ -269,26 +262,11 @@ public class SeeAlsoTest {
   }
 
   @XMLMapper
-  public static class SeeAlsoAnimalCollection {
+  public static class SeeAlsoAnimalArray {
 
     private Animal[] animals;
-    @XmlUnwrappedCollection private Animal[] animals2;
-    private List<Animal> list;
-    @XmlUnwrappedCollection private List<Animal> list2;
-    private Map<Animal, Animal> map;
 
-    private Vehicle vehicle;
-    private List<Vehicle> vehicles;
-
-    @XmlUnwrappedCollection private List<Vehicle> vehicles2;
-
-    public List<Animal> getList() {
-      return list;
-    }
-
-    public void setList(List<Animal> list) {
-      this.list = list;
-    }
+    private Vehicle[] vehicles2;
 
     public Animal[] getAnimals() {
       return animals;
@@ -296,6 +274,30 @@ public class SeeAlsoTest {
 
     public void setAnimals(Animal[] animals) {
       this.animals = animals;
+    }
+
+    public Vehicle[] getVehicles2() {
+      return vehicles2;
+    }
+
+    public void setVehicles2(Vehicle[] vehicles2) {
+      this.vehicles2 = vehicles2;
+    }
+  }
+
+  @XMLMapper
+  public static class SeeAlsoAnimalCollection {
+
+    private List<Animal> list;
+    private Map<Animal, Animal> map;
+    private List<Vehicle> vehicles;
+
+    public List<Animal> getList() {
+      return list;
+    }
+
+    public void setList(List<Animal> list) {
+      this.list = list;
     }
 
     public Map<Animal, Animal> getMap() {
@@ -306,44 +308,12 @@ public class SeeAlsoTest {
       this.map = map;
     }
 
-    public Vehicle getVehicle() {
-      return vehicle;
-    }
-
-    public void setVehicle(Vehicle vehicle) {
-      this.vehicle = vehicle;
-    }
-
     public List<Vehicle> getVehicles() {
       return vehicles;
     }
 
     public void setVehicles(List<Vehicle> vehicles) {
       this.vehicles = vehicles;
-    }
-
-    public List<Animal> getList2() {
-      return list2;
-    }
-
-    public void setList2(List<Animal> list2) {
-      this.list2 = list2;
-    }
-
-    public Animal[] getAnimals2() {
-      return animals2;
-    }
-
-    public void setAnimals2(Animal[] animals2) {
-      this.animals2 = animals2;
-    }
-
-    public List<Vehicle> getVehicles2() {
-      return vehicles2;
-    }
-
-    public void setVehicles2(List<Vehicle> vehicles2) {
-      this.vehicles2 = vehicles2;
     }
 
     @Override
@@ -354,35 +324,21 @@ public class SeeAlsoTest {
       SeeAlsoAnimalCollection that = (SeeAlsoAnimalCollection) o;
 
       // Probably incorrect - comparing Object[] arrays with Arrays.equals
-      if (!Arrays.equals(getAnimals(), that.getAnimals())) return false;
       // Probably incorrect - comparing Object[] arrays with Arrays.equals
-      if (!Arrays.equals(getAnimals2(), that.getAnimals2())) return false;
       if (getList() != null ? !getList().equals(that.getList()) : that.getList() != null)
         return false;
-      if (getList2() != null ? !getList2().equals(that.getList2()) : that.getList2() != null)
-        return false;
       if (getMap() != null ? !getMap().equals(that.getMap()) : that.getMap() != null) return false;
-      if (getVehicle() != null
-          ? !getVehicle().equals(that.getVehicle())
-          : that.getVehicle() != null) return false;
       if (getVehicles() != null
           ? !getVehicles().equals(that.getVehicles())
           : that.getVehicles() != null) return false;
-      return getVehicles2() != null
-          ? getVehicles2().equals(that.getVehicles2())
-          : that.getVehicles2() == null;
+      return true;
     }
 
     @Override
     public int hashCode() {
-      int result = Arrays.hashCode(getAnimals());
-      result = 31 * result + Arrays.hashCode(getAnimals2());
-      result = 31 * result + (getList() != null ? getList().hashCode() : 0);
-      result = 31 * result + (getList2() != null ? getList2().hashCode() : 0);
+      int result = 31 * (getList() != null ? getList().hashCode() : 0);
       result = 31 * result + (getMap() != null ? getMap().hashCode() : 0);
-      result = 31 * result + (getVehicle() != null ? getVehicle().hashCode() : 0);
       result = 31 * result + (getVehicles() != null ? getVehicles().hashCode() : 0);
-      result = 31 * result + (getVehicles2() != null ? getVehicles2().hashCode() : 0);
       return result;
     }
   }

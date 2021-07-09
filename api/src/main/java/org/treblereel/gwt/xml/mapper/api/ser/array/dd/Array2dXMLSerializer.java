@@ -75,7 +75,6 @@ public class Array2dXMLSerializer<T> extends BasicArrayXMLSerializer<T[][]> {
       return;
     }
 
-    beginObject(writer, true);
     for (T[] array : values) {
       beginObject(writer, true);
       for (T value : array) {
@@ -83,7 +82,6 @@ public class Array2dXMLSerializer<T> extends BasicArrayXMLSerializer<T[][]> {
       }
       endObject(writer, true);
     }
-    endObject(writer, true);
   }
 
   /** {@inheritDoc} */

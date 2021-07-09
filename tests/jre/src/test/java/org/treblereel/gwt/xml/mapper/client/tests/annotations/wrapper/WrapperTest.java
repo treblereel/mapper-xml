@@ -32,13 +32,14 @@ import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 @J2clTestInput(WrapperTest.class)
 public class WrapperTest {
 
-  WrapperTest_Foo_XMLMapperImpl mapper = WrapperTest_Foo_XMLMapperImpl.INSTANCE;
-
-  private static final String XML =
-      "<?xml version='1.0' encoding='UTF-8'?><my-foo><ZZZ><stuff><stuff><name>AAAA</name></stuff><stuff><name>BBBB</name></stuff><stuff><name>CCCC</name></stuff></stuff></ZZZ><wrapper><stuff2><stuff2><name>AAAA</name></stuff2><stuff2><name>BBBB</name></stuff2><stuff2><name>CCCC</name></stuff2></stuff2></wrapper><wrapper_root><Root xmlns=\"ololo.org\"><test>ROOT</test></Root></wrapper_root></my-foo>";
+  private static final WrapperTest_Foo_XMLMapperImpl mapper =
+      WrapperTest_Foo_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {
+    String XML =
+        "<?xml version='1.0' encoding='UTF-8'?><my-foo><ZZZ><stuff><name>AAAA</name></stuff><stuff><name>BBBB</name></stuff><stuff><name>CCCC</name></stuff></ZZZ><wrapper><stuff2><name>AAAA</name></stuff2><stuff2><name>BBBB</name></stuff2><stuff2><name>CCCC</name></stuff2></wrapper><wrapper_root><Root xmlns=\"ololo.org\"><test>ROOT</test></Root></wrapper_root></my-foo>";
+
     Foo test = new Foo();
     test.setRoot(new Root("ROOT"));
 
@@ -49,10 +50,11 @@ public class WrapperTest {
     test.setStuff(children);
     test.setStuff2(children);
 
-    // System.out.println("RESULT " + mapper.write(test));
+    String result = mapper.write(test);
 
-    assertEquals(XML, mapper.write(test));
+    assertEquals(XML, result);
     assertEquals(test, mapper.read(mapper.write(test)));
+    assertEquals(result, mapper.write(mapper.read(mapper.write(test))));
   }
 
   @XMLMapper

@@ -20,25 +20,16 @@ import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/29/20 */
 @XMLMapper
-public class StringArray2d {
+public class FloatArray2d {
 
-  private String check1;
+  private float[][] floats;
 
-  private String[][] array = new String[][] {{"AAA", "BB"}, {"CCC", "DDD"}};
-
-  private String check2;
-
-  public String[][] getArray() {
-    return array;
+  public float[][] getFloats() {
+    return floats;
   }
 
-  public void setArray(String[][] array) {
-    this.array = array;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(getArray());
+  public void setFloats(float[][] floats) {
+    this.floats = floats;
   }
 
   @Override
@@ -46,31 +37,15 @@ public class StringArray2d {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof StringArray2d)) {
+    if (!(o instanceof FloatArray2d)) {
       return false;
     }
-    StringArray2d that = (StringArray2d) o;
-    return Arrays.deepEquals(getArray(), that.getArray());
+    FloatArray2d that = (FloatArray2d) o;
+    return Arrays.deepEquals(getFloats(), that.getFloats());
   }
 
   @Override
-  public String toString() {
-    return "StringArray2d{" + "array=" + Arrays.toString(array) + '}';
-  }
-
-  public String getCheck1() {
-    return check1;
-  }
-
-  public void setCheck1(String check1) {
-    this.check1 = check1;
-  }
-
-  public String getCheck2() {
-    return check2;
-  }
-
-  public void setCheck2(String check2) {
-    this.check2 = check2;
+  public int hashCode() {
+    return Arrays.hashCode(getFloats());
   }
 }

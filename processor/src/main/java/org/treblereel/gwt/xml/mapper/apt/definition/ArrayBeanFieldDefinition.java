@@ -153,11 +153,11 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
 
   private Expression maybeXmlUnwrappedCollection(
       PropertyDefinition element, Expression expression) {
-    if (element.isUnWrapped()) {
-      return new MethodCallExpr(expression, "setUnWrapCollections");
-    }
+    // if (element.isUnWrapped()) {
+    return new MethodCallExpr(expression, "setUnWrapCollections");
+    // }
 
-    return expression;
+    // return expression;
   }
 
   @Override

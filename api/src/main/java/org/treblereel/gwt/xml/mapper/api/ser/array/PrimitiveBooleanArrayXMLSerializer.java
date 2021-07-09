@@ -52,11 +52,11 @@ public class PrimitiveBooleanArrayXMLSerializer extends BasicArrayXMLSerializer<
       return;
     }
 
-    beginObject(writer, isWrapCollections);
+    beginObject(writer, true);
     for (boolean value : values) {
       serializer.doSerialize(writer, value, ctx, params);
     }
-    endObject(writer, isWrapCollections);
+    endObject(writer, true);
   }
 
   /** {@inheritDoc} */

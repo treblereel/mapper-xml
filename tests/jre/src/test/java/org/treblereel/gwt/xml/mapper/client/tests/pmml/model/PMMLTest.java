@@ -68,7 +68,7 @@ public class PMMLTest {
 
     String xml = mapper.write(pmml);
 
-    //System.out.println("? \n" + xml);
+    // System.out.println("? \n" + xml);
 
     assertNotNull(xml);
     assertNotNull(mapper.read(xml));

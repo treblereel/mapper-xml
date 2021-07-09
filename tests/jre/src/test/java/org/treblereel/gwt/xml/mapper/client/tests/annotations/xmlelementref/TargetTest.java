@@ -50,7 +50,6 @@ public class TargetTest {
   public void testSerializeAndDeserializeValue1() throws XMLStreamException {
     final String XML =
         "<?xml version='1.0' encoding='UTF-8'?><target><JarTask><firstName>setFirstName</firstName></JarTask><JavacTask><lastName>setLastName</lastName></JavacTask><the_wrapper><JarTask2><firstName>setFirstName</firstName></JarTask2><JavacTask2><lastName>setLastName</lastName></JavacTask2></the_wrapper><task_JarTask><firstName>JarTask</firstName></task_JarTask><task2><_JarTask><firstName>JarTask</firstName></_JarTask></task2></target>";
-
     Target target = new Target();
     JarTask jarTask = new JarTask();
     jarTask.setFirstName("setFirstName");
@@ -73,14 +72,13 @@ public class TargetTest {
 
     String result = mapper.write(target);
     assertEquals(XML, result);
-    assertEquals(result, mapper.write(mapper.read(mapper.write(target))));
+    assertEquals(XML, mapper.write(mapper.read(mapper.write(target))));
   }
 
   @Test
   public void testSerializeAndDeserializeValue2() throws XMLStreamException {
     final String XML =
         "<?xml version='1.0' encoding='UTF-8'?><target><the_wrapper><JarTask2><firstName>setFirstName</firstName></JarTask2><JavacTask2><lastName>setLastName</lastName></JavacTask2></the_wrapper></target>";
-
     Target target = new Target();
 
     JarTask jarTask = new JarTask();
@@ -108,6 +106,5 @@ public class TargetTest {
 
     String result = mapper.write(target);
     assertEquals(XML, result);
-    assertEquals(result, mapper.write(mapper.read(mapper.write(target))));
   }
 }

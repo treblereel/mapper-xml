@@ -49,6 +49,8 @@ public interface XMLReader {
    */
   QName peekNodeName() throws XMLStreamException;
 
+  String rowValue() throws XMLStreamException;
+
   /**
    * Returns the {@link String } value of the next token, consuming it. If the next token is a
    * number, this method will return its string form.

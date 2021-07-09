@@ -21,7 +21,6 @@ import com.google.j2cl.junit.apt.J2clTestInput;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.stream.XMLStreamException;
-import org.junit.Assert;
 import org.junit.Test;
 import org.treblereel.gwt.xml.mapper.client.tests.annotations.namespace.test1.ci.Tutorial;
 import org.treblereel.gwt.xml.mapper.client.tests.annotations.namespace.test1.ci.Tutorial_XMLMapperImpl;
@@ -30,19 +29,20 @@ import org.treblereel.gwt.xml.mapper.client.tests.annotations.namespace.test1.cl
 /** @author Dmitrii Tikhomirov Created by treblereel 4/28/20 */
 @J2clTestInput(TutorialTest.class)
 public class TutorialTest {
-  Tutorial_XMLMapperImpl mapper = Tutorial_XMLMapperImpl.INSTANCE;
-
   private static final String XML =
-      "<?xml version='1.0' encoding='UTF-8'?><_tutorial xmlns=\"http://ns\" xmlns:ci=\"http://www.ci\" xmlns:cl=\"http://www.cl\"><id xmlns=\"http://ns\">0</id><names xmlns=\"http://ns\"><cl:names><name>NAME</name></cl:names></names><cl:types><cl:types><name>NAME</name></cl:types></cl:types><cl:arrays><cl:Name><name>F1</name></cl:Name><cl:Name><name>F2</name></cl:Name></cl:arrays></_tutorial>";
+      "<?xml version='1.0' encoding='UTF-8'?><_tutorial xmlns=\"http://ns\" xmlns:ci=\"http://www.ci\" xmlns:cl=\"http://www.cl\"><id xmlns=\"http://ns\">0</id><cl:names><name>NAME</name></cl:names><cl:names><name>NAME2</name></cl:names><wrapper><cl:types><name>NAME</name></cl:types><cl:types><name>NAME2</name></cl:types></wrapper><cl:arrays><name>F1</name></cl:arrays><cl:arrays><name>F2</name></cl:arrays></_tutorial>";
+  private static final Tutorial_XMLMapperImpl mapper = Tutorial_XMLMapperImpl.INSTANCE;
 
   @Test
   public void test() throws XMLStreamException {
     Tutorial tutorial = new Tutorial();
     Name name1 = new Name("NAME");
+    Name name2 = new Name("NAME2");
     List<Name> names = new ArrayList<>();
     tutorial.setNames(names);
     tutorial.setTypes(names);
     names.add(name1);
+    names.add(name2);
 
     Name[] arr = new Name[2];
     arr[0] = new Name("F1");
@@ -50,8 +50,8 @@ public class TutorialTest {
     tutorial.setArrays(arr);
 
     String xml = mapper.write(tutorial);
-    // System.out.println("TutorialTest \n " + xml);
     assertEquals(XML, xml);
-    Assert.assertEquals(tutorial, mapper.read(xml));
+    assertEquals(tutorial, mapper.read(xml));
+    assertEquals(xml, mapper.write(mapper.read(xml)));
   }
 }

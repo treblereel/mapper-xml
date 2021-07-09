@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 import org.treblereel.gwt.xml.mapper.api.stream.XMLReader;
@@ -64,6 +65,11 @@ public class JsNativeXMLReader implements XMLReader {
       return new QName(current.node.namespaceURI, nodeName, current.node.prefix);
     }
     return new QName(current.node.namespaceURI, current.node.nodeName);
+  }
+
+  @Override
+  public String rowValue() throws XMLStreamException {
+    return ((Text) current.node).data;
   }
 
   @Override

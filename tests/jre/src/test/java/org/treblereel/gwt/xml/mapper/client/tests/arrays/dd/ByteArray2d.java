@@ -20,16 +20,18 @@ import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/29/20 */
 @XMLMapper
-public class FloatArray2d {
+public class ByteArray2d {
 
-  private float[][] floats = new float[][] {{1, 2, 3}, {4, 5, 6}};
+  private byte[][] array;
 
-  public float[][] getFloats() {
-    return floats;
+  private byte[][] array2;
+
+  public byte[][] getArray() {
+    return array;
   }
 
-  public void setFloats(float[][] floats) {
-    this.floats = floats;
+  public void setArray(byte[][] array) {
+    this.array = array;
   }
 
   @Override
@@ -37,15 +39,23 @@ public class FloatArray2d {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof FloatArray2d)) {
+    if (!(o instanceof ByteArray2d)) {
       return false;
     }
-    FloatArray2d that = (FloatArray2d) o;
-    return Arrays.deepEquals(getFloats(), that.getFloats());
+    ByteArray2d that = (ByteArray2d) o;
+    return Arrays.equals(getArray(), that.getArray());
   }
 
   @Override
   public int hashCode() {
-    return Arrays.hashCode(getFloats());
+    return Arrays.hashCode(getArray());
+  }
+
+  public byte[][] getArray2() {
+    return array2;
+  }
+
+  public void setArray2(byte[][] array2) {
+    this.array2 = array2;
   }
 }

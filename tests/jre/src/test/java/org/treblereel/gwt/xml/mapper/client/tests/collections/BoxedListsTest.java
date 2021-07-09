@@ -44,23 +44,10 @@ public class BoxedListsTest {
   public void testWrapped() throws XMLStreamException {
     BoxedLists test = new BoxedLists(strings, booleans, chars, bytes, doubles, ints, longs, shorts);
     String xml =
-        "<?xml version='1.0' encoding='UTF-8'?><BoxedLists><strings><strings>A</strings><strings>B</strings><strings>C</strings><strings>D</strings></strings><booleans><booleans>true</booleans><booleans>true</booleans><booleans>false</booleans><booleans>false</booleans></booleans><chars><chars>a</chars><chars>z</chars><chars>F</chars><chars>!</chars></chars><bytes><bytes>2</bytes><bytes>12</bytes><bytes>122</bytes><bytes>3</bytes></bytes><doubles><doubles>17222.1</doubles><doubles>2111.2</doubles><doubles>32223.3</doubles><doubles>6226.3</doubles></doubles><ints><ints>17222</ints><ints>2111</ints><ints>32223</ints><ints>6226</ints></ints><longs><longs>17222</longs><longs>2111</longs><longs>32223</longs><longs>6226</longs></longs><shorts><shorts>3</shorts><shorts>13</shorts><shorts>123</shorts><shorts>233</shorts></shorts></BoxedLists>";
+        "<?xml version='1.0' encoding='UTF-8'?><BoxedLists><strings>A</strings><strings>B</strings><strings>C</strings><strings>D</strings><booleans>true</booleans><booleans>true</booleans><booleans>false</booleans><booleans>false</booleans><chars>a</chars><chars>z</chars><chars>F</chars><chars>!</chars><bytes>2</bytes><bytes>12</bytes><bytes>122</bytes><bytes>3</bytes><doubles>17222.1</doubles><doubles>2111.2</doubles><doubles>32223.3</doubles><doubles>6226.3</doubles><ints>17222</ints><ints>2111</ints><ints>32223</ints><ints>6226</ints><longs>17222</longs><longs>2111</longs><longs>32223</longs><longs>6226</longs><shorts>3</shorts><shorts>13</shorts><shorts>123</shorts><shorts>233</shorts></BoxedLists>";
 
     assertEquals(xml, mapper.write(test));
     assertEquals(xml, mapper.write(mapper.read(mapper.write(test))));
     assertEquals(test, mapper.read(mapper.write(test)));
-  }
-
-  // TODO
-  @Test
-  public void testInlined() throws XMLStreamException {
-
-    BoxedLists testUnwrappedCollections =
-        new BoxedLists(strings, booleans, chars, bytes, doubles, ints, longs, shorts);
-    String xmlUnwrappedCollections = mapper.write(testUnwrappedCollections);
-
-    BoxedLists processed = mapper.read(xmlUnwrappedCollections);
-    assertEquals(testUnwrappedCollections, processed);
-    assertEquals(testUnwrappedCollections, mapper.read(mapper.write(testUnwrappedCollections)));
   }
 }

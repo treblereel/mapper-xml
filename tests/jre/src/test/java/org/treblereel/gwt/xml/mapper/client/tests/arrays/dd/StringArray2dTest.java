@@ -13,25 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.treblereel.gwt.xml.mapper.client.tests.collections.arrays;
+package org.treblereel.gwt.xml.mapper.client.tests.arrays;
 
 import static org.junit.Assert.assertEquals;
 
 import com.google.j2cl.junit.apt.J2clTestInput;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
-import org.treblereel.gwt.xml.mapper.client.tests.beans.collection.FloatArray2d;
-import org.treblereel.gwt.xml.mapper.client.tests.beans.collection.FloatArray2d_XMLMapperImpl;
+import org.treblereel.gwt.xml.mapper.client.tests.arrays.dd.StringArray2d;
+import org.treblereel.gwt.xml.mapper.client.tests.beans.collection.StringArray2d_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/29/20 */
-@J2clTestInput(FloatArray2dTest.class)
-public class FloatArray2dTest {
+@J2clTestInput(StringArray2dTest.class)
+public class StringArray2dTest {
 
-  FloatArray2d test = new FloatArray2d();
-  FloatArray2d_XMLMapperImpl mapper = FloatArray2d_XMLMapperImpl.INSTANCE;
+  StringArray2d test = new StringArray2d();
+  StringArray2d_XMLMapperImpl mapper = StringArray2d_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {
+    test.setCheck1("Check1");
+    test.setCheck2("Check2");
+
+    String xml = mapper.write(test);
+
+    System.out.println("REZ " + xml);
+
     assertEquals(test, mapper.read(mapper.write(test)));
+    assertEquals(xml, mapper.write(mapper.read(mapper.write(test))));
   }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.treblereel.gwt.xml.mapper.client.tests.arrays;
+package org.treblereel.gwt.xml.mapper.client.tests.arrays.dd;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -23,8 +23,6 @@ import com.google.j2cl.junit.apt.J2clTestInput;
 import java.util.Arrays;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
-import org.treblereel.gwt.xml.mapper.client.tests.arrays.dd.ByteArray2d;
-import org.treblereel.gwt.xml.mapper.client.tests.beans.collection.ByteArray2d_XMLMapperImpl;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/29/20 */
 @J2clTestInput(ByteArray2dTest.class)

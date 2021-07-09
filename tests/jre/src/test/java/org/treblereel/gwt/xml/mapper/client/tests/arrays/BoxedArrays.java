@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.treblereel.gwt.xml.mapper.client.tests.beans.collection;
+package org.treblereel.gwt.xml.mapper.client.tests.arrays;
 
 import java.util.Arrays;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;

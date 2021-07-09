@@ -38,8 +38,7 @@ public class WrapperTest {
   @Test
   public void testDeserializeValue() throws XMLStreamException {
     String XML =
-        "<?xml version='1.0' encoding='UTF-8'?><my-foo><ZZZ><stuff><name>AAAA</name></stuff><stuff><name>BBBB</name></stuff><stuff><name>CCCC</name></stuff></ZZZ><wrapper><stuff2><name>AAAA</name></stuff2><stuff2><name>BBBB</name></stuff2><stuff2><name>CCCC</name></stuff2></wrapper><wrapper_root><Root xmlns=\"ololo.org\"><test>ROOT</test></Root></wrapper_root></my-foo>";
-
+        "<?xml version='1.0' encoding='UTF-8'?><my-foo><ZZZ><stuff><name>AAAA</name></stuff><stuff><name>BBBB</name></stuff><stuff><name>CCCC</name></stuff></ZZZ><wrapper><stuff2><name>AAAA</name></stuff2><stuff2><name>BBBB</name></stuff2><stuff2><name>CCCC</name></stuff2></wrapper><wrapper2><stuff3><name>AAAA</name></stuff3><stuff3><name>BBBB</name></stuff3><stuff3><name>CCCC</name></stuff3></wrapper2><wrapper_root><Root xmlns=\"ololo.org\"><test>ROOT</test></Root></wrapper_root></my-foo>";
     Foo test = new Foo();
     test.setRoot(new Root("ROOT"));
 
@@ -49,6 +48,7 @@ public class WrapperTest {
     children.add(new Child("CCCC"));
     test.setStuff(children);
     test.setStuff2(children);
+    test.setStuff3(children.toArray(new Child[children.size()]));
 
     String result = mapper.write(test);
 
@@ -67,12 +67,15 @@ public class WrapperTest {
     @XmlElementWrapper(name = "wrapper")
     private List<Child> stuff2;
 
+    @XmlElementWrapper(name = "wrapper2")
+    private Child[] stuff3;
+
     @XmlElementWrapper(name = "wrapper_root")
     private Root root;
 
     @Override
     public int hashCode() {
-      return Objects.hash(getStuff(), getStuff2(), getRoot());
+      return Objects.hash(getStuff(), getStuff2(), getStuff3(), getRoot());
     }
 
     @Override
@@ -86,6 +89,7 @@ public class WrapperTest {
       Foo foo = (Foo) o;
       return Objects.equals(getStuff(), foo.getStuff())
           && Objects.equals(getStuff2(), foo.getStuff2())
+          && Objects.deepEquals(getStuff3(), foo.getStuff3())
           && Objects.equals(getRoot(), foo.getRoot());
     }
 
@@ -111,6 +115,14 @@ public class WrapperTest {
 
     public void setRoot(Root root) {
       this.root = root;
+    }
+
+    public Child[] getStuff3() {
+      return stuff3;
+    }
+
+    public void setStuff3(Child[] stuff3) {
+      this.stuff3 = stuff3;
     }
   }
 

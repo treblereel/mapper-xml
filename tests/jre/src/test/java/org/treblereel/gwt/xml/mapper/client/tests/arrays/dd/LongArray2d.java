@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Treblereel
+ * Copyright © 2021 Treblereel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,32 +20,39 @@ import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/29/20 */
 @XMLMapper
-public class FloatArray2d {
+public class LongArray2d {
 
-  private float[][] floats;
+  private long[][] array;
+  private long[][] array2;
 
   @Override
   public int hashCode() {
-    return Arrays.hashCode(getFloats());
+    int result = Arrays.hashCode(array);
+    result = 31 * result + Arrays.hashCode(array2);
+    return result;
   }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof FloatArray2d)) {
-      return false;
-    }
-    FloatArray2d that = (FloatArray2d) o;
-    return Arrays.deepEquals(getFloats(), that.getFloats());
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    LongArray2d that = (LongArray2d) o;
+    return Arrays.deepEquals(array, that.array) && Arrays.deepEquals(array2, that.array2);
   }
 
-  public float[][] getFloats() {
-    return floats;
+  public long[][] getArray() {
+    return array;
   }
 
-  public void setFloats(float[][] floats) {
-    this.floats = floats;
+  public void setArray(long[][] array) {
+    this.array = array;
+  }
+
+  public long[][] getArray2() {
+    return array2;
+  }
+
+  public void setArray2(long[][] array2) {
+    this.array2 = array2;
   }
 }

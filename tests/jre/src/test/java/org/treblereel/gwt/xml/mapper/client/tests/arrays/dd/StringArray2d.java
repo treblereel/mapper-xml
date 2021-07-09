@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.treblereel.gwt.xml.mapper.client.tests.beans.collection;
+package org.treblereel.gwt.xml.mapper.client.tests.arrays.dd;
 
 import java.util.Arrays;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/29/20 */
@@ -24,10 +25,17 @@ public class StringArray2d {
 
   private String check1;
 
-  private String[][] array = new String[][] {{"AAA", "BB"}, {"CCC", "DDD"}};
-  private String[][] array2 = new String[][] {{"AAA2", "BB2"}, {"CCC2", "DDD2"}};
+  @XmlElementWrapper(name = "ZZZ")
+  private String[][] array;
+
+  private String[][] array2;
 
   private String check2;
+
+  @Override
+  public int hashCode() {
+    return Arrays.hashCode(getArray());
+  }
 
   public String[][] getArray() {
     return array;
@@ -35,11 +43,6 @@ public class StringArray2d {
 
   public void setArray(String[][] array) {
     this.array = array;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(getArray());
   }
 
   @Override

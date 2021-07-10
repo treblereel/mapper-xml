@@ -118,6 +118,13 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T>
     if (reader.peek() == XMLStreamConstants.START_DOCUMENT) {
       reader.next();
     }
+    if (reader.peek() == XMLStreamConstants.DTD) {
+      reader.next();
+    }
+    if (reader.peek() == XMLStreamConstants.COMMENT) {
+      reader.next();
+    }
+
     T instance = instanceBuilder.newInstance(reader, ctx, params, null, null).getInstance();
 
     if (reader.getAttributeCount() > 0) {

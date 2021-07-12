@@ -98,6 +98,7 @@ public class SerializerGenerator extends AbstractGenerator {
   protected void getType(BeanDefinition type) {
     getSerializedType(type);
     getXmlRootElement(type);
+    getXmlValuePropertyName(type);
     getXmlNs(type);
     getSchemaLocation(type);
     getDefaultNamespace(type);
@@ -130,6 +131,23 @@ public class SerializerGenerator extends AbstractGenerator {
                   body.addStatement(
                       new ReturnStmt(new StringLiteralExpr(type.getXmlRootElement()))));
     }
+  }
+
+  private void getXmlValuePropertyName(BeanDefinition type) {
+    type.getFields().stream()
+        .filter(PropertyDefinition::isXmlValue)
+        .forEach(
+            xmlvalue -> {
+              declaration
+                  .addMethod("getXmlValuePropertyName", Modifier.Keyword.PROTECTED)
+                  .addAnnotation(Override.class)
+                  .setType(String.class)
+                  .getBody()
+                  .ifPresent(
+                      body ->
+                          body.addStatement(
+                              new ReturnStmt(new StringLiteralExpr(xmlvalue.getPropertyName()))));
+            });
   }
 
   private void getXmlNs(BeanDefinition beanDefinition) {

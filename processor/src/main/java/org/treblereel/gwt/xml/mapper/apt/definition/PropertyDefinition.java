@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchema;
+import javax.xml.bind.annotation.XmlValue;
 import org.treblereel.gwt.xml.mapper.api.PropertyType;
 import org.treblereel.gwt.xml.mapper.api.annotation.XmlTypeAdapter;
 import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
@@ -155,6 +156,10 @@ public class PropertyDefinition extends Definition {
 
   public boolean isWrapped() {
     return property.getAnnotation(XmlElementWrapper.class) != null;
+  }
+
+  public boolean isXmlValue() {
+    return property.getAnnotation(XmlValue.class) != null;
   }
 
   public boolean isUnWrapped() {

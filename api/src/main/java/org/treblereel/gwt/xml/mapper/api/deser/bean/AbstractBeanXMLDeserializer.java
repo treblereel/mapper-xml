@@ -145,6 +145,11 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T>
       deserializers.get("$CDATA").deserialize(reader, instance, ctx);
       processed = true;
       // Following properties could be skipped
+    } else if (getXmlValuePropertyName() != null) {
+      String xmlValue = getXmlValuePropertyName();
+
+      initDeserializers().get(xmlValue).deserialize(reader, instance, ctx);
+      processed = true;
     } else {
       result =
           ctx.iterator()
@@ -187,6 +192,10 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T>
   }
 
   protected abstract String getXmlRootElement();
+
+  protected String getXmlValuePropertyName() {
+    return null;
+  }
 
   /**
    * getDeserializedType

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Nicolas Morel
+ * Copyright © 2021 Treblereel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package org.treblereel.gwt.xml.mapper.api;
+package org.treblereel.gwt.xml.mapper.apt.processor.check;
 
-/** @author Dmitrii Tikhomirov Created by treblereel 9/8/20 */
-public enum PropertyType {
-  COMMON,
-  CDATA,
-  CDATA_INLINE,
-  XML_VALUE;
+import javax.lang.model.element.TypeElement;
+import org.treblereel.gwt.xml.mapper.apt.context.GenerationContext;
+
+/** @author Dmitrii Tikhomirov Created by treblereel 7/11/21 */
+public interface BeanCheck {
+
+  void check(TypeElement type, GenerationContext context);
 }

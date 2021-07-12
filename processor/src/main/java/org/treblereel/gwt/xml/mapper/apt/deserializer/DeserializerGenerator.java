@@ -114,6 +114,21 @@ public class DeserializerGenerator extends AbstractGenerator {
         .ifPresent(
             body ->
                 body.addStatement(new ReturnStmt(new StringLiteralExpr(type.getXmlRootElement()))));
+
+    type.getFields().stream()
+        .filter(PropertyDefinition::isXmlValue)
+        .forEach(
+            xmlvalue ->
+                declaration
+                    .addMethod("getXmlValuePropertyName", Modifier.Keyword.PROTECTED)
+                    .addAnnotation(Override.class)
+                    .setType(String.class)
+                    .getBody()
+                    .ifPresent(
+                        body ->
+                            body.addStatement(
+                                new ReturnStmt(
+                                    new StringLiteralExpr(xmlvalue.getPropertyName())))));
   }
 
   @Override

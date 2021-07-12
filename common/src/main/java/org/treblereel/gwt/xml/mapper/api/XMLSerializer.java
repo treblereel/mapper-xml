@@ -317,6 +317,9 @@ public abstract class XMLSerializer<T> {
   }
 
   protected void beginObject(XMLWriter writer) throws XMLStreamException {
+    if (type.equals(PropertyType.XML_VALUE)) {
+      return;
+    }
     if (namespace != null) {
       String prefix = getPrefix(namespace);
       if (prefix != null) {
@@ -330,6 +333,10 @@ public abstract class XMLSerializer<T> {
   }
 
   protected void writeValue(XMLWriter writer, String value) throws XMLStreamException {
+    if (type.equals(PropertyType.XML_VALUE)) {
+      writer.writeCharacters(value);
+      return;
+    }
     if (namespace != null) {
       String prefix = getPrefix(namespace);
       if (prefix == null) {

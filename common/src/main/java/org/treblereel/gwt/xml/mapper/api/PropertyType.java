@@ -20,5 +20,6 @@ package org.treblereel.gwt.xml.mapper.api;
 public enum PropertyType {
   COMMON,
   CDATA,
-  CDATA_INLINE;
+  CDATA_INLINE,
+  XML_VALUE;
 }

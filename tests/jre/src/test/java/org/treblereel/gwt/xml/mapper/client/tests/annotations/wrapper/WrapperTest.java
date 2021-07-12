@@ -32,13 +32,13 @@ import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 @J2clTestInput(WrapperTest.class)
 public class WrapperTest {
 
-  WrapperTest_Foo_XMLMapperImpl mapper = WrapperTest_Foo_XMLMapperImpl.INSTANCE;
-
-  private static final String XML =
-      "<?xml version='1.0' encoding='UTF-8'?><my-foo><ZZZ><stuff><stuff><name>AAAA</name></stuff><stuff><name>BBBB</name></stuff><stuff><name>CCCC</name></stuff></stuff></ZZZ><wrapper><stuff2><stuff2><name>AAAA</name></stuff2><stuff2><name>BBBB</name></stuff2><stuff2><name>CCCC</name></stuff2></stuff2></wrapper><wrapper_root><Root xmlns=\"ololo.org\"><test>ROOT</test></Root></wrapper_root></my-foo>";
+  private static final WrapperTest_Foo_XMLMapperImpl mapper =
+      WrapperTest_Foo_XMLMapperImpl.INSTANCE;
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {
+    String XML =
+        "<?xml version='1.0' encoding='UTF-8'?><my-foo><ZZZ><stuff><name>AAAA</name></stuff><stuff><name>BBBB</name></stuff><stuff><name>CCCC</name></stuff></ZZZ><wrapper><stuff2><name>AAAA</name></stuff2><stuff2><name>BBBB</name></stuff2><stuff2><name>CCCC</name></stuff2></wrapper><wrapper2><stuff3><name>AAAA</name></stuff3><stuff3><name>BBBB</name></stuff3><stuff3><name>CCCC</name></stuff3></wrapper2><wrapper_root><Root xmlns=\"ololo.org\"><test>ROOT</test></Root></wrapper_root></my-foo>";
     Foo test = new Foo();
     test.setRoot(new Root("ROOT"));
 
@@ -48,11 +48,13 @@ public class WrapperTest {
     children.add(new Child("CCCC"));
     test.setStuff(children);
     test.setStuff2(children);
+    test.setStuff3(children.toArray(new Child[children.size()]));
 
-    // System.out.println("RESULT " + mapper.write(test));
+    String result = mapper.write(test);
 
-    assertEquals(XML, mapper.write(test));
+    assertEquals(XML, result);
     assertEquals(test, mapper.read(mapper.write(test)));
+    assertEquals(result, mapper.write(mapper.read(mapper.write(test))));
   }
 
   @XMLMapper
@@ -65,12 +67,15 @@ public class WrapperTest {
     @XmlElementWrapper(name = "wrapper")
     private List<Child> stuff2;
 
+    @XmlElementWrapper(name = "wrapper2")
+    private Child[] stuff3;
+
     @XmlElementWrapper(name = "wrapper_root")
     private Root root;
 
     @Override
     public int hashCode() {
-      return Objects.hash(getStuff(), getStuff2(), getRoot());
+      return Objects.hash(getStuff(), getStuff2(), getStuff3(), getRoot());
     }
 
     @Override
@@ -84,6 +89,7 @@ public class WrapperTest {
       Foo foo = (Foo) o;
       return Objects.equals(getStuff(), foo.getStuff())
           && Objects.equals(getStuff2(), foo.getStuff2())
+          && Objects.deepEquals(getStuff3(), foo.getStuff3())
           && Objects.equals(getRoot(), foo.getRoot());
     }
 
@@ -109,6 +115,14 @@ public class WrapperTest {
 
     public void setRoot(Root root) {
       this.root = root;
+    }
+
+    public Child[] getStuff3() {
+      return stuff3;
+    }
+
+    public void setStuff3(Child[] stuff3) {
+      this.stuff3 = stuff3;
     }
   }
 

@@ -123,4 +123,9 @@ public abstract class BeanPropertySerializer<T, V> extends HasSerializer<V, XMLS
     this.parent = parent;
     return this;
   }
+
+  public BeanPropertySerializer setPropertyType(PropertyType type) {
+    this.type = type;
+    return this;
+  }
 }

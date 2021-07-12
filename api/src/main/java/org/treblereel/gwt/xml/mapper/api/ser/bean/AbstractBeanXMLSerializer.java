@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.xml.stream.XMLStreamException;
+import org.treblereel.gwt.xml.mapper.api.PropertyType;
 import org.treblereel.gwt.xml.mapper.api.XMLSerializationContext;
 import org.treblereel.gwt.xml.mapper.api.XMLSerializer;
 import org.treblereel.gwt.xml.mapper.api.XMLSerializerParameters;
@@ -96,10 +97,6 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T>
    */
   public abstract Class getSerializedType();
 
-  protected List<Pair<String, String>> getXmlNs() {
-    return Collections.emptyList();
-  }
-
   protected String getSchemaLocation() {
     return null;
   }
@@ -108,8 +105,8 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T>
     return null;
   }
 
-  protected String getXmlRootElement() {
-    return null;
+  protected List<Pair<String, String>> getXmlNs() {
+    return Collections.emptyList();
   }
 
   /** {@inheritDoc} */
@@ -169,7 +166,6 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T>
     } else {
       writer.beginObject(typeName);
     }
-
     writeNamespace(writer, prefix);
     setXsiType(writer, ctx);
     serializeAttribute(writer, value, ctx);
@@ -177,14 +173,8 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T>
     writer.endObject();
   }
 
-  private String getSerializeObjectName() {
-    if (propertyName != null) {
-      return propertyName;
-    } else if (getXmlRootElement() != null) {
-      return getXmlRootElement();
-    } else {
-      return getSerializedType().getSimpleName();
-    }
+  protected String getXmlValuePropertyName() {
+    return null;
   }
 
   private void setXsiType(XMLWriter writer, XMLSerializationContext ctx) throws XMLStreamException {
@@ -210,8 +200,29 @@ public abstract class AbstractBeanXMLSerializer<T> extends XMLSerializer<T>
         if (propertySerializer.getValue(value, ctx) == null && !ctx.isSerializeNulls()) {
           continue;
         }
-        propertySerializer.setParent(this).serialize(writer, value, ctx);
+        if (propertySerializer.propertyName.equals(getXmlValuePropertyName())) {
+          propertySerializer
+              .setParent(this)
+              .setPropertyType(PropertyType.XML_VALUE)
+              .serialize(writer, value, ctx);
+        } else {
+          propertySerializer.setParent(this).serialize(writer, value, ctx);
+        }
       }
     }
+  }
+
+  private String getSerializeObjectName() {
+    if (propertyName != null) {
+      return propertyName;
+    } else if (getXmlRootElement() != null) {
+      return getXmlRootElement();
+    } else {
+      return getSerializedType().getSimpleName();
+    }
+  }
+
+  protected String getXmlRootElement() {
+    return null;
   }
 }

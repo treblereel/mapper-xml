@@ -26,7 +26,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.xml.bind.annotation.XmlElementRefs;
 import org.treblereel.gwt.xml.mapper.api.Inheritance;
-import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
 import org.treblereel.gwt.xml.mapper.api.utils.Pair;
 import org.treblereel.gwt.xml.mapper.apt.context.GenerationContext;
 
@@ -64,7 +63,7 @@ public class IterableBeanFieldDefinition extends FieldDefinition {
     } else {
       method.addArgument(generateXMLDeserializerFactory(field, type, type.toString(), cu));
     }
-    if (field.getProperty().getAnnotation(XmlUnwrappedCollection.class) != null) {
+    if (field.isUnWrapped()) {
       return new MethodCallExpr(method, "setUnWrapCollections");
     }
     return method;
@@ -83,7 +82,7 @@ public class IterableBeanFieldDefinition extends FieldDefinition {
       method.addArgument(generateXMLSerializerFactory(field, param, "?", cu));
     }
     method.addArgument(new StringLiteralExpr(field.getPropertyName()));
-    if (field.getProperty().getAnnotation(XmlUnwrappedCollection.class) != null) {
+    if (field.isUnWrapped()) {
       method = new MethodCallExpr(method, "setUnWrapCollections");
     }
     if (field.getNamespace() != null) {

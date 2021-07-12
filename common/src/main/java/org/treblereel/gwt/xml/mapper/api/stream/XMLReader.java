@@ -40,7 +40,7 @@ public interface XMLReader {
    *
    * @return a {@link XMLStreamConstants} object.
    */
-  int peek() throws XMLStreamException;
+  int peek();
 
   /**
    * Returns the text value of the current token.
@@ -48,6 +48,8 @@ public interface XMLReader {
    * @return a {@link String} object.
    */
   QName peekNodeName() throws XMLStreamException;
+
+  String rowValue() throws XMLStreamException;
 
   /**
    * Returns the {@link String } value of the next token, consuming it. If the next token is a

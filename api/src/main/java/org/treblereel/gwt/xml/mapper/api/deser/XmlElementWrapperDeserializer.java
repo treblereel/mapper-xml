@@ -15,6 +15,7 @@
  */
 package org.treblereel.gwt.xml.mapper.api.deser;
 
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.xml.mapper.api.XMLDeserializationContext;
 import org.treblereel.gwt.xml.mapper.api.XMLDeserializer;
@@ -36,9 +37,22 @@ public class XmlElementWrapperDeserializer<T> extends XMLDeserializer<T> {
   protected T doDeserialize(
       XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
       throws XMLStreamException {
-    reader.next();
-    T result = internalXMLDeserializer.deserialize(reader, ctx, params);
-    reader.next();
+    int counter = 0;
+    T result = null;
+
+    while (reader.hasNext()) {
+      reader.next();
+      if (reader.peek() == XMLStreamConstants.START_ELEMENT) {
+        counter++;
+        result = internalXMLDeserializer.deserialize(reader, ctx, params);
+      }
+      if (reader.peek() == XMLStreamConstants.END_ELEMENT) {
+        counter--;
+      }
+      if (counter < 0) {
+        break;
+      }
+    }
     return result;
   }
 }

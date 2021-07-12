@@ -75,24 +75,8 @@ public class DefaultXMLIterator implements XMLIterator {
       XMLDeserializerParameters params,
       boolean isWrapCollections)
       throws XMLStreamException {
-    int counter = 0;
-    if (!isWrapCollections) {
-      scanner.accept(reader, ctx, (T) collection);
-    } else {
-      while (reader.hasNext()) {
-        reader.next();
-        if (reader.peek() == XMLStreamConstants.START_ELEMENT) {
-          counter++;
-          scanner.accept(reader, ctx, (T) collection);
-        }
-        if (reader.peek() == XMLStreamConstants.END_ELEMENT) {
-          counter--;
-        }
-        if (counter < 0) {
-          break;
-        }
-      }
-    }
+
+    scanner.accept(reader, ctx, (T) collection);
     return collection;
   }
 
@@ -177,14 +161,6 @@ public class DefaultXMLIterator implements XMLIterator {
     return collection;
   }
 
-  @FunctionalInterface
-  private interface MapScanner<K, V> {
-
-    void accept(
-        XMLReader reader, XMLDeserializationContext ctx, Map<K, V> instance, AtomicInteger counter)
-        throws XMLStreamException;
-  }
-
   protected String getXsiType(XMLReader reader) {
     if (reader != null) {
       for (int i = 0; i < reader.getAttributeCount(); i++) {
@@ -194,5 +170,13 @@ public class DefaultXMLIterator implements XMLIterator {
       }
     }
     return null;
+  }
+
+  @FunctionalInterface
+  private interface MapScanner<K, V> {
+
+    void accept(
+        XMLReader reader, XMLDeserializationContext ctx, Map<K, V> instance, AtomicInteger counter)
+        throws XMLStreamException;
   }
 }

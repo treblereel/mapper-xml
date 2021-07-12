@@ -46,6 +46,7 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import org.treblereel.gwt.xml.mapper.api.Inheritance;
 import org.treblereel.gwt.xml.mapper.api.XMLDeserializer;
+import org.treblereel.gwt.xml.mapper.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.xml.mapper.api.stream.XMLReader;
 import org.treblereel.gwt.xml.mapper.api.utils.Pair;
 import org.treblereel.gwt.xml.mapper.apt.TypeUtils;
@@ -74,6 +75,7 @@ public abstract class FieldDefinition extends Definition {
 
     cu.addImport(Function.class);
     cu.addImport(XMLReader.class);
+    cu.addImport(XMLDeserializationException.class);
     NodeList<BodyDeclaration<?>> anonymousClassBody = new NodeList<>();
 
     NodeList<Type> typeArguments = new NodeList<>();
@@ -129,13 +131,13 @@ public abstract class FieldDefinition extends Definition {
                 propertyDefinitionFactory.getFieldDefinition(type).getFieldDeserializer(field, cu));
       } else {
         ClassOrInterfaceType instanceBuilderType =
-            new ClassOrInterfaceType().setName(Error.class.getSimpleName());
+            new ClassOrInterfaceType().setName(XMLDeserializationException.class.getSimpleName());
         expression =
             new ThrowStmt()
                 .setExpression(
                     new ObjectCreationExpr()
                         .setType(instanceBuilderType)
-                        .addArgument(new NameExpr("value")));
+                        .addArgument(new NameExpr("\"Unknown property '\" + value + \"'\"")));
       }
     } else {
       expression =

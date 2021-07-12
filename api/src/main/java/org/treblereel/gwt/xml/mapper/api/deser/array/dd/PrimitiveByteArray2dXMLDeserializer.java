@@ -18,11 +18,11 @@ package org.treblereel.gwt.xml.mapper.api.deser.array.dd;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.xml.mapper.api.XMLDeserializationContext;
 import org.treblereel.gwt.xml.mapper.api.XMLDeserializer;
 import org.treblereel.gwt.xml.mapper.api.XMLDeserializerParameters;
-import org.treblereel.gwt.xml.mapper.api.deser.StringXMLDeserializer;
 import org.treblereel.gwt.xml.mapper.api.stream.XMLReader;
 import org.treblereel.gwt.xml.mapper.api.utils.Base64Utils;
 
@@ -45,16 +45,22 @@ public class PrimitiveByteArray2dXMLDeserializer extends AbstractArray2dXMLDeser
     return new PrimitiveByteArray2dXMLDeserializer();
   }
 
+  private final List<String> strings = new ArrayList<>();
+
   /** {@inheritDoc} */
   @Override
   public byte[][] doDeserialize(
       XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
       throws XMLStreamException {
+    String tag = ctx.defaultParameters().getTypeInfo().getPropertyName();
 
     byte[][] result;
 
-    List<String> strings =
-        doDeserializeInnerIntoList(reader, ctx, s -> StringXMLDeserializer.getInstance(), params);
+    if (reader.peekNodeName().getLocalPart().equals(tag)
+        && reader.peek() == XMLStreamConstants.START_ELEMENT) {
+      strings.add(reader.nextString());
+      reader.next();
+    }
 
     if (strings.isEmpty()) {
       result = new byte[0][0];

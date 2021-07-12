@@ -83,6 +83,11 @@ public class DefaultXMLReader implements XMLReader {
     return reader.getName();
   }
 
+  @Override
+  public String rowValue() throws XMLStreamException {
+    return reader.getText();
+  }
+
   /** {@inheritDoc} */
   @Override
   public String nextString() throws XMLStreamException {

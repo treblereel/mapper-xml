@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.function.Function;
 import javax.lang.model.type.TypeMirror;
 import javax.xml.bind.annotation.XmlElementRefs;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
 import org.treblereel.gwt.xml.mapper.api.Inheritance;
 import org.treblereel.gwt.xml.mapper.api.utils.Pair;
@@ -48,10 +49,22 @@ public class DefaultBeanFieldDefinition extends FieldDefinition {
       String inheritance =
           pair.key.equals(XmlElementRefs.class) ? "xsiTagChooser" : "xsiTypeChooser";
 
+      // TODO refactoring, single field, annotated with @XmlElementRefs and @XmlElementWrapper
+      String arg = "reader";
+      if ((!context.getTypeUtils().isCollection(field.getBean())
+              && !context.getTypeUtils().isIterable(field.getBean())
+              && !TypeUtils.isArray(field.getBean()))
+          && field.getProperty().getAnnotation(XmlElementRefs.class) != null
+          && field.getProperty().getAnnotation(XmlElementWrapper.class) != null) {
+        arg = "nextTag.apply(reader)";
+      }
+
+      MethodCallExpr theCall =
+          new MethodCallExpr(new NameExpr(inheritance), "apply").addArgument(arg);
+
       return new MethodCallExpr(
               generateXMLDeserializerFactory(field, bean, bean.toString(), cu, pair), "apply")
-          .addArgument(
-              new MethodCallExpr(new NameExpr(inheritance), "apply").addArgument("reader"));
+          .addArgument(theCall);
     }
     return new ObjectCreationExpr()
         .setType(

@@ -44,7 +44,7 @@ public class StringArrayXMLDeserializer extends AbstractArrayXMLDeserializer<Str
    * @return an instance of {@link StringArrayXMLDeserializer}
    */
   public static StringArrayXMLDeserializer getInstance() {
-    return INSTANCE;
+    return new StringArrayXMLDeserializer();
   }
 
   /** {@inheritDoc} */

@@ -22,7 +22,7 @@ import org.treblereel.gwt.xml.mapper.api.stream.XMLWriter;
 /** @author Dmitrii Tikhomirov Created by treblereel 3/28/20 */
 public abstract class BasicArrayXMLSerializer<T> extends XMLSerializer<T> {
 
-  protected boolean isWrapCollections = true;
+  protected boolean isWrapCollections = false;
 
   public BasicArrayXMLSerializer<T> setPropertyName(String propertyName) {
     this.propertyName = propertyName;
@@ -30,7 +30,7 @@ public abstract class BasicArrayXMLSerializer<T> extends XMLSerializer<T> {
   }
 
   public BasicArrayXMLSerializer<T> setUnWrapCollections() {
-    isWrapCollections = false;
+    // isWrapCollections = false;
     return this;
   }
 

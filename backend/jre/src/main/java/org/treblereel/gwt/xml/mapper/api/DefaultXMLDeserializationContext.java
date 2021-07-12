@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
+import org.codehaus.stax2.XMLInputFactory2;
 import org.treblereel.gwt.xml.mapper.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.xml.mapper.api.stream.XMLIterator;
 import org.treblereel.gwt.xml.mapper.api.stream.XMLReader;
@@ -66,6 +67,8 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
     this.xmlInputFactory = new WstxInputFactory();
     this.readDateAsTimestamps = readDateAsTimestamps;
     this.iterator = new DefaultXMLIterator();
+
+    xmlInputFactory.setProperty(XMLInputFactory2.SUPPORT_DTD, false);
   }
 
   /**

@@ -39,6 +39,8 @@ import org.treblereel.gwt.xml.mapper.apt.context.GenerationContext;
 import org.treblereel.gwt.xml.mapper.apt.exception.GenerationException;
 import org.treblereel.gwt.xml.mapper.apt.generator.MapperGenerator;
 import org.treblereel.gwt.xml.mapper.apt.logger.TreeLogger;
+import org.treblereel.gwt.xml.mapper.apt.processor.check.BeanCheck;
+import org.treblereel.gwt.xml.mapper.apt.processor.check.XmlValueBeanCheck;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/11/20 */
 public class BeanProcessor {
@@ -49,6 +51,13 @@ public class BeanProcessor {
   private final Set<TypeElement> beans = new HashSet<>();
   private final TypeUtils typeUtils;
   private final MapperGenerator mapperGenerator;
+
+  private final Set<BeanCheck> beanChecks =
+      new HashSet<BeanCheck>() {
+        {
+          add(new XmlValueBeanCheck());
+        }
+      };
 
   public BeanProcessor(
       GenerationContext context, TreeLogger logger, Set<TypeElement> annotatedBeans) {
@@ -188,6 +197,8 @@ public class BeanProcessor {
             "A @XMLMapper bean [" + type + "] must have a non-private non-arg constructor");
       }
     }
+    beanChecks.forEach(check -> check.check(type, context));
+
     return type;
   }
 }

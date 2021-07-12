@@ -18,6 +18,7 @@ package org.treblereel.gwt.xml.mapper.client.tests.annotations.namespace.test1.c
 import java.util.Arrays;
 import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 import org.treblereel.gwt.xml.mapper.client.tests.annotations.namespace.test1.cl.Name;
@@ -28,8 +29,10 @@ import org.treblereel.gwt.xml.mapper.client.tests.annotations.namespace.test1.cl
 public class Tutorial {
 
   private int id;
+  // @XmlElement(namespace = "test1") //TODO check if name must be test1
   private List<Name> names;
 
+  @XmlElementWrapper(name = "wrapper")
   @XmlElement(namespace = "http://www.cl")
   private List<Name> types;
 

@@ -118,16 +118,24 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T>
     if (reader.peek() == XMLStreamConstants.START_DOCUMENT) {
       reader.next();
     }
+    if (reader.peek() == XMLStreamConstants.DTD) {
+      reader.next();
+    }
+    if (reader.peek() == XMLStreamConstants.COMMENT) {
+      reader.next();
+    }
+
     T instance = instanceBuilder.newInstance(reader, ctx, params, null, null).getInstance();
 
     if (reader.getAttributeCount() > 0) {
       for (int i = 0; i < reader.getAttributeCount(); i++) {
-        BeanPropertyDeserializer<T, ?> property =
-            deserializers.get(getPropertyName(reader.getAttributeName(i)));
+        String propertyName = getPropertyName(reader.getAttributeName(i));
+        BeanPropertyDeserializer<T, ?> property = deserializers.get(propertyName);
         if (property != null) {
           processed = true;
           if (reader.getAttributeValue(i) != null)
-            property.deserialize(reader.getAttributeValue(i), instance, ctx);
+            ctx.defaultParameters().setTypeInfo(new TypeDeserializationInfo<T>(propertyName));
+          property.deserialize(reader.getAttributeValue(i), instance, ctx);
         }
       }
     }
@@ -137,6 +145,11 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T>
       deserializers.get("$CDATA").deserialize(reader, instance, ctx);
       processed = true;
       // Following properties could be skipped
+    } else if (getXmlValuePropertyName() != null) {
+      String xmlValue = getXmlValuePropertyName();
+
+      initDeserializers().get(xmlValue).deserialize(reader, instance, ctx);
+      processed = true;
     } else {
       result =
           ctx.iterator()
@@ -147,6 +160,9 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T>
                       BeanPropertyDeserializer<T, ?> property =
                           getPropertyDeserializer(propertyName.getLocalPart(), ctx1);
                       if (property != null) {
+                        ctx1.defaultParameters()
+                            .setTypeInfo(
+                                new TypeDeserializationInfo<>(propertyName.getLocalPart()));
                         property.deserialize(reader1, bean, ctx1);
                       }
                     }
@@ -176,6 +192,10 @@ public abstract class AbstractBeanXMLDeserializer<T> extends XMLDeserializer<T>
   }
 
   protected abstract String getXmlRootElement();
+
+  protected String getXmlValuePropertyName() {
+    return null;
+  }
 
   /**
    * getDeserializedType

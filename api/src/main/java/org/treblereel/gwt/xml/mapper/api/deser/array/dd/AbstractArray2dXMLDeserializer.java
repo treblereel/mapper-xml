@@ -17,7 +17,6 @@
 package org.treblereel.gwt.xml.mapper.api.deser.array.dd;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import javax.xml.stream.XMLStreamException;
@@ -32,7 +31,9 @@ import org.treblereel.gwt.xml.mapper.api.stream.XMLReader;
  * @author Nicolas Morel
  * @version $Id: $
  */
-public abstract class AbstractArray2dXMLDeserializer<T> extends XMLDeserializer<T> {
+public abstract class AbstractArray2dXMLDeserializer<C> extends XMLDeserializer<C> {
+
+  private final List<List<C>> list = new ArrayList<>();
 
   /**
    * Deserializes the array into a {@link java.util.List}. We need the length of the array before
@@ -70,45 +71,28 @@ public abstract class AbstractArray2dXMLDeserializer<T> extends XMLDeserializer<
       Function<String, XMLDeserializer<C>> deserializer,
       XMLDeserializerParameters params)
       throws XMLStreamException {
-    List<List<C>> list = new ArrayList<>();
-    // we keep the size of the first inner list to initialize the next lists with the correct size
-    ctx.iterator()
-        .iterateOverCollection(
-            reader,
-            (Collection<T>) list,
-            (reader1, ctx1, instance) -> {
-              List<C> innerList = doDeserializeInnerIntoList(reader, ctx, deserializer, params);
-              list.add(innerList);
-              return null;
-            },
-            ctx,
-            params,
-            isWrapCollections);
-    return list;
-  }
+    reader.next();
+    List temp = new ArrayList<>();
+    int counter = 0;
 
-  protected <C> List<C> doDeserializeInnerIntoList(
-      XMLReader reader,
-      XMLDeserializationContext ctx,
-      Function<String, XMLDeserializer<C>> deserializer,
-      XMLDeserializerParameters params)
-      throws XMLStreamException {
-    List<C> innerList = new ArrayList<>();
-    ctx.iterator()
-        .iterateOverCollection(
-            reader,
-            (Collection<T>) innerList,
-            (reader1, ctx1, instance) -> {
-              C val =
-                  deserializer
-                      .apply(inheritanceChooser.get().apply(reader1))
-                      .deserialize(reader1, ctx1, params);
-              innerList.add(val);
-              return null;
-            },
-            ctx,
-            params,
-            isWrapCollections);
-    return innerList;
+    while (reader.hasNext()) {
+      if (reader.peek() == 1) {
+        counter++;
+        C val =
+            deserializer
+                .apply(inheritanceChooser.get().apply(reader))
+                .deserialize(reader, ctx, params);
+        temp.add(val);
+      }
+      if (reader.peek() == 2) {
+        counter--;
+      }
+      if (counter < 0) {
+        list.add(temp);
+        break;
+      }
+      reader.next();
+    }
+    return (List<List<C>>) (Object) list;
   }
 }

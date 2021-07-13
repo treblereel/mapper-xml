@@ -245,6 +245,14 @@ public class BeanDefinition extends Definition {
     return null;
   }
 
+  public XmlAccessType getAccessorType() {
+    if (this.xmlAccessorType == null) {
+      return XmlAccessType.PROPERTY;
+    }
+
+    return this.xmlAccessorType.value();
+  }
+
   public String getSimpleName() {
     return getElement().getSimpleName().toString();
   }

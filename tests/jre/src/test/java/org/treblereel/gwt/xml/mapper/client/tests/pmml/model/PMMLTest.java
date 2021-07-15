@@ -155,7 +155,7 @@ public class PMMLTest {
     XMLSerializationContext serializationContext =
         DefaultXMLSerializationContext.builder().writeEmptyXMLArrays(false).build();
 
-    //System.out.println("XML \n" + mapper.write(mapper.read(XML)));
+    // System.out.println("XML \n" + mapper.write(mapper.read(XML)));
 
     String xml = mapper.write(mapper.read(XML));
 

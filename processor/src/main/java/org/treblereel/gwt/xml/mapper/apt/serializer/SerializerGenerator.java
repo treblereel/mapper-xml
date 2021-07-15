@@ -44,6 +44,7 @@ import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.xml.bind.annotation.XmlAccessType;
 import org.treblereel.gwt.xml.mapper.api.PropertyType;
 import org.treblereel.gwt.xml.mapper.api.XMLSerializationContext;
 import org.treblereel.gwt.xml.mapper.api.XMLSerializer;
@@ -403,19 +404,19 @@ public class SerializerGenerator extends AbstractGenerator {
     method.setType(interfaceType);
     method
         .getBody()
-        .ifPresent(body -> body.addAndGetStatement(new ReturnStmt(getFieldAccessor(field))));
+        .ifPresent(body -> body.addAndGetStatement(new ReturnStmt(getFieldAccessor(bean, field))));
     anonymousClassBody.add(method);
   }
 
-  private Expression getFieldAccessor(PropertyDefinition field) {
-    if (typeUtils.hasGetter(field.getProperty())) {
-      return new MethodCallExpr(
-          new NameExpr("bean"),
-          typeUtils.getGetter(field.getProperty()).getSimpleName().toString());
-    } else {
+  private Expression getFieldAccessor(BeanDefinition beanDefinition, PropertyDefinition field) {
+    boolean hasGetter = typeUtils.hasGetter(field.getProperty());
+
+    if (beanDefinition.getAccessorType().equals(XmlAccessType.FIELD) || !hasGetter) {
       return new FieldAccessExpr(
           new NameExpr("bean"), field.getProperty().getSimpleName().toString());
     }
+    return new MethodCallExpr(
+        new NameExpr("bean"), typeUtils.getGetter(field.getProperty()).getSimpleName().toString());
   }
 
   private void isAttribute(

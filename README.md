@@ -141,6 +141,7 @@ Supported `JAXB` annotations:
 * [@XmlElementRefs](#xmlelementrefs)
 * [@XmlElementRef](#xmlelementrefs)
 * [@XmlJavaTypeAdapter](#xmljavatypeadapter)
+* [@XmlValue](#xmlvalue)
 * [@XmlEnumValue](#xmlenumvalue)
 * XmlNsForm
 * XmlAccessorType
@@ -481,9 +482,7 @@ Java:
      
 XML:
 ```xml
-  <iAddressList>
-    <iAddressList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="_Address1">
-  </iAddressList>
+  <iAddressList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="_Address1" />
 ``` 
 
 ### @XmlElementRefs
@@ -534,6 +533,22 @@ public class MyTestBeanValueAdapter extends XmlAdapter<MyCustomBeanType, MyCusto
   }
 }
 ```
+
+### @XmlValue
+Enables mapping a class to a XML Schema complex type with a simpleContent or a XML Schema simple type.
+
+Java:
+```java
+public class User {
+         @XmlValue
+         public String name;
+     }
+```
+XML:
+```xml
+<?xml version='1.0' encoding='UTF-8'?><User>testName</User>
+```
+
 
 ### @XmlEnumValue
 Maps an enum constant in Enum type to XML representation.

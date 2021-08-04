@@ -5,7 +5,6 @@
         <groupId>org.treblereel.gwt.xml.mapper</groupId>
         <artifactId>mapper-parent</artifactId>
         <version>0.4-SNAPSHOT</version>
-        <relativePath>..</relativePath>
     </parent>
 
     <artifactId>common</artifactId>
@@ -15,17 +14,10 @@
     <description />
     <url>https://github.com/treblereel</url>
 
-    <properties>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.google.elemental2</groupId>
             <artifactId>elemental2-core</artifactId>
-            <version>1.0.0</version>
         </dependency>
     </dependencies>
 
@@ -65,8 +57,8 @@
         </resources>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
@@ -75,7 +67,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>${maven.source.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>

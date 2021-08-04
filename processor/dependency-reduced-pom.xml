@@ -36,7 +36,6 @@
     <plugins>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
-        <version>${maven.source.version}</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -49,7 +48,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>${maven.shade.plugin}</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -72,7 +70,4 @@
       </plugin>
     </plugins>
   </build>
-  <properties>
-    <apache.commons.commons-lang3.version>3.9</apache.commons.commons-lang3.version>
-  </properties>
 </project>

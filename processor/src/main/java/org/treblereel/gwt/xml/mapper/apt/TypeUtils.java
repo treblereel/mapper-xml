@@ -30,7 +30,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -44,6 +46,7 @@ import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -54,9 +57,12 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 import javax.lang.model.util.SimpleTypeVisitor8;
 import javax.lang.model.util.Types;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
 import org.apache.commons.lang3.StringUtils;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 import org.treblereel.gwt.xml.mapper.apt.context.GenerationContext;
+import org.treblereel.gwt.xml.mapper.apt.definition.PropertyDefinition;
 
 /**
  * Type class.
@@ -70,6 +76,9 @@ public class TypeUtils {
   public static final String BEAN_XML_SERIALIZER_IMPL = "BeanXMLSerializerImpl";
   /** Constant <code>BEAN_JSON_DESERIALIZER_IMPL="BeanJsonDeserializerImpl"</code> */
   public static final String BEAN_XML_DESERIALIZER_IMPL = "BeanXMLDeserializerImpl";
+
+  private static final String XML_ELEMENT_DEFAULT_CLASSNAME =
+      javax.xml.bind.annotation.XmlElement.DEFAULT.class.getName().replaceAll("\\$", "\\.");
 
   private static final int FIRST_ARGUMENT = 0;
   private static final int SECOND_ARGUMENT = 1;
@@ -985,5 +994,62 @@ public class TypeUtils {
 
   public TypeElement toTypeElement(TypeMirror type) {
     return ((TypeElement) types.asElement(type));
+  }
+
+  public Optional<TypeMirror> getTypeMirror(PropertyDefinition definition) {
+    if (Objects.isNull(definition)) {
+      return Optional.empty();
+    }
+    VariableElement variable = definition.getProperty();
+    return getTypeMirror(variable);
+  }
+
+  public Optional<TypeMirror> getTypeMirror(VariableElement variable) {
+    if (Objects.isNull(variable)) {
+      return Optional.empty();
+    }
+    TypeMirror[] fieldTypeMirror = {null};
+    getTypeMirrorFromXmlElement(variable.getAnnotation(XmlElement.class))
+        .ifPresent(element -> fieldTypeMirror[0] = element.asType());
+    getTypeMirrorFromXmlElementRef(variable.getAnnotation(XmlElementRef.class))
+        .ifPresent(element -> fieldTypeMirror[0] = element.asType());
+
+    return Optional.ofNullable(fieldTypeMirror[0]);
+  }
+
+  private Optional<TypeElement> getTypeMirrorFromXmlElement(XmlElement xmlElementAttribute) {
+    if (Objects.isNull(xmlElementAttribute)) {
+      return Optional.empty();
+    }
+    return getTypeMirror(xmlElementAttribute::type);
+  }
+
+  private Optional<TypeElement> getTypeMirrorFromXmlElementRef(
+      XmlElementRef xmlElementRefAttribute) {
+    if (Objects.isNull(xmlElementRefAttribute)) {
+      return Optional.empty();
+    }
+    return getTypeMirror(xmlElementRefAttribute::type);
+  }
+
+  private Optional<TypeElement> getTypeMirror(Supplier<Class<?>> classSupplier) {
+    // See Method 2:
+    // https://area-51.blog/2009/02/13/getting-class-values-from-annotations-in-an-annotationprocessor/
+    TypeMirror typeMirror = null;
+    try {
+      classSupplier.get();
+    } catch (MirroredTypeException mte) {
+      typeMirror = mte.getTypeMirror();
+    }
+    // Don't process Annotations for basic types
+    if (typeRegistry.isBasicType(typeMirror.toString())) {
+      return Optional.empty();
+    }
+    // Don't process Annotations for default type handling
+    if (Objects.equals(typeMirror.toString(), XML_ELEMENT_DEFAULT_CLASSNAME)) {
+      return Optional.empty();
+    }
+    TypeElement type = elements.getTypeElement(typeMirror.toString());
+    return Optional.ofNullable(type);
   }
 }

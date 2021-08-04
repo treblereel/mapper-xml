@@ -269,11 +269,6 @@ public class BeanDefinition extends Definition {
     return null;
   }
 
-  @Override
-  public TypeMirror getBean() {
-    return bean;
-  }
-
   public TypeElement[] getXmlSeeAlso() {
     if (xmlSeeAlso != null) {
       try {

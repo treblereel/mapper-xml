@@ -5,7 +5,6 @@
         <groupId>org.treblereel.gwt.xml.mapper</groupId>
         <artifactId>mapper-parent</artifactId>
         <version>0.4-SNAPSHOT</version>
-        <relativePath>..</relativePath>
     </parent>
 
     <artifactId>api</artifactId>
@@ -40,7 +39,7 @@
         <dependency>
             <groupId>org.treblereel.gwt.xml.mapper</groupId>
             <artifactId>common</artifactId>
-            <version>0.4-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
@@ -60,7 +59,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>${maven.source.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>

@@ -149,11 +149,6 @@ public class PropertyDefinition extends Definition {
     return property.getAnnotation(XmlAttribute.class) != null;
   }
 
-  @Override
-  public TypeMirror getBean() {
-    return bean;
-  }
-
   public boolean isWrapped() {
     return property.getAnnotation(XmlElementWrapper.class) != null;
   }

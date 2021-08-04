@@ -90,7 +90,10 @@ public class BeanProcessor {
 
   private void processField(VariableElement field) {
     if (checkField(field)) {
-      checkTypeAndAdd(field.asType());
+      // Ensure the serializer/deserializer is generated for the fields concrete type, considering
+      // XmlElement and XmlElementRef types
+      TypeMirror typeMirror = typeUtils.getTypeMirror(field).orElse(field.asType());
+      checkTypeAndAdd(typeMirror);
     }
   }
 

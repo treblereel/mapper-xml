@@ -66,9 +66,13 @@ public class DefaultBeanFieldDefinition extends FieldDefinition {
               generateXMLDeserializerFactory(field, bean, bean.toString(), cu, pair), "apply")
           .addArgument(theCall);
     }
+
+    // Ensure the generated deserializer is for the fields concrete type, considering XmlElement and
+    // XmlElementRef types
+    TypeMirror typeMirror = typeUtils.getTypeMirror(field).orElse(getBean());
     return new ObjectCreationExpr()
         .setType(
-            new ClassOrInterfaceType().setName(typeUtils.canonicalDeserializerName(getBean())));
+            new ClassOrInterfaceType().setName(typeUtils.canonicalDeserializerName(typeMirror)));
   }
 
   @Override
@@ -81,8 +85,12 @@ public class DefaultBeanFieldDefinition extends FieldDefinition {
               generateXMLSerializerFactory(field, bean, bean.toString(), cu), "apply")
           .addArgument("value");
     }
+
+    // Ensure the generated serializer is for the fields concrete type, considering XmlElement and
+    // XmlElementRef types
+    TypeMirror typeMirror = typeUtils.getTypeMirror(field).orElse(getBean());
     return new ObjectCreationExpr()
-        .setType(new ClassOrInterfaceType().setName(typeUtils.canonicalSerializerName(getBean())));
+        .setType(new ClassOrInterfaceType().setName(typeUtils.canonicalSerializerName(typeMirror)));
   }
 
   private boolean isPolymorphic(PropertyDefinition field) {

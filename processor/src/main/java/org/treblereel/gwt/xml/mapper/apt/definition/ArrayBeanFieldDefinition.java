@@ -46,18 +46,19 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
     cu.addImport(ArrayXMLDeserializer.class);
 
     ArrayType array = (ArrayType) bean;
-    TypeMirror componentType = array.getComponentType();
+    TypeMirror componentType =
+        context.getTypeUtils().getTypeMirror(field).orElse(array.getComponentType());
     String arrayType = componentType.toString();
-    if (array.getComponentType().getKind().isPrimitive()) {
+    if (componentType.getKind().isPrimitive()) {
       arrayType =
           context
               .getProcessingEnv()
               .getTypeUtils()
-              .boxedClass((PrimitiveType) array.getComponentType())
+              .boxedClass((PrimitiveType) componentType)
               .getSimpleName()
               .toString();
-    } else if (array.getComponentType().getKind().equals(TypeKind.ARRAY)) {
-      ArrayType array2d = (ArrayType) array.getComponentType();
+    } else if (componentType.getKind().equals(TypeKind.ARRAY)) {
+      ArrayType array2d = (ArrayType) componentType;
       if (array2d.getComponentType().getKind().isPrimitive()) {
         arrayType =
             context
@@ -105,8 +106,7 @@ public class ArrayBeanFieldDefinition extends FieldDefinition {
         field,
         new MethodCallExpr(new NameExpr(ArrayXMLDeserializer.class.getSimpleName()), "newInstance")
             .addArgument(
-                generateXMLDeserializerFactory(
-                    field, array.getComponentType(), array.getComponentType().toString(), cu))
+                generateXMLDeserializerFactory(field, componentType, componentType.toString(), cu))
             .addArgument(
                 new CastExpr()
                     .setType(typeOf)

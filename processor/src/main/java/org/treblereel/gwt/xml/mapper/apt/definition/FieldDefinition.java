@@ -120,7 +120,8 @@ public abstract class FieldDefinition extends Definition {
     anonymousClassBody.add(method);
 
     Statement expression;
-    if (MoreTypes.asTypeElement(type)
+    TypeMirror typeMirror = typeUtils.getTypeMirror(field).orElse(type);
+    if (MoreTypes.asTypeElement(typeMirror)
         .getModifiers()
         .contains(javax.lang.model.element.Modifier.ABSTRACT)) {
       if (context
@@ -222,7 +223,8 @@ public abstract class FieldDefinition extends Definition {
     anonymousClassBody.add(method);
 
     Statement defaultReturn;
-    if (MoreTypes.asTypeElement(type)
+    TypeMirror typeMirror = typeUtils.getTypeMirror(field).orElse(type);
+    if (MoreTypes.asTypeElement(typeMirror)
         .getModifiers()
         .contains(javax.lang.model.element.Modifier.ABSTRACT)) {
       if (context
@@ -240,7 +242,9 @@ public abstract class FieldDefinition extends Definition {
     } else {
       defaultReturn =
           new ReturnStmt(
-              propertyDefinitionFactory.getFieldDefinition(type).getFieldSerializer(null, cu));
+              propertyDefinitionFactory
+                  .getFieldDefinition(typeMirror)
+                  .getFieldSerializer(null, cu));
     }
 
     method.getBody().ifPresent(body -> body.addAndGetStatement(defaultReturn));

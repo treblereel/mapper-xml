@@ -38,30 +38,35 @@ public class IterableBeanFieldDefinition extends FieldDefinition {
 
   @Override
   public Expression getFieldDeserializer(PropertyDefinition field, CompilationUnit cu) {
-    TypeElement serializer =
+    TypeElement deserializer =
         context
             .getTypeRegistry()
             .getDeserializer(context.getProcessingEnv().getTypeUtils().erasure(bean));
 
-    cu.addImport(serializer.getQualifiedName().toString());
+    cu.addImport(deserializer.getQualifiedName().toString());
 
     MethodCallExpr method =
-        new MethodCallExpr(new NameExpr(serializer.getSimpleName().toString()), "newInstance");
+        new MethodCallExpr(new NameExpr(deserializer.getSimpleName().toString()), "newInstance");
 
     Pair<Class, Map<String, TypeMirror>> maybePolymorphicType = maybePolymorphicType(field, bean);
     String inheritance =
         maybePolymorphicType.key.equals(XmlElementRefs.class)
             ? "Inheritance.TAG"
             : "Inheritance.XSI";
-    TypeMirror type = MoreTypes.asDeclared(bean).getTypeArguments().get(0);
-
+    TypeMirror typeMirror =
+        context
+            .getTypeUtils()
+            .getTypeMirror(field)
+            .orElse(MoreTypes.asDeclared(bean).getTypeArguments().get(0));
     if (!maybePolymorphicType.value.isEmpty()) {
       cu.addImport(Inheritance.class);
       method.addArgument(
-          generateXMLDeserializerFactory(field, type, type.toString(), cu, maybePolymorphicType));
+          generateXMLDeserializerFactory(
+              field, typeMirror, typeMirror.toString(), cu, maybePolymorphicType));
       method = new MethodCallExpr(method, "setInheritanceType").addArgument(inheritance);
     } else {
-      method.addArgument(generateXMLDeserializerFactory(field, type, type.toString(), cu));
+      method.addArgument(
+          generateXMLDeserializerFactory(field, typeMirror, typeMirror.toString(), cu));
     }
     if (field.isUnWrapped()) {
       return new MethodCallExpr(method, "setUnWrapCollections");

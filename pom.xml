@@ -230,6 +230,7 @@
                         <exclude>**/pom.xml</exclude>
                         <exclude>**/.flattened-pom.xml</exclude>
                         <exclude>**/gwt-unitcache</exclude>
+                        <exclude>**/src/test/java/org/treblereel/gwt/xml/mapper/client/tests/pmml/model/**</exclude>
                     </excludes>
                     <properties>
                         <year>${project.inceptionYear}</year>

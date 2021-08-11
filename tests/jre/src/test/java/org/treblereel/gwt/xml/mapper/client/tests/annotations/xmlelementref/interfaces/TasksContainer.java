@@ -16,6 +16,7 @@
 
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.xmlelementref.interfaces;
 
+import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -29,7 +30,19 @@ public class TasksContainer {
   private ITask task1;
 
   @XmlElementRef(name = "Task2", type = Task.class)
-  private ITask task2;
+  private ITask task2Ref;
+
+  @XmlElement(name = "TaskList", type = Task.class)
+  private List<ITask> taskList;
+
+  @XmlElementRef(name = "TaskListRef", type = Task.class)
+  private List<ITask> taskListRef;
+
+  @XmlElement(name = "TaskArray", type = Task.class)
+  private ITask[] taskArray;
+
+  @XmlElementRef(name = "TaskArrayRef", type = Task.class)
+  private ITask[] taskArrayRef;
 
   public ITask getTask1() {
     return task1;
@@ -39,11 +52,43 @@ public class TasksContainer {
     this.task1 = task1;
   }
 
-  public ITask getTask2() {
-    return task2;
+  public ITask getTask2Ref() {
+    return task2Ref;
   }
 
-  public void setTask2(ITask task2) {
-    this.task2 = task2;
+  public void setTask2Ref(ITask task2) {
+    this.task2Ref = task2;
+  }
+
+  public List<ITask> getTaskList() {
+    return taskList;
+  }
+
+  public void setTaskList(List<ITask> taskList) {
+    this.taskList = taskList;
+  }
+
+  public List<ITask> getTaskListRef() {
+    return taskListRef;
+  }
+
+  public void setTaskListRef(List<ITask> taskListRef) {
+    this.taskListRef = taskListRef;
+  }
+
+  public ITask[] getTaskArray() {
+    return taskArray;
+  }
+
+  public void setTaskArray(ITask[] taskArray) {
+    this.taskArray = taskArray;
+  }
+
+  public ITask[] getTaskArrayRef() {
+    return taskArrayRef;
+  }
+
+  public void setTaskArrayRef(ITask[] taskArrayRef) {
+    this.taskArrayRef = taskArrayRef;
   }
 }

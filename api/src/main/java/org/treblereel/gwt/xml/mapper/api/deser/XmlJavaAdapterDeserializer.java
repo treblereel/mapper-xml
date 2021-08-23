@@ -21,6 +21,7 @@ import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.xml.mapper.api.XMLDeserializationContext;
 import org.treblereel.gwt.xml.mapper.api.XMLDeserializer;
 import org.treblereel.gwt.xml.mapper.api.XMLDeserializerParameters;
+import org.treblereel.gwt.xml.mapper.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.xml.mapper.api.stream.XMLReader;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 9/29/20 */
@@ -40,6 +41,14 @@ public class XmlJavaAdapterDeserializer<V, T> extends XMLDeserializer<T> {
       XMLReader reader, XMLDeserializationContext ctx, XMLDeserializerParameters params)
       throws XMLStreamException {
     V result = internalXMLDeserializer.deserialize(reader, ctx, params);
+    return converter.apply(result);
+  }
+
+  @Override
+  public T deserialize(
+      String value, XMLDeserializationContext ctx, XMLDeserializerParameters params)
+      throws XMLDeserializationException {
+    V result = internalXMLDeserializer.deserialize(value, ctx, params);
     return converter.apply(result);
   }
 }

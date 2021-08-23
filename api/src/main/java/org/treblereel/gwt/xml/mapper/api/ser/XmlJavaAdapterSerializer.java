@@ -41,6 +41,7 @@ public class XmlJavaAdapterSerializer<T, V> extends XMLSerializer<T> {
       XMLWriter writer, T value, XMLSerializationContext ctx, XMLSerializerParameters params)
       throws XMLStreamException {
     internalXMLSerializer
+        .isAttribute(isAttribute)
         .setParent(parent)
         .setPropertyName(propertyName)
         .serialize(writer, converter.apply(value), ctx, params);

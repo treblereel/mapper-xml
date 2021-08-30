@@ -20,6 +20,7 @@ import com.google.auto.common.MoreTypes;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
@@ -75,9 +76,8 @@ public class BeanProcessor {
         .filter(elm -> context.getTypeRegistry().get(elm.getElement().toString()) == null)
         .filter(
             elm ->
-                !MoreTypes.asTypeElement(elm.getBean())
-                    .getModifiers()
-                    .contains(javax.lang.model.element.Modifier.ABSTRACT))
+                !MoreTypes.asTypeElement(elm.getBean()).getModifiers().contains(Modifier.ABSTRACT))
+        .filter(type -> !hasXmlAdapter(type.getElement()))
         .forEach(mapperGenerator::generate);
   }
 
@@ -157,7 +157,7 @@ public class BeanProcessor {
             "Unable to process [%s] in [%s]", field.getSimpleName(), field.getEnclosingElement()));
   }
 
-  private boolean hasXmlAdapter(VariableElement field) {
+  private boolean hasXmlAdapter(Element field) {
     if (field.getAnnotation(XmlJavaTypeAdapter.class) != null) {
       return true;
     }

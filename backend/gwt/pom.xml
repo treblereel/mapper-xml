@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.treblereel.gwt.xml.mapper</groupId>
         <artifactId>backend-parent</artifactId>
-        <version>0.4</version>
+        <version>0.5-SNAPSHOT</version>
     </parent>
 
     <artifactId>gwt-backend</artifactId>

@@ -136,7 +136,7 @@ public class SerializerGenerator extends AbstractGenerator {
 
   private void getXmlValuePropertyName(BeanDefinition type) {
     type.getFields().stream()
-        .filter(PropertyDefinition::isXmlValue)
+        .filter(p -> p.isXmlValue() && !(p.isCData() && p.getCData().value()))
         .forEach(
             xmlvalue -> {
               declaration
@@ -286,7 +286,9 @@ public class SerializerGenerator extends AbstractGenerator {
       String value =
           PropertyType.class.getCanonicalName()
               + "."
-              + (variableElement.getCData().value() ? "CDATA" : "CDATA_INLINE");
+              + ((variableElement.getCData().value() && !variableElement.isXmlValue())
+                  ? "CDATA"
+                  : "CDATA_INLINE");
       beanProperty.addArgument(new NameExpr(value));
     }
     setTypeParams(beanDefinition, variableElement, beanType);

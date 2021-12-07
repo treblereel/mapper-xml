@@ -117,7 +117,7 @@ public class DeserializerGenerator extends AbstractGenerator {
                 body.addStatement(new ReturnStmt(new StringLiteralExpr(type.getXmlRootElement()))));
 
     type.getFields().stream()
-        .filter(PropertyDefinition::isXmlValue)
+        .filter(p -> p.isXmlValue() && !(p.isCData() && p.getCData().value()))
         .forEach(
             xmlvalue ->
                 declaration
@@ -279,7 +279,7 @@ public class DeserializerGenerator extends AbstractGenerator {
   }
 
   private StringLiteralExpr getMapPropertyName(PropertyDefinition field) {
-    if (field.isCData() && !field.getCData().value()) {
+    if (field.isCData() && (!field.getCData().value() || field.isXmlValue())) {
       return new StringLiteralExpr("$CDATA");
     }
     return new StringLiteralExpr(

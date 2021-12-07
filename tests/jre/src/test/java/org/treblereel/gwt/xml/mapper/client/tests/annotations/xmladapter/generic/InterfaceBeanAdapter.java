@@ -22,8 +22,6 @@ public class InterfaceBeanAdapter extends XmlAdapter<BeanModel, Bean> {
 
   @Override
   public Bean unmarshal(BeanModel model) throws Exception {
-
-    System.out.println("InterfaceBeanAdapter " + model.getValue());
     return new Bean(model);
   }
 

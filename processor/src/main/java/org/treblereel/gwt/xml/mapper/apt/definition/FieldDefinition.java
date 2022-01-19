@@ -121,7 +121,14 @@ public abstract class FieldDefinition extends Definition {
 
     Statement expression;
     TypeMirror typeMirror = typeUtils.getTypeMirror(field).orElse(type);
-    if (MoreTypes.asTypeElement(typeMirror)
+    if (field.hasXmlJavaTypeAdapter()) {
+      expression =
+          new ReturnStmt(
+              new XmlJavaTypeAdapterFieldDefinition(
+                      typeMirror, context, field.getXmlJavaTypeAdapter())
+                  .getFieldDeserializer(field, cu));
+
+    } else if (MoreTypes.asTypeElement(typeMirror)
         .getModifiers()
         .contains(javax.lang.model.element.Modifier.ABSTRACT)) {
       if (context
@@ -224,7 +231,14 @@ public abstract class FieldDefinition extends Definition {
 
     Statement defaultReturn;
     TypeMirror typeMirror = typeUtils.getTypeMirror(field).orElse(type);
-    if (MoreTypes.asTypeElement(typeMirror)
+    if (field.hasXmlJavaTypeAdapter()) {
+      defaultReturn =
+          new ReturnStmt(
+              new XmlJavaTypeAdapterFieldDefinition(
+                      typeMirror, context, field.getXmlJavaTypeAdapter())
+                  .getFieldSerializer(field, cu));
+
+    } else if (MoreTypes.asTypeElement(typeMirror)
         .getModifiers()
         .contains(javax.lang.model.element.Modifier.ABSTRACT)) {
       if (context

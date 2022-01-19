@@ -139,11 +139,11 @@ public class BPMNTest {
     Definitions encoded = mapper.read(xml);
     assertEquals(xml, mapper.write(encoded));
 
-    /*    xml = mapper.write(tested, serializationContext);
-    System.out.println("RESULT \n" + xml);
-    encoded = mapper.read(xml, deserializationContext);
+    xml = mapper.write(tested);
+    // System.out.println("RESULT \n" + xml);
+    encoded = mapper.read(xml);
     assertEquals(tested, encoded);
-    assertEquals(xml, mapper.write(encoded, serializationContext));*/
+    assertEquals(xml, mapper.write(encoded));
   }
 
   @Test

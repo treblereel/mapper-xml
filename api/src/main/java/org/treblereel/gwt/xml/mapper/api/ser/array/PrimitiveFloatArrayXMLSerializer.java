@@ -61,7 +61,7 @@ public class PrimitiveFloatArrayXMLSerializer extends BasicArrayXMLSerializer<fl
     }
 
     beginObject(writer, true);
-    for (float value : values) {
+    for (float value : (float[]) values) {
       serializer.doSerialize(writer, value, ctx, params);
     }
     endObject(writer, true);

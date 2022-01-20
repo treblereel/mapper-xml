@@ -66,7 +66,7 @@ public class PrimitiveDoubleArray2dXMLSerializer extends BasicArrayXMLSerializer
         PrimitiveDoubleArrayXMLSerializer.getInstance(propertyName);
 
     beginObject(writer, true);
-    for (double[] value : values) {
+    for (double[] value : (double[][]) values) {
       serializer.serialize(writer, value, ctx, params);
     }
     endObject(writer, true);

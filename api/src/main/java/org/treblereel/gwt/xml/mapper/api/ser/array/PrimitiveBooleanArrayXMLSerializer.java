@@ -52,7 +52,7 @@ public class PrimitiveBooleanArrayXMLSerializer extends BasicArrayXMLSerializer<
       return;
     }
 
-    for (boolean value : values) {
+    for (boolean value : (boolean[]) values) {
       serializer.doSerialize(writer, value, ctx, params);
     }
   }

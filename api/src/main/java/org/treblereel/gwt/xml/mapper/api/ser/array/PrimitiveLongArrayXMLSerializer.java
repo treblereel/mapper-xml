@@ -61,7 +61,7 @@ public class PrimitiveLongArrayXMLSerializer extends BasicArrayXMLSerializer<lon
     }
 
     beginObject(writer, isWrapCollections);
-    for (long value : values) {
+    for (long value : (long[]) values) {
       serializer.doSerialize(writer, value, ctx, params);
     }
     endObject(writer, isWrapCollections);

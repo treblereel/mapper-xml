@@ -64,7 +64,7 @@ public class PrimitiveDoubleArrayXMLSerializer extends BasicArrayXMLSerializer<d
     }
 
     beginObject(writer, isWrapCollections);
-    for (double value : values) {
+    for (double value : (double[]) values) {
       serializer.doSerialize(writer, value, ctx, params);
     }
     endObject(writer, isWrapCollections);

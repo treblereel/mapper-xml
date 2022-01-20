@@ -61,7 +61,7 @@ public class PrimitiveShortArrayXMLSerializer extends BasicArrayXMLSerializer<sh
     }
 
     beginObject(writer, isWrapCollections);
-    for (short value : values) {
+    for (short value : (short[]) values) {
       serializer.doSerialize(writer, value, ctx, params);
     }
     endObject(writer, isWrapCollections);

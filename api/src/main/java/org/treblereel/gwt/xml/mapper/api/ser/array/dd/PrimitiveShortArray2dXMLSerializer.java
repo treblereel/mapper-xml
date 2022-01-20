@@ -65,7 +65,7 @@ public class PrimitiveShortArray2dXMLSerializer extends BasicArrayXMLSerializer<
     BasicArrayXMLSerializer serializer = PrimitiveShortArrayXMLSerializer.getInstance(propertyName);
 
     beginObject(writer, true);
-    for (short[] value : values) {
+    for (short[] value : (short[][]) values) {
       serializer.serialize(writer, value, ctx, params);
     }
     endObject(writer, true);

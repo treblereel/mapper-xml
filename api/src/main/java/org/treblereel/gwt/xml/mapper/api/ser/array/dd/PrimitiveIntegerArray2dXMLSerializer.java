@@ -63,7 +63,7 @@ public class PrimitiveIntegerArray2dXMLSerializer extends BasicArrayXMLSerialize
         PrimitiveIntegerArrayXMLSerializer.getInstance(propertyName);
 
     beginObject(writer, true);
-    for (int[] value : values) {
+    for (int[] value : (int[][]) values) {
       serializer.serialize(writer, value, ctx, params);
     }
     endObject(writer, true);

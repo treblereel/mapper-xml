@@ -51,14 +51,6 @@ public class XmlJavaTypeAdapterFieldDefinition extends FieldDefinition {
   private final TypeMirror marshal;
   private final TypeMirror umarshal;
 
-  XmlJavaTypeAdapterFieldDefinition(
-      PropertyDefinition propertyDefinition, GenerationContext context) {
-    this(
-        propertyDefinition.bean,
-        context,
-        propertyDefinition.getProperty().getAnnotation(XmlJavaTypeAdapter.class));
-  }
-
   XmlJavaTypeAdapterFieldDefinition(TypeMirror type, GenerationContext context) {
     this(type, context, MoreTypes.asTypeElement(type).getAnnotation(XmlJavaTypeAdapter.class));
   }

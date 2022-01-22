@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -35,6 +36,8 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchema;
 import javax.xml.bind.annotation.XmlValue;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapters;
 import org.treblereel.gwt.xml.mapper.api.PropertyType;
 import org.treblereel.gwt.xml.mapper.api.annotation.XmlTypeAdapter;
 import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
@@ -175,6 +178,56 @@ public class PropertyDefinition extends Definition {
 
   public boolean hasXmlSeeAlso() {
     return getXmlSeeAlso() != null;
+  }
+
+  public boolean hasXmlJavaTypeAdapter() {
+    if (property.getAnnotation(XmlJavaTypeAdapter.class) != null) {
+      return true;
+    }
+    if (MoreElements.getPackage(property).getAnnotation(XmlJavaTypeAdapters.class) != null) {
+
+      if (MoreElements.getPackage(property).getAnnotation(XmlJavaTypeAdapters.class) != null) {
+        for (XmlJavaTypeAdapter typeAdapter :
+            MoreElements.getPackage(property).getAnnotation(XmlJavaTypeAdapters.class).value()) {
+          try {
+            typeAdapter.type();
+          } catch (MirroredTypeException e) {
+            if (context
+                .getProcessingEnv()
+                .getTypeUtils()
+                .isSameType(e.getTypeMirror(), property.asType())) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  public XmlJavaTypeAdapter getXmlJavaTypeAdapter() {
+    if (property.getAnnotation(XmlJavaTypeAdapter.class) != null) {
+      return property.getAnnotation(XmlJavaTypeAdapter.class);
+    }
+    if (MoreElements.getPackage(property).getAnnotation(XmlJavaTypeAdapters.class) != null) {
+
+      if (MoreElements.getPackage(property).getAnnotation(XmlJavaTypeAdapters.class) != null) {
+        for (XmlJavaTypeAdapter typeAdapter :
+            MoreElements.getPackage(property).getAnnotation(XmlJavaTypeAdapters.class).value()) {
+          try {
+            typeAdapter.type();
+          } catch (MirroredTypeException e) {
+            if (context
+                .getProcessingEnv()
+                .getTypeUtils()
+                .isSameType(e.getTypeMirror(), property.asType())) {
+              return typeAdapter;
+            }
+          }
+        }
+      }
+    }
+    return null;
   }
 
   public TypeElement[] getXmlSeeAlso() {

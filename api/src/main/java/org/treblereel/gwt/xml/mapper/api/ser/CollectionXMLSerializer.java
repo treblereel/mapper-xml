@@ -81,7 +81,8 @@ public class CollectionXMLSerializer<C extends Collection<T>, T>
       return;
     }
     beginObject(writer, isWrapCollections);
-    for (T value : values) {
+    for (T value :
+        (Collection<T>) values) { // J2CL bug: work around is to cast values to the collection
       serializer
           .apply(value.getClass())
           .setParent(parent)

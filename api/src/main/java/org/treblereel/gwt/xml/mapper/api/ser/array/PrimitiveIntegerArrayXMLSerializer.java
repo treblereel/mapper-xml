@@ -61,7 +61,7 @@ public class PrimitiveIntegerArrayXMLSerializer extends BasicArrayXMLSerializer<
     }
 
     beginObject(writer, isWrapCollections);
-    for (int value : values) {
+    for (int value : (int[]) values) {
       serializer.doSerialize(writer, value, ctx, params);
     }
     endObject(writer, isWrapCollections);

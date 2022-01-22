@@ -73,7 +73,7 @@ public class ArrayXMLSerializer<T> extends BasicArrayXMLSerializer<T[]> {
     }
 
     beginObject(writer, isWrapCollections);
-    for (T value : values) {
+    for (T value : (T[]) values) { // J2CL bug: work around is to cast values to the collection
       serializer
           .apply(value.getClass())
           .setParent(this)

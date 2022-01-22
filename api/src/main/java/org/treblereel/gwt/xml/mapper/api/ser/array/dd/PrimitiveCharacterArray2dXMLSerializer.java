@@ -66,7 +66,7 @@ public class PrimitiveCharacterArray2dXMLSerializer extends BasicArrayXMLSeriali
         PrimitiveCharacterArrayXMLSerializer.getInstance(propertyName);
 
     beginObject(writer, true);
-    for (char[] value : values) {
+    for (char[] value : (char[][]) values) {
       serializer.serialize(writer, value, ctx, params);
     }
     endObject(writer, true);

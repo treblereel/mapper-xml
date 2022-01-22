@@ -55,7 +55,7 @@ public class PrimitiveCharacterArrayXMLSerializer extends BasicArrayXMLSerialize
     }
 
     beginObject(writer, isWrapCollections);
-    for (char value : values) {
+    for (char value : (char[]) values) {
       serializer.doSerialize(writer, value, ctx, params);
     }
     endObject(writer, isWrapCollections);

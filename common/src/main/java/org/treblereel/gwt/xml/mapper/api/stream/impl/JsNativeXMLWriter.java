@@ -32,13 +32,19 @@ public class JsNativeXMLWriter implements XMLWriter {
 
   private static final String HEADER = "<?xml version='1.0' encoding='UTF-8'?>";
 
-  private String deferredName;
-  private boolean beginNs = true;
+  protected String deferredName;
+  protected boolean beginNs = true;
 
   private Deque<Node> stack = new ArrayDeque<>();
 
-  private Document xml = DomGlobal.document.implementation.createDocument("", "", null);
+  private Document xml;
   private Element root;
+
+  public JsNativeXMLWriter() {
+    if (DomGlobal.document != null) {
+      xml = DomGlobal.document.implementation.createDocument("", "", null);
+    }
+  }
 
   @Override
   public boolean getSerializeNulls() {
@@ -49,7 +55,7 @@ public class JsNativeXMLWriter implements XMLWriter {
   public void setSerializeNulls(boolean serializeNulls) {}
 
   @Override
-  public XMLWriter beginArray() {
+  public XMLWriter beginArray() throws XMLStreamException {
     Element array = xml.createElement(deferredName);
     stack.getFirst().appendChild(array);
     stack.push(array);
@@ -57,13 +63,13 @@ public class JsNativeXMLWriter implements XMLWriter {
   }
 
   @Override
-  public XMLWriter endArray() {
+  public XMLWriter endArray() throws XMLStreamException {
     stack.pop();
     return this;
   }
 
   @Override
-  public XMLWriter beginObject(String name) {
+  public XMLWriter beginObject(String name) throws XMLStreamException {
     Element element = xml.createElement(name);
     if (root == null) {
       root = element;
@@ -92,7 +98,8 @@ public class JsNativeXMLWriter implements XMLWriter {
   }
 
   @Override
-  public XMLWriter beginObject(String prefix, String namespace, String name) {
+  public XMLWriter beginObject(String prefix, String namespace, String name)
+      throws XMLStreamException {
     Element element = xml.createElement(prefix + ":" + name);
     if (root == null) {
       root = element;
@@ -105,13 +112,13 @@ public class JsNativeXMLWriter implements XMLWriter {
   }
 
   @Override
-  public XMLWriter endObject() {
+  public XMLWriter endObject() throws XMLStreamException {
     stack.pop();
     return this;
   }
 
   @Override
-  public XMLWriter name(String name) {
+  public XMLWriter name(String name) throws XMLStreamException {
     checkName(name);
     StringBuffer sb = new StringBuffer();
     sb.append('\"').append(name).append('\"');
@@ -120,14 +127,14 @@ public class JsNativeXMLWriter implements XMLWriter {
   }
 
   @Override
-  public XMLWriter unescapeName(String name) {
+  public XMLWriter unescapeName(String name) throws XMLStreamException {
     checkName(name);
     deferredName = name;
     return this;
   }
 
   @Override
-  public XMLWriter value(String value) {
+  public XMLWriter value(String value) throws XMLStreamException {
     Element element = xml.createElement(deferredName);
     element.textContent = value;
 
@@ -136,24 +143,24 @@ public class JsNativeXMLWriter implements XMLWriter {
   }
 
   @Override
-  public XMLWriter unescapeValue(String value) {
+  public XMLWriter unescapeValue(String value) throws XMLStreamException {
     return null;
   }
 
   @Override
-  public XMLWriter nullValue() {
+  public XMLWriter nullValue() throws XMLStreamException {
     stack.getFirst().appendChild(xml.createElement(deferredName));
     return this;
   }
 
   @Override
-  public XMLWriter value(boolean value) {
+  public XMLWriter value(boolean value) throws XMLStreamException {
     value(value ? "true" : "false");
     return this;
   }
 
   @Override
-  public XMLWriter value(double value) {
+  public XMLWriter value(double value) throws XMLStreamException {
     if (Double.isNaN(value) || Double.isInfinite(value)) {
       throw new IllegalArgumentException("Numeric values must be finite, but was " + value);
     }
@@ -162,13 +169,13 @@ public class JsNativeXMLWriter implements XMLWriter {
   }
 
   @Override
-  public XMLWriter value(long value) {
+  public XMLWriter value(long value) throws XMLStreamException {
     value(Long.toString(value));
     return this;
   }
 
   @Override
-  public XMLWriter value(Number value) {
+  public XMLWriter value(Number value) throws XMLStreamException {
     if (value == null) {
       nullValue();
       return this;
@@ -183,10 +190,10 @@ public class JsNativeXMLWriter implements XMLWriter {
   }
 
   @Override
-  public void flush() {}
+  public void flush() throws XMLStreamException {}
 
   @Override
-  public void close() {}
+  public void close() throws XMLStreamException {}
 
   @Override
   public String getOutput() {
@@ -195,14 +202,14 @@ public class JsNativeXMLWriter implements XMLWriter {
   }
 
   @Override
-  public void writeDefaultNamespace(String namespace) {
+  public void writeDefaultNamespace(String namespace) throws XMLStreamException {
     if (beginNs) {
       ((Element) stack.getFirst()).setAttribute("xmlns", namespace);
     }
   }
 
   @Override
-  public void writeNamespace(String prefix, String namespace) {
+  public void writeNamespace(String prefix, String namespace) throws XMLStreamException {
     ((Element) stack.getFirst()).setAttribute("xmlns:" + prefix, namespace);
   }
 
@@ -212,31 +219,31 @@ public class JsNativeXMLWriter implements XMLWriter {
   }
 
   @Override
-  public void writeCData(String value) {
+  public void writeCData(String value) throws XMLStreamException {
     stack.getFirst().appendChild(xml.createCDATASection(value));
   }
 
   @Override
-  public void writeCharacters(String value) {
+  public void writeCharacters(String value) throws XMLStreamException {
     stack.getFirst().textContent = value;
   }
 
   @Override
-  public void writeAttribute(String propertyName, String value) {
+  public void writeAttribute(String propertyName, String value) throws XMLStreamException {
     if (propertyName != null && value != null) {
       ((Element) stack.getFirst()).setAttribute(propertyName, value);
     }
   }
 
   @Override
-  public void writeSchemaLocation(String s, String schemaLocation) {
+  public void writeSchemaLocation(String s, String schemaLocation) throws XMLStreamException {
     if (beginNs) {
       ((Element) stack.getFirst()).setAttribute(s, schemaLocation);
     }
   }
 
   @Override
-  public void writeTargetNamespace(String targetNamespace) {
+  public void writeTargetNamespace(String targetNamespace) throws XMLStreamException {
     ((Element) stack.getFirst()).setAttribute("targetNamespace", targetNamespace);
   }
 

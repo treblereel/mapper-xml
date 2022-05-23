@@ -40,7 +40,7 @@ public interface XMLReader {
    *
    * @return a {@link XMLStreamConstants} object.
    */
-  int peek();
+  int peek() throws XMLStreamException;
 
   /**
    * Returns the text value of the current token.
@@ -120,7 +120,7 @@ public interface XMLReader {
    *
    * @return a {@link String} object.
    */
-  String nextValue();
+  String nextValue() throws XMLStreamException;
 
   /**
    * Returns the {@link Number} value of the next token, consuming it. This method will attempt to

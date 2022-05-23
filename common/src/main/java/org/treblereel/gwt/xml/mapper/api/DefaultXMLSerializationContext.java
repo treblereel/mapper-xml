@@ -16,17 +16,16 @@
 
 package org.treblereel.gwt.xml.mapper.api;
 
-import com.ctc.wstx.stax.WstxOutputFactory;
 import java.util.Date;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.xml.mapper.api.exception.XMLSerializationException;
 import org.treblereel.gwt.xml.mapper.api.stream.XMLWriter;
 import org.treblereel.gwt.xml.mapper.api.stream.impl.DefaultXMLWriter;
+import org.treblereel.gwt.xml.mapper.api.stream.impl.JsNativeXMLWriter;
 
 /**
  * Context for the serialization process.
@@ -47,7 +46,6 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
   private final boolean writeEmptyXMLArrays;
   private final boolean orderMapEntriesByKeys;
   private final boolean wrapExceptions;
-  private final XMLOutputFactory xmlOutputFactory;
 
   private DefaultXMLSerializationContext(
       boolean serializeNulls,
@@ -64,13 +62,12 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
     this.writeEmptyXMLArrays = writeEmptyXMLArrays;
     this.orderMapEntriesByKeys = orderMapEntriesByKeys;
     this.wrapExceptions = wrapExceptions;
-    this.xmlOutputFactory = new WstxOutputFactory();
   }
 
   /**
    * builder
    *
-   * @return a {@link DefaultXMLSerializationContext.Builder} object.
+   * @return a {@link Builder} object.
    */
   public static Builder builder() {
     return new DefaultBuilder();
@@ -155,8 +152,7 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
    */
   @Override
   public XMLWriter newXMLWriter() throws XMLStreamException {
-    XMLWriter writer = new DefaultXMLWriter(xmlOutputFactory);
-    return writer;
+    return new XMLWriterHolder().newXMLReader();
   }
 
   /**
@@ -402,5 +398,21 @@ public class DefaultXMLSerializationContext implements XMLSerializationContext {
   public static class DefaultBuilder extends Builder {
 
     private DefaultBuilder() {}
+  }
+
+  private static class XMLWriterHolder extends XMLWriterHolderHolder {
+
+    @GwtIncompatible
+    @Override
+    public XMLWriter newXMLReader() throws XMLStreamException {
+      return new DefaultXMLWriter();
+    }
+  }
+
+  private static class XMLWriterHolderHolder {
+
+    public XMLWriter newXMLReader() throws XMLStreamException {
+      return new JsNativeXMLWriter();
+    }
   }
 }

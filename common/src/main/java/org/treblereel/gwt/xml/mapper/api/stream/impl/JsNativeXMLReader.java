@@ -39,6 +39,8 @@ public class JsNativeXMLReader implements XMLReader {
   private Iterator<NodeWrapper> iterator;
   private NodeWrapper current;
 
+  protected JsNativeXMLReader() {}
+
   public JsNativeXMLReader(String input) {
     doc = new DOMParser().parseFromString(input, "text/xml");
     removeWhitespace(doc, null);
@@ -49,17 +51,17 @@ public class JsNativeXMLReader implements XMLReader {
   }
 
   @Override
-  public boolean hasNext() {
+  public boolean hasNext() throws XMLStreamException {
     return iterator.hasNext();
   }
 
   @Override
-  public int peek() {
+  public int peek() throws XMLStreamException {
     return current.type;
   }
 
   @Override
-  public QName peekNodeName() {
+  public QName peekNodeName() throws XMLStreamException {
     if (current.node.prefix != null && !current.node.prefix.isEmpty()) {
       String nodeName = current.node.nodeName.replace(current.node.prefix + ":", "");
       return new QName(current.node.namespaceURI, nodeName, current.node.prefix);
@@ -73,7 +75,7 @@ public class JsNativeXMLReader implements XMLReader {
   }
 
   @Override
-  public String nextString() {
+  public String nextString() throws XMLStreamException {
     if (current.type == XMLStreamConstants.START_ELEMENT) {
       next();
     }
@@ -85,7 +87,7 @@ public class JsNativeXMLReader implements XMLReader {
   }
 
   @Override
-  public boolean nextBoolean() {
+  public boolean nextBoolean() throws XMLStreamException {
     String value = nextString();
     if (value == null) {
       return false;
@@ -94,7 +96,7 @@ public class JsNativeXMLReader implements XMLReader {
   }
 
   @Override
-  public double nextDouble() {
+  public double nextDouble() throws XMLStreamException {
     String value = nextString();
     if (value == null) {
       return 0;
@@ -103,7 +105,7 @@ public class JsNativeXMLReader implements XMLReader {
   }
 
   @Override
-  public long nextLong() {
+  public long nextLong() throws XMLStreamException {
     String value = nextString();
     if (value == null) {
       return 0;
@@ -112,7 +114,7 @@ public class JsNativeXMLReader implements XMLReader {
   }
 
   @Override
-  public int nextInt() {
+  public int nextInt() throws XMLStreamException {
     String value = nextString();
     if (value == null) {
       return 0;
@@ -121,13 +123,13 @@ public class JsNativeXMLReader implements XMLReader {
   }
 
   @Override
-  public void close() {}
+  public void close() throws XMLStreamException {}
 
   @Override
-  public void skipValue() {}
+  public void skipValue() throws XMLStreamException {}
 
   @Override
-  public String nextValue() {
+  public String nextValue() throws XMLStreamException {
     if (current.type == XMLStreamConstants.END_ELEMENT) {
       return ((CDATASection) current.node).data;
     }
@@ -135,19 +137,19 @@ public class JsNativeXMLReader implements XMLReader {
   }
 
   @Override
-  public Number nextNumber() {
+  public Number nextNumber() throws XMLStreamException {
     return null;
   }
 
   @Override
-  public void next() {
+  public void next() throws XMLStreamException {
     if (iterator.hasNext()) {
       current = iterator.next();
     }
   }
 
   @Override
-  public String getInput() {
+  public String getInput() throws XMLStreamException {
     return doc.documentElement.toString();
   }
 

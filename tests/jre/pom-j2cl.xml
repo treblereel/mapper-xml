@@ -27,6 +27,10 @@
 
   <description>Test cases for the J2CL</description>
 
+  <properties>
+    <j2cl.version>0.10.0-3c97afeac</j2cl.version>
+  </properties>
+
   <developers>
     <developer>
       <id>treblereel</id>
@@ -49,11 +53,6 @@
   </organization>
 
   <inceptionYear>2020</inceptionYear>
-
-  <properties>
-    <vertispan.j2cl.repo.url>https://repo.vertispan.com/j2cl/</vertispan.j2cl.repo.url>
-    <google.snapshot.repo.url>https://oss.sonatype.org/content/repositories/google-snapshots/</google.snapshot.repo.url>
-  </properties>
 
   <dependencies>
     <!-- test dependencies -->
@@ -140,19 +139,4 @@
     </plugins>
   </build>
 
-  <repositories>
-    <repository>
-      <id>vertispan-snapshots</id>
-      <name>Vertispan hosted artifacts-releases</name>
-      <url>${vertispan.j2cl.repo.url}</url>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>vertispan-releases</id>
-      <name>Vertispan hosted artifacts-releases</name>
-      <url>${vertispan.j2cl.repo.url}</url>
-    </pluginRepository>
-  </pluginRepositories>
 </project>

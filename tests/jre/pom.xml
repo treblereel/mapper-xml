@@ -5,12 +5,16 @@
   <parent>
     <groupId>org.treblereel.gwt.xml.mapper</groupId>
     <artifactId>tests</artifactId>
-    <version>0.6-SNAPSHOT</version>
+    <version>0.6</version>
   </parent>
 
   <artifactId>jre-tests</artifactId>
   <description>Test cases for the JRE</description>
   <packaging>jar</packaging>
+
+  <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
 
   <developers>
     <developer>
@@ -45,17 +49,18 @@
     </dependency>
     <dependency>
       <groupId>org.treblereel.gwt.xml.mapper</groupId>
-      <artifactId>jre-backend</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>processor</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>com.fasterxml.woodstox</groupId>
+      <artifactId>woodstox-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

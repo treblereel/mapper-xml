@@ -32,11 +32,8 @@
 
 package org.treblereel.gwt.xml.mapper.api.stream.impl;
 
-import java.io.StringWriter;
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-import org.treblereel.gwt.xml.mapper.api.stream.XMLWriter;
+import org.treblereel.gwt.xml.mapper.api.GwtIncompatible;
 
 /**
  * DefaultXMLWriter class.
@@ -44,28 +41,28 @@ import org.treblereel.gwt.xml.mapper.api.stream.XMLWriter;
  * @author nicolasmorel
  * @version $Id: $
  */
-public class DefaultXMLWriter implements XMLWriter {
+public class DefaultXMLWriter extends JsNativeXMLWriter {
 
   /** The output data, containing at most one top-level array or object. */
-  private final XMLStreamWriter out;
+  @GwtIncompatible private final javax.xml.stream.XMLStreamWriter out;
 
-  private final StringWriter sw = new StringWriter();
+  @GwtIncompatible private final java.io.StringWriter sw = new java.io.StringWriter();
 
-  private String deferredName;
-  private boolean serializeNulls = true;
-  private boolean beginNs = true;
-  private boolean writeDefaultNamespace = true;
-  private int objCounter = 0;
+  @GwtIncompatible private boolean serializeNulls = true;
+  @GwtIncompatible private boolean writeDefaultNamespace = true;
+  @GwtIncompatible private int objCounter = 0;
+
+  @GwtIncompatible
+  private com.ctc.wstx.stax.WstxOutputFactory xmlOutputFactory =
+      new com.ctc.wstx.stax.WstxOutputFactory();
 
   /**
    * Creates a new instance that writes a XML-encoded stream to {@code out}.
    *
    * @param out a {@link StringBuilder} object.
    */
-  public DefaultXMLWriter(XMLOutputFactory xmlOutputFactory) throws XMLStreamException {
-    if (xmlOutputFactory == null) {
-      throw new NullPointerException("xmlOutputFactory == null");
-    }
+  @GwtIncompatible
+  public DefaultXMLWriter() throws XMLStreamException {
     this.out = xmlOutputFactory.createXMLStreamWriter(sw);
   }
 
@@ -76,18 +73,21 @@ public class DefaultXMLWriter implements XMLWriter {
    * on array elements. The default is true.
    */
   @Override
+  @GwtIncompatible
   public final boolean getSerializeNulls() {
     return serializeNulls;
   }
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public final void setSerializeNulls(boolean serializeNulls) {
     this.serializeNulls = serializeNulls;
   }
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public DefaultXMLWriter beginArray() throws XMLStreamException {
     out.writeStartElement(deferredName);
     return this;
@@ -95,6 +95,7 @@ public class DefaultXMLWriter implements XMLWriter {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public DefaultXMLWriter endArray() throws XMLStreamException {
     out.writeEndElement();
     return this;
@@ -102,6 +103,7 @@ public class DefaultXMLWriter implements XMLWriter {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public DefaultXMLWriter beginObject(String name) throws XMLStreamException {
     if (objCounter == 0) {
       out.writeStartDocument();
@@ -112,6 +114,7 @@ public class DefaultXMLWriter implements XMLWriter {
   }
 
   @Override
+  @GwtIncompatible
   public DefaultXMLWriter beginObject(String namespace, String name) throws XMLStreamException {
     if (objCounter == 0) {
       out.writeStartDocument();
@@ -124,6 +127,7 @@ public class DefaultXMLWriter implements XMLWriter {
   }
 
   @Override
+  @GwtIncompatible
   public DefaultXMLWriter beginObject(String prefix, String namespace, String name)
       throws XMLStreamException {
     if (objCounter == 0) {
@@ -137,6 +141,7 @@ public class DefaultXMLWriter implements XMLWriter {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public DefaultXMLWriter endObject() throws XMLStreamException {
     out.writeEndElement();
     objCounter--;
@@ -148,6 +153,7 @@ public class DefaultXMLWriter implements XMLWriter {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public DefaultXMLWriter name(String name) {
     checkName(name);
     StringBuffer sb = new StringBuffer();
@@ -158,6 +164,7 @@ public class DefaultXMLWriter implements XMLWriter {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public DefaultXMLWriter unescapeName(String name) {
     checkName(name);
     deferredName = name;
@@ -166,6 +173,7 @@ public class DefaultXMLWriter implements XMLWriter {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public DefaultXMLWriter value(String value) throws XMLStreamException {
     if (value == null) {
       return nullValue();
@@ -176,6 +184,7 @@ public class DefaultXMLWriter implements XMLWriter {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public DefaultXMLWriter unescapeValue(String value) throws XMLStreamException {
     if (value == null) {
       return nullValue();
@@ -188,6 +197,7 @@ public class DefaultXMLWriter implements XMLWriter {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public DefaultXMLWriter nullValue() throws XMLStreamException {
     out.writeEmptyElement(deferredName);
     return this;
@@ -195,6 +205,7 @@ public class DefaultXMLWriter implements XMLWriter {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public DefaultXMLWriter value(boolean value) throws XMLStreamException {
     value(value ? "true" : "false");
     return this;
@@ -202,6 +213,7 @@ public class DefaultXMLWriter implements XMLWriter {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public DefaultXMLWriter value(double value) throws XMLStreamException {
     if (Double.isNaN(value) || Double.isInfinite(value)) {
       throw new IllegalArgumentException("Numeric values must be finite, but was " + value);
@@ -212,6 +224,7 @@ public class DefaultXMLWriter implements XMLWriter {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public DefaultXMLWriter value(long value) throws XMLStreamException {
     value(Long.toString(value));
     return this;
@@ -219,6 +232,7 @@ public class DefaultXMLWriter implements XMLWriter {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public DefaultXMLWriter value(Number value) throws XMLStreamException {
     if (value == null) {
       out.writeEmptyElement(deferredName);
@@ -235,23 +249,27 @@ public class DefaultXMLWriter implements XMLWriter {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public void flush() throws XMLStreamException {
     out.flush();
   }
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public void close() throws XMLStreamException {
     out.close();
   }
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public String getOutput() {
     return sw.toString();
   }
 
   @Override
+  @GwtIncompatible
   public void writeDefaultNamespace(String namespace) throws XMLStreamException {
     if (beginNs && writeDefaultNamespace) {
       out.writeDefaultNamespace(namespace);
@@ -260,26 +278,31 @@ public class DefaultXMLWriter implements XMLWriter {
   }
 
   @Override
+  @GwtIncompatible
   public void writeNamespace(String prefix, String namespace) throws XMLStreamException {
     out.writeNamespace(prefix, namespace);
   }
 
   @Override
+  @GwtIncompatible
   public void endNs() {
     beginNs = false;
   }
 
   @Override
+  @GwtIncompatible
   public void writeCData(String value) throws XMLStreamException {
     out.writeCData(value);
   }
 
   @Override
+  @GwtIncompatible
   public void writeCharacters(String value) throws XMLStreamException {
     out.writeCharacters(value);
   }
 
   @Override
+  @GwtIncompatible
   public void writeAttribute(String propertyName, String value) throws XMLStreamException {
     if (propertyName != null && value != null) {
       out.writeAttribute(propertyName, value);
@@ -287,6 +310,7 @@ public class DefaultXMLWriter implements XMLWriter {
   }
 
   @Override
+  @GwtIncompatible
   public void writeSchemaLocation(String xsi, String schemaLocation) throws XMLStreamException {
     if (beginNs) {
       out.writeAttribute(xsi, schemaLocation);
@@ -294,12 +318,14 @@ public class DefaultXMLWriter implements XMLWriter {
   }
 
   @Override
+  @GwtIncompatible
   public void writeTargetNamespace(String targetNamespace) throws XMLStreamException {
     if (beginNs) {
       out.writeAttribute("targetNamespace", targetNamespace);
     }
   }
 
+  @GwtIncompatible
   private void string(String value) throws XMLStreamException {
     if (value == null) {
       out.writeEmptyElement(deferredName);
@@ -309,6 +335,7 @@ public class DefaultXMLWriter implements XMLWriter {
     out.writeEndElement();
   }
 
+  @GwtIncompatible
   private void checkName(String name) {
     if (name == null) {
       throw new NullPointerException("name == null");

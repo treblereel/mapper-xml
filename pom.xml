@@ -4,7 +4,7 @@
 
     <groupId>org.treblereel.gwt.xml.mapper</groupId>
     <artifactId>mapper-parent</artifactId>
-    <version>0.6-SNAPSHOT</version>
+    <version>0.6</version>
     <packaging>pom</packaging>
 
     <name>mapper-parent</name>
@@ -55,7 +55,6 @@
         <maven.gpg.plugin>1.6</maven.gpg.plugin>
         <maven.javadoc.plugin>3.2.0</maven.javadoc.plugin>
         <maven.source.plugin>3.2.1</maven.source.plugin>
-        <maven.j2cl.plugin>0.18-SNAPSHOT</maven.j2cl.plugin>
         <maven.release.plugin>2.5.3</maven.release.plugin>
         <maven.surfire.plugin>3.0.0-M1</maven.surfire.plugin>
 
@@ -63,7 +62,7 @@
         <maven.scm.provider.gitexe>1.9.5</maven.scm.provider.gitexe>
 
         <elemental2.version>1.1.0</elemental2.version>
-        <j2cl.version>0.9-SNAPSHOT</j2cl.version>
+        <j2cl.version>0.10.0-3c97afeac</j2cl.version>
         <javax.annotation.api.version>1.3.1</javax.annotation.api.version>
         <javaparser.core.version>3.13.1</javaparser.core.version>
         <apache.commons.lang3.version>3.9</apache.commons.lang3.version>
@@ -75,9 +74,8 @@
     </properties>
 
     <modules>
-        <module>common</module>
-        <module>backend</module>
         <module>api</module>
+        <module>common</module>
         <module>processor</module>
         <module>tests</module>
     </modules>
@@ -180,19 +178,9 @@
                     <version>${maven.javadoc.plugin}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>${nexus.staging.maven.plugin}</version>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
                     <version>${maven.gpg.plugin}</version>
-                </plugin>
-                <plugin>
-                    <groupId>com.vertispan.j2cl</groupId>
-                    <artifactId>j2cl-maven-plugin</artifactId>
-                    <version>${maven.j2cl.plugin}</version>
                 </plugin>
             </plugins>
 
@@ -258,32 +246,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-deploy</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <localCheckout>true</localCheckout>
-                    <pushChanges>false</pushChanges>
-                    <mavenExecutorId>forked-path</mavenExecutorId>
-                    <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-provider-gitexe</artifactId>
-                        <version>${maven.scm.provider.gitexe}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -292,32 +254,29 @@
                     <failOnError>false</failOnError>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <stagingProgressTimeoutMinutes>20</stagingProgressTimeoutMinutes>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
     <profiles>
-        <!-- release profile to create sources, javadoc, and sign all artifacts before uploading -->
         <profile>
             <id>release</id>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <failOnError>false</failOnError>
-                        </configuration>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -327,7 +286,6 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <!-- see http://central.sonatype.org/pages/working-with-pgp-signatures.html for more detail -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
@@ -340,6 +298,13 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
@@ -358,32 +323,4 @@
         </repository>
     </distributionManagement>
 
-    <repositories>
-        <repository>
-            <id>vertispan</id>
-            <name>vertispan</name>
-            <url>https://repo.vertispan.com/gwt-snapshot/</url>
-        </repository>
-        <repository>
-            <id>vertispan-releases</id>
-            <name>Vertispan hosted artifacts-releases</name>
-            <url>https://repo.vertispan.com/j2cl</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>vertispan-snapshots</id>
-            <name>Vertispan Snapshots</name>
-            <url>https://repo.vertispan.com/gwt-snapshot/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>fail</checksumPolicy>
-            </snapshots>
-        </repository>
-    </repositories>
 </project>

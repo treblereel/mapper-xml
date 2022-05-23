@@ -81,7 +81,7 @@ public interface XMLWriter {
    * @param name the name of the forthcoming value. May not be null.
    * @return this writer.
    */
-  XMLWriter name(String name);
+  XMLWriter name(String name) throws XMLStreamException;
 
   /**
    * Encodes the property name without escaping it.
@@ -89,7 +89,7 @@ public interface XMLWriter {
    * @param name the name of the forthcoming value. May not be null.
    * @return this writer.
    */
-  XMLWriter unescapeName(String name);
+  XMLWriter unescapeName(String name) throws XMLStreamException;
 
   /**
    * Encodes {@code value}.

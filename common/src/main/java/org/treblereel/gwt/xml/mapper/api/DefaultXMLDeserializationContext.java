@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Treblereel
+ * Copyright 2013 Nicolas Morel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.treblereel.gwt.xml.mapper.api;
 
 import java.util.logging.Level;
@@ -22,9 +23,15 @@ import org.treblereel.gwt.xml.mapper.api.exception.XMLDeserializationException;
 import org.treblereel.gwt.xml.mapper.api.stream.XMLIterator;
 import org.treblereel.gwt.xml.mapper.api.stream.XMLReader;
 import org.treblereel.gwt.xml.mapper.api.stream.impl.DefaultXMLIterator;
+import org.treblereel.gwt.xml.mapper.api.stream.impl.DefaultXMLReader;
 import org.treblereel.gwt.xml.mapper.api.stream.impl.JsNativeXMLReader;
 
-/** @author Dmitrii Tikhomirov Created by treblereel 4/19/20 */
+/**
+ * Context for the deserialization process.
+ *
+ * @author Nicolas Morel
+ * @version $Id: $
+ */
 public class DefaultXMLDeserializationContext implements XMLDeserializationContext {
 
   private static final Logger logger = Logger.getLogger("XMLDeserialization");
@@ -38,7 +45,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
   private final boolean readUnknownEnumValuesAsNull;
   private final boolean useBrowserTimezone;
   private final XMLIterator iterator;
-  private final boolean readDateAsTimestamp;
+  private final boolean readDateAsTimestamps;
 
   private DefaultXMLDeserializationContext(
       boolean failOnUnknownProperties,
@@ -47,14 +54,14 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
       boolean useSafeEval,
       boolean readUnknownEnumValuesAsNull,
       boolean useBrowserTimezone,
-      boolean readDateAsTimestamp) {
+      boolean readDateAsTimestamps) {
     this.failOnUnknownProperties = failOnUnknownProperties;
     this.acceptSingleValueAsArray = acceptSingleValueAsArray;
     this.wrapExceptions = wrapExceptions;
     this.useSafeEval = useSafeEval;
     this.readUnknownEnumValuesAsNull = readUnknownEnumValuesAsNull;
     this.useBrowserTimezone = useBrowserTimezone;
-    this.readDateAsTimestamp = readDateAsTimestamp;
+    this.readDateAsTimestamps = readDateAsTimestamps;
     this.iterator = new DefaultXMLIterator();
   }
 
@@ -72,7 +79,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
    *
    * <p>isFailOnUnknownProperties
    *
-   * @see DefaultXMLDeserializationContext.Builder#failOnUnknownProperties(boolean)
+   * @see Builder#failOnUnknownProperties(boolean)
    */
   @Override
   public boolean isFailOnUnknownProperties() {
@@ -84,7 +91,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
    *
    * <p>isAcceptSingleValueAsArray
    *
-   * @see DefaultXMLDeserializationContext.Builder#acceptSingleValueAsArray(boolean)
+   * @see Builder#acceptSingleValueAsArray(boolean)
    */
   @Override
   public boolean isAcceptSingleValueAsArray() {
@@ -96,7 +103,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
    *
    * <p>isUseSafeEval
    *
-   * @see DefaultXMLDeserializationContext.Builder#useSafeEval(boolean)
+   * @see Builder#useSafeEval(boolean)
    */
   @Override
   public boolean isUseSafeEval() {
@@ -108,7 +115,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
    *
    * <p>isReadUnknownEnumValuesAsNull
    *
-   * @see DefaultXMLDeserializationContext.Builder#readUnknownEnumValuesAsNull(boolean)
+   * @see Builder#readUnknownEnumValuesAsNull(boolean)
    */
   @Override
   public boolean isReadUnknownEnumValuesAsNull() {
@@ -120,7 +127,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
    *
    * <p>isUseBrowserTimezone
    *
-   * @see DefaultXMLDeserializationContext.Builder#isUseBrowserTimezone()
+   * @see Builder#isUseBrowserTimezone()
    */
   @Override
   public boolean isUseBrowserTimezone() {
@@ -129,7 +136,7 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
 
   @Override
   public boolean isReadDateAsTimestamps() {
-    return readDateAsTimestamp;
+    return readDateAsTimestamps;
   }
 
   /**
@@ -138,9 +145,8 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
    * <p>newXMLReader
    */
   @Override
-  public XMLReader newXMLReader(String input) {
-    XMLReader reader = new JsNativeXMLReader(input);
-    return reader;
+  public XMLReader newXMLReader(String input) throws XMLStreamException {
+    return new XMLReaderHolder().newXMLReader(input);
   }
 
   @Override
@@ -302,11 +308,6 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
       return this;
     }
 
-    public Builder readDateAsTimestamp(boolean readDateAsTimestamp) {
-      this.readDateAsTimestamp = readDateAsTimestamp;
-      return this;
-    }
-
     /**
      * to deserialize JsType <br>
      * <br>
@@ -344,6 +345,11 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
       return this;
     }
 
+    public Builder readDateAsTimestamp(boolean readDateAsTimestamp) {
+      this.readDateAsTimestamp = readDateAsTimestamp;
+      return this;
+    }
+
     public final XMLDeserializationContext build() {
       return new DefaultXMLDeserializationContext(
           failOnUnknownProperties,
@@ -359,5 +365,21 @@ public class DefaultXMLDeserializationContext implements XMLDeserializationConte
   public static class DefaultBuilder extends Builder {
 
     private DefaultBuilder() {}
+  }
+
+  private static class XMLReaderHolder extends GWTXMLReaderHolder {
+
+    @GwtIncompatible
+    @Override
+    public XMLReader newXMLReader(String input) throws XMLStreamException {
+      return new DefaultXMLReader(input);
+    }
+  }
+
+  private static class GWTXMLReaderHolder {
+
+    public XMLReader newXMLReader(String input) throws XMLStreamException {
+      return new JsNativeXMLReader(input);
+    }
   }
 }

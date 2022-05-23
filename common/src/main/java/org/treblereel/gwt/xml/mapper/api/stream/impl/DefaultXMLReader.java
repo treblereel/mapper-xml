@@ -32,27 +32,32 @@
 
 package org.treblereel.gwt.xml.mapper.api.stream.impl;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import org.treblereel.gwt.xml.mapper.api.stream.XMLReader;
+import org.treblereel.gwt.xml.mapper.api.GwtIncompatible;
 import org.treblereel.gwt.xml.mapper.api.utils.NumberUtils;
 
-public class DefaultXMLReader implements XMLReader {
+public class DefaultXMLReader extends JsNativeXMLReader {
 
-  private final XMLStreamReader reader;
+  @GwtIncompatible private final javax.xml.stream.XMLStreamReader reader;
 
-  private final String input;
+  private String input;
+
+  @GwtIncompatible
+  private final com.ctc.wstx.stax.WstxInputFactory xmlInputFactory =
+      new com.ctc.wstx.stax.WstxInputFactory();
 
   /**
    * Creates a new instance that reads a JSON-encoded stream from {@code in}.
    *
    * @param in a {@link String} object.
    */
-  public DefaultXMLReader(XMLInputFactory xmlInputFactory, String in) throws XMLStreamException {
+  @GwtIncompatible
+  public DefaultXMLReader(String in) throws XMLStreamException {
+
+    xmlInputFactory.setProperty(org.codehaus.stax2.XMLInputFactory2.SUPPORT_DTD, false);
+
     if (in == null) {
       throw new NullPointerException("in == null");
     }
@@ -62,34 +67,39 @@ public class DefaultXMLReader implements XMLReader {
       throw new NullPointerException("xmlInputFactory == null");
     }
 
-    InputStream byteArrayInputStream = new ByteArrayInputStream(input.getBytes());
+    InputStream byteArrayInputStream = new java.io.ByteArrayInputStream(input.getBytes());
     reader = xmlInputFactory.createXMLStreamReader(byteArrayInputStream);
   }
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public boolean hasNext() throws XMLStreamException {
     return reader.hasNext();
   }
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public int peek() {
     return reader.getEventType();
   }
 
   @Override
+  @GwtIncompatible
   public QName peekNodeName() throws XMLStreamException {
     return reader.getName();
   }
 
   @Override
+  @GwtIncompatible
   public String rowValue() throws XMLStreamException {
     return reader.getText();
   }
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public String nextString() throws XMLStreamException {
     if (peek() == 1) {
       reader.next();
@@ -103,6 +113,7 @@ public class DefaultXMLReader implements XMLReader {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public boolean nextBoolean() throws XMLStreamException {
     String value = nextString();
     if (value == null) {
@@ -113,6 +124,7 @@ public class DefaultXMLReader implements XMLReader {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public double nextDouble() throws XMLStreamException {
     String value = nextString();
     if (value == null) {
@@ -123,6 +135,7 @@ public class DefaultXMLReader implements XMLReader {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public long nextLong() throws XMLStreamException {
     String value = nextString();
     if (value == null) {
@@ -133,6 +146,7 @@ public class DefaultXMLReader implements XMLReader {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public int nextInt() throws XMLStreamException {
     String value = nextString();
     if (value == null) {
@@ -143,55 +157,65 @@ public class DefaultXMLReader implements XMLReader {
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public void close() throws XMLStreamException {
     reader.close();
   }
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public void skipValue() throws XMLStreamException {
     reader.next();
   }
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public String nextValue() {
     return reader.getText();
   }
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public String getInput() throws XMLStreamException {
     return input;
   }
 
   /** {@inheritDoc} */
   @Override
+  @GwtIncompatible
   public Number nextNumber() throws XMLStreamException {
     return NumberUtils.toNumber(nextString());
   }
 
   @Override
+  @GwtIncompatible
   public void next() throws XMLStreamException {
     reader.next();
   }
 
   @Override
+  @GwtIncompatible
   public int getAttributeCount() {
     return reader.getAttributeCount();
   }
 
   @Override
+  @GwtIncompatible
   public QName getAttributeName(int index) {
     return reader.getAttributeName(index);
   }
 
   @Override
+  @GwtIncompatible
   public String getAttributeValue(int index) {
     return reader.getAttributeValue(index);
   }
 
   @Override
+  @GwtIncompatible
   public String getAttributeType(int index) {
     return reader.getAttributeType(index);
   }

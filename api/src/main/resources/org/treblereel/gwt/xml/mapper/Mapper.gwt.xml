@@ -4,7 +4,6 @@
 <module>
   <inherits name="com.google.gwt.user.User"/>
   <inherits name="org.treblereel.gwt.xml.mapper.Common"/>
-  <inherits name="org.treblereel.gwt.xml.mapper.Gwt"/>
   <inherits name='elemental2.dom.Dom'/>
   <source path="api" />
 </module>

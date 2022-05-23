@@ -41,12 +41,12 @@ Artifacts are published to sonatype repo
     <dependency>
       <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>api</artifactId>
-      <version>0.5</version>
+      <version>0.6</version>
     </dependency>
     <dependency>
       <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>processor</artifactId>
-      <version>0.5</version>
+      <version>0.6</version>
       <scope>provided</scope>
     </dependency>
     ```

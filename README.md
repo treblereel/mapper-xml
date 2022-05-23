@@ -27,43 +27,34 @@ Artifacts are published to sonatype repo
     - For the JRE environment:
 
     ```xml
-        <dependency>
-          <groupId>org.treblereel.gwt.xml.mapper</groupId>
-          <artifactId>jre-backend</artifactId>
-          <version>0.2</version>
-        </dependency>
-    ```
-
-    - For the GWT2/J2CL environment:
-
-    ```xml
-        <dependency>
-          <groupId>org.treblereel.gwt.xml.mapper</groupId>
-          <artifactId>gwt-backend</artifactId>
-          <version>0.2</version>
-        </dependency>
+    <dependency>
+      <groupId>com.fasterxml.woodstox</groupId>
+      <artifactId>woodstox-core</artifactId>
+      <scope>test</scope>
+      <version>6.2.1</version>
+    </dependency>
     ```
 
     2.2. For both JRE and GWT2/J2CL environments, add the API and annotation processor dependencies:
     
     ```xml
-        <dependency>
-          <groupId>org.treblereel.gwt.xml.mapper</groupId>
-          <artifactId>api</artifactId>
-          <version>0.2</version>
-        </dependency>
-        <dependency>
-          <groupId>org.treblereel.gwt.xml.mapper</groupId>
-          <artifactId>processor</artifactId>
-          <version>0.2</version>
-        </dependency>
+    <dependency>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
+      <artifactId>api</artifactId>
+      <version>0.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
+      <artifactId>processor</artifactId>
+      <version>0.5</version>
+      <scope>provided</scope>
+    </dependency>
     ```
     
     > In case you use GWT2, add the `inherits` directive to your `gwt.xml` file:
 
     ```xml
-      <inherits name='org.treblereel.gwt.xml.mapper.Gwt'/>
-      <inherits name="org.treblereel.gwt.xml.mapper.Jackson"/>
+      <inherits name="org.treblereel.gwt.xml.mapper.Mapper"/>
     ```
 
 3. Annotate POJOs with the @XMLMapper annotation:

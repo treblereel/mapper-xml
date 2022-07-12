@@ -1,3 +1,5 @@
+[![Java CI with Maven](https://github.com/treblereel/mapper-xml/actions/workflows/maven.yml/badge.svg)](https://github.com/treblereel/mapper-xml/actions/workflows/maven.yml)
+
 # xml-mapper
 **xml-mapper** is an annotation-processor-based XML mapper that works both on the client side - GWT and J2CL - and on the JVM side with "Code-first" approach.
 

@@ -16,7 +16,7 @@
 
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.xmladapter.generic;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 public class InterfaceBeanAdapter extends XmlAdapter<BeanModel, Bean> {
 

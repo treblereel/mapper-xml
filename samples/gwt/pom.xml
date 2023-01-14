@@ -15,7 +15,7 @@
 
   <properties>
     <!-- Convenience property to set the GWT version -->
-    <gwt.version>2.9.0</gwt.version>
+    <gwt.version>2.10.0</gwt.version>
 
     <!-- GWT 2.8 requires 1.8 -->
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -51,12 +51,12 @@
     <dependency>
       <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>api</artifactId>
-      <version>0.6</version>
+      <version>0.7</version>
     </dependency>
     <dependency>
       <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>processor</artifactId>
-      <version>0.6</version>
+      <version>0.7</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

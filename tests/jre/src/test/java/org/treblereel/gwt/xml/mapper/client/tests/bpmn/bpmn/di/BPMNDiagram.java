@@ -15,10 +15,10 @@
  */
 package org.treblereel.gwt.xml.mapper.client.tests.bpmn.bpmn.di;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlAttribute;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/6/20 */
 public class BPMNDiagram {

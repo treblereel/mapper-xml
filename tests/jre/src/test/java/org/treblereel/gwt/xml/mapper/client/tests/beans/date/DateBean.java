@@ -15,8 +15,8 @@
  */
 package org.treblereel.gwt.xml.mapper.client.tests.beans.date;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
 import java.util.Date;
-import javax.xml.bind.annotation.XmlAttribute;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/27/20 */

@@ -15,11 +15,11 @@
  */
 package org.treblereel.gwt.xml.mapper.client.tests.beans.iface;
 
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementRef;
+import jakarta.xml.bind.annotation.XmlElementRefs;
+import jakarta.xml.bind.annotation.XmlElements;
 import java.util.List;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlElementRefs;
-import javax.xml.bind.annotation.XmlElements;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 5/13/20 */

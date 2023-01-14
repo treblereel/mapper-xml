@@ -15,8 +15,8 @@
  */
 package org.treblereel.gwt.xml.mapper.client.tests.arrays.dd;
 
+import jakarta.xml.bind.annotation.XmlElementWrapper;
 import java.util.Arrays;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/29/20 */

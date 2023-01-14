@@ -1,9 +1,14 @@
+[![GitHub license](https://img.shields.io/github/license/treblereel/mapper-xml)](https://github.com/treblereel/mapper-xml/blob/main/LICENSE)
+![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/org.treblereel.gwt.xml.mapper/processor?server=https%3A%2F%2Foss.sonatype.org&style=plastic)
+![Gitter](https://img.shields.io/gitter/room/vertispan/j2cl)
 [![Java CI with Maven](https://github.com/treblereel/mapper-xml/actions/workflows/maven.yml/badge.svg)](https://github.com/treblereel/mapper-xml/actions/workflows/maven.yml)
 
-# xml-mapper
-**xml-mapper** is an annotation-processor-based XML mapper that works both on the client side - GWT and J2CL - and on the JVM side with "Code-first" approach.
 
-Setting up **xml-mapper** includes cloning the repository, adding dependencies and annotating POJOs.
+
+# mapper-xml
+**mapper-xml** is an annotation-processor-based XML mapper that works both on the client side - GWT and J2CL - and on the JVM side with "Code-first" approach.
+
+mapper-xml is a relaxed implementation of the Jakarta JAXB specification, which means that it is not 100% compatible with the JAXB specification;
 
 ## Maven
 
@@ -16,15 +21,9 @@ Artifacts are published to sonatype repo
 
 ## Installing xml-mapper:
 
-1. Clone the repository and install it:
+1. Add relevant dependencies to the `pom` file:
 
-    ```xml
-     $ mvn clean install
-    ```
-
-2. Add relevant dependencies to the `pom` file:
-
-    2.1. Add the following dependencies:
+    1.1. Add the following dependencies:
     
     - For the JRE environment:
 
@@ -37,7 +36,7 @@ Artifacts are published to sonatype repo
     </dependency>
     ```
 
-    2.2. For both JRE and GWT2/J2CL environments, add the API and annotation processor dependencies:
+    1.2. For both JRE and GWT2/J2CL environments, add the API and annotation processor dependencies:
     
     ```xml
     <dependency>
@@ -59,7 +58,7 @@ Artifacts are published to sonatype repo
       <inherits name="org.treblereel.gwt.xml.mapper.Mapper"/>
     ```
 
-3. Annotate POJOs with the @XMLMapper annotation:
+2. Annotate POJOs with the @XMLMapper annotation:
 
     ```xml
     import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
@@ -380,7 +379,7 @@ Java:
     @XmlSchema(namespace = "http://www.omg.org/bpmn20")
 package org.treblereel.gwt.xml.mapper.client.tests.beans.simple;
 
-import javax.xml.bind.annotation.XmlSchema;
+import jakarta.xml.bind.annotation.XmlSchema;
 ```
      
 XML:
@@ -403,8 +402,8 @@ Java:
 )
 package org.treblereel.gwt.xml.mapper.client.tests.beans.simple;
 
-import javax.xml.bind.annotation.XmlNs;
-import javax.xml.bind.annotation.XmlSchema;
+import jakarta.xml.bind.annotation.XmlNs;
+import jakarta.xml.bind.annotation.XmlSchema;
 ```
      
 XML:
@@ -431,8 +430,8 @@ Java:
 )
 package org.treblereel.gwt.xml.mapper.client.tests.beans.simple;
 
-import javax.xml.bind.annotation.XmlNs;
-import javax.xml.bind.annotation.XmlSchema;
+import jakarta.xml.bind.annotation.XmlNs;
+import jakarta.xml.bind.annotation.XmlSchema;
 ```
      
 XML:

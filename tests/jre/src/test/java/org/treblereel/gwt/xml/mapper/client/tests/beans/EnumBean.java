@@ -15,8 +15,8 @@
  */
 package org.treblereel.gwt.xml.mapper.client.tests.beans;
 
+import jakarta.xml.bind.annotation.XmlEnumValue;
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlEnumValue;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 3/27/20 */

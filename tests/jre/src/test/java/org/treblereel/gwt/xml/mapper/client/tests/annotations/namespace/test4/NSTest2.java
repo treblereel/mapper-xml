@@ -16,9 +16,9 @@
 
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.namespace.test4;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 10/4/20 */
 @XmlRootElement(namespace = "http://www.omg.org/bpmn30")

@@ -15,10 +15,10 @@
  */
 package org.treblereel.gwt.xml.mapper.client.tests.beans.collection;
 
+import jakarta.xml.bind.annotation.XmlElement;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlElement;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 import org.treblereel.gwt.xml.mapper.client.tests.beans.Address;
 import org.treblereel.gwt.xml.mapper.client.tests.beans.Person;

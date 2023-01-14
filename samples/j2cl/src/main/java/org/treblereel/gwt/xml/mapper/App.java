@@ -15,8 +15,6 @@
  */
 package org.treblereel.gwt.xml.mapper;
 
-import javax.xml.stream.XMLStreamException;
-
 import com.google.gwt.core.client.EntryPoint;
 import elemental2.dom.CSSProperties;
 import elemental2.dom.DomGlobal;
@@ -38,6 +36,8 @@ import org.treblereel.gwt.xml.mapper.bpmn2.ItemDefinition;
 import org.treblereel.gwt.xml.mapper.bpmn2.Process;
 import org.treblereel.gwt.xml.mapper.bpmn2.SubProcess;
 import org.treblereel.gwt.xml.mapper.drools.MetaData;
+
+import javax.xml.stream.XMLStreamException;
 
 public class App implements EntryPoint {
 

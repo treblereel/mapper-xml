@@ -19,5 +19,5 @@
     xmlns = {@XmlNs(prefix = "bpmn40", namespaceURI = "http://www.omg.org/bpmn40")})
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.namespace.test4;
 
-import javax.xml.bind.annotation.XmlNs;
-import javax.xml.bind.annotation.XmlSchema;
+import jakarta.xml.bind.annotation.XmlNs;
+import jakarta.xml.bind.annotation.XmlSchema;

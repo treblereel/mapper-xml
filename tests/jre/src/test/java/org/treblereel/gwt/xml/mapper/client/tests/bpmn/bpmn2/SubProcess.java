@@ -15,11 +15,11 @@
  */
 package org.treblereel.gwt.xml.mapper.client.tests.bpmn.bpmn2;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 import org.treblereel.gwt.xml.mapper.client.tests.bpmn.drools.MetaData;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/6/20 */

@@ -15,7 +15,7 @@
  */
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.seealso;
 
-import javax.xml.bind.annotation.XmlSeeAlso;
+import jakarta.xml.bind.annotation.XmlSeeAlso;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 7/1/20 */
 @XmlSeeAlso({First.class, Second.class})

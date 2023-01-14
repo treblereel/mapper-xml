@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 Treblereel
+ * Copyright © 2020 Treblereel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package javax.xml.bind.annotation;
+package jakarta.xml.bind.annotation;
 
-/** Mock for the purpose of J2CL compilation */
-public @interface XmlSchemaType {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-  String name();
+/** @author Dmitrii Tikhomirov Created by treblereel 4/4/20 */
+@Target({ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface XmlCData {
 
-  String namespace() default "http://www.w3.org/2001/XMLSchema";
-
-  Class type() default DEFAULT.class;
-
-  static final class DEFAULT {}
+  boolean value() default true;
 }

@@ -15,11 +15,11 @@
  */
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.cdata;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlCData;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 import java.util.UUID;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlCData;
-import javax.xml.bind.annotation.XmlRootElement;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/4/20 */

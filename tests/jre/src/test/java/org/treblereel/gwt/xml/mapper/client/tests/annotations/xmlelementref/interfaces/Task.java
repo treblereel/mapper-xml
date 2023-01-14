@@ -16,7 +16,7 @@
 
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.xmlelementref.interfaces;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "Task")
 public class Task implements ITask {

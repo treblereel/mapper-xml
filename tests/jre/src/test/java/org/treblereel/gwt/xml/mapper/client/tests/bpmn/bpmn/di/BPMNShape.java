@@ -15,8 +15,8 @@
  */
 package org.treblereel.gwt.xml.mapper.client.tests.bpmn.bpmn.di;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlAttribute;
 import org.treblereel.gwt.xml.mapper.client.tests.bpmn.bpmn.dc.Bounds;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/6/20 */

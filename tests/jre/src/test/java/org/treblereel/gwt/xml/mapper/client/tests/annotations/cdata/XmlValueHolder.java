@@ -16,9 +16,9 @@
 
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.cdata;
 
+import jakarta.xml.bind.annotation.XmlCData;
+import jakarta.xml.bind.annotation.XmlValue;
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlCData;
-import javax.xml.bind.annotation.XmlValue;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 11/07/21 */

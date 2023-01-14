@@ -16,8 +16,8 @@
 
 package org.treblereel.gwt.xml.mapper.client.tests.bpmn.bpmn2;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "dataInput", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
 public class DataInput implements Data {

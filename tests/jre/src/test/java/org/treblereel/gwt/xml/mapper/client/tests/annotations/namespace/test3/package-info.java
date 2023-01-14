@@ -17,4 +17,4 @@
 @XmlSchema(namespace = "http://www.omg.org/bpmn20")
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.namespace.test3;
 
-import javax.xml.bind.annotation.XmlSchema;
+import jakarta.xml.bind.annotation.XmlSchema;

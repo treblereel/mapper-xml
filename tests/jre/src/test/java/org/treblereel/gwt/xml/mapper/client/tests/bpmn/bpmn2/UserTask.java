@@ -16,12 +16,12 @@
 
 package org.treblereel.gwt.xml.mapper.client.tests.bpmn.bpmn2;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElementRef;
+import jakarta.xml.bind.annotation.XmlElementRefs;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.List;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlElementRefs;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
 import org.treblereel.gwt.xml.mapper.client.tests.bpmn.drools.MetaData;
 
 @XmlRootElement(name = "userTask", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")

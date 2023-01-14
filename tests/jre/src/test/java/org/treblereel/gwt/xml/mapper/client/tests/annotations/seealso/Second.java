@@ -15,8 +15,8 @@
  */
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.seealso;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 7/1/20 */
 @XmlRootElement

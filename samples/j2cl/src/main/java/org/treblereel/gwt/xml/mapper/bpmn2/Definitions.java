@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.treblereel.gwt.xml.mapper.api.annotation.TargetNamespace;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
@@ -92,7 +92,7 @@ public class Definitions {
                 sb.append("</br>&nbsp;&nbsp;&nbsp;&nbsp;").append(item.toString());
             });
         }
-        
+
         if(process != null) {
             sb.append("</br>&nbsp;&nbsp;&nbsp;&nbsp;").append(process.toString());
         }

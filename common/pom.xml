@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.treblereel.gwt.xml.mapper</groupId>
         <artifactId>mapper-parent</artifactId>
-        <version>0.6</version>
+        <version>0.7</version>
     </parent>
 
     <artifactId>common</artifactId>
@@ -20,9 +20,22 @@
             <artifactId>elemental2-dom</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.treblereel.gwt.jakarta.jaxb</groupId>
+            <artifactId>api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.treblereel.gwt.jakarta</groupId>
+            <artifactId>utils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.treblereel.gwt.jakarta</groupId>
+            <artifactId>stdlib</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.woodstox</groupId>
             <artifactId>woodstox-core</artifactId>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

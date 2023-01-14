@@ -16,7 +16,7 @@
 
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.xmlelementref;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 6/21/21 */
 @XmlRootElement(name = "javac")

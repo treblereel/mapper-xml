@@ -15,7 +15,7 @@
  */
 package org.treblereel.gwt.xml.mapper.client.tests.beans.inheritance;
 
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/8/20 */
 public class Parent {

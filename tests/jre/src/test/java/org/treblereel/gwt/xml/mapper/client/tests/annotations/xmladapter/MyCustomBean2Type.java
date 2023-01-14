@@ -16,7 +16,7 @@
 
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.xmladapter;
 
-import javax.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlAttribute;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 9/30/20 */
 public class MyCustomBean2Type {

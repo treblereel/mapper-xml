@@ -17,5 +17,5 @@
 @XmlSchema(namespace = "http://www.example.org/package", elementFormDefault = XmlNsForm.QUALIFIED)
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.cdata;
 
-import javax.xml.bind.annotation.XmlNsForm;
-import javax.xml.bind.annotation.XmlSchema;
+import jakarta.xml.bind.annotation.XmlNsForm;
+import jakarta.xml.bind.annotation.XmlSchema;

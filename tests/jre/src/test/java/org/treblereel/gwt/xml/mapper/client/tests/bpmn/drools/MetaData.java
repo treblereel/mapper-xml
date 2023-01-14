@@ -15,11 +15,11 @@
  */
 package org.treblereel.gwt.xml.mapper.client.tests.bpmn.drools;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlCData;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlCData;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/6/20 */
 @XmlRootElement(name = "metaData", namespace = "http://www.jboss.org/drools")

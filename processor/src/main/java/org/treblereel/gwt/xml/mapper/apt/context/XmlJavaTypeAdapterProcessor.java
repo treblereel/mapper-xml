@@ -17,6 +17,8 @@
 package org.treblereel.gwt.xml.mapper.apt.context;
 
 import com.google.auto.common.MoreTypes;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapters;
 import java.util.Arrays;
 import java.util.Objects;
 import javax.lang.model.element.Element;
@@ -25,8 +27,6 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapters;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 9/29/20 */
 public class XmlJavaTypeAdapterProcessor {

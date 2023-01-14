@@ -16,8 +16,8 @@
 
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.xmladapter.collection;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class BeanOneGenericBean extends GenericBean {

@@ -15,9 +15,9 @@
  */
 package org.treblereel.gwt.xml.mapper.client.tests.bpmn.bpmn2;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/6/20 */
 @XmlRootElement(name = "dataObject", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")

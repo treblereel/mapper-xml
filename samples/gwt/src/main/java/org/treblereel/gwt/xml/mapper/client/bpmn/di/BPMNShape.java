@@ -17,7 +17,7 @@ package org.treblereel.gwt.xml.mapper.client.bpmn.di;
 
 import java.util.Objects;
 
-import javax.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlAttribute;
 
 import org.treblereel.gwt.xml.mapper.client.bpmn.dc.Bounds;
 

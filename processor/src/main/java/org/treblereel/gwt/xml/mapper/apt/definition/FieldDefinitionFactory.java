@@ -16,12 +16,12 @@
 package org.treblereel.gwt.xml.mapper.apt.definition;
 
 import com.google.auto.common.MoreTypes;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.HashMap;
 import java.util.Map;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.treblereel.gwt.xml.mapper.apt.TypeUtils;
 import org.treblereel.gwt.xml.mapper.apt.context.GenerationContext;
 

@@ -20,6 +20,8 @@ import static java.util.Objects.nonNull;
 
 import com.google.auto.common.MoreElements;
 import com.google.auto.common.MoreTypes;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementRef;
 import java.lang.annotation.Annotation;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -57,8 +59,6 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 import javax.lang.model.util.SimpleTypeVisitor8;
 import javax.lang.model.util.Types;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
 import org.apache.commons.lang3.StringUtils;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 import org.treblereel.gwt.xml.mapper.apt.context.GenerationContext;
@@ -78,7 +78,7 @@ public class TypeUtils {
   public static final String BEAN_XML_DESERIALIZER_IMPL = "BeanXMLDeserializerImpl";
 
   private static final String XML_ELEMENT_DEFAULT_CLASSNAME =
-      javax.xml.bind.annotation.XmlElement.DEFAULT.class.getName().replaceAll("\\$", "\\.");
+      XmlElement.DEFAULT.class.getName().replaceAll("\\$", "\\.");
 
   private static final int FIRST_ARGUMENT = 0;
   private static final int SECOND_ARGUMENT = 1;

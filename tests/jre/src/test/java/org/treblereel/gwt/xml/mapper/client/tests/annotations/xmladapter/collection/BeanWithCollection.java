@@ -16,8 +16,8 @@
 
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.xmladapter.collection;
 
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 
 @XMLMapper

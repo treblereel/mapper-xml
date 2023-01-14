@@ -15,8 +15,8 @@
  */
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.beans.address;
 
+import jakarta.xml.bind.annotation.XmlAttribute;
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlAttribute;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/2/20 */
 public class Address {

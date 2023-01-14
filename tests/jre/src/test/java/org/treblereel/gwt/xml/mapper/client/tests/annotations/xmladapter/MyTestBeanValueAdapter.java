@@ -16,7 +16,7 @@
 
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.xmladapter;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 9/29/20 */
 public class MyTestBeanValueAdapter extends XmlAdapter<MyCustomBeanType, MyCustomBean> {

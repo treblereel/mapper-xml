@@ -15,8 +15,8 @@
  */
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.type;
 
+import jakarta.xml.bind.annotation.XmlType;
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlType;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 6/30/20 */

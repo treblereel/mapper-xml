@@ -6,7 +6,8 @@
 // Generated on: 2021.08.06 at 04:43:18 PM BST
 //
 
-@javax.xml.bind.annotation.XmlSchema(
-    namespace = "http://www.dmg.org/PMML-4_4",
-    elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@XmlSchema(namespace = "http://www.dmg.org/PMML-4_4", elementFormDefault = XmlNsForm.QUALIFIED)
 package org.treblereel.gwt.xml.mapper.client.tests.pmml.model.impl.v4_4;
+
+import jakarta.xml.bind.annotation.XmlNsForm;
+import jakarta.xml.bind.annotation.XmlSchema;

@@ -14,7 +14,7 @@
     <webappdir>${project.build.directory}/webapp</webappdir>
     <webapp.libdir>${webappdir}/WEB-INF/lib</webapp.libdir>
 
-    <j2cl.maven.plugin.version>0.19</j2cl.maven.plugin.version>
+    <j2cl.maven.plugin.version>0.20</j2cl.maven.plugin.version>
     <elemental2.version>1.1.0</elemental2.version>
 
     <google.jsinterop.version>1.0.0</google.jsinterop.version>
@@ -36,12 +36,12 @@
     <dependency>
       <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>api</artifactId>
-      <version>0.6</version>
+      <version>0.7</version>
     </dependency>
     <dependency>
       <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>processor</artifactId>
-      <version>0.6</version>
+      <version>0.7</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

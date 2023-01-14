@@ -75,7 +75,11 @@ public class DefaultXMLReader extends JsNativeXMLReader {
   @Override
   @GwtIncompatible
   public boolean hasNext() throws XMLStreamException {
-    return reader.hasNext();
+    try {
+      return reader.hasNext();
+    } catch (javax.xml.stream.XMLStreamException e) {
+      throw new XMLStreamException(e);
+    }
   }
 
   /** {@inheritDoc} */

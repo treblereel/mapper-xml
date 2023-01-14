@@ -3,8 +3,11 @@
     "http://gwtproject.org/doctype/2.8.2/gwt-module.dtd">
 <module>
   <inherits name="com.google.gwt.user.User"/>
-  <inherits name="java.Util"/>
-  <inherits name="javax.xml.Xml"/>
   <inherits name='elemental2.dom.Dom'/>
+  <inherits name="javax.xml.Xml"/>
+  <inherits name="jakarta.xml.bind.Annotation"/>
+  <inherits name="jakarta.JAXB"/>
+  <inherits name="org.treblereel.gwt.Utils"/>
+  <inherits name="org.treblereel.gwt.emul.Stdlib"/>
   <source path="api" />
 </module>

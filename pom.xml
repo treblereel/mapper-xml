@@ -4,7 +4,7 @@
 
     <groupId>org.treblereel.gwt.xml.mapper</groupId>
     <artifactId>mapper-parent</artifactId>
-    <version>0.6</version>
+    <version>0.7</version>
     <packaging>pom</packaging>
 
     <name>mapper-parent</name>
@@ -33,7 +33,7 @@
     </organization>
 
     <scm>
-        <url>https://github.com/treblereel/mapper-xmll</url>
+        <url>https://github.com/treblereel/mapper-xml</url>
         <developerConnection>scm:git:git@github.com:treblereel/mapper-xml.git</developerConnection>
         <connection>scm:git:git://github.com/treblereel/mapper-xml.git</connection>
         <tag>HEAD</tag>
@@ -68,6 +68,7 @@
         <apache.commons.lang3.version>3.9</apache.commons.lang3.version>
         <junit.version>4.13.1</junit.version>
 
+        <gwt.jakarta.version>0.2</gwt.jakarta.version>
         <com.fasterxml.woodstox.version>6.2.1</com.fasterxml.woodstox.version>
         <auto.common.version>0.11</auto.common.version>
         <auto.service.version>1.0-rc6</auto.service.version>
@@ -81,13 +82,13 @@
     </modules>
 
     <dependencyManagement>
-
-
         <dependencies>
             <dependency>
-                <groupId>javax.annotation</groupId>
-                <artifactId>javax.annotation-api</artifactId>
-                <version>${javax.annotation.api.version}</version>
+                <groupId>org.treblereel.gwt.jakarta</groupId>
+                <artifactId>bom</artifactId>
+                <version>${gwt.jakarta.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>com.google.elemental2</groupId>

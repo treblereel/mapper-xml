@@ -5,7 +5,7 @@
 
   <groupId>org.treblereel.gwt.xml.mapper</groupId>
   <artifactId>j2cl-demo</artifactId>
-  <packaging>war</packaging>
+  <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
 
   <name>J2CL demo</name>
@@ -14,11 +14,10 @@
     <webappdir>${project.build.directory}/webapp</webappdir>
     <webapp.libdir>${webappdir}/WEB-INF/lib</webapp.libdir>
 
-    <elemental2.version>1.2.1</elemental2.version>
+    <elemental2.version>1.2.3</elemental2.version>
 
-    <google.jsinterop.version>1.0.0</google.jsinterop.version>
-    <j2cl.maven.plugin.version>0.23.1</j2cl.maven.plugin.version>
-    <j2cl.version>v20240622-2</j2cl.version>
+    <j2cl.maven.plugin.version>0.23.2</j2cl.maven.plugin.version>
+    <j2cl.version>v20241110-1</j2cl.version>
 
     <maven.compiler.target>11</maven.compiler.target>
     <maven.compiler.source>11</maven.compiler.source>
@@ -35,12 +34,12 @@
     <dependency>
       <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>api</artifactId>
-      <version>0.8</version>
+      <version>0.9</version>
     </dependency>
     <dependency>
       <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>processor</artifactId>
-      <version>0.8</version>
+      <version>0.9</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
@@ -81,14 +80,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>${maven.war.plugin.version}</version>
-        <configuration>
-          <packagingExcludes>WEB-INF/classes/**</packagingExcludes>
-        </configuration>
-      </plugin>
-      <plugin>
         <artifactId>maven-source-plugin</artifactId>
         <version>3.2.1</version>
         <executions>
@@ -117,27 +108,6 @@
         <configuration>
           <defaultWebappDirectory>${project.build.directory}/gwt/launcherDir</defaultWebappDirectory>
           <compilationLevel>ADVANCED</compilationLevel>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.tomcat.maven</groupId>
-        <artifactId>tomcat7-maven-plugin</artifactId>
-        <version>${maven.tomcat7.plugin.version}</version>
-        <configuration>
-          <warSourceDirectory>target/gwt/launcherDir/</warSourceDirectory>
-          <path>/</path>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-maven-plugin</artifactId>
-        <version>${maven.jetty.plugin.version}</version>
-        <configuration>
-          <scanIntervalSeconds>2</scanIntervalSeconds>
-          <webApp>
-            <resourceBase>target/gwt/launcherDir/</resourceBase>
-            <contextPath>/</contextPath>
-          </webApp>
         </configuration>
       </plugin>
     </plugins>

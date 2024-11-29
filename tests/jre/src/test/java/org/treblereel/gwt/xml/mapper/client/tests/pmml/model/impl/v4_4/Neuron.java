@@ -50,7 +50,7 @@ public class Neuron {
   protected List<Extension> extension;
 
   @XmlElement(name = "Con", required = true)
-  protected List<Con> con;
+  protected List<Content> con;
 
   @XmlAttribute(name = "id", required = true)
   protected String id;
@@ -99,11 +99,11 @@ public class Neuron {
    *    getCon().add(newItem);
    * </pre>
    *
-   * <p>Objects of the following type(s) are allowed in the list {@link Con }
+   * <p>Objects of the following type(s) are allowed in the list {@link Content }
    */
-  public List<Con> getCon() {
+  public List<Content> getCon() {
     if (con == null) {
-      con = new ArrayList<Con>();
+      con = new ArrayList<Content>();
     }
     return this.con;
   }

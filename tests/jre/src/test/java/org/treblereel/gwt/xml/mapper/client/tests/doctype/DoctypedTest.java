@@ -29,16 +29,16 @@ public class DoctypedTest {
   private static final Doctyped_XMLMapperImpl mapper = Doctyped_XMLMapperImpl.INSTANCE;
 
   private static final String XML =
-      "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-          + "<!DOCTYPE ldml SYSTEM \"../../common/dtd/ldml.dtd\">\n"
-          + "<!-- Copyright © 1991-2021 Unicode, Inc.\n"
-          + "For terms of use, see http://www.unicode.org/copyright.html\n"
-          + "Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.\n"
-          + "CLDR data files are interpreted according to the LDML specification  (http://unicode.org/reports/tr35/)\n"
-          + "\n"
-          + "Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/ for // derived annotations.\n"
-          + "-->\n"
-          + "<ldml></ldml>";
+          "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
+                  + "<!DOCTYPE ldml SYSTEM \"../../common/dtd/ldml.dtd\">\n"
+                  + "<!-- Copyright \\u00A9 1991-2021 Unicode, Inc.\n"
+                  + "For terms of use, see http://www.unicode.org/copyright.html\n"
+                  + "Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.\n"
+                  + "CLDR data files are interpreted according to the LDML specification  (http://unicode.org/reports/tr35/)\n"
+                  + "\n"
+                  + "Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/ for // derived annotations.\n"
+                  + "-->\n"
+                  + "<ldml></ldml>";
 
   @Test
   public void testSerializeValue() throws XMLStreamException {

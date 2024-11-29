@@ -52,23 +52,6 @@ public interface Neuron {
   List<Extension> getExtension();
 
   /**
-   * Gets the value of the con property.
-   *
-   * <p>This accessor method returns a reference to the live list, not a snapshot. Therefore any
-   * modification you make to the returned list will be present inside the JAXB object. This is why
-   * there is not a <CODE>set</CODE> method for the con property.
-   *
-   * <p>For example, to add a new item, do as follows:
-   *
-   * <pre>
-   *    getCon().add(newItem);
-   * </pre>
-   *
-   * <p>Objects of the following type(s) are allowed in the list {@link Con }
-   */
-  List<Con> getCon();
-
-  /**
    * Gets the value of the id property.
    *
    * @return possible object is {@link String }

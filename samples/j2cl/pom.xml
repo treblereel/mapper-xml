@@ -6,18 +6,13 @@
   <groupId>org.treblereel.gwt.xml.mapper</groupId>
   <artifactId>j2cl-demo</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.10</version>
 
   <name>J2CL demo</name>
 
   <properties>
     <webappdir>${project.build.directory}/webapp</webappdir>
     <webapp.libdir>${webappdir}/WEB-INF/lib</webapp.libdir>
-
-    <elemental2.version>1.2.3</elemental2.version>
-
-    <j2cl.maven.plugin.version>0.23.2</j2cl.maven.plugin.version>
-    <j2cl.version>v20241110-1</j2cl.version>
 
     <maven.compiler.target>11</maven.compiler.target>
     <maven.compiler.source>11</maven.compiler.source>
@@ -28,18 +23,31 @@
     <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
     <maven.resources.plugin.version>3.1.0</maven.resources.plugin.version>
     <maven.war.plugin.version>3.2.3</maven.war.plugin.version>
+    <j2cl.platform.version>20251001-1</j2cl.platform.version>
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.treblereel.j2cl.platform</groupId>
+        <artifactId>bom</artifactId>
+        <version>20251001-1</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>
       <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>api</artifactId>
-      <version>0.9</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>processor</artifactId>
-      <version>0.9</version>
+      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
@@ -95,7 +103,6 @@
       <plugin>
         <groupId>org.kie.j2cl.tools</groupId>
         <artifactId>j2cl-maven-plugin</artifactId>
-        <version>${j2cl.maven.plugin.version}</version>
         <executions>
           <execution>
             <id>build-js</id>

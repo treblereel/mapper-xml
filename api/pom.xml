@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
 
     <name>API</name>
-    <description />
+    <description>XML marshallers API</description>
     <url>https://github.com/treblereel</url>
 
     <developers>

@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
 
     <name>common</name>
-    <description />
+    <description>XML marshallers Commons</description>
     <url>https://github.com/treblereel</url>
 
     <dependencies>

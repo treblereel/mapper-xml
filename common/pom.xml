@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.treblereel.gwt.xml.mapper</groupId>
         <artifactId>mapper-parent</artifactId>
-        <version>0.10</version>
+        <version>0.11</version>
     </parent>
 
     <artifactId>common</artifactId>
@@ -72,6 +72,11 @@
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
+                    <compilerArgument>-proc:none</compilerArgument>
+                    <excludes>
+                        <exclude>emul/javax/**</exclude>
+                        <exclude>emul/org/**</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>

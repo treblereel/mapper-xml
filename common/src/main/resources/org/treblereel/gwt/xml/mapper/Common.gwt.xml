@@ -4,7 +4,6 @@
 <module>
   <inherits name="com.google.gwt.user.User"/>
   <inherits name='elemental2.dom.Dom'/>
-  <inherits name="javax.xml.Xml"/>
   <inherits name="jakarta.xml.bind.Annotation"/>
   <inherits name="jakarta.JAXB"/>
   <source path="api" />

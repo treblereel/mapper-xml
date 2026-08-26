@@ -175,13 +175,18 @@ public class JsNativeXMLReader implements XMLReader {
   }
 
   public void visit(Node node, List<NodeWrapper> nodes) {
-    nodes.add(new NodeWrapper(node, toNodeType(node.nodeType)));
+    int nodeType = node.nodeType;
+    // Skip Comment (8), ProcessingInstruction (7), and DocumentType (10) nodes
+    if (nodeType == 7 || nodeType == 8 || nodeType == 10) {
+      return;
+    }
+    nodes.add(new NodeWrapper(node, toNodeType(nodeType)));
     if (node.hasChildNodes()) {
       for (int i = 0; i < node.childNodes.getLength(); i++) {
         visit(node.childNodes.item(i), nodes);
       }
     }
-    if (node.nodeType == 1) {
+    if (nodeType == 1) {
       nodes.add(new NodeWrapper(node, XMLStreamConstants.END_ELEMENT));
     }
   }

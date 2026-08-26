@@ -46,7 +46,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <maven.compiler.version>3.8.0</maven.compiler.version>
+        <maven.compiler.version>3.15.0</maven.compiler.version>
         <maven.source.version>3.2.1</maven.source.version>
         <maven.fmt.plugin>2.9</maven.fmt.plugin>
         <maven.license.plugin>3.0</maven.license.plugin>
@@ -77,6 +77,8 @@
         <module>common</module>
         <module>processor</module>
         <module>tests</module>
+        <module>tests-j2cl</module>
+        <module>tests-gwt2</module>
     </modules>
 
     <dependencyManagement>
@@ -283,7 +285,7 @@
                         <version>${maven.central.publishing.plugin}</version>
                         <extensions>true</extensions>
                         <configuration>
-                            <publishingServerId>sonatype</publishingServerId>
+                            <publishingServerId>central</publishingServerId>
                         </configuration>
                     </plugin>
                     <plugin>

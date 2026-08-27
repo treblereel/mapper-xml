@@ -17,8 +17,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.collection;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

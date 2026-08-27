@@ -16,8 +16,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.handler;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import javax.xml.stream.XMLStreamException;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 5/19/20 */

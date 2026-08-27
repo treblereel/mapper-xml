@@ -16,8 +16,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.wrapper;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;

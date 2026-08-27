@@ -16,8 +16,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.beans.iface;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

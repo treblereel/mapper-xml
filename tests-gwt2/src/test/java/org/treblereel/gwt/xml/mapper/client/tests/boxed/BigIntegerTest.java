@@ -16,8 +16,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.boxed;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import java.math.BigInteger;
 import java.util.Objects;
 import javax.xml.stream.XMLStreamException;
@@ -30,6 +28,7 @@ public class BigIntegerTest extends GWTTestCase {
   public String getModuleName() {
     return "org.treblereel.gwt.xml.mapper.MapperTest";
   }
+
   private static final String value = "1548784651132124566543513203245448715154542123114001571970";
 
   private static final String XML_EMPTY = "<?xml version='1.0' encoding='UTF-8'?><BigIntegerBean/>";

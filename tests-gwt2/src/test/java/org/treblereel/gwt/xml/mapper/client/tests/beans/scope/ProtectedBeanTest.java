@@ -16,8 +16,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.beans.scope;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import javax.xml.stream.XMLStreamException;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 5/13/20 */
@@ -27,6 +25,7 @@ public class ProtectedBeanTest extends GWTTestCase {
   public String getModuleName() {
     return "org.treblereel.gwt.xml.mapper.MapperTest";
   }
+
   ProtectedBean_XMLMapperImpl mapper = ProtectedBean_XMLMapperImpl.INSTANCE;
 
   public void test() throws XMLStreamException {

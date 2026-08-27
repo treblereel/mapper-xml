@@ -16,8 +16,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.beans.inheritance;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import javax.xml.stream.XMLStreamException;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 4/8/20 */

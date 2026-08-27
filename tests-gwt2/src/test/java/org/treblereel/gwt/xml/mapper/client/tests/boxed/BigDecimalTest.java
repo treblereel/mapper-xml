@@ -16,8 +16,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.boxed;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import java.math.BigDecimal;
 import java.util.Objects;
 import javax.xml.stream.XMLStreamException;

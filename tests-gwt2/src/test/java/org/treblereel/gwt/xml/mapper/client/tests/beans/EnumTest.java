@@ -16,8 +16,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.beans;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.xml.mapper.api.DefaultXMLDeserializationContext;
 
@@ -28,6 +26,7 @@ public class EnumTest extends GWTTestCase {
   public String getModuleName() {
     return "org.treblereel.gwt.xml.mapper.MapperTest";
   }
+
   EnumBean_XMLMapperImpl mapper = EnumBean_XMLMapperImpl.INSTANCE;
 
   public void testDeserializeValue() throws XMLStreamException {

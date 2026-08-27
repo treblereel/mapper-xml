@@ -17,8 +17,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.namespace.test2;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import javax.xml.stream.XMLStreamException;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 10/4/20 */
@@ -28,6 +26,7 @@ public class NamespaceTest extends GWTTestCase {
   public String getModuleName() {
     return "org.treblereel.gwt.xml.mapper.MapperTest";
   }
+
   NSTest_XMLMapperImpl mapper = NSTest_XMLMapperImpl.INSTANCE;
 
   private static final String XML =
@@ -43,6 +42,6 @@ public class NamespaceTest extends GWTTestCase {
 
     String xml = mapper.write(test1);
     assertEquals(XML, xml);
-    Assert.assertEquals(test1, mapper.read(xml));
+    assertEquals(test1, mapper.read(xml));
   }
 }

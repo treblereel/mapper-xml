@@ -16,8 +16,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.seealso;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;

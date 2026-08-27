@@ -16,8 +16,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.namespace.test1;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.stream.XMLStreamException;
@@ -32,6 +30,7 @@ public class TutorialTest extends GWTTestCase {
   public String getModuleName() {
     return "org.treblereel.gwt.xml.mapper.MapperTest";
   }
+
   private static final String XML =
       "<?xml version='1.0' encoding='UTF-8'?><_tutorial xmlns=\"http://ns\" xmlns:ci=\"http://www.ci\" xmlns:cl=\"http://www.cl\"><id xmlns=\"http://ns\">0</id><cl:names><name>NAME</name></cl:names><cl:names><name>NAME2</name></cl:names><wrapper><cl:types><name>NAME</name></cl:types><cl:types><name>NAME2</name></cl:types></wrapper><cl:arrays><name>F1</name></cl:arrays><cl:arrays><name>F2</name></cl:arrays></_tutorial>";
   private static final Tutorial_XMLMapperImpl mapper = Tutorial_XMLMapperImpl.INSTANCE;

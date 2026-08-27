@@ -16,8 +16,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.date;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import java.sql.Timestamp;
 import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.xml.mapper.client.tests.beans.date.TimestampBean_XMLMapperImpl;

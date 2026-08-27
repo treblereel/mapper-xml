@@ -17,8 +17,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.cdata;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import javax.xml.stream.XMLStreamException;
 
 public class XmlValueHolderTest extends GWTTestCase {

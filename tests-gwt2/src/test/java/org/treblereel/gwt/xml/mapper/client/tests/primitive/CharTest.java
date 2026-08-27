@@ -16,8 +16,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.primitive;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import java.util.Objects;
 import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
@@ -29,6 +27,7 @@ public class CharTest extends GWTTestCase {
   public String getModuleName() {
     return "org.treblereel.gwt.xml.mapper.MapperTest";
   }
+
   private static final String XML_EMPTY =
       "<?xml version='1.0' encoding='UTF-8'?><CharType><value/></CharType>";
   private static final String XML_0 =

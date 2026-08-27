@@ -17,8 +17,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.annotations.xmladapter.pkg;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.xml.mapper.client.tests.annotations.xmladapter.MyCustomBean;
 

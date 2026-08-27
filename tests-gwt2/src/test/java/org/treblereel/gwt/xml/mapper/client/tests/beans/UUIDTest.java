@@ -16,8 +16,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.beans;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import java.util.UUID;
 import javax.xml.stream.XMLStreamException;
 

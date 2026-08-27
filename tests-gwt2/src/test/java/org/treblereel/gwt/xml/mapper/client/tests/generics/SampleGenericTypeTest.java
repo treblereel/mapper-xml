@@ -17,8 +17,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.generics;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import javax.xml.stream.XMLStreamException;
 
 /** @author Dmitrii Tikhomirov Created by treblereel 7/15/20 */
@@ -28,6 +26,7 @@ public class SampleGenericTypeTest extends GWTTestCase {
   public String getModuleName() {
     return "org.treblereel.gwt.xml.mapper.MapperTest";
   }
+
   private static final String XML =
       "<?xml version='1.0' encoding='UTF-8'?><SampleGenericType><field3>setField3</field3><field1>setField1</field1><field2>1</field2></SampleGenericType>";
   SampleGenericType_XMLMapperImpl mapper = SampleGenericType_XMLMapperImpl.INSTANCE;

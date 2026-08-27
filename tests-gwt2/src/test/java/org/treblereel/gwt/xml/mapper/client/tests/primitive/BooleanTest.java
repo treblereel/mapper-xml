@@ -16,9 +16,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.primitive;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
-import com.google.gwt.junit.client.GWTTestCase;
 import javax.xml.stream.XMLStreamException;
 import org.treblereel.gwt.xml.mapper.client.tests.beans.BooleanBean;
 import org.treblereel.gwt.xml.mapper.client.tests.beans.BooleanBean_XMLMapperImpl;
@@ -28,7 +25,7 @@ public class BooleanTest extends GWTTestCase {
 
   @Override
   public String getModuleName() {
-    return "org.treblereel.gwt.xml.mapper.MapperTest";
+    return "org.treblereel.gwt.xml.mapper.XMLTest";
   }
 
   private static final String XML_TRUE =
@@ -63,10 +60,5 @@ public class BooleanTest extends GWTTestCase {
         "<?xml version='1.0' encoding='UTF-8'?><BooleanBean><check>false</check></BooleanBean>",
         mapper.write(test));
     assertEquals(test, mapper.read(mapper.write(test)));
-  }
-
-  @Override
-  public String getModuleName() {
-    return "org.treblereel.gwt.xml.mapper.XMLTest";
   }
 }

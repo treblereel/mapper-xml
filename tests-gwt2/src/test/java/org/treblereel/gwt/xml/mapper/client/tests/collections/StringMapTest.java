@@ -16,8 +16,6 @@
 package org.treblereel.gwt.xml.mapper.client.tests.collections;
 
 import com.google.gwt.junit.client.GWTTestCase;
-
-
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.stream.XMLStreamException;

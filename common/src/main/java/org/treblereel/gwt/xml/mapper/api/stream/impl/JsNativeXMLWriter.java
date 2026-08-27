@@ -85,8 +85,8 @@ public class JsNativeXMLWriter implements XMLWriter {
 
   @Override
   public XMLWriter beginObject(String namespace, String name) throws XMLStreamException {
-    Element element = xml.createElementNS(namespace, name);
-    element.setAttributeNS(XMLNS_NS, "xmlns", namespace);
+    Element element = xml.createElement(name);
+    element.setAttribute("xmlns", namespace);
 
     if (root == null) {
       root = element;
@@ -205,7 +205,7 @@ public class JsNativeXMLWriter implements XMLWriter {
   @Override
   public void writeDefaultNamespace(String namespace) throws XMLStreamException {
     if (beginNs) {
-      ((Element) stack.getFirst()).setAttributeNS(XMLNS_NS, "xmlns", namespace);
+      ((Element) stack.getFirst()).setAttribute("xmlns", namespace);
     }
   }
 

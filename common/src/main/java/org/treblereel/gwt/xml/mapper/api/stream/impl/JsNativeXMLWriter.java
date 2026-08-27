@@ -21,6 +21,8 @@ import elemental2.dom.Element;
 import elemental2.dom.Node;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.stream.XMLStreamException;
 import jsinterop.annotations.JsMethod;
 import jsinterop.annotations.JsPackage;
@@ -37,6 +39,7 @@ public class JsNativeXMLWriter implements XMLWriter {
   protected boolean beginNs = true;
 
   private Deque<Node> stack = new ArrayDeque<>();
+  private Map<String, String> namespacePrefixes = new HashMap<>();
 
   private Document xml;
   private Element root;
@@ -211,6 +214,7 @@ public class JsNativeXMLWriter implements XMLWriter {
 
   @Override
   public void writeNamespace(String prefix, String namespace) throws XMLStreamException {
+    namespacePrefixes.put(prefix, namespace);
     ((Element) stack.getFirst()).setAttributeNS(XMLNS_NS, "xmlns:" + prefix, namespace);
   }
 
@@ -236,7 +240,7 @@ public class JsNativeXMLWriter implements XMLWriter {
       int colonIndex = propertyName.indexOf(':');
       if (colonIndex > 0) {
         String prefix = propertyName.substring(0, colonIndex);
-        String nsUri = element.lookupNamespaceURI(prefix);
+        String nsUri = namespacePrefixes.get(prefix);
         if (nsUri != null) {
           element.setAttributeNS(nsUri, propertyName, value);
         } else {

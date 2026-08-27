@@ -20,11 +20,9 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@v2.2.0
       - name: Build and test
         run: |
-          mvn -B package --file pom.xml -pl '!tests-gwt2'
+          mvn -B package --file pom.xml -pl '!tests-gwt2,!tests-j2cl'
       - name: Upload test results for review
         uses: actions/upload-artifact@v4
         if: always()
@@ -39,6 +37,13 @@ jobs:
     strategy:
       matrix:
         java: ['17', '21', '25']
+        include:
+          - java: '17'
+            exclude_modules: '!tests-gwt2,!tests-j2cl'
+          - java: '21'
+            exclude_modules: '!tests-gwt2'
+          - java: '25'
+            exclude_modules: '!tests-gwt2'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,10 +53,11 @@ jobs:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
       - name: Setup Chrome
+        if: matrix.java != '17'
         uses: browser-actions/setup-chrome@v2.2.0
       - name: Build and test
         run: |
-          mvn -B package --file pom.xml -pl '!tests-gwt2'
+          mvn -B package --file pom.xml -pl '${{ matrix.exclude_modules }}'
       - name: Upload test results for review
         uses: actions/upload-artifact@v4
         if: always()

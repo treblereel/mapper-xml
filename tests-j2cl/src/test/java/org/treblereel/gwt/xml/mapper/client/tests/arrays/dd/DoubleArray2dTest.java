@@ -28,10 +28,10 @@ public class DoubleArray2dTest {
   private final DoubleArray2d test = new DoubleArray2d();
   private final DoubleArray2d_XMLMapperImpl mapper = DoubleArray2d_XMLMapperImpl.INSTANCE;
   private final String XML =
-      "<?xml version='1.0' encoding='UTF-8'?><DoubleArray2d><array><array>1.0</array><array>2.0</array><array>3.0</array><array>4.0</array><array>5.0</array><array>6.0</array></array></DoubleArray2d>";
+      "<?xml version='1.0' encoding='UTF-8'?><DoubleArray2d><array><array>1</array><array>2</array><array>3</array><array>4</array><array>5</array><array>6</array></array></DoubleArray2d>";
 
   private final String XML2 =
-      "<?xml version='1.0' encoding='UTF-8'?><DoubleArray2d><array><array>1.0</array><array>2.0</array><array>3.0</array><array>4.0</array><array>5.0</array><array>6.0</array></array><array2><array2>1.0</array2><array2>2.0</array2><array2>3.0</array2><array2>4.0</array2><array2>5.0</array2><array2>6.0</array2></array2></DoubleArray2d>";
+      "<?xml version='1.0' encoding='UTF-8'?><DoubleArray2d><array><array>1</array><array>2</array><array>3</array><array>4</array><array>5</array><array>6</array></array><array2><array2>1</array2><array2>2</array2><array2>3</array2><array2>4</array2><array2>5</array2><array2>6</array2></array2></DoubleArray2d>";
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {

@@ -30,7 +30,7 @@ public class FloatArray2dTest {
   private final FloatArray2d test = new FloatArray2d();
   private final FloatArray2d_XMLMapperImpl mapper = FloatArray2d_XMLMapperImpl.INSTANCE;
   private final String XML =
-      "<?xml version='1.0' encoding='UTF-8'?><FloatArray2d><floats><floats>1.0</floats><floats>2.0</floats><floats>3.0</floats></floats><floats><floats>4.0</floats><floats>5.0</floats><floats>6.0</floats></floats></FloatArray2d>";
+      "<?xml version='1.0' encoding='UTF-8'?><FloatArray2d><floats><floats>1</floats><floats>2</floats><floats>3</floats></floats><floats><floats>4</floats><floats>5</floats><floats>6</floats></floats></FloatArray2d>";
 
   @Test
   public void testDeserializeValue() throws XMLStreamException {

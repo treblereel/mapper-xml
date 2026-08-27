@@ -215,10 +215,10 @@ public class JsNativeXMLReader implements XMLReader {
   }
 
   public void removeWhitespace(Node n, Node parent) {
-    // This n is removed from the parent if n is a whitespace node
+    // This n is removed from the parent if n is a whitespace node between elements
     if (parent != null && n instanceof Text && (!(n instanceof CDATASection))) {
       Text t = (Text) n;
-      if (t.data.matches("[ \t\n]*")) {
+      if (t.data.matches("[ \t\n]*") && hasElementChild(parent)) {
         parent.removeChild(t);
       }
     }
@@ -236,6 +236,17 @@ public class JsNativeXMLReader implements XMLReader {
         removeWhitespace(childNode, n);
       }
     }
+  }
+
+  private boolean hasElementChild(Node node) {
+    if (node.hasChildNodes()) {
+      for (int i = 0; i < node.childNodes.getLength(); i++) {
+        if (node.childNodes.item(i).nodeType == 1) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private static class NodeWrapper {

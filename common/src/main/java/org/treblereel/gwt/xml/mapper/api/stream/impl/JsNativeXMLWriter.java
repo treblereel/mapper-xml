@@ -21,6 +21,8 @@ import elemental2.dom.Element;
 import elemental2.dom.Node;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.stream.XMLStreamException;
 import jsinterop.annotations.JsMethod;
 import jsinterop.annotations.JsPackage;
@@ -31,11 +33,13 @@ import org.treblereel.gwt.xml.mapper.api.stream.XMLWriter;
 public class JsNativeXMLWriter implements XMLWriter {
 
   private static final String HEADER = "<?xml version='1.0' encoding='UTF-8'?>";
+  private static final String XMLNS_NS = "http://www.w3.org/2000/xmlns/";
 
   protected String deferredName;
   protected boolean beginNs = true;
 
   private Deque<Node> stack = new ArrayDeque<>();
+  private Map<String, String> namespacePrefixes = new HashMap<>();
 
   private Document xml;
   private Element root;
@@ -100,7 +104,7 @@ public class JsNativeXMLWriter implements XMLWriter {
   @Override
   public XMLWriter beginObject(String prefix, String namespace, String name)
       throws XMLStreamException {
-    Element element = xml.createElement(prefix + ":" + name);
+    Element element = xml.createElementNS(namespace, prefix + ":" + name);
     if (root == null) {
       root = element;
       xml.appendChild(root);
@@ -210,7 +214,8 @@ public class JsNativeXMLWriter implements XMLWriter {
 
   @Override
   public void writeNamespace(String prefix, String namespace) throws XMLStreamException {
-    ((Element) stack.getFirst()).setAttribute("xmlns:" + prefix, namespace);
+    namespacePrefixes.put(prefix, namespace);
+    ((Element) stack.getFirst()).setAttributeNS(XMLNS_NS, "xmlns:" + prefix, namespace);
   }
 
   @Override
@@ -231,7 +236,19 @@ public class JsNativeXMLWriter implements XMLWriter {
   @Override
   public void writeAttribute(String propertyName, String value) throws XMLStreamException {
     if (propertyName != null && value != null) {
-      ((Element) stack.getFirst()).setAttribute(propertyName, value);
+      Element element = (Element) stack.getFirst();
+      int colonIndex = propertyName.indexOf(':');
+      if (colonIndex > 0) {
+        String prefix = propertyName.substring(0, colonIndex);
+        String nsUri = namespacePrefixes.get(prefix);
+        if (nsUri != null) {
+          element.setAttributeNS(nsUri, propertyName, value);
+        } else {
+          element.setAttribute(propertyName, value);
+        }
+      } else {
+        element.setAttribute(propertyName, value);
+      }
     }
   }
 

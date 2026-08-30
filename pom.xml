@@ -4,7 +4,7 @@
 
     <groupId>org.treblereel.gwt.xml.mapper</groupId>
     <artifactId>mapper-parent</artifactId>
-    <version>0.9</version>
+    <version>0.11</version>
     <packaging>pom</packaging>
 
     <name>mapper-parent</name>
@@ -43,32 +43,30 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
 
-        <maven.compiler.version>3.8.0</maven.compiler.version>
+        <maven.compiler.version>3.15.0</maven.compiler.version>
         <maven.source.version>3.2.1</maven.source.version>
         <maven.fmt.plugin>2.9</maven.fmt.plugin>
         <maven.license.plugin>3.0</maven.license.plugin>
         <maven.shade.plugin>3.2.4</maven.shade.plugin>
-        <maven.deploy.plugin>2.8.2</maven.deploy.plugin>
         <maven.gpg.plugin>1.6</maven.gpg.plugin>
         <maven.javadoc.plugin>3.2.0</maven.javadoc.plugin>
         <maven.source.plugin>3.2.1</maven.source.plugin>
         <maven.release.plugin>2.5.3</maven.release.plugin>
         <maven.surfire.plugin>3.0.0-M1</maven.surfire.plugin>
-
-        <nexus.staging.maven.plugin>1.6.8</nexus.staging.maven.plugin>
+        <maven.flatten.plugin>1.5.0</maven.flatten.plugin>
         <maven.scm.provider.gitexe>1.9.5</maven.scm.provider.gitexe>
+        <maven.central.publishing.plugin>0.9.0</maven.central.publishing.plugin>
+        <nexus.staging.maven.plugin>1.6.8</nexus.staging.maven.plugin>
 
-        <elemental2.version>1.2.3</elemental2.version>
-        <j2cl.version>v20241110-1</j2cl.version>
         <javax.annotation.api.version>1.3.1</javax.annotation.api.version>
         <javaparser.core.version>3.13.1</javaparser.core.version>
         <apache.commons.lang3.version>3.9</apache.commons.lang3.version>
-        <junit.version>4.13.2</junit.version>
-
-        <gwt.jakarta.version>0.6</gwt.jakarta.version>
+        <j2cl.platform.version>20260527-1</j2cl.platform.version>
+        <jakarta4g.version>0.7</jakarta4g.version>
+        <stdlib.version>0.8</stdlib.version>
         <com.fasterxml.woodstox.version>6.2.1</com.fasterxml.woodstox.version>
         <auto.common.version>1.2.2</auto.common.version>
         <auto.service.version>1.1.1</auto.service.version>
@@ -79,6 +77,8 @@
         <module>common</module>
         <module>processor</module>
         <module>tests</module>
+        <module>tests-j2cl</module>
+        <module>tests-gwt2</module>
     </modules>
 
     <dependencyManagement>
@@ -86,19 +86,16 @@
             <dependency>
                 <groupId>org.treblereel.gwt.jakarta</groupId>
                 <artifactId>bom</artifactId>
-                <version>${gwt.jakarta.version}</version>
+                <version>${jakarta4g.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>com.google.elemental2</groupId>
-                <artifactId>elemental2-core</artifactId>
-                <version>${elemental2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.elemental2</groupId>
-                <artifactId>elemental2-dom</artifactId>
-                <version>${elemental2.version}</version>
+                <groupId>org.treblereel.j2cl.platform</groupId>
+                <artifactId>bom</artifactId>
+                <version>${j2cl.platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>com.google.auto</groupId>
@@ -125,13 +122,6 @@
                 <artifactId>woodstox-core</artifactId>
                 <version>${com.fasterxml.woodstox.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -152,11 +142,6 @@
                     <groupId>com.coveo</groupId>
                     <artifactId>fmt-maven-plugin</artifactId>
                     <version>${maven.fmt.plugin}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>${maven.deploy.plugin}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -184,8 +169,6 @@
                     <version>${maven.gpg.plugin}</version>
                 </plugin>
             </plugins>
-
-
         </pluginManagement>
         <plugins>
             <plugin>
@@ -246,10 +229,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
                     <failOnError>false</failOnError>
@@ -301,27 +280,42 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${maven.central.publishing.plugin}</version>
+                        <extensions>true</extensions>
                         <configuration>
-                            <skip>false</skip>
+                            <publishingServerId>central</publishingServerId>
                         </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>flatten-maven-plugin</artifactId>
+                        <version>${maven.flatten.plugin}</version>
+                        <configuration>
+                            <flattenMode>oss</flattenMode>
+                            <updatePomFile>true</updatePomFile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>flatten</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>flatten</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>flatten.clean</id>
+                                <phase>clean</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
         </profile>
     </profiles>
-
-    <!-- Specify that we will push snapshots and releases to sonatype's repos -->
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
 
 </project>

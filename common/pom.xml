@@ -4,14 +4,14 @@
     <parent>
         <groupId>org.treblereel.gwt.xml.mapper</groupId>
         <artifactId>mapper-parent</artifactId>
-        <version>0.9</version>
+        <version>0.11</version>
     </parent>
 
     <artifactId>common</artifactId>
     <packaging>jar</packaging>
 
     <name>common</name>
-    <description />
+    <description>XML marshallers Commons</description>
     <url>https://github.com/treblereel</url>
 
     <dependencies>
@@ -20,16 +20,8 @@
             <artifactId>elemental2-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.treblereel.gwt.jakarta.jaxb</groupId>
-            <artifactId>api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.treblereel.gwt.jakarta</groupId>
-            <artifactId>utils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.treblereel.gwt.jakarta</groupId>
-            <artifactId>stdlib</artifactId>
+            <artifactId>jaxb</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.woodstox</groupId>
@@ -80,6 +72,11 @@
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
+                    <compilerArgument>-proc:none</compilerArgument>
+                    <excludes>
+                        <exclude>emul/javax/**</exclude>
+                        <exclude>emul/org/**</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>

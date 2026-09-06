@@ -161,7 +161,8 @@ public class JsNativeXMLReader implements XMLReader {
   @Override
   public QName getAttributeName(int index) {
     Attr attr = (Attr) current.node.attributes.item(index);
-    return new QName(attr.namespaceURI, attr.name.replaceAll("xsi:", ""));
+    String localName = attr.localName != null ? attr.localName : attr.name;
+    return new QName(attr.namespaceURI, localName);
   }
 
   @Override
@@ -175,13 +176,18 @@ public class JsNativeXMLReader implements XMLReader {
   }
 
   public void visit(Node node, List<NodeWrapper> nodes) {
-    nodes.add(new NodeWrapper(node, toNodeType(node.nodeType)));
+    int nodeType = node.nodeType;
+    // Skip Comment (8), ProcessingInstruction (7), and DocumentType (10) nodes
+    if (nodeType == 7 || nodeType == 8 || nodeType == 10) {
+      return;
+    }
+    nodes.add(new NodeWrapper(node, toNodeType(nodeType)));
     if (node.hasChildNodes()) {
       for (int i = 0; i < node.childNodes.getLength(); i++) {
         visit(node.childNodes.item(i), nodes);
       }
     }
-    if (node.nodeType == 1) {
+    if (nodeType == 1) {
       nodes.add(new NodeWrapper(node, XMLStreamConstants.END_ELEMENT));
     }
   }
@@ -210,10 +216,10 @@ public class JsNativeXMLReader implements XMLReader {
   }
 
   public void removeWhitespace(Node n, Node parent) {
-    // This n is removed from the parent if n is a whitespace node
+    // This n is removed from the parent if n is a whitespace node between elements
     if (parent != null && n instanceof Text && (!(n instanceof CDATASection))) {
       Text t = (Text) n;
-      if (t.data.matches("[ \t\n]*")) {
+      if (t.data.matches("[ \t\n]*") && hasElementChild(parent)) {
         parent.removeChild(t);
       }
     }
@@ -231,6 +237,17 @@ public class JsNativeXMLReader implements XMLReader {
         removeWhitespace(childNode, n);
       }
     }
+  }
+
+  private boolean hasElementChild(Node node) {
+    if (node.hasChildNodes()) {
+      for (int i = 0; i < node.childNodes.getLength(); i++) {
+        if (node.childNodes.item(i).nodeType == 1) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private static class NodeWrapper {

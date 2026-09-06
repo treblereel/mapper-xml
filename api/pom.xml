@@ -4,14 +4,14 @@
     <parent>
         <groupId>org.treblereel.gwt.xml.mapper</groupId>
         <artifactId>mapper-parent</artifactId>
-        <version>0.9</version>
+        <version>0.11</version>
     </parent>
 
     <artifactId>api</artifactId>
     <packaging>jar</packaging>
 
     <name>API</name>
-    <description />
+    <description>XML marshallers API</description>
     <url>https://github.com/treblereel</url>
 
     <developers>
@@ -36,6 +36,11 @@
     </organization>
 
     <dependencies>
+        <dependency>
+            <groupId>org.treblereel.gwt</groupId>
+            <artifactId>stdlib</artifactId>
+            <version>${stdlib.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.treblereel.gwt.xml.mapper</groupId>
             <artifactId>common</artifactId>

@@ -129,7 +129,7 @@ public class TypeUtils {
   }
 
   private static boolean isPrimitive(TypeMirror typeMirror) {
-    return typeMirror.getKind().isPrimitive();
+    return typeMirror != null && typeMirror.getKind().isPrimitive();
   }
 
   /**
@@ -229,7 +229,7 @@ public class TypeUtils {
    */
   public static boolean hasWildcards(TypeMirror type) {
     return type.accept(
-        new SimpleTypeVisitor8<Boolean, Void>() {
+        new SimpleTypeVisitor8<Boolean, Void>(false) {
           @Override
           public Boolean visitPrimitive(PrimitiveType t, Void p) {
             return false;
@@ -270,7 +270,7 @@ public class TypeUtils {
    */
   public static boolean isGenericType(TypeMirror type) {
     return type.accept(
-        new SimpleTypeVisitor8<Boolean, Void>() {
+        new SimpleTypeVisitor8<Boolean, Void>(false) {
           @Override
           public Boolean visitPrimitive(PrimitiveType t, Void p) {
             return false;
@@ -307,7 +307,7 @@ public class TypeUtils {
    */
   public static boolean hasTypeParameter(TypeMirror type) {
     return type.accept(
-        new SimpleTypeVisitor8<Boolean, Void>() {
+        new SimpleTypeVisitor8<Boolean, Void>(false) {
           @Override
           public Boolean visitPrimitive(PrimitiveType t, Void p) {
             return false;
@@ -485,7 +485,7 @@ public class TypeUtils {
    */
   public static boolean hasUnboundedWildcards(TypeMirror type) {
     return type.accept(
-        new SimpleTypeVisitor8<Boolean, Void>() {
+        new SimpleTypeVisitor8<Boolean, Void>(false) {
           @Override
           public Boolean visitPrimitive(PrimitiveType t, Void p) {
             return false;

@@ -51,12 +51,12 @@
     <dependency>
       <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>api</artifactId>
-      <version>0.11</version>
+      <version>9999-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>processor</artifactId>
-      <version>0.11</version>
+      <version>9999-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

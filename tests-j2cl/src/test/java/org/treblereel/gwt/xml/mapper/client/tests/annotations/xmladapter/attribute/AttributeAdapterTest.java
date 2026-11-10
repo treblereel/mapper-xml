@@ -21,7 +21,6 @@ import static org.junit.Assert.assertEquals;
 import com.google.j2cl.junit.apt.J2clTestInput;
 import javax.xml.stream.XMLStreamException;
 import org.junit.Test;
-import org.treblereel.gwt.xml.mapper.client.tests.annotations.xmladapter.MyTestBeanTest;
 
 @J2clTestInput(AttributeAdapterTest.class)
 public class AttributeAdapterTest {
